@@ -1,4 +1,5 @@
 :root {
+  --timeline-head-h: 5.75rem;
   color-scheme: light;
   --bg: #f4f6fa;
   --surface: #ffffff;
@@ -244,8 +245,11 @@ a {
   grid-template-columns: var(--rail-w) minmax(0, 1fr);
   gap: 0;
   min-height: 0;
-  align-items: stretch;
+  align-items: start;
   padding: 0.75rem 0.75rem 1.25rem 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: thin;
 }
 
 
@@ -253,9 +257,11 @@ a {
   display: flex;
   gap: 0.65rem;
   min-width: 0;
-  min-height: calc(100vh - 110px);
+  min-height: 0;
   padding-right: 0.5rem;
   overflow-x: auto;
+  overflow-y: visible;
+  align-items: start;
 }
 
 .board__col-slot {
@@ -272,45 +278,60 @@ a {
   max-width: 100%;
 }
 
-/* ─── Timeline rail (year flush left; dates indented children) ─── */
+/* ─── Timeline rail (shared Y canvas with cards) ─── */
 .timeline-rail {
   position: sticky;
-  top: 88px;
+  left: 0;
+  top: 0;
   align-self: start;
-  padding: 0.4rem 0.35rem 1rem 0.35rem;
-  overflow-y: auto;
-  max-height: calc(100vh - 100px);
-  scrollbar-width: thin;
+  z-index: 5;
+  padding: 0 0.35rem 1rem 0.35rem;
+  overflow: visible;
+  max-height: none;
+  background: linear-gradient(90deg, #f8fafc 70%, transparent);
 }
 
-.timeline-rail__year {
+/* Match .cat-column__head so rail canvas Y0 == card canvas Y0 */
+.timeline-rail__head-spacer {
+  height: var(--timeline-head-h, 5.75rem);
+  flex-shrink: 0;
+  box-sizing: border-box;
+}
+
+.timeline-rail__canvas {
   position: relative;
-  margin-bottom: 0.65rem;
+  margin-left: 0.15rem;
+  min-height: 4rem;
 }
 
-.timeline-rail__year-label {
+.timeline-rail__year-marker {
+  position: absolute;
+  left: 0;
+  right: 0;
   display: flex;
   align-items: center;
   gap: 0.28rem;
-  width: 100%;
+  z-index: 2;
   border: 0;
-  background: transparent;
+  background: #f1f5f9;
   cursor: pointer;
-  font-size: 0.8rem;
+  font-size: 0.72rem;
   font-weight: 800;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  margin: 0 0 0.2rem 0;
-  /* Flush left: caret + year + count */
-  padding: 0.2rem 0.15rem 0.2rem 0;
+  padding: 0 0.2rem;
   border-radius: 6px;
   color: #334155;
   text-align: left;
 }
 
-.timeline-rail__year-label:hover {
-  background: #eef2f7;
+.timeline-rail__year-marker:hover {
+  background: #e2e8f0;
   color: #0f172a;
+}
+
+.timeline-rail__year-marker.is-collapsed {
+  opacity: 0.55;
 }
 
 .timeline-rail__year-chevron {
@@ -331,26 +352,15 @@ a {
   font-weight: 700;
   font-variant-numeric: tabular-nums;
   color: #94a3b8;
-  background: #f1f5f9;
+  background: #fff;
   border-radius: 999px;
   padding: 0.05rem 0.4rem;
 }
 
-.timeline-rail__year.is-collapsed .timeline-rail__year-label {
-  margin-bottom: 0;
-}
-
-/* Date children: clear indent under year; guide line aligns with dots */
-.timeline-rail__track {
-  position: relative;
-  margin-left: 1.05rem;
-  padding-left: 0;
-}
-
-/* Same-month soft background bands (相同月份 bg同色); adjacent months alternate */
+/* Same-month soft background bands */
 .timeline-rail__month-bg {
   position: absolute;
-  left: 0;
+  left: 1.05rem;
   right: 2px;
   border-radius: 6px;
   pointer-events: none;
@@ -365,7 +375,7 @@ a {
 
 .timeline-rail__line {
   position: absolute;
-  left: 5px;
+  left: calc(1.05rem + 5px);
   top: 2px;
   bottom: 6px;
   width: 1px;
@@ -375,7 +385,7 @@ a {
 
 .timeline-rail__item {
   position: absolute;
-  left: 0;
+  left: 1.05rem;
   right: 0;
   display: grid;
   grid-template-columns: 12px 1fr;
@@ -387,7 +397,7 @@ a {
   text-align: left;
   padding: 0;
   height: 18px;
-  transform: translateY(-9px);
+  transform: translateY(-50%);
   border-radius: 4px;
   z-index: 1;
 }
@@ -433,7 +443,7 @@ a {
   background: #f8fafc;
   border: 1px solid var(--border);
   border-radius: 6px;
-  overflow: hidden;
+  overflow: visible;
   box-shadow: var(--shadow);
 }
 
@@ -541,16 +551,33 @@ a {
   color: var(--accent);
 }
 
-.cat-column__body {
-  flex: 1;
+.cat-column__head {
+  flex-shrink: 0;
+  height: var(--timeline-head-h, 5.75rem);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
   overflow: auto;
+  scrollbar-width: thin;
+  background: #f8fafc;
+  border-bottom: 1px solid #eef2f7;
+  box-sizing: border-box;
+}
+
+.cat-column__body {
+  flex: 0 0 auto;
+  overflow: visible;
   padding: 0.55rem;
   display: flex;
   flex-direction: column;
   gap: 0.55rem;
   min-height: 0;
-  max-height: calc(100vh - 260px);
+  max-height: none;
   background: linear-gradient(180deg, #fff 0%, #f8fafc 100%);
+}
+
+.cat-column__body.is-time-canvas {
+  padding-top: 0.35rem;
 }
 
 .cat-column__body.has-subcols {
@@ -587,6 +614,27 @@ a {
   display: flex;
   flex-direction: column;
   gap: 0.45rem;
+}
+
+.cat-subcol__cards.is-time-placed {
+  position: relative;
+  display: block;
+  gap: 0;
+  min-height: 4rem;
+}
+
+.event-card.is-time-placed {
+  position: absolute;
+  left: 0;
+  right: 0;
+  width: 100%;
+  transform: translateY(-50%);
+  z-index: 1;
+}
+
+.event-card.is-time-placed:hover,
+.event-card.is-time-placed.is-selected {
+  z-index: 3;
 }
 
 /* ─── Event card ─── */
@@ -743,6 +791,7 @@ a {
   height: 100%;
   max-width: 100%;
   max-height: 100%;
+  filter: none;
 }
 
 .co-avatar--letter {
@@ -820,7 +869,8 @@ a {
 }
 
 .detail-popover__logo .co-avatar {
-  filter: brightness(0) invert(1);
+  /* keep brand colors — do not force mono invert */
+  filter: none;
 }
 
 .detail-popover__logo .co-avatar--letter {

@@ -10,6 +10,8 @@ type Props = {
   companies: Company[]
   selected: boolean
   onSelect: (id: string | null) => void
+  /** Shared timeline center Y; when set, card is absolutely placed */
+  centerY?: number
 }
 
 export default function EventCard({
@@ -17,6 +19,7 @@ export default function EventCard({
   companies,
   selected,
   onSelect,
+  centerY,
 }: Props) {
   const cardRef = useRef<HTMLElement>(null)
   const { color, soft } = companyColor(companies, event.company)
@@ -27,13 +30,16 @@ export default function EventCard({
   return (
     <article
       ref={cardRef}
-      className={`event-card${selected ? ' is-selected' : ''}`}
+      className={`event-card${selected ? ' is-selected' : ''}${centerY != null ? ' is-time-placed' : ''}`}
       data-event-id={event.id}
       style={
         {
           ['--co' as string]: color,
           ['--co-soft' as string]: soft,
           background: soft,
+          ...(centerY != null
+            ? { top: centerY, ['--card-center-y' as string]: `${centerY}px` }
+            : {}),
         } as CSSProperties
       }
       onClick={() => onSelect(selected ? null : event.id)}

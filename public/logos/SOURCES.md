@@ -20,3 +20,7 @@ All marks are third-party brand assets (not invented geometry).
 | minimax.svg | Simple Icons v16 (`minimax`) |
 | cognition | *missing* — letter avatar fallback in UI |
 
+
+## Brand tint
+
+Simple Icons ships monochrome paths. For single-color marks we set `fill` to `companies[].color` so card icons are not black. **Google / DeepMind / Microsoft** keep true multi-color marks (Google four-color G; Microsoft four-square).

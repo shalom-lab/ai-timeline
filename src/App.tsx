@@ -7,6 +7,7 @@ import Header, { type Filters } from './components/Header'
 import TimelineRail from './components/TimelineRail'
 import CategoryColumn from './components/CategoryColumn'
 import FrontierColumn from './components/FrontierColumn'
+import { buildTimelineLayout } from './lib/timelineLayout'
 
 const DEFAULT_FILTERS: Filters = {
   query: '',
@@ -91,6 +92,9 @@ export default function App() {
     return filterFrontierMonths(capabilityFrontierData.months, q)
   }, [filters])
 
+  /** Shared rail ↔ card vertical positions (all search-filtered events). */
+  const layout = useMemo(() => buildTimelineLayout(filtered), [filtered])
+
   const byCategory = useMemo(() => {
     const map: Record<Category, TimelineEvent[]> = {
       model: [],
@@ -165,6 +169,7 @@ export default function App() {
           companies={companies}
           selectedId={selectedId}
           onSelect={setSelectedId}
+          layout={layout}
         />
 
         <div
@@ -188,6 +193,7 @@ export default function App() {
                 }
                 selectedId={selectedId}
                 onSelect={setSelectedId}
+                layout={layout}
               />
             </div>
           ))}

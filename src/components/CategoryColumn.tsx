@@ -2,6 +2,7 @@ import type { ReactNode } from 'react'
 import type { Category, Company, TimelineEvent } from '../types/timeline'
 import { CATEGORY_LABEL_ZH, CATEGORY_THEME } from '../lib/labels'
 import { buildSubGroups } from '../lib/group'
+import type { TimelineLayout } from '../lib/timelineLayout'
 import EventCard from './EventCard'
 
 type Props = {
@@ -17,6 +18,8 @@ type Props = {
   onSubFilter: (keys: string[]) => void
   selectedId: string | null
   onSelect: (id: string | null) => void
+  /** Shared date→Y layout with the left rail */
+  layout: TimelineLayout
 }
 
 const ICONS: Record<Category, ReactNode> = {
@@ -54,7 +57,6 @@ const ICONS: Record<Category, ReactNode> = {
   ),
 }
 
-/** Compact maximize / focus — enter 独占 (~14px) */
 function IconSoloEnter() {
   return (
     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden>
@@ -69,7 +71,6 @@ function IconSoloEnter() {
   )
 }
 
-/** Compact minimize / exit-focus — leave 独占 (~14px) */
 function IconSoloExit() {
   return (
     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden>
@@ -95,6 +96,7 @@ export default function CategoryColumn({
   onSubFilter,
   selectedId,
   onSelect,
+  layout,
 }: Props) {
   const theme = CATEGORY_THEME[category]
   const groups = buildSubGroups(category, events, companies)
@@ -115,94 +117,110 @@ export default function CategoryColumn({
     }
   }
 
+  const multi = visibleGroups.length > 1
+  /** Skip chip row when flat / single group (e.g. concept) — 别强行分 */
+  const showChips = groups.length > 1
+
   return (
     <section
       className={`cat-column${isSolo ? ' is-solo' : ''}`}
       style={{ ['--accent' as string]: theme.accent }}
       aria-label={CATEGORY_LABEL_ZH[category]}
     >
-      <div className="cat-column__header">
-        <span
-          className="cat-column__header-icon"
-          style={{ color: theme.accent, background: theme.headerSoft }}
-        >
-          {ICONS[category]}
-        </span>
-        <span className="cat-column__header-title">
-          {CATEGORY_LABEL_ZH[category]}
-        </span>
-        <span
-          className="cat-column__header-count"
-          style={{ color: theme.accent, background: theme.headerSoft }}
-        >
-          {events.length}
-        </span>
-        {isSolo ? (
-          <button
-            type="button"
-            className="cat-column__solo-btn is-icon is-active"
-            onClick={onExitSolo}
-            title="退出独占"
-            aria-label="退出独占"
+      <div className="cat-column__head">
+        <div className="cat-column__header">
+          <span
+            className="cat-column__header-icon"
+            style={{ color: theme.accent, background: theme.headerSoft }}
           >
-            <IconSoloExit />
-          </button>
-        ) : (
-          <button
-            type="button"
-            className="cat-column__solo-btn is-icon"
-            onClick={onSolo}
-            title="独占"
-            aria-label="独占"
+            {ICONS[category]}
+          </span>
+          <span className="cat-column__header-title">
+            {CATEGORY_LABEL_ZH[category]}
+          </span>
+          <span
+            className="cat-column__header-count"
+            style={{ color: theme.accent, background: theme.headerSoft }}
           >
-            <IconSoloEnter />
-          </button>
-        )}
-      </div>
+            {events.length}
+          </span>
+          {isSolo ? (
+            <button
+              type="button"
+              className="cat-column__solo-btn is-icon is-active"
+              onClick={onExitSolo}
+              title="退出独占"
+              aria-label="退出独占"
+            >
+              <IconSoloExit />
+            </button>
+          ) : (
+            <button
+              type="button"
+              className="cat-column__solo-btn is-icon"
+              onClick={onSolo}
+              title="独占"
+              aria-label="独占"
+            >
+              <IconSoloEnter />
+            </button>
+          )}
+        </div>
 
-      <div className="cat-column__chips" role="group" aria-label="子类多选">
-        <button
-          type="button"
-          className={showAll ? 'is-active' : ''}
-          onClick={() => toggleChip('all')}
-        >
-          全部
-        </button>
-        {groups.map((g) => (
-          <button
-            key={g.key}
-            type="button"
-            className={!showAll && subFilter.includes(g.key) ? 'is-active' : ''}
-            aria-pressed={!showAll && subFilter.includes(g.key)}
-            onClick={() => toggleChip(g.key)}
-          >
-            {g.label}
-            <em>{g.events.length}</em>
-          </button>
-        ))}
+        {showChips ? (
+          <div className="cat-column__chips" role="group" aria-label="子类多选">
+            <button
+              type="button"
+              className={showAll ? 'is-active' : ''}
+              onClick={() => toggleChip('all')}
+            >
+              全部
+            </button>
+            {groups.map((g) => (
+              <button
+                key={g.key}
+                type="button"
+                className={!showAll && subFilter.includes(g.key) ? 'is-active' : ''}
+                aria-pressed={!showAll && subFilter.includes(g.key)}
+                onClick={() => toggleChip(g.key)}
+              >
+                {g.label}
+                <em>{g.events.length}</em>
+              </button>
+            ))}
+          </div>
+        ) : null}
       </div>
 
       <div
-        className={`cat-column__body${visibleGroups.length > 1 ? ' has-subcols' : ''}`}
+        className={`cat-column__body is-time-canvas${multi ? ' has-subcols' : ''}`}
       >
         {visibleGroups.length === 0 ? (
           <p className="cat-column__empty">暂无匹配事件</p>
         ) : (
           visibleGroups.map((g) => (
             <div key={g.key} className="cat-subcol">
-              {visibleGroups.length > 1 ? (
+              {multi ? (
                 <div className="cat-subcol__label">{g.label}</div>
               ) : null}
-              <div className="cat-subcol__cards">
-                {g.events.map((e) => (
-                  <EventCard
-                    key={e.id}
-                    event={e}
-                    companies={companies}
-                    selected={selectedId === e.id}
-                    onSelect={onSelect}
-                  />
-                ))}
+              <div
+                className="cat-subcol__cards is-time-placed"
+                style={{ height: layout.height }}
+              >
+                {g.events.map((e) => {
+                  const cy = layout.centerY[e.id]
+                  if (cy == null) return null
+                  return (
+                    <EventCard
+                      key={e.id}
+                      event={e}
+                      companies={companies}
+                      selected={selectedId === e.id}
+                      onSelect={onSelect}
+                      centerY={cy}
+                    />
+                  )
+                })}
               </div>
             </div>
           ))

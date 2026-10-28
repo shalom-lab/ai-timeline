@@ -57,27 +57,16 @@ export function groupKeyForEvent(
     const s = e.series?.trim() || '其他'
     return { key: `series:${s}`, label: seriesChipLabel(s) }
   }
-  // concept / other — theme by tags
+  // concept: flat chronological — do NOT force MCP/Skill/Harness theme chips
+  if (category === 'concept') {
+    return { key: 'flat', label: '全部' }
+  }
+  // other — light theme buckets only when tags clearly apply; else flat
   const tags = e.tags ?? []
-  if (tags.some((t) => t === 'mcp' || t.includes('mcp'))) {
-    return { key: 'theme:mcp', label: 'MCP' }
-  }
-  if (tags.some((t) => t.includes('skill'))) {
-    return { key: 'theme:skill', label: 'Skill' }
-  }
-  if (tags.some((t) => t.includes('harness'))) {
-    return { key: 'theme:harness', label: 'Harness' }
-  }
-  if (tags.some((t) => t.includes('agent'))) {
-    return { key: 'theme:agent', label: 'Agent' }
-  }
-  if (tags.includes('multimodal')) {
-    return { key: 'theme:multimodal', label: '多模态' }
-  }
   if (tags.some((t) => ['policy', 'regulation', 'funding', 'acquisition'].includes(t))) {
     return { key: 'theme:policy', label: '政策/资本' }
   }
-  return { key: 'theme:other', label: '其他' }
+  return { key: 'flat', label: '全部' }
 }
 
 export function buildSubGroups(
