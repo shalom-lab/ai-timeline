@@ -6,7 +6,7 @@ import type { Company } from '../types/timeline'
 
 /**
  * Company ids with a real brand asset under public/logos/{id}.svg.
- * Sources: see public/logos/SOURCES.md (Simple Icons / Wikimedia — not invented).
+ * Sources: see public/logos/SOURCES.md (Simple Icons / Lobe Icons / official CDN — not invented).
  * cognition: no verified public SVG yet → letter avatar.
  */
 export const COMPANY_LOGO_IDS = new Set([
@@ -25,6 +25,7 @@ export const COMPANY_LOGO_IDS = new Set([
   'minimax',
   'deepmind', // Google mark fallback — see SOURCES.md
   'cursor',
+  'zhipu',
 ])
 
 /** @deprecated use COMPANY_LOGO_IDS / hasCompanyLogo */

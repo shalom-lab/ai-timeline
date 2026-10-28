@@ -103,8 +103,8 @@
         "通义",
         "Qwen"
       ],
-      "color": "#FF6A00",
-      "colorSoft": "#FFE2CC"
+      "color": "#6950EF",
+      "colorSoft": "#E8E2FF"
     },
     {
       "id": "tencent",
@@ -130,8 +130,8 @@
         "火山引擎",
         "Volcengine"
       ],
-      "color": "#325AB4",
-      "colorSoft": "#D6E0F5"
+      "color": "#1E37FC",
+      "colorSoft": "#D6DBFF"
     },
     {
       "id": "moonshot",
