@@ -1,7 +1,7 @@
 {
   "meta": {
     "name": "AI纪年",
-    "version": "0.8.4",
+    "version": "0.9.0",
     "scopeStart": "2022-11-30",
     "updatedAt": "2026-10-28",
     "locale": "zh-CN",
@@ -2067,6 +2067,43 @@
       ]
     },
     {
+      "id": "moonshot-kimi-k2-5-2026-01-27",
+      "date": "2026-01-27",
+      "dateStatus": "exact",
+      "title": "发布并开源 Kimi K2.5",
+      "summary": "Moonshot 发布原生多模态开源模型 Kimi K2.5：强化视觉编码与 Agent Swarm（可自组织上百子代理并行），经 Kimi 应用/API 与 Kimi Code 提供。",
+      "category": "model",
+      "company": "Moonshot AI",
+      "series": "Kimi",
+      "product": "Kimi K2.5",
+      "eventType": "open_source",
+      "sources": [
+        {
+          "title": "Kimi K2.5 Tech Blog: Visual Agentic Intelligence",
+          "url": "https://www.kimi.ai/blog/kimi-k2-5",
+          "publisher": "Moonshot AI",
+          "publishedAt": "2026-01-27"
+        },
+        {
+          "title": "China's Moonshot releases a new open source model Kimi K2.5 and a coding agent",
+          "url": "https://techcrunch.com/2026/01/27/chinas-moonshot-releases-a-new-open-source-model-kimi-k2-5-and-a-coding-agent/",
+          "publisher": "TechCrunch",
+          "publishedAt": "2026-01-27"
+        }
+      ],
+      "tags": [
+        "kimi",
+        "k2.5",
+        "agent-swarm",
+        "open-source"
+      ],
+      "capabilities": [
+        "chat",
+        "reasoning",
+        "vision"
+      ]
+    },
+    {
       "id": "openclaw-rename-launch-2026-01-29",
       "date": "2026-01-29",
       "dateStatus": "exact",
@@ -2093,6 +2130,36 @@
       ]
     },
     {
+      "id": "openai-gpt-5-3-codex-2026-02-05",
+      "date": "2026-02-05",
+      "dateStatus": "exact",
+      "title": "发布 GPT-5.3-Codex",
+      "summary": "OpenAI 发布面向 Codex 的 GPT-5.3-Codex：在编码、终端与计算机使用评测上显著提升，强调可在任务进行中被实时引导，经 Codex 应用/CLI/IDE/网页对订阅用户开放。",
+      "category": "model",
+      "company": "OpenAI",
+      "series": "GPT",
+      "product": "GPT-5.3-Codex",
+      "eventType": "ga",
+      "sources": [
+        {
+          "title": "Introducing GPT-5.3-Codex",
+          "url": "https://openai.com/index/introducing-gpt-5-3-codex/",
+          "publisher": "OpenAI",
+          "publishedAt": "2026-02-05"
+        }
+      ],
+      "tags": [
+        "gpt-5.3",
+        "codex",
+        "agentic-coding"
+      ],
+      "capabilities": [
+        "chat",
+        "reasoning",
+        "vision"
+      ]
+    },
+    {
       "id": "qoder-qoderwork-2026-02-12",
       "date": "2026-02-12",
       "dateStatus": "exact",
@@ -2116,6 +2183,94 @@
         "qoder",
         "work-assistant",
         "desktop-agent"
+      ]
+    },
+    {
+      "id": "zhipu-glm-5-2026-02-12",
+      "date": "2026-02-12",
+      "dateStatus": "exact",
+      "title": "开源发布 GLM-5",
+      "summary": "智谱发布并开源 GLM-5（MIT）：规模升至约 744B/40B 激活，面向复杂系统工程与长程 Agent；经 Hugging Face/ModelScope 权重与 Z.ai / BigModel API 提供。",
+      "category": "model",
+      "company": "Zhipu AI",
+      "series": "GLM",
+      "product": "GLM-5",
+      "eventType": "open_source",
+      "sources": [
+        {
+          "title": "GLM-5: From Vibe Coding to Agentic Engineering",
+          "url": "https://z.ai/blog/glm-5",
+          "publisher": "Zhipu AI",
+          "publishedAt": "2026-02-12"
+        }
+      ],
+      "tags": [
+        "glm-5",
+        "open-source",
+        "agentic"
+      ],
+      "capabilities": [
+        "chat",
+        "reasoning"
+      ]
+    },
+    {
+      "id": "bytedance-seed-2-0-2026-02-14",
+      "date": "2026-02-14",
+      "dateStatus": "exact",
+      "title": "发布 Seed 2.0 / 豆包大模型 2.0 系列",
+      "summary": "字节跳动 Seed 正式发布 Seed2.0：Pro/Lite/Mini 通用 Agent 型号与 Code 型号，强化多模态理解与长程任务；经豆包 App、TRAE 与火山引擎 API 上线。",
+      "category": "model",
+      "company": "ByteDance",
+      "series": "Doubao / Seed",
+      "product": "Seed 2.0",
+      "eventType": "ga",
+      "sources": [
+        {
+          "title": "Seed 2.0 Official Launch",
+          "url": "https://seed.bytedance.com/en/blog/seed-2-0-official-launch",
+          "publisher": "ByteDance Seed",
+          "publishedAt": "2026-02-14"
+        }
+      ],
+      "tags": [
+        "seed-2.0",
+        "doubao",
+        "trae"
+      ],
+      "capabilities": [
+        "chat",
+        "reasoning",
+        "vision"
+      ]
+    },
+    {
+      "id": "openai-gpt-5-4-2026-03-05",
+      "date": "2026-03-05",
+      "dateStatus": "exact",
+      "title": "发布 GPT-5.4",
+      "summary": "OpenAI 发布 GPT-5.4（含 Thinking）：面向复杂专业工作，强化规划、联网研究、长上下文、编码与工具调用，经 ChatGPT 付费档与 API（gpt-5.4）提供。",
+      "category": "model",
+      "company": "OpenAI",
+      "series": "GPT",
+      "product": "GPT-5.4",
+      "eventType": "ga",
+      "sources": [
+        {
+          "title": "Introducing GPT-5.4",
+          "url": "https://openai.com/index/introducing-gpt-5-4/",
+          "publisher": "OpenAI",
+          "publishedAt": "2026-03-05"
+        }
+      ],
+      "tags": [
+        "gpt-5.4",
+        "thinking"
+      ],
+      "capabilities": [
+        "chat",
+        "reasoning",
+        "vision"
       ]
     },
     {
@@ -2151,6 +2306,768 @@
         "workbuddy",
         "agent",
         "openclaw"
+      ]
+    },
+    {
+      "id": "alibaba-qwen3-6-plus-2026-04-02",
+      "date": "2026-04-02",
+      "dateStatus": "exact",
+      "title": "发布 Qwen3.6-Plus",
+      "summary": "阿里云发布 Qwen3.6-Plus：面向真实世界 Agent 部署强化，API 当日可用。",
+      "category": "model",
+      "company": "Alibaba",
+      "series": "Qwen",
+      "product": "Qwen3.6-Plus",
+      "eventType": "ga",
+      "sources": [
+        {
+          "title": "Qwen3.6-Plus: Towards Real World Agents",
+          "url": "https://www.alibabacloud.com/blog/qwen3-6-plus-towards-real-world-agents_603005",
+          "publisher": "Alibaba Cloud",
+          "publishedAt": "2026-04-02"
+        }
+      ],
+      "tags": [
+        "qwen3.6",
+        "agent"
+      ],
+      "capabilities": [
+        "chat",
+        "reasoning"
+      ]
+    },
+    {
+      "id": "cursor-3-2026-04-02",
+      "date": "2026-04-02",
+      "dateStatus": "exact",
+      "title": "发布 Cursor 3（Agents Window）",
+      "summary": "Cursor 发布 Cursor 3：以 Agents Window 统一本地/云端/worktree/远程 SSH 等多代理并行工作区，可在 IDE 与代理视图间切换。",
+      "category": "product",
+      "productSubcategory": "ide",
+      "company": "Cursor",
+      "series": "Cursor",
+      "product": "Cursor 3",
+      "eventType": "major_upgrade",
+      "sources": [
+        {
+          "title": "Meet the new Cursor",
+          "url": "https://cursor.com/blog/cursor-3",
+          "publisher": "Cursor",
+          "publishedAt": "2026-04-02"
+        }
+      ],
+      "tags": [
+        "cursor-3",
+        "agents-window"
+      ]
+    },
+    {
+      "id": "openai-gpt-5-5-2026-04-23",
+      "date": "2026-04-23",
+      "dateStatus": "exact",
+      "title": "发布 GPT-5.5",
+      "summary": "OpenAI 发布 GPT-5.5：强调 Agent 式编码、计算机使用与知识工作闭环，面向 ChatGPT/Codex 付费用户上线；次日起 API 可用。",
+      "category": "model",
+      "company": "OpenAI",
+      "series": "GPT",
+      "product": "GPT-5.5",
+      "eventType": "ga",
+      "sources": [
+        {
+          "title": "Introducing GPT-5.5",
+          "url": "https://openai.com/index/introducing-gpt-5-5/",
+          "publisher": "OpenAI",
+          "publishedAt": "2026-04-23"
+        }
+      ],
+      "tags": [
+        "gpt-5.5",
+        "computer-use",
+        "codex"
+      ],
+      "capabilities": [
+        "chat",
+        "reasoning",
+        "vision"
+      ]
+    },
+    {
+      "id": "deepseek-v4-preview-2026-04-24",
+      "date": "2026-04-24",
+      "dateStatus": "exact",
+      "title": "发布 DeepSeek-V4 Preview（百万 token 上下文）",
+      "summary": "DeepSeek 发布 V4 预览：开源权重的 V4-Pro / V4-Flash（MoE），强调可负担的百万 token 上下文，并经 API（deepseek-v4-pro / deepseek-v4-flash）提供。",
+      "category": "model",
+      "company": "DeepSeek",
+      "series": "DeepSeek-V4",
+      "product": "DeepSeek-V4 Preview",
+      "eventType": "research_preview",
+      "sources": [
+        {
+          "title": "DeepSeek-V4 Preview: Entering the Era of Affordable Million-Token Context",
+          "url": "https://www.deepseek.com/en/news/v4-preview/",
+          "publisher": "DeepSeek",
+          "publishedAt": "2026-04-24"
+        }
+      ],
+      "tags": [
+        "deepseek-v4",
+        "open-weight",
+        "long-context"
+      ],
+      "capabilities": [
+        "chat",
+        "reasoning"
+      ]
+    },
+    {
+      "id": "google-gemini-3-5-2026-05-19",
+      "date": "2026-05-19",
+      "dateStatus": "exact",
+      "title": "发布 Gemini 3.5（含 Flash）",
+      "summary": "Google 在 I/O 发布 Gemini 3.5：强调可行动的前沿智能与编码/长程 Agent 工作流；Flash 等型号经 Gemini 应用、Search AI Mode、API/AI Studio 等正式可用。",
+      "category": "model",
+      "company": "Google",
+      "series": "Gemini",
+      "product": "Gemini 3.5",
+      "eventType": "ga",
+      "sources": [
+        {
+          "title": "Gemini 3.5: frontier intelligence with action",
+          "url": "https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-3-5/",
+          "publisher": "Google",
+          "publishedAt": "2026-05-19"
+        }
+      ],
+      "tags": [
+        "gemini-3.5",
+        "flash",
+        "io-2026"
+      ],
+      "capabilities": [
+        "chat",
+        "reasoning",
+        "vision",
+        "audio"
+      ]
+    },
+    {
+      "id": "bytedance-coze-3-2026-05-29",
+      "date": "2026-05-29",
+      "dateStatus": "exact",
+      "title": "正式发布扣子 Coze 3.0",
+      "summary": "字节跳动扣子正式发布 3.0：强化多人多 Agent 协作、本地 Agent 接入与跨端同步等能力（官方 FAQ 标注发布日）。",
+      "category": "product",
+      "productSubcategory": "agent",
+      "company": "ByteDance",
+      "series": "Coze",
+      "product": "Coze 3.0",
+      "eventType": "ga",
+      "sources": [
+        {
+          "title": "扣子常见问题（Coze 3.0）",
+          "url": "https://docs.coze.cn/cozespace_coze_app_faq",
+          "publisher": "ByteDance / Coze",
+          "publishedAt": "2026-05-29"
+        }
+      ],
+      "tags": [
+        "coze",
+        "agent",
+        "扣子"
+      ]
+    },
+    {
+      "id": "anthropic-claude-fable-mythos-5-2026-06-09",
+      "date": "2026-06-09",
+      "dateStatus": "exact",
+      "title": "发布 Claude Fable 5 与 Mythos 5",
+      "summary": "Anthropic 发布 Mythos 级能力模型：Fable 5 对公众开放（高风险网络/生物请求回退到更强防护路径），Mythos 5 面向经核验的网络防御等可信访问。",
+      "category": "model",
+      "company": "Anthropic",
+      "series": "Claude",
+      "product": "Claude Fable 5 / Mythos 5",
+      "eventType": "ga",
+      "sources": [
+        {
+          "title": "Claude Fable 5 and Claude Mythos 5",
+          "url": "https://www.anthropic.com/news/claude-fable-5-mythos-5",
+          "publisher": "Anthropic",
+          "publishedAt": "2026-06-09"
+        }
+      ],
+      "tags": [
+        "claude-5",
+        "fable",
+        "mythos"
+      ],
+      "capabilities": [
+        "chat",
+        "reasoning",
+        "vision"
+      ]
+    },
+    {
+      "id": "anthropic-claude-sonnet-5-2026-06-30",
+      "date": "2026-06-30",
+      "dateStatus": "exact",
+      "title": "发布 Claude Sonnet 5",
+      "summary": "Anthropic 发布 Claude Sonnet 5：定位日常高速主力档，经 Claude 产品与各云平台 API 提供。",
+      "category": "model",
+      "company": "Anthropic",
+      "series": "Claude",
+      "product": "Claude Sonnet 5",
+      "eventType": "ga",
+      "sources": [
+        {
+          "title": "Introducing Claude Sonnet 5",
+          "url": "https://www.anthropic.com/news/claude-sonnet-5",
+          "publisher": "Anthropic",
+          "publishedAt": "2026-06-30"
+        }
+      ],
+      "tags": [
+        "claude-5",
+        "sonnet"
+      ],
+      "capabilities": [
+        "chat",
+        "reasoning",
+        "vision"
+      ]
+    },
+    {
+      "id": "openai-gpt-live-chatgpt-voice-2026-07-08",
+      "date": "2026-07-08",
+      "dateStatus": "exact",
+      "title": "上线新一代语音模型并驱动 ChatGPT Voice",
+      "summary": "OpenAI 发布面向自然人人机语音交互的新一代语音模型（GPT-Live 系列），当日起驱动 ChatGPT Voice 全球体验。",
+      "category": "product",
+      "productSubcategory": "voice",
+      "company": "OpenAI",
+      "series": "ChatGPT",
+      "product": "ChatGPT Voice / GPT-Live",
+      "eventType": "ga",
+      "sources": [
+        {
+          "title": "Introducing GPT-Live",
+          "url": "https://openai.com/index/introducing-gpt-live/",
+          "publisher": "OpenAI",
+          "publishedAt": "2026-07-08"
+        },
+        {
+          "title": "OpenAI Research | Release",
+          "url": "https://openai.com/research/index/release/",
+          "publisher": "OpenAI",
+          "publishedAt": "2026-07-08"
+        }
+      ],
+      "tags": [
+        "gpt-live",
+        "voice",
+        "chatgpt"
+      ]
+    },
+    {
+      "id": "openai-gpt-5-6-2026-07-09",
+      "date": "2026-07-09",
+      "dateStatus": "exact",
+      "title": "正式开放 GPT-5.6 家族（Sol / Terra / Luna）",
+      "summary": "继有限预览后，OpenAI 正式向 ChatGPT、Codex 与 API 开放 GPT-5.6：旗舰 Sol、均衡 Terra 与高性价比 Luna；引入 ultra 多代理加速等能力。",
+      "category": "model",
+      "company": "OpenAI",
+      "series": "GPT",
+      "product": "GPT-5.6",
+      "eventType": "ga",
+      "sources": [
+        {
+          "title": "GPT-5.6: Frontier intelligence that scales with your ambition",
+          "url": "https://openai.com/index/gpt-5-6/",
+          "publisher": "OpenAI",
+          "publishedAt": "2026-07-09"
+        }
+      ],
+      "relatedIds": [
+        "openai-gpt-5-5-2026-04-23"
+      ],
+      "tags": [
+        "gpt-5.6",
+        "sol",
+        "terra",
+        "luna"
+      ],
+      "capabilities": [
+        "chat",
+        "reasoning",
+        "vision"
+      ]
+    },
+    {
+      "id": "anthropic-claude-opus-5-2026-07-24",
+      "date": "2026-07-24",
+      "dateStatus": "exact",
+      "title": "发布 Claude Opus 5",
+      "summary": "Anthropic 发布 Claude Opus 5：面向长程 Agent 编码与知识工作的高能力档，经 Claude 产品与云平台提供。",
+      "category": "model",
+      "company": "Anthropic",
+      "series": "Claude",
+      "product": "Claude Opus 5",
+      "eventType": "ga",
+      "sources": [
+        {
+          "title": "Introducing Claude Opus 5",
+          "url": "https://www.anthropic.com/news/claude-opus-5",
+          "publisher": "Anthropic",
+          "publishedAt": "2026-07-24"
+        }
+      ],
+      "tags": [
+        "claude-5",
+        "opus"
+      ],
+      "capabilities": [
+        "chat",
+        "reasoning",
+        "vision"
+      ]
+    },
+    {
+      "id": "alibaba-qwen3-8-max-2026-08-03",
+      "date": "2026-08-03",
+      "dateStatus": "exact",
+      "title": "发布 Qwen3.8-Max",
+      "summary": "阿里云发布旗舰 Qwen3.8-Max（约 2.4T 总参/95B 激活、百万上下文）：强化长程编码与多模态 Agent，经百炼 Model Studio API 与 QwenWork 开放。",
+      "category": "model",
+      "company": "Alibaba",
+      "series": "Qwen",
+      "product": "Qwen3.8-Max",
+      "eventType": "ga",
+      "sources": [
+        {
+          "title": "Alibaba Unveils Qwen3.8-Max: Its Largest and Most Capable Flagship Model to Date",
+          "url": "https://www.alibabacloud.com/en/press-room/alibaba-unveils-qwen3-8-max?_p_lc=1",
+          "publisher": "Alibaba Cloud",
+          "publishedAt": "2026-08-03"
+        }
+      ],
+      "relatedIds": [
+        "alibaba-qwen3-6-plus-2026-04-02"
+      ],
+      "tags": [
+        "qwen3.8",
+        "max",
+        "moe"
+      ],
+      "capabilities": [
+        "chat",
+        "reasoning",
+        "vision"
+      ]
+    },
+    {
+      "id": "xai-grok-4-6-2026-08-12",
+      "date": "2026-08-12",
+      "dateStatus": "exact",
+      "title": "发布 Grok 4.6",
+      "summary": "xAI 发布 Grok 4.6：官方新闻稿介绍新一代 Grok 模型能力与可用性更新。",
+      "category": "model",
+      "company": "xAI",
+      "series": "Grok",
+      "product": "Grok 4.6",
+      "eventType": "ga",
+      "sources": [
+        {
+          "title": "Introducing Grok 4.6",
+          "url": "https://x.ai/news/grok-4-6",
+          "publisher": "xAI",
+          "publishedAt": "2026-08-12"
+        }
+      ],
+      "tags": [
+        "grok-4.6"
+      ],
+      "capabilities": [
+        "chat",
+        "reasoning"
+      ]
+    },
+    {
+      "id": "anthropic-claude-fable-mythos-5-1-2026-09-01",
+      "date": "2026-09-01",
+      "dateStatus": "exact",
+      "title": "发布 Claude Fable 5.1 与 Mythos 5.1",
+      "summary": "Anthropic 发布 Fable/Mythos 5.1：同一底座、不同防护强度；Fable 5.1 全面可用并下调缓存读价，Mythos 5.1 面向核验后的网络安全与生命科学可信访问。",
+      "category": "model",
+      "company": "Anthropic",
+      "series": "Claude",
+      "product": "Claude Fable 5.1 / Mythos 5.1",
+      "eventType": "ga",
+      "sources": [
+        {
+          "title": "Introducing Claude Fable 5.1 and Claude Mythos 5.1",
+          "url": "https://www.anthropic.com/claude-fable-and-mythos-5-1",
+          "publisher": "Anthropic",
+          "publishedAt": "2026-09-01"
+        }
+      ],
+      "relatedIds": [
+        "anthropic-claude-fable-mythos-5-2026-06-09"
+      ],
+      "tags": [
+        "claude-5.1",
+        "fable",
+        "mythos"
+      ],
+      "capabilities": [
+        "chat",
+        "reasoning",
+        "vision"
+      ]
+    },
+    {
+      "id": "openai-gpt-6-astra-2026-09-03",
+      "date": "2026-09-03",
+      "dateStatus": "exact",
+      "title": "发布 GPT-6 Astra",
+      "summary": "OpenAI 发布 GPT-6 世代旗舰 Astra：在计算机使用、编码、网络安全与科学等评测上刷新纪录，并强调对齐与任务边界；向 ChatGPT 付费档、API、Azure 与 Bedrock 滚动开放。",
+      "category": "model",
+      "company": "OpenAI",
+      "series": "GPT",
+      "product": "GPT-6 Astra",
+      "eventType": "ga",
+      "sources": [
+        {
+          "title": "GPT-6 Astra: A new generation of intelligence",
+          "url": "https://openai.com/index/gpt-6-astra/",
+          "publisher": "OpenAI",
+          "publishedAt": "2026-09-03"
+        }
+      ],
+      "tags": [
+        "gpt-6",
+        "astra"
+      ],
+      "capabilities": [
+        "chat",
+        "reasoning",
+        "vision"
+      ]
+    },
+    {
+      "id": "deepseek-v4-1-flash-2026-09-10",
+      "date": "2026-09-10",
+      "dateStatus": "exact",
+      "title": "发布 DeepSeek-V4.1-Flash",
+      "summary": "DeepSeek 发布 V4.1-Flash：接替 V4-Flash，原生视觉、强化 KV 压缩与效率，经产品与 API（deepseek-flash）提供。",
+      "category": "model",
+      "company": "DeepSeek",
+      "series": "DeepSeek-V4",
+      "product": "DeepSeek-V4.1-Flash",
+      "eventType": "ga",
+      "sources": [
+        {
+          "title": "Introducing DeepSeek-V4.1-Flash: smarter, faster, more efficient.",
+          "url": "https://www.deepseek.com/en/news/deepseek-v4-1-flash/",
+          "publisher": "DeepSeek",
+          "publishedAt": "2026-09-10"
+        }
+      ],
+      "relatedIds": [
+        "deepseek-v4-preview-2026-04-24"
+      ],
+      "tags": [
+        "deepseek-v4.1",
+        "flash",
+        "vision"
+      ],
+      "capabilities": [
+        "chat",
+        "reasoning",
+        "vision"
+      ]
+    },
+    {
+      "id": "openai-gpt-live-1-api-2026-09-10",
+      "date": "2026-09-10",
+      "dateStatus": "exact",
+      "title": "在 API 开放 GPT-Live-1 全双工语音",
+      "summary": "OpenAI 将 GPT-Live-1 带到 API：支持全双工自然语音、更强指令跟随、自定义音色与电话场景，面向开发者构建实时语音体验。",
+      "category": "product",
+      "productSubcategory": "voice",
+      "company": "OpenAI",
+      "series": "GPT-Live",
+      "product": "GPT-Live-1",
+      "eventType": "ga",
+      "sources": [
+        {
+          "title": "Build more natural voice experiences with GPT-Live-1 in the API",
+          "url": "https://openai.com/index/introducing-gpt-live-1-in-the-api/",
+          "publisher": "OpenAI",
+          "publishedAt": "2026-09-10"
+        }
+      ],
+      "relatedIds": [
+        "openai-gpt-live-chatgpt-voice-2026-07-08"
+      ],
+      "tags": [
+        "gpt-live-1",
+        "api",
+        "voice"
+      ]
+    },
+    {
+      "id": "anthropic-claude-opus-5-5-2026-09-22",
+      "date": "2026-09-22",
+      "dateStatus": "exact",
+      "title": "发布 Claude Opus 5.5",
+      "summary": "Anthropic 发布 Claude 5.5 家族首款 Opus 5.5：宣称多数工作接近 Fable 5.1、运行成本显著低于 Opus 5，并加强对齐评测与防护；经各平台以 claude-opus-5-5 提供。",
+      "category": "model",
+      "company": "Anthropic",
+      "series": "Claude",
+      "product": "Claude Opus 5.5",
+      "eventType": "ga",
+      "sources": [
+        {
+          "title": "Introducing Claude Opus 5.5",
+          "url": "https://www.anthropic.com/claude-opus-5-5",
+          "publisher": "Anthropic",
+          "publishedAt": "2026-09-22"
+        }
+      ],
+      "relatedIds": [
+        "anthropic-claude-opus-5-2026-07-24"
+      ],
+      "tags": [
+        "claude-5.5",
+        "opus"
+      ],
+      "capabilities": [
+        "chat",
+        "reasoning",
+        "vision"
+      ]
+    },
+    {
+      "id": "openai-gpt-6-sol-luna-2026-09-22",
+      "date": "2026-09-22",
+      "dateStatus": "exact",
+      "title": "发布 GPT-6 Sol 与 Luna",
+      "summary": "在 Astra 之后，OpenAI 扩展 GPT-6 家族：Sol 与 Luna 将 Astra 一代能力带到更低成本与更高吞吐档位，经 ChatGPT Work、Codex 与 API（gpt-6-sol / gpt-6-luna）提供。",
+      "category": "model",
+      "company": "OpenAI",
+      "series": "GPT",
+      "product": "GPT-6 Sol / Luna",
+      "eventType": "ga",
+      "sources": [
+        {
+          "title": "Introducing GPT-6 Sol and Luna",
+          "url": "https://openai.com/index/introducing-gpt-6-sol-and-luna/",
+          "publisher": "OpenAI",
+          "publishedAt": "2026-09-22"
+        }
+      ],
+      "relatedIds": [
+        "openai-gpt-6-astra-2026-09-03"
+      ],
+      "tags": [
+        "gpt-6",
+        "sol",
+        "luna"
+      ],
+      "capabilities": [
+        "chat",
+        "reasoning",
+        "vision"
+      ]
+    },
+    {
+      "id": "anthropic-claude-sonnet-5-5-2026-09-28",
+      "date": "2026-09-28",
+      "dateStatus": "exact",
+      "title": "发布 Claude Sonnet 5.5",
+      "summary": "Anthropic 发布 Claude Sonnet 5.5：相对 Sonnet 5 大幅提升 Agent 编码与知识工作表现，更快且多数任务更省 token；经各平台以 claude-sonnet-5-5 提供。",
+      "category": "model",
+      "company": "Anthropic",
+      "series": "Claude",
+      "product": "Claude Sonnet 5.5",
+      "eventType": "ga",
+      "sources": [
+        {
+          "title": "Introducing Claude Sonnet 5.5",
+          "url": "https://www.anthropic.com/claude-sonnet-5-5",
+          "publisher": "Anthropic",
+          "publishedAt": "2026-09-28"
+        }
+      ],
+      "relatedIds": [
+        "anthropic-claude-opus-5-5-2026-09-22"
+      ],
+      "tags": [
+        "claude-5.5",
+        "sonnet"
+      ],
+      "capabilities": [
+        "chat",
+        "reasoning",
+        "vision"
+      ]
+    },
+    {
+      "id": "openai-gpt-6-1-sol-2026-09-29",
+      "date": "2026-09-29",
+      "dateStatus": "exact",
+      "title": "发布 GPT-6.1 Sol",
+      "summary": "OpenAI 在 DevDay 发布 GPT-6.1 Sol：宣称接近 Astra 的编码/计算机使用/专业工作表现，标准 API 价约为 Astra 的五分之一；经 ChatGPT Work、Codex 与 API 提供（尚未进 Chat）。",
+      "category": "model",
+      "company": "OpenAI",
+      "series": "GPT",
+      "product": "GPT-6.1 Sol",
+      "eventType": "ga",
+      "sources": [
+        {
+          "title": "Introducing GPT-6.1 Sol",
+          "url": "https://openai.com/index/introducing-gpt-6-1-sol",
+          "publisher": "OpenAI",
+          "publishedAt": "2026-09-29"
+        }
+      ],
+      "relatedIds": [
+        "openai-gpt-6-sol-luna-2026-09-22"
+      ],
+      "tags": [
+        "gpt-6.1",
+        "sol"
+      ],
+      "capabilities": [
+        "chat",
+        "reasoning",
+        "vision"
+      ]
+    },
+    {
+      "id": "anthropic-claude-haiku-5-5-2026-10-07",
+      "date": "2026-10-07",
+      "dateStatus": "exact",
+      "title": "发布 Claude Haiku 5.5",
+      "summary": "Anthropic 发布 Claude Haiku 5.5：面向高并发、低延迟与成本敏感任务的最强小模型档，可作 Opus/Sonnet 5.5 的子代理；经各平台以 claude-haiku-5-5 提供。",
+      "category": "model",
+      "company": "Anthropic",
+      "series": "Claude",
+      "product": "Claude Haiku 5.5",
+      "eventType": "ga",
+      "sources": [
+        {
+          "title": "Introducing Claude Haiku 5.5",
+          "url": "https://www.anthropic.com/claude-haiku-5-5",
+          "publisher": "Anthropic",
+          "publishedAt": "2026-10-07"
+        }
+      ],
+      "relatedIds": [
+        "anthropic-claude-sonnet-5-5-2026-09-28"
+      ],
+      "tags": [
+        "claude-5.5",
+        "haiku"
+      ],
+      "capabilities": [
+        "chat",
+        "reasoning",
+        "vision"
+      ]
+    },
+    {
+      "id": "openai-gpt-6-intelligent-ui-2026-10-07",
+      "date": "2026-10-07",
+      "dateStatus": "exact",
+      "title": "向大众开放 GPT-6 与 Intelligent UI",
+      "summary": "OpenAI 将 GPT-6 带入 ChatGPT Chat，并推出 Intelligent UI：可在对话中组合文字、图表、按钮与可交互组件；付费档当日滚动，免费/Go 次日跟进。",
+      "category": "product",
+      "productSubcategory": "chat",
+      "company": "OpenAI",
+      "series": "ChatGPT",
+      "product": "GPT-6 / Intelligent UI",
+      "eventType": "major_upgrade",
+      "sources": [
+        {
+          "title": "GPT-6 and Intelligent UI for everyone",
+          "url": "https://openai.com/index/gpt-6-for-everyone/",
+          "publisher": "OpenAI",
+          "publishedAt": "2026-10-07"
+        }
+      ],
+      "relatedIds": [
+        "openai-gpt-6-sol-luna-2026-09-22"
+      ],
+      "tags": [
+        "gpt-6",
+        "intelligent-ui",
+        "chatgpt"
+      ]
+    },
+    {
+      "id": "google-gemini-4-argon-2026-10-13",
+      "date": "2026-10-13",
+      "dateStatus": "exact",
+      "title": "正式开放 Gemini 4 Argon",
+      "summary": "Google 面向大众与企业开放 Gemini 4 Argon：定位解决最难的编码、金融、法律、网络安全与科学类长程任务，经 Gemini API、企业与 Gemini 应用等提供。",
+      "category": "model",
+      "company": "Google",
+      "series": "Gemini",
+      "product": "Gemini 4 Argon",
+      "eventType": "ga",
+      "sources": [
+        {
+          "title": "Gemini 4 Argon is now available for everyone",
+          "url": "https://blog.google/innovation-and-ai/models-and-research/gemini-models/introducing-gemini-4-argon/",
+          "publisher": "Google",
+          "publishedAt": "2026-10-13"
+        }
+      ],
+      "relatedIds": [
+        "google-gemini-3-5-2026-05-19"
+      ],
+      "tags": [
+        "gemini-4",
+        "argon"
+      ],
+      "capabilities": [
+        "chat",
+        "reasoning",
+        "vision"
+      ]
+    },
+    {
+      "id": "openai-gpt-6-1-terra-2026-10-26",
+      "date": "2026-10-26",
+      "dateStatus": "exact",
+      "title": "发布 GPT-6.1 Terra",
+      "summary": "OpenAI 发布 GPT-6.1 Terra：强调快速视觉推理与精确计算机使用、更自然写作，并以更低单价面向高并发自动化；经 ChatGPT Work、Codex 与 API（gpt-6.1-terra）提供。",
+      "category": "model",
+      "company": "OpenAI",
+      "series": "GPT",
+      "product": "GPT-6.1 Terra",
+      "eventType": "ga",
+      "sources": [
+        {
+          "title": "Introducing GPT-6.1 Terra",
+          "url": "https://openai.com/index/introducing-gpt-6-1-terra",
+          "publisher": "OpenAI",
+          "publishedAt": "2026-10-26"
+        }
+      ],
+      "relatedIds": [
+        "openai-gpt-6-1-sol-2026-09-29"
+      ],
+      "tags": [
+        "gpt-6.1",
+        "terra",
+        "computer-use"
+      ],
+      "capabilities": [
+        "chat",
+        "reasoning",
+        "vision"
       ]
     }
   ]

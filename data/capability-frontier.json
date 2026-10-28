@@ -1,7 +1,7 @@
 {
   "meta": {
     "name": "能力边界",
-    "version": "0.2.0",
+    "version": "0.3.0",
     "scopeStart": "2022-11",
     "updatedAt": "2026-10-28",
     "locale": "zh-CN"
@@ -221,6 +221,164 @@
             "cli",
             "agent",
             "coding"
+          ]
+        }
+      ]
+    },
+    {
+      "month": "2026-04",
+      "summary": "截止本月末：百万级上下文与更强的端到端软件/电脑工作流进入主力模型；IDE 也开始把多代理并排放进同一工作区。",
+      "new": [
+        {
+          "id": "long-context-million-token-work",
+          "emoji": "📚",
+          "title": "把整仓文档/长报告丢进百万上下文模型，让它跨文件做审计或迁移方案",
+          "detail": "DeepSeek-V4 Preview 等把百万 token 上下文推到可负担档位；仍要核对关键结论。",
+          "enabledBy": [
+            "deepseek-v4-preview-2026-04-24"
+          ],
+          "tags": [
+            "long-context",
+            "audit"
+          ]
+        },
+        {
+          "id": "agentic-computer-work-gpt55",
+          "emoji": "🖥️",
+          "title": "把「跨应用做完一件脏活」交给模型：查资料、改表、点界面、交付文档",
+          "detail": "GPT-5.5 等强化计算机使用与知识工作闭环；适合有监督的多步任务。",
+          "enabledBy": [
+            "openai-gpt-5-5-2026-04-23"
+          ],
+          "tags": [
+            "computer-use",
+            "knowledge-work"
+          ]
+        },
+        {
+          "id": "ide-parallel-agents-window",
+          "emoji": "🪟",
+          "title": "在同一 IDE 工作区并行开多个本地/云端编码代理，边改边看 diff",
+          "detail": "Cursor 3 Agents Window 把多代理并行做成默认工作流。",
+          "enabledBy": [
+            "cursor-3-2026-04-02"
+          ],
+          "tags": [
+            "ide",
+            "agents"
+          ]
+        }
+      ]
+    },
+    {
+      "month": "2026-07",
+      "summary": "截止本月末：语音可以更像真人全双工交谈；开源与闭源都把「长跑 Agent 编码」当成默认卖点。",
+      "new": [
+        {
+          "id": "full-duplex-voice-chat",
+          "emoji": "🎙️",
+          "title": "用全双工语音边说边打断助手，像打电话一样把事办完",
+          "detail": "GPT-Live 驱动的 ChatGPT Voice 把自然打断与实时对话推向大众。",
+          "enabledBy": [
+            "openai-gpt-live-chatgpt-voice-2026-07-08"
+          ],
+          "tags": [
+            "voice",
+            "realtime"
+          ]
+        },
+        {
+          "id": "overnight-agentic-coding",
+          "emoji": "🌙",
+          "title": "夜里丢一个大型重构/迁移给前沿模型，早上起来看可审查的改动栈",
+          "detail": "GPT-5.6 / Claude Opus 5 等把长程 agentic coding 推到更稳的日常用法（仍要 code review）。",
+          "enabledBy": [
+            "openai-gpt-5-6-2026-07-09",
+            "anthropic-claude-opus-5-2026-07-24"
+          ],
+          "tags": [
+            "coding",
+            "agent"
+          ]
+        }
+      ]
+    },
+    {
+      "month": "2026-09",
+      "summary": "截止本月末：新一代旗舰把「代你操作电脑 + 更敢托付」推到新高度；语音能力也进了开发者 API。",
+      "new": [
+        {
+          "id": "delegate-hard-computer-tasks",
+          "emoji": "🤝",
+          "title": "把填表、对账、浏览排查这类烦人电脑活交给更对齐的旗舰模型盯着做",
+          "detail": "GPT-6 Astra 等强调计算机使用与任务边界；生产环境仍建议开自动审核。",
+          "enabledBy": [
+            "openai-gpt-6-astra-2026-09-03"
+          ],
+          "tags": [
+            "computer-use",
+            "delegation"
+          ]
+        },
+        {
+          "id": "build-voice-agents-api",
+          "emoji": "📞",
+          "title": "用语音 API 自己搭客服/助理：能听、能插话、还能接到电话线路",
+          "detail": "GPT-Live-1 进入 API，覆盖全双工与 telephony 场景。",
+          "enabledBy": [
+            "openai-gpt-live-1-api-2026-09-10"
+          ],
+          "tags": [
+            "voice",
+            "api"
+          ]
+        },
+        {
+          "id": "near-frontier-at-lower-cost",
+          "emoji": "💸",
+          "title": "用接近旗舰的模型干复杂活，但按「日常预算」跑批量任务",
+          "detail": "GPT-6.1 Sol / Claude Opus 5.5 等把近旗舰能力压到更低单价。",
+          "enabledBy": [
+            "openai-gpt-6-1-sol-2026-09-29",
+            "anthropic-claude-opus-5-5-2026-09-22"
+          ],
+          "tags": [
+            "cost",
+            "frontier"
+          ]
+        }
+      ]
+    },
+    {
+      "month": "2026-10",
+      "summary": "截止本月末：聊天答案可以自带可点图表与小工具；更快的小模型/视觉计算机使用模型也把自动化成本再压一档。",
+      "new": [
+        {
+          "id": "chat-with-intelligent-ui",
+          "emoji": "🧩",
+          "title": "在聊天里直接拿到可交互界面：对比表、示意图、计算器或小游戏随问随用",
+          "detail": "ChatGPT 的 GPT-6 + Intelligent UI 让回答不再只是纯文字气泡。",
+          "enabledBy": [
+            "openai-gpt-6-intelligent-ui-2026-10-07"
+          ],
+          "tags": [
+            "ui",
+            "chat"
+          ]
+        },
+        {
+          "id": "fast-visual-computer-automation",
+          "emoji": "⚡",
+          "title": "用更便宜更快的视觉+计算机使用模型批量处理发票录入、看图改表一类流水线",
+          "detail": "GPT-6.1 Terra / Claude Haiku 5.5 / Gemini 4 Argon 等把「看得懂界面并动手」推到更实用的价位与速度。",
+          "enabledBy": [
+            "openai-gpt-6-1-terra-2026-10-26",
+            "anthropic-claude-haiku-5-5-2026-10-07",
+            "google-gemini-4-argon-2026-10-13"
+          ],
+          "tags": [
+            "automation",
+            "vision"
           ]
         }
       ]
