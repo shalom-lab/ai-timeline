@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState, type MouseEvent } from 'react'
 import type { Company } from '../types/timeline'
 import type {
   AiToolsData,
@@ -16,6 +16,7 @@ import {
   toolsTabFromHash,
   type ToolsTabId,
 } from '../lib/route'
+import { writeClipboard, ClipboardIcon, CheckIcon } from '../lib/clipboard'
 
 type Props = {
   data: AiToolsData
@@ -145,6 +146,74 @@ function ProductBlock({
   )
 }
 
+/** Plain-text matrix for clipboard: one block per company, cols as lines. */
+export function formatToolsMatrixPlainText(opts: {
+  tabLabel: string
+  columns: ToolColumnDef[]
+  rows: { companyName: string; cells: Partial<Record<ToolColumnId, ToolProduct | ToolProduct[]>> }[]
+}): string {
+  const header = `AI工具 · ${opts.tabLabel}`
+  if (opts.rows.length === 0) return `${header}\n（无匹配）`
+
+  const blocks = opts.rows.map((row) => {
+    const lines: string[] = [row.companyName]
+    for (const col of opts.columns) {
+      const products = asList(row.cells[col.id])
+      if (products.length === 0) continue
+      const cell = products
+        .map((p) => {
+          const price = p.pricing?.trim()
+          return price ? `${p.name} — ${price}` : p.name
+        })
+        .join('；')
+      lines.push(`  ${col.label}：${cell}`)
+    }
+    return lines.join('\n')
+  })
+
+  return [header, ...blocks].join('\n\n')
+}
+
+function ToolsMatrixCopyButton({
+  tabLabel,
+  columns,
+  rows,
+}: {
+  tabLabel: string
+  columns: ToolColumnDef[]
+  rows: { companyName: string; cells: Partial<Record<ToolColumnId, ToolProduct | ToolProduct[]>> }[]
+}) {
+  const [copied, setCopied] = useState(false)
+  const tip =
+    rows.length === 0
+      ? '暂无可复制矩阵'
+      : `复制「${tabLabel}」矩阵（${rows.length} 家公司）`
+
+  const onCopy = useCallback(
+    async (e: MouseEvent) => {
+      e.stopPropagation()
+      if (rows.length === 0) return
+      await writeClipboard(formatToolsMatrixPlainText({ tabLabel, columns, rows }))
+      setCopied(true)
+      window.setTimeout(() => setCopied(false), 1500)
+    },
+    [tabLabel, columns, rows],
+  )
+
+  return (
+    <button
+      type="button"
+      className={`tools-tabs__copy${copied ? ' is-copied' : ''}`}
+      onClick={onCopy}
+      disabled={rows.length === 0}
+      title={copied ? '已复制' : tip}
+      aria-label={copied ? '已复制' : tip}
+    >
+      {copied ? <CheckIcon /> : <ClipboardIcon />}
+    </button>
+  )
+}
+
 function groupForTab(tab: ToolsTabId): ToolColumnGroupDef {
   return (
     TOOL_COLUMN_GROUPS.find((g) => g.id === tab) ?? TOOL_COLUMN_GROUPS[0]
@@ -186,6 +255,17 @@ export default function ToolsMatrix({ data, companies, query }: Props) {
     })
   }, [data.rows, companies, q, activeCols])
 
+  const copyRows = useMemo(
+    () =>
+      rows.map((row) => {
+        const co = resolveCompany(companies, row.companyId)
+        const companyName =
+          row.displayName ?? co?.name ?? row.companyId
+        return { companyName, cells: row.cells }
+      }),
+    [rows, companies],
+  )
+
   const wrapTitle = data.meta.disclaimer
     ? `${data.meta.disclaimer} · v${data.meta.version} · ${data.meta.updatedAt}`
     : `v${data.meta.version} · ${data.meta.updatedAt}`
@@ -211,6 +291,11 @@ export default function ToolsMatrix({ data, companies, query }: Props) {
             <span>{g.label}</span>
           </button>
         ))}
+        <ToolsMatrixCopyButton
+          tabLabel={activeGroup.label}
+          columns={activeCols}
+          rows={copyRows}
+        />
       </nav>
 
       <div className="tools-table-wrap" title={wrapTitle}>

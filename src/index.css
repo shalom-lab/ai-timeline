@@ -1769,6 +1769,43 @@ a {
   z-index: 1;
 }
 
+/* Icon-only copy — right end of 模型|产品 tab row (mirrors board chips-copy) */
+.tools-tabs__copy {
+  margin-left: auto;
+  flex-shrink: 0;
+  align-self: center;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.55rem;
+  height: 1.55rem;
+  padding: 0;
+  border: 1px solid color-mix(in srgb, #0f766e 22%, #e2e8f0);
+  background: #fff;
+  color: var(--muted);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: color 0.12s ease, background 0.12s ease, border-color 0.12s ease;
+  margin-bottom: 0.15rem;
+}
+
+.tools-tabs__copy:hover:not(:disabled) {
+  color: #0f766e;
+  border-color: color-mix(in srgb, #0f766e 45%, #e2e8f0);
+  background: color-mix(in srgb, #0f766e 8%, #fff);
+}
+
+.tools-tabs__copy:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.tools-tabs__copy.is-copied {
+  color: #047857;
+  border-color: #a7f3d0;
+  background: #ecfdf5;
+}
+
 .tools-page__foot {
   margin: 0;
   padding: 0 0.15rem;
