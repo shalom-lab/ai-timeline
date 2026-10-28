@@ -5,11 +5,6 @@ export type Filters = {
   query: string
 }
 
-export type BoardTabItem = {
-  id: string
-  label: string
-}
-
 type Props = {
   meta: TimelineMeta
   filters: Filters
@@ -18,11 +13,6 @@ type Props = {
   page: AppPage
   onNavigate: (page: AppPage) => void
   toolsCount?: number
-  /** Board category tabs (纪年 only). Hidden on tools page. */
-  boardTabs?: readonly BoardTabItem[]
-  boardTabId?: string
-  boardTabCounts?: Record<string, number>
-  onSelectBoardTab?: (id: string) => void
 }
 
 const brandMarkSrc = `${import.meta.env.BASE_URL || '/'}brand/mark.svg`
@@ -35,10 +25,6 @@ export default function Header({
   page,
   onNavigate,
   toolsCount,
-  boardTabs,
-  boardTabId,
-  boardTabCounts,
-  onSelectBoardTab,
 }: Props) {
   const openingBg =
     meta.ui?.openingBg ??
@@ -52,9 +38,6 @@ export default function Header({
     page === 'tools'
       ? `当前可用产品 · ${toolsCount ?? '—'} 家`
       : `自 ${meta.scopeStart} · v${meta.version} · ${eventCount} 条 · 更新 ${meta.updatedAt}`
-
-  const showBoardTabs =
-    page === 'timeline' && boardTabs && boardTabs.length > 0 && onSelectBoardTab
 
   return (
     <header className="app-header">
@@ -98,30 +81,6 @@ export default function Header({
             AI工具
           </button>
         </nav>
-
-        {showBoardTabs ? (
-          <nav className="board-tabs board-tabs--in-header" aria-label="分类切换">
-            {boardTabs!.map((t) => (
-              <button
-                key={t.id}
-                type="button"
-                className={`board-tabs__btn${boardTabId === t.id ? ' is-active' : ''}`}
-                aria-current={boardTabId === t.id ? 'page' : undefined}
-                onClick={() => onSelectBoardTab!(t.id)}
-              >
-                <span>{t.label}</span>
-                <em className="board-tabs__count">
-                  {boardTabCounts?.[t.id] ?? 0}
-                </em>
-              </button>
-            ))}
-          </nav>
-        ) : (
-          <div
-            className="app-header__board-tabs-slot"
-            aria-hidden
-          />
-        )}
 
         <div className="app-header__search-wrap">
           <label className="sr-only" htmlFor="site-search">

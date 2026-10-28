@@ -394,10 +394,6 @@ export default function App() {
         page={page}
         onNavigate={onNavigate}
         toolsCount={aiToolsData.rows.length}
-        boardTabs={[...BOARD_TABS]}
-        boardTabId={activeTab}
-        boardTabCounts={tabCounts}
-        onSelectBoardTab={onSelectTab}
       />
 
       {page === 'tools' ? (
@@ -407,9 +403,25 @@ export default function App() {
           query={filters.query}
         />
       ) : (
-        <div
-          className={`board${boardHasChipHead ? '' : ' board--no-col-head'}`}
-        >
+        <>
+          <nav className="board-tabs" aria-label="分类切换">
+            {BOARD_TABS.map((t) => (
+              <button
+                key={t.id}
+                type="button"
+                className={`board-tabs__btn${activeTab === t.id ? ' is-active' : ''}`}
+                aria-current={activeTab === t.id ? 'page' : undefined}
+                onClick={() => onSelectTab(t.id)}
+              >
+                <span>{t.label}</span>
+                <em className="board-tabs__count">{tabCounts[t.id]}</em>
+              </button>
+            ))}
+          </nav>
+
+          <div
+            className={`board${boardHasChipHead ? '' : ' board--no-col-head'}`}
+          >
           <TimelineRail
             events={railEvents}
             companies={companies}
@@ -472,6 +484,7 @@ export default function App() {
             )}
           </div>
         </div>
+        </>
       )}
     </div>
   )
