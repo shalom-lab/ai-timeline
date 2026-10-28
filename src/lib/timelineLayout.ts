@@ -2,7 +2,7 @@ import type { TimelineEvent } from '../types/timeline'
 
 /** Year marker row height inside the shared canvas (rail + columns). */
 export const YEAR_MARKER_H = 26
-/** Minimum gap between consecutive event centers (card-friendly). */
+/** Minimum gap between consecutive *distinct-date* centers (card-friendly). */
 export const MIN_CENTER_GAP = 156
 /** Extra pixels per calendar day of span (large gaps stretch). */
 export const PX_PER_DAY = 0.42
@@ -42,8 +42,8 @@ function dayOfYear(iso: string): number {
 
 /**
  * Shared date→Y mapping for TimelineRail dots and EventCard vertical centers.
- * Same date → same centerY across the board. Spacing is time-proportional with
- * a readability floor so dense clusters (and tall cards) do not overlap.
+ * Same calendar date → same centerY (one shared row across columns).
+ * Spacing between distinct dates is time-proportional with a readability floor.
  */
 export function buildTimelineLayout(events: TimelineEvent[]): TimelineLayout {
   const sorted = [...events].sort(
@@ -53,58 +53,75 @@ export function buildTimelineLayout(events: TimelineEvent[]): TimelineLayout {
     return { centerY: {}, height: CANVAS_PAD_TOP + CANVAS_PAD_BOTTOM, items: [], years: [] }
   }
 
-  // Per-year day span → ideal local offsets, then stitch years with markers.
-  const byYear = new Map<string, TimelineEvent[]>()
+  // Unique dates in order (same-date events share one slot)
+  const dateOrder: string[] = []
+  const byDate = new Map<string, TimelineEvent[]>()
   for (const e of sorted) {
-    const y = e.date.slice(0, 4)
-    let list = byYear.get(y)
+    let list = byDate.get(e.date)
     if (!list) {
       list = []
-      byYear.set(y, list)
+      byDate.set(e.date, list)
+      dateOrder.push(e.date)
     }
     list.push(e)
   }
 
+  const yearsPresent: string[] = []
+  for (const d of dateOrder) {
+    const y = d.slice(0, 4)
+    if (yearsPresent[yearsPresent.length - 1] !== y) yearsPresent.push(y)
+  }
+
+  // Ideal local offset per date within its year, then stitch with year markers + min gap
   const centerY: Record<string, number> = {}
   const items: LayoutItem[] = []
   const years: LayoutYear[] = []
   let cursor = CANVAS_PAD_TOP
   let prevCenter = -Infinity
+  let prevDate = ''
 
-  for (const [year, list] of byYear) {
-    years.push({ year, top: cursor, count: list.length })
+  for (const year of yearsPresent) {
+    const datesInYear = dateOrder.filter((d) => d.startsWith(year))
+    const count = datesInYear.reduce((n, d) => n + (byDate.get(d)?.length ?? 0), 0)
+    years.push({ year, top: cursor, count })
     cursor += YEAR_MARKER_H
 
-    const days = list.map((e) => dayOfYear(e.date))
+    const days = datesInYear.map((d) => dayOfYear(d))
     const dMin = Math.min(...days)
     const dMax = Math.max(...days)
     const span = Math.max(1, dMax - dMin)
     const spanHeight = Math.max(
-      (list.length - 1) * MIN_CENTER_GAP,
+      (datesInYear.length - 1) * MIN_CENTER_GAP,
       span * PX_PER_DAY,
     )
 
-    for (let i = 0; i < list.length; i++) {
-      const e = list[i]
+    for (let i = 0; i < datesInYear.length; i++) {
+      const date = datesInYear[i]
       const idealLocal =
         dMin === dMax ? 0 : ((days[i] - dMin) / span) * spanHeight
-      // First event in year sits just below the year marker
       let y = cursor + idealLocal
-      // Global min-gap vs previous event (including across years)
-      y = Math.max(y, prevCenter + MIN_CENTER_GAP)
-      // Also vs year marker bottom
+      if (prevDate && date !== prevDate) {
+        y = Math.max(y, prevCenter + MIN_CENTER_GAP)
+      } else if (!prevDate) {
+        y = Math.max(y, cursor + MIN_CENTER_GAP * 0.4)
+      } else {
+        // same date as previous slot — should not happen across loop
+        y = prevCenter
+      }
       y = Math.max(y, cursor + MIN_CENTER_GAP * 0.35)
 
-      centerY[e.id] = y
-      items.push({
-        id: e.id,
-        date: e.date,
-        centerY: y,
-        ym: e.date.slice(0, 7),
-      })
+      for (const e of byDate.get(date)!) {
+        centerY[e.id] = y
+        items.push({
+          id: e.id,
+          date: e.date,
+          centerY: y,
+          ym: e.date.slice(0, 7),
+        })
+      }
       prevCenter = y
+      prevDate = date
     }
-    // Advance cursor past last event in this year for next year marker
     cursor = Math.max(cursor, prevCenter + MIN_CENTER_GAP * 0.45)
   }
 
