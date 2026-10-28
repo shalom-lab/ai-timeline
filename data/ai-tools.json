@@ -1,19 +1,40 @@
 {
   "meta": {
     "name": "AI工具",
-    "version": "0.1.0",
+    "version": "0.1.2",
     "updatedAt": "2026-10-28",
     "locale": "zh-CN",
-    "disclaimer": "仅记录当前可用产品形态与费用提示；价格以官方定价页为准，本表为高层摘要。"
+    "disclaimer": "费用以官方定价页为准；本表仅作高层摘要。"
   },
   "columns": [
-    { "id": "llm", "label": "语言模型" },
-    { "id": "image", "label": "图像模型" },
-    { "id": "video", "label": "视频模型" },
-    { "id": "chat", "label": "对话产品" },
-    { "id": "coding", "label": "编程办公" },
-    { "id": "api", "label": "API调用" },
-    { "id": "agent", "label": "机器人/Agent" }
+    {
+      "id": "llm",
+      "label": "语言模型"
+    },
+    {
+      "id": "image",
+      "label": "图像"
+    },
+    {
+      "id": "video",
+      "label": "视频"
+    },
+    {
+      "id": "chat",
+      "label": "对话"
+    },
+    {
+      "id": "coding",
+      "label": "编程办公"
+    },
+    {
+      "id": "api",
+      "label": "API"
+    },
+    {
+      "id": "agent",
+      "label": "Agent/搭子"
+    }
   ],
   "rows": [
     {
@@ -338,18 +359,34 @@
           "pricing": "火山引擎按量",
           "pricingUrl": "https://www.volcengine.com/product/doubao"
         },
-        "image": {
-          "name": "Doubao 图像 / Seedream",
-          "url": "https://www.doubao.com/",
-          "pricing": "App 限额 + 云端按量",
-          "pricingUrl": "https://www.volcengine.com/product/doubao"
-        },
-        "video": {
-          "name": "Doubao / Seedance 视频",
-          "url": "https://www.doubao.com/",
-          "pricing": "App / 云端套餐",
-          "pricingUrl": "https://www.volcengine.com/product/doubao"
-        },
+        "image": [
+          {
+            "name": "即梦",
+            "url": "https://jimeng.jianying.com/",
+            "pricing": "免费积分 · 基础 ¥79/月 起",
+            "pricingUrl": "https://jimeng.jianying.com/"
+          },
+          {
+            "name": "豆包图像",
+            "url": "https://www.doubao.com/",
+            "pricing": "App 限额 + 云端按量",
+            "pricingUrl": "https://www.volcengine.com/product/doubao"
+          }
+        ],
+        "video": [
+          {
+            "name": "即梦",
+            "url": "https://jimeng.jianying.com/",
+            "pricing": "会员积分制 · 基础 ¥79/月 起",
+            "pricingUrl": "https://jimeng.jianying.com/"
+          },
+          {
+            "name": "Seedance / 豆包视频",
+            "url": "https://www.doubao.com/",
+            "pricing": "App / 云端套餐",
+            "pricingUrl": "https://www.volcengine.com/product/doubao"
+          }
+        ],
         "chat": {
           "name": "豆包",
           "url": "https://www.doubao.com/",
@@ -357,10 +394,10 @@
           "pricingUrl": "https://www.doubao.com/"
         },
         "coding": {
-          "name": "豆包编程 / Trae 相关",
-          "url": "https://www.doubao.com/",
-          "pricing": "免费档 / 订阅视产品",
-          "pricingUrl": "https://www.doubao.com/"
+          "name": "TRAE",
+          "url": "https://www.trae.cn/",
+          "pricing": "免费 · Lite ¥49 · Pro ¥99 · Pro+ ¥239 · Ultra ¥699",
+          "pricingUrl": "https://www.trae.cn/pricing"
         },
         "api": {
           "name": "火山方舟",
@@ -368,12 +405,20 @@
           "pricing": "按量计费",
           "pricingUrl": "https://www.volcengine.com/product/ark"
         },
-        "agent": {
-          "name": "豆包智能体",
-          "url": "https://www.doubao.com/",
-          "pricing": "App 内功能",
-          "pricingUrl": "https://www.doubao.com/"
-        }
+        "agent": [
+          {
+            "name": "扣子 Coze",
+            "url": "https://www.coze.cn/",
+            "pricing": "免费 · 进阶 ¥39.9/月 起",
+            "pricingUrl": "https://docs.coze.cn/coze_pro_premium_package"
+          },
+          {
+            "name": "豆包智能体",
+            "url": "https://www.doubao.com/",
+            "pricing": "App 内功能",
+            "pricingUrl": "https://www.doubao.com/"
+          }
+        ]
       }
     },
     {
@@ -399,9 +444,9 @@
           "pricingUrl": "https://open.bigmodel.cn/pricing"
         },
         "chat": {
-          "name": "智谱清言",
+          "name": "清言 / Z.ai",
           "url": "https://chatglm.cn/",
-          "pricing": "免费 + 会员",
+          "pricing": "免费 + VIP/SVIP",
           "pricingUrl": "https://chatglm.cn/"
         },
         "coding": {
@@ -411,9 +456,9 @@
           "pricingUrl": "https://codegeex.cn/"
         },
         "api": {
-          "name": "BigModel 开放平台",
+          "name": "GLM API",
           "url": "https://open.bigmodel.cn/",
-          "pricing": "按量计费",
+          "pricing": "按 token 计费",
           "pricingUrl": "https://open.bigmodel.cn/pricing"
         },
         "agent": {
@@ -561,6 +606,76 @@
           "url": "https://cloud.tencent.com/product/hunyuan",
           "pricing": "按量计费",
           "pricingUrl": "https://cloud.tencent.com/product/hunyuan"
+        }
+      }
+    },
+    {
+      "companyId": "cognition",
+      "displayName": "Cognition / Devin",
+      "cells": {
+        "coding": {
+          "name": "Devin Desktop（原 Windsurf）",
+          "url": "https://devin.ai/",
+          "pricing": "Free · Pro $20/月 · Max $200/月",
+          "pricingUrl": "https://devin.ai/pricing"
+        },
+        "agent": {
+          "name": "Devin Cloud / Local",
+          "url": "https://devin.ai/",
+          "pricing": "Pro 及以上含云端 Agent",
+          "pricingUrl": "https://devin.ai/pricing"
+        }
+      }
+    },
+    {
+      "companyId": "baidu",
+      "displayName": "Baidu / 文心",
+      "cells": {
+        "llm": {
+          "name": "文心 / ERNIE",
+          "url": "https://cloud.baidu.com/product/model.html",
+          "pricing": "千帆按量",
+          "pricingUrl": "https://cloud.baidu.com/doc/qianfan/s/wmh4sv6ya"
+        },
+        "chat": {
+          "name": "文心一言",
+          "url": "https://yiyan.baidu.com/",
+          "pricing": "对话端免费为主",
+          "pricingUrl": "https://yiyan.baidu.com/"
+        },
+        "api": {
+          "name": "千帆",
+          "url": "https://cloud.baidu.com/product/model.html",
+          "pricing": "按 token 计费",
+          "pricingUrl": "https://cloud.baidu.com/doc/qianfan/s/wmh4sv6ya"
+        }
+      }
+    },
+    {
+      "companyId": "midjourney",
+      "cells": {
+        "image": {
+          "name": "Midjourney",
+          "url": "https://www.midjourney.com/",
+          "pricing": "Basic $10 · Standard $30 · Pro $60 · Mega $120/月",
+          "pricingUrl": "https://docs.midjourney.com/hc/en-us/articles/27870484040333-Comparing-Midjourney-Plans"
+        }
+      }
+    },
+    {
+      "companyId": "perplexity",
+      "cells": {
+        "chat": {
+          "name": "Perplexity",
+          "url": "https://www.perplexity.ai/",
+          "pricing": "免费 · Pro $17/月起（年付） · Max 更高",
+          "pricingUrl": "https://www.perplexity.ai/hub/pricing"
+        },
+        "agent": {
+          "name": "Perplexity Computer",
+          "url": "https://www.perplexity.ai/",
+          "pricing": "Pro / Max 计划内",
+          "pricingUrl": "https://www.perplexity.ai/hub/pricing"
         }
       }
     }

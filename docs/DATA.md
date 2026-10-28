@@ -351,12 +351,12 @@ interface AiToolsData {
 
 type ToolColumnId =
   | 'llm'      // 语言模型
-  | 'image'    // 图像模型
-  | 'video'    // 视频模型
-  | 'chat'     // 对话产品
+  | 'image'    // 图像
+  | 'video'    // 视频
+  | 'chat'     // 对话
   | 'coding'   // 编程办公
-  | 'api'      // API调用
-  | 'agent'    // 机器人/Agent
+  | 'api'      // API
+  | 'agent'    // Agent/搭子
 
 interface ToolProduct {
   name: string
@@ -383,5 +383,5 @@ interface ToolRow {
 
 路径：`docs/DATA.md`（本节）· `src/types/tools.ts` · `data/ai-tools.json`。
 
-相对 v0.7：新增 AI工具页与本数据集；`package.json` `0.8.0`；工具种子 `meta.version` `0.1.0`。
+相对 v0.7：新增 AI工具页与本数据集。`package.json` 现 `0.8.5`；工具数据 `meta.version` 随修订递增。
 

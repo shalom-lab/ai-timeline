@@ -51,6 +51,36 @@ function LetterAvatar({ name, color }: { name: string; color: string }) {
   )
 }
 
+function ProductBlock({ p }: { p: ToolProduct }) {
+  return (
+    <div className="tools-cell__item">
+      <a
+        className="tools-cell__name"
+        href={p.url}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        {p.name}
+      </a>
+      <div className="tools-cell__pricing">
+        {p.pricingUrl ? (
+          <a
+            href={p.pricingUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            title="官方定价"
+          >
+            {p.pricing}
+          </a>
+        ) : (
+          <span>{p.pricing}</span>
+        )}
+      </div>
+      {p.note ? <div className="tools-cell__note">{p.note}</div> : null}
+    </div>
+  )
+}
+
 export default function ToolsMatrix({ data, companies, query }: Props) {
   const q = query.trim().toLowerCase()
 
@@ -73,18 +103,11 @@ export default function ToolsMatrix({ data, companies, query }: Props) {
 
   return (
     <div className="tools-page">
-      <div className="tools-page__intro">
-        <div>
-          <h2 className="tools-page__title">{data.meta.name}</h2>
-          <p className="tools-page__sub">
-            当前可用产品一览 · v{data.meta.version} · 更新 {data.meta.updatedAt} ·{' '}
-            {rows.length}/{data.rows.length} 家公司
-          </p>
-        </div>
-        {data.meta.disclaimer ? (
-          <p className="tools-page__disclaimer">{data.meta.disclaimer}</p>
-        ) : null}
-      </div>
+      <p className="tools-page__hint">
+        {rows.length}/{data.rows.length} 家 · v{data.meta.version} ·{' '}
+        {data.meta.updatedAt}
+        {data.meta.disclaimer ? ` · ${data.meta.disclaimer}` : ''}
+      </p>
 
       <div className="tools-table-wrap">
         <table className="tools-table">
@@ -104,7 +127,7 @@ export default function ToolsMatrix({ data, companies, query }: Props) {
             {rows.length === 0 ? (
               <tr>
                 <td colSpan={activeCols.length + 1} className="tools-table__empty">
-                  无匹配产品，试试清空搜索。
+                  无匹配，清空搜索试试
                 </td>
               </tr>
             ) : (
@@ -144,39 +167,24 @@ export default function ToolsMatrix({ data, companies, query }: Props) {
                       return (
                         <td key={col.id} className="tools-table__cell">
                           {products.length === 0 ? (
-                            <span className="tools-cell__empty">—</span>
+                            <span className="tools-cell__empty" aria-hidden>
+                              ·
+                            </span>
                           ) : (
-                            <ul className="tools-cell__list">
+                            <div
+                              className={
+                                products.length > 1
+                                  ? 'tools-cell__stack'
+                                  : 'tools-cell__stack tools-cell__stack--single'
+                              }
+                            >
                               {products.map((p) => (
-                                <li key={`${p.name}-${p.url}`}>
-                                  <a
-                                    className="tools-cell__name"
-                                    href={p.url}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                  >
-                                    {p.name}
-                                  </a>
-                                  <div className="tools-cell__pricing">
-                                    {p.pricingUrl ? (
-                                      <a
-                                        href={p.pricingUrl}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        title="官方定价"
-                                      >
-                                        {p.pricing}
-                                      </a>
-                                    ) : (
-                                      <span>{p.pricing}</span>
-                                    )}
-                                  </div>
-                                  {p.note ? (
-                                    <div className="tools-cell__note">{p.note}</div>
-                                  ) : null}
-                                </li>
+                                <ProductBlock
+                                  key={`${p.name}-${p.url}`}
+                                  p={p}
+                                />
                               ))}
-                            </ul>
+                            </div>
                           )}
                         </td>
                       )

@@ -79,7 +79,11 @@
       "id": "cognition",
       "name": "Cognition",
       "aliases": [
-        "Cognition Labs"
+        "Cognition Labs",
+        "Windsurf",
+        "Devin",
+        "Devin Desktop",
+        "Cascade"
       ],
       "color": "#6E56CF",
       "colorSoft": "#E4DFF5"
@@ -101,7 +105,9 @@
         "阿里云",
         "Alibaba Cloud",
         "通义",
-        "Qwen"
+        "Qwen",
+        "通义灵码",
+        "Lingma"
       ],
       "color": "#6950EF",
       "colorSoft": "#E8E2FF"
@@ -128,7 +134,14 @@
         "Doubao",
         "Seed",
         "火山引擎",
-        "Volcengine"
+        "Volcengine",
+        "TRAE",
+        "Trae",
+        "扣子",
+        "Coze",
+        "即梦",
+        "Jimeng",
+        "Dreamina"
       ],
       "color": "#1E37FC",
       "colorSoft": "#D6DBFF"
@@ -173,7 +186,10 @@
         "ChatGLM",
         "GLM",
         "清言",
-        "BigModel"
+        "BigModel",
+        "Z.ai",
+        "z.ai",
+        "ZAI"
       ],
       "color": "#2454FF",
       "colorSoft": "#D6E0FF"
@@ -207,6 +223,37 @@
       ],
       "color": "#0EA5E9",
       "colorSoft": "#DFF3FC"
+    },
+    {
+      "id": "baidu",
+      "name": "Baidu",
+      "aliases": [
+        "百度",
+        "文心",
+        "文心一言",
+        "ERNIE",
+        "千帆"
+      ],
+      "color": "#2932E1",
+      "colorSoft": "#D8DBFF"
+    },
+    {
+      "id": "midjourney",
+      "name": "Midjourney",
+      "aliases": [
+        "MJ"
+      ],
+      "color": "#000000",
+      "colorSoft": "#E8E8E8"
+    },
+    {
+      "id": "perplexity",
+      "name": "Perplexity",
+      "aliases": [
+        "Perplexity AI"
+      ],
+      "color": "#20808D",
+      "colorSoft": "#D4EEF1"
     }
   ],
   "events": [

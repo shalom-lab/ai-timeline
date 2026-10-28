@@ -36,7 +36,7 @@ export default function Header({
       : '搜索模型、产品、公司、关键词…'
   const subtitle =
     page === 'tools'
-      ? `产品矩阵 · v${meta.version} · ${toolsCount ?? '—'} 家 · 更新 ${meta.updatedAt}`
+      ? `当前可用产品 · ${toolsCount ?? '—'} 家`
       : `自 ${meta.scopeStart} · v${meta.version} · ${eventCount} 条 · 更新 ${meta.updatedAt}`
 
   return (

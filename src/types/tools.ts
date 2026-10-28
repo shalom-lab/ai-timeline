@@ -8,7 +8,7 @@ export type ToolColumnId =
   | 'chat'
   | 'coding'
   | 'api'
-  | 'agent'
+  | 'agent' // 机器人/Agent/搭子
 
 export interface ToolColumnDef {
   id: ToolColumnId
