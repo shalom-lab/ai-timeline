@@ -1,13 +1,26 @@
 import type { TimelineEvent } from '../types/timeline'
 
 /** Year marker row height inside the shared canvas (rail + columns). */
-export const YEAR_MARKER_H = 26
-/** Minimum gap between consecutive *distinct-date* centers (card-friendly). */
-export const MIN_CENTER_GAP = 156
-/** Extra pixels per calendar day of span (large gaps stretch). */
-export const PX_PER_DAY = 0.42
-export const CANVAS_PAD_TOP = 16
-export const CANVAS_PAD_BOTTOM = 40
+export const YEAR_MARKER_H = 24
+/**
+ * Minimum gap between consecutive *distinct-date* centers.
+ * Sized so ~140px cards with translateY(-50%) clear each other.
+ */
+export const MIN_CENTER_GAP = 148
+/**
+ * Soft cap for large calendar spans — longer Δdays get a bit more room,
+ * but never raw linear voids.
+ */
+export const MAX_CENTER_GAP = 196
+/**
+ * tanh scale (days).
+ * gap(Δ) = MIN + (MAX - MIN) * tanh(Δ / GAP_TAU)
+ */
+export const GAP_TAU = 40
+export const CANVAS_PAD_TOP = 10
+export const CANVAS_PAD_BOTTOM = 32
+/** Space from year marker bottom to first date center in that year. */
+export const AFTER_YEAR_MARKER = 56
 
 export type LayoutItem = {
   id: string
@@ -31,29 +44,42 @@ export type TimelineLayout = {
   years: LayoutYear[]
 }
 
-function dayOfYear(iso: string): number {
+function utcDay(iso: string): number {
   const y = Number(iso.slice(0, 4))
   const m = Number(iso.slice(5, 7))
   const d = Number(iso.slice(8, 10))
-  const start = Date.UTC(y, 0, 0)
-  const cur = Date.UTC(y, m - 1, d)
-  return Math.round((cur - start) / 86_400_000)
+  return Math.round(Date.UTC(y, m - 1, d) / 86_400_000)
 }
 
 /**
- * Shared date→Y mapping for TimelineRail dots and EventCard vertical centers.
- * Same calendar date → same centerY (one shared row across columns).
- * Spacing between distinct dates is time-proportional with a readability floor.
+ * Calendar day-delta → vertical gap (px).
+ *
+ *   gap(Δ) = MIN_CENTER_GAP + (MAX_CENTER_GAP - MIN_CENTER_GAP) * tanh(Δ / GAP_TAU)
+ *
+ * Short gaps stay near MIN (dense months readable); long gaps asymptote to MAX.
+ */
+export function gapForDeltaDays(deltaDays: number): number {
+  const d = Math.max(0, deltaDays)
+  return MIN_CENTER_GAP + (MAX_CENTER_GAP - MIN_CENTER_GAP) * Math.tanh(d / GAP_TAU)
+}
+
+/**
+ * Shared date→Y for TimelineRail dots and EventCard centers.
+ * Same calendar date → same centerY; order chronological; gaps soft-compressed.
  */
 export function buildTimelineLayout(events: TimelineEvent[]): TimelineLayout {
   const sorted = [...events].sort(
     (a, b) => a.date.localeCompare(b.date) || a.id.localeCompare(b.id),
   )
   if (sorted.length === 0) {
-    return { centerY: {}, height: CANVAS_PAD_TOP + CANVAS_PAD_BOTTOM, items: [], years: [] }
+    return {
+      centerY: {},
+      height: CANVAS_PAD_TOP + CANVAS_PAD_BOTTOM,
+      items: [],
+      years: [],
+    }
   }
 
-  // Unique dates in order (same-date events share one slot)
   const dateOrder: string[] = []
   const byDate = new Map<string, TimelineEvent[]>()
   for (const e of sorted) {
@@ -66,65 +92,66 @@ export function buildTimelineLayout(events: TimelineEvent[]): TimelineLayout {
     list.push(e)
   }
 
-  const yearsPresent: string[] = []
+  const yearCounts = new Map<string, number>()
   for (const d of dateOrder) {
     const y = d.slice(0, 4)
-    if (yearsPresent[yearsPresent.length - 1] !== y) yearsPresent.push(y)
+    yearCounts.set(y, (yearCounts.get(y) ?? 0) + byDate.get(d)!.length)
   }
 
-  // Ideal local offset per date within its year, then stitch with year markers + min gap
   const centerY: Record<string, number> = {}
   const items: LayoutItem[] = []
   const years: LayoutYear[] = []
-  let cursor = CANVAS_PAD_TOP
+
   let prevCenter = -Infinity
-  let prevDate = ''
+  let prevDay = 0
+  let prevYear = ''
 
-  for (const year of yearsPresent) {
-    const datesInYear = dateOrder.filter((d) => d.startsWith(year))
-    const count = datesInYear.reduce((n, d) => n + (byDate.get(d)?.length ?? 0), 0)
-    years.push({ year, top: cursor, count })
-    cursor += YEAR_MARKER_H
+  for (const date of dateOrder) {
+    const year = date.slice(0, 4)
+    const day = utcDay(date)
+    let nextY: number
 
-    const days = datesInYear.map((d) => dayOfYear(d))
-    const dMin = Math.min(...days)
-    const dMax = Math.max(...days)
-    const span = Math.max(1, dMax - dMin)
-    const spanHeight = Math.max(
-      (datesInYear.length - 1) * MIN_CENTER_GAP,
-      span * PX_PER_DAY,
-    )
-
-    for (let i = 0; i < datesInYear.length; i++) {
-      const date = datesInYear[i]
-      const idealLocal =
-        dMin === dMax ? 0 : ((days[i] - dMin) / span) * spanHeight
-      let y = cursor + idealLocal
-      if (prevDate && date !== prevDate) {
-        y = Math.max(y, prevCenter + MIN_CENTER_GAP)
-      } else if (!prevDate) {
-        y = Math.max(y, cursor + MIN_CENTER_GAP * 0.4)
-      } else {
-        // same date as previous slot — should not happen across loop
-        y = prevCenter
-      }
-      y = Math.max(y, cursor + MIN_CENTER_GAP * 0.35)
-
-      for (const e of byDate.get(date)!) {
-        centerY[e.id] = y
-        items.push({
-          id: e.id,
-          date: e.date,
-          centerY: y,
-          ym: e.date.slice(0, 7),
-        })
-      }
-      prevCenter = y
-      prevDate = date
+    if (year !== prevYear) {
+      // Place year marker below previous content (or at pad for the first year)
+      const markerTop =
+        prevCenter === -Infinity
+          ? CANVAS_PAD_TOP
+          : prevCenter + gapForDeltaDays(Math.max(1, day - prevDay)) * 0.35
+      years.push({
+        year,
+        top: markerTop,
+        count: yearCounts.get(year) ?? 0,
+      })
+      // First date of this year sits under the marker
+      const underMarker = markerTop + YEAR_MARKER_H + AFTER_YEAR_MARKER
+      const fromPrev =
+        prevCenter === -Infinity
+          ? underMarker
+          : prevCenter + gapForDeltaDays(day - prevDay)
+      // Prefer calendar gap from previous date, but never climb back into the marker
+      nextY = Math.max(underMarker, fromPrev)
+      prevYear = year
+    } else {
+      nextY = prevCenter + gapForDeltaDays(day - prevDay)
     }
-    cursor = Math.max(cursor, prevCenter + MIN_CENTER_GAP * 0.45)
+
+    for (const e of byDate.get(date)!) {
+      centerY[e.id] = nextY
+      items.push({
+        id: e.id,
+        date: e.date,
+        centerY: nextY,
+        ym: e.date.slice(0, 7),
+      })
+    }
+    prevCenter = nextY
+    prevDay = day
   }
 
-  const height = Math.max(prevCenter + CANVAS_PAD_BOTTOM, cursor + CANVAS_PAD_BOTTOM)
-  return { centerY, height, items, years }
+  return {
+    centerY,
+    height: prevCenter + CANVAS_PAD_BOTTOM,
+    items,
+    years,
+  }
 }
