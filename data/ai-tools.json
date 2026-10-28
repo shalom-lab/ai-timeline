@@ -1,7 +1,7 @@
 {
   "meta": {
     "name": "AI工具",
-    "version": "0.1.2",
+    "version": "0.1.3",
     "updatedAt": "2026-10-28",
     "locale": "zh-CN",
     "disclaimer": "费用以官方定价页为准；本表仅作高层摘要。"
@@ -282,21 +282,21 @@
       "companyId": "deepseek",
       "cells": {
         "llm": {
-          "name": "DeepSeek-V / R1",
-          "url": "https://www.deepseek.com/",
-          "pricing": "对话免费档；API 按量（价低）",
+          "name": "DeepSeek-V4.1-Flash",
+          "url": "https://www.deepseek.com/en/news/deepseek-v4-1-flash/",
+          "pricing": "对话免费档；API 按量（deepseek-flash）",
           "pricingUrl": "https://platform.deepseek.com/api-docs/pricing"
         },
         "chat": {
           "name": "DeepSeek Chat",
           "url": "https://chat.deepseek.com/",
-          "pricing": "免费（有限额）",
+          "pricing": "免费（有限额；当前产品默认 V4.1-Flash）",
           "pricingUrl": "https://www.deepseek.com/"
         },
         "api": {
           "name": "DeepSeek API",
           "url": "https://platform.deepseek.com/",
-          "pricing": "按 token 计费",
+          "pricing": "按 token 计费（模型 deepseek-flash）",
           "pricingUrl": "https://platform.deepseek.com/api-docs/pricing"
         }
       }
@@ -606,6 +606,19 @@
           "url": "https://cloud.tencent.com/product/hunyuan",
           "pricing": "按量计费",
           "pricingUrl": "https://cloud.tencent.com/product/hunyuan"
+        },
+        "coding": {
+          "name": "WorkBuddy",
+          "url": "https://cloud.tencent.com/product/workbuddy",
+          "pricing": "体验免费 · 标准 ¥99/月 起；企业旗舰 ¥198/人/月",
+          "pricingUrl": "https://www.workbuddy.cn/docs/workbuddy/Pricing",
+          "note": "与 CodeBuddy 同账号积分共享"
+        },
+        "agent": {
+          "name": "WorkBuddy",
+          "url": "https://cloud.tencent.com/product/workbuddy",
+          "pricing": "体验免费 · 标准 ¥99/月 起；企业旗舰 ¥198/人/月",
+          "pricingUrl": "https://www.workbuddy.cn/docs/workbuddy/Pricing"
         }
       }
     },
