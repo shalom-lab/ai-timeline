@@ -5,9 +5,11 @@ export interface CapabilityScenario {
   id: string
   /** Optional leading emoji for scannability */
   emoji?: string
-  /** Concrete work scenario, e.g. "能跟 ChatGPT 闲聊，顺便让它一步步教我量子力学" */
-  title: string
-  /** Optional one-line how / caveat */
+  /** 之前：没有这项能力时普通人怎么干（短句对比） */
+  before: string
+  /** 之后：有了 AI 后已经能做的具体工作场景 */
+  after: string
+  /** Optional one-line how / caveat under the after side */
   detail?: string
   /** Optional timeline event ids that unlocked this scenario */
   enabledBy?: string[]

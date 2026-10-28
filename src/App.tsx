@@ -76,7 +76,8 @@ function filterFrontierMonths(
       `工作场景`.includes(q)
     const neu = m.new.filter((w) => {
       const hay = [
-        w.title,
+        w.before,
+        w.after,
         w.detail ?? '',
         w.emoji ?? '',
         ...(w.tags ?? []),

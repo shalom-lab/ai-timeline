@@ -309,7 +309,8 @@ function validateScenario(
   if (!s.id || !KEBAB_RE.test(s.id)) push(`${label}: bad scenario id`)
   if (scenarioIds.has(s.id)) push(`${label}: duplicate scenario id (global)`)
   scenarioIds.add(s.id)
-  if (!s.title?.trim()) push(`${label}: empty title`)
+  if (!s.before?.trim()) push(`${label}: empty before`)
+  if (!s.after?.trim()) push(`${label}: empty after`)
   for (const eid of s.enabledBy ?? []) {
     if (!eventIds.has(eid)) {
       push(`${label}: enabledBy missing timeline event ${eid}`)

@@ -324,12 +324,13 @@ interface CapabilityMonth {
 interface CapabilityScenario {
   id: string // global unique kebab（首次出现月登记）
   emoji?: string
-  title: string // 具体工作场景，非产品发布腔
-  detail?: string
+  before: string // 之前：没有这项能力时怎么干（短句）
+  after: string // 之后：有了 AI 后已能做的具体工作场景
+  detail?: string // 可选 how / 注意点
   enabledBy?: string[] // timeline event ids
   tags?: string[]
 }
-// UI：既往已具备 = 本月之前所有 new 的累积（默认折叠）
+// UI：每张卡「之前 → 之后」对比；既往已具备 = 本月之前所有 new 的累积（默认折叠）
 ```
 
 不变式（`npm run validate` 一并校验）：
@@ -340,9 +341,11 @@ interface CapabilityScenario {
 4. 每条 `enabledBy` 若存在，须指向 `timeline.json` 已有 `id`。
 5. 无新增则 **省略该月**，不要写空 `workflows`。
 
-贡献规则：**只追加**新月或新 scenario 到 `new[]`；不要把旧场景再写进后续月的 `new[]`（既往由 UI 折叠展示）。文案用具体工作场景+emoji，避免产品发布腔。
+贡献规则：**只追加**新月或新 scenario 到 `new[]`；不要把旧场景再写进后续月的 `new[]`（既往由 UI 折叠展示）。文案用「之前/之后」对比短句 + emoji，避免产品发布腔；`after` 写具体工作场景。
 
 路径：`docs/DATA.md`（本节）· `src/types/capability.ts` · `data/capability-frontier.json`。
+
+相对 v0.3：场景改为 `before` / `after` 对比字段（原 `title` 迁入 `after`）；UI 用前后对比卡展示能力跃迁。frontier `meta.version` `0.4.0`。
 
 ---
 

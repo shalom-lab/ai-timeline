@@ -1,7 +1,7 @@
 {
   "meta": {
     "name": "能力边界",
-    "version": "0.3.0",
+    "version": "0.4.0",
     "scopeStart": "2022-11",
     "updatedAt": "2026-10-28",
     "locale": "zh-CN"
@@ -14,7 +14,8 @@
         {
           "id": "chat-learn-anything",
           "emoji": "💬",
-          "title": "能跟 ChatGPT 闲聊，顺便让它一步步教我量子力学",
+          "before": "想学难的东西只能啃教材、看网课，卡住了没人即时答",
+          "after": "能跟 ChatGPT 闲聊，顺便让它一步步教我量子力学",
           "detail": "研究预览里用自然语言提问；回答可能有错，重要结论要自己核对。",
           "enabledBy": [
             "openai-chatgpt-research-preview-2022-11-30"
@@ -27,7 +28,8 @@
         {
           "id": "chat-draft-everyday-writing",
           "emoji": "✍️",
-          "title": "让对话助手帮我改邮件、写周报初稿、润色一段自我介绍",
+          "before": "邮件、周报、自我介绍得对着空白页自己硬写",
+          "after": "让对话助手帮我改邮件、写周报初稿、润色一段自我介绍",
           "detail": "把要点丢给它，要一版可读草稿，再自己改到能发出去。",
           "enabledBy": [
             "openai-chatgpt-research-preview-2022-11-30"
@@ -46,7 +48,8 @@
         {
           "id": "chat-as-daily-tool",
           "emoji": "⚡",
-          "title": "高峰时段也能稳定打开对话助手，当成每天随手用的工具",
+          "before": "高峰时段排队进不去，助手只能挑冷门时间用",
+          "after": "高峰时段也能稳定打开对话助手，当成每天随手用的工具",
           "detail": "ChatGPT Plus 优先访问，排队少了，写东西/问问题不必专挑冷门时段。",
           "enabledBy": [
             "openai-chatgpt-plus-2023-02-01"
@@ -59,7 +62,8 @@
         {
           "id": "chat-resume-polish",
           "emoji": "📄",
-          "title": "把旧简历丢给助手，让它按岗位改出几版更像样的表述",
+          "before": "对着空白屏硬凑量化业绩，改简历又慢又空",
+          "after": "把旧简历丢给助手，让它按岗位改出几版更像样的表述",
           "detail": "说明目标岗位和经历要点，要它改结构、补量化、压空话。",
           "enabledBy": [
             "openai-chatgpt-plus-2023-02-01"
@@ -78,7 +82,8 @@
         {
           "id": "chat-hard-reasoning",
           "emoji": "🧠",
-          "title": "用更强对话模型啃复杂分析：拆方案、比选项、写带结构的长回答",
+          "before": "复杂方案拆解、长论证只能自己憋，或约专家聊",
+          "after": "用更强对话模型啃复杂分析：拆方案、比选项、写带结构的长回答",
           "detail": "在 ChatGPT Plus 里切到 GPT-4，适合多步骤说明、论证和较难的写作。",
           "enabledBy": [
             "openai-gpt-4-2023-03-14"
@@ -91,7 +96,8 @@
         {
           "id": "chat-explain-code",
           "emoji": "🧩",
-          "title": "把看不懂的报错/代码贴进去，让它讲人话并给修改思路",
+          "before": "报错堆栈看不懂，只能搜帖或问同事",
+          "after": "把看不懂的报错/代码贴进去，让它讲人话并给修改思路",
           "detail": "适合自学和排查；仍要在自己环境里验证，别盲目复制执行。",
           "enabledBy": [
             "openai-gpt-4-2023-03-14"
@@ -104,7 +110,8 @@
         {
           "id": "cursor-ai-pair",
           "emoji": "🤝",
-          "title": "用 AI 原生编辑器结对：边写边让它提议改动",
+          "before": "写代码靠自己补全和搜答案，对话还得另开浏览器",
+          "after": "用 AI 原生编辑器结对：边写边让它提议改动",
           "detail": "Cursor 等编辑器公开可用后，个人项目可以把对话嵌进写代码的流程里。",
           "enabledBy": [
             "cursor-ide-public-2023-03-14"
@@ -123,7 +130,8 @@
         {
           "id": "chat-image-iterate",
           "emoji": "🖼️",
-          "title": "在聊天里用一句话生成插图，再改几版直到能用",
+          "before": "配图要找图库、找设计师，或自己硬画",
+          "after": "在聊天里用一句话生成插图，再改几版直到能用",
           "detail": "ChatGPT 里调 DALL·E 3：海报示意、幻灯片配图、概念草图都能先出一版。",
           "enabledBy": [
             "openai-dalle-3-2023-09-20"
@@ -142,7 +150,8 @@
         {
           "id": "ide-chat-edit-code",
           "emoji": "💻",
-          "title": "在 IDE 里对着当前文件聊天：生成补丁、解释报错、改一小段逻辑",
+          "before": "编码时切浏览器问助手，再复制粘贴回编辑器",
+          "after": "在 IDE 里对着当前文件聊天：生成补丁、解释报错、改一小段逻辑",
           "detail": "Copilot Chat 等正式可用后，编码时少切浏览器，问题留在编辑器上下文里。",
           "enabledBy": [
             "github-copilot-chat-ga-2024-01-11"
@@ -161,7 +170,8 @@
         {
           "id": "chat-see-image",
           "emoji": "👀",
-          "title": "把截图/照片丢进对话，问「这是什么」「帮我读表上的数」",
+          "before": "截图里的字和表要自己一个个读、手动抄",
+          "after": "把截图/照片丢进对话，问「这是什么」「帮我读表上的数」",
           "detail": "GPT-4o 类多模态：界面报错图、白板、菜单都可以直接问。",
           "enabledBy": [
             "openai-gpt-4o-2024-05-13"
@@ -174,7 +184,8 @@
         {
           "id": "chat-realtime-voice",
           "emoji": "🎙️",
-          "title": "用实时语音跟助手聊：走路时口述问题，听它讲思路",
+          "before": "走路时想问问题只能停下来打字",
+          "after": "用实时语音跟助手聊：走路时口述问题，听它讲思路",
           "detail": "低延迟语音对话，适合头脑风暴和口语练习；重要事实仍要回看文字核对。",
           "enabledBy": [
             "openai-gpt-4o-2024-05-13"
@@ -193,7 +204,8 @@
         {
           "id": "reason-hard-stem",
           "emoji": "🧮",
-          "title": "用「慢思考」推理模型啃难题：竞赛数学、棘手算法、复杂规划",
+          "before": "竞赛数学、棘手算法卡住了只能死磕或等答疑",
+          "after": "用「慢思考」推理模型啃难题：竞赛数学、棘手算法、复杂规划",
           "detail": "o1-preview 等：等久一点，换更稳的推导；日常闲聊仍用更快的模型更划算。",
           "enabledBy": [
             "openai-o1-preview-2024-09-12"
@@ -212,7 +224,8 @@
         {
           "id": "cli-coding-agent",
           "emoji": "🦞",
-          "title": "在终端里派智能体干活：改文件、跑命令、把多步编码任务往前推",
+          "before": "多步改仓任务要自己一条条敲命令、改文件",
+          "after": "在终端里派智能体干活：改文件、跑命令、把多步编码任务往前推",
           "detail": "Claude Code 等研究预览：给仓库上下文下任务；务必审 diff、限权限。",
           "enabledBy": [
             "anthropic-claude-code-research-preview-2025-02-24"
@@ -232,7 +245,8 @@
         {
           "id": "long-context-million-token-work",
           "emoji": "📚",
-          "title": "把整仓文档/长报告丢进百万上下文模型，让它跨文件做审计或迁移方案",
+          "before": "跨文件审计/迁移方案要人肉翻仓、分段贴上下文",
+          "after": "把整仓文档/长报告丢进百万上下文模型，让它跨文件做审计或迁移方案",
           "detail": "DeepSeek-V4 Preview 等把百万 token 上下文推到可负担档位；仍要核对关键结论。",
           "enabledBy": [
             "deepseek-v4-preview-2026-04-24"
@@ -245,7 +259,8 @@
         {
           "id": "agentic-computer-work-gpt55",
           "emoji": "🖥️",
-          "title": "把「跨应用做完一件脏活」交给模型：查资料、改表、点界面、交付文档",
+          "before": "查资料、改表、点界面、交文档要自己跨应用跑完",
+          "after": "把「跨应用做完一件脏活」交给模型：查资料、改表、点界面、交付文档",
           "detail": "GPT-5.5 等强化计算机使用与知识工作闭环；适合有监督的多步任务。",
           "enabledBy": [
             "openai-gpt-5-5-2026-04-23"
@@ -258,7 +273,8 @@
         {
           "id": "ide-parallel-agents-window",
           "emoji": "🪟",
-          "title": "在同一 IDE 工作区并行开多个本地/云端编码代理，边改边看 diff",
+          "before": "一次只能盯一个编码助手，并行任务要自己切窗口调度",
+          "after": "在同一 IDE 工作区并行开多个本地/云端编码代理，边改边看 diff",
           "detail": "Cursor 3 Agents Window 把多代理并行做成默认工作流。",
           "enabledBy": [
             "cursor-3-2026-04-02"
@@ -277,7 +293,8 @@
         {
           "id": "full-duplex-voice-chat",
           "emoji": "🎙️",
-          "title": "用全双工语音边说边打断助手，像打电话一样把事办完",
+          "before": "语音助手得等它说完才能插话，像对讲机",
+          "after": "用全双工语音边说边打断助手，像打电话一样把事办完",
           "detail": "GPT-Live 驱动的 ChatGPT Voice 把自然打断与实时对话推向大众。",
           "enabledBy": [
             "openai-gpt-live-chatgpt-voice-2026-07-08"
@@ -290,7 +307,8 @@
         {
           "id": "overnight-agentic-coding",
           "emoji": "🌙",
-          "title": "夜里丢一个大型重构/迁移给前沿模型，早上起来看可审查的改动栈",
+          "before": "大型重构/迁移只能自己连轴干，一夜干不完",
+          "after": "夜里丢一个大型重构/迁移给前沿模型，早上起来看可审查的改动栈",
           "detail": "GPT-5.6 / Claude Opus 5 等把长程 agentic coding 推到更稳的日常用法（仍要 code review）。",
           "enabledBy": [
             "openai-gpt-5-6-2026-07-09",
@@ -310,7 +328,8 @@
         {
           "id": "delegate-hard-computer-tasks",
           "emoji": "🤝",
-          "title": "把填表、对账、浏览排查这类烦人电脑活交给更对齐的旗舰模型盯着做",
+          "before": "填表、对账、浏览排查这类脏活只能自己点点点",
+          "after": "把填表、对账、浏览排查这类烦人电脑活交给更对齐的旗舰模型盯着做",
           "detail": "GPT-6 Astra 等强调计算机使用与任务边界；生产环境仍建议开自动审核。",
           "enabledBy": [
             "openai-gpt-6-astra-2026-09-03"
@@ -323,7 +342,8 @@
         {
           "id": "build-voice-agents-api",
           "emoji": "📞",
-          "title": "用语音 API 自己搭客服/助理：能听、能插话、还能接到电话线路",
+          "before": "要搭能听能插话的电话客服，得拼一堆语音栈自己搓",
+          "after": "用语音 API 自己搭客服/助理：能听、能插话、还能接到电话线路",
           "detail": "GPT-Live-1 进入 API，覆盖全双工与 telephony 场景。",
           "enabledBy": [
             "openai-gpt-live-1-api-2026-09-10"
@@ -336,7 +356,8 @@
         {
           "id": "near-frontier-at-lower-cost",
           "emoji": "💸",
-          "title": "用接近旗舰的模型干复杂活，但按「日常预算」跑批量任务",
+          "before": "近旗舰能力只能按旗舰价跑，批量任务成本扛不住",
+          "after": "用接近旗舰的模型干复杂活，但按「日常预算」跑批量任务",
           "detail": "GPT-6.1 Sol / Claude Opus 5.5 等把近旗舰能力压到更低单价。",
           "enabledBy": [
             "openai-gpt-6-1-sol-2026-09-29",
@@ -356,7 +377,8 @@
         {
           "id": "chat-with-intelligent-ui",
           "emoji": "🧩",
-          "title": "在聊天里直接拿到可交互界面：对比表、示意图、计算器或小游戏随问随用",
+          "before": "聊天答案只有纯文字气泡，对比表、计算器得另开工具",
+          "after": "在聊天里直接拿到可交互界面：对比表、示意图、计算器或小游戏随问随用",
           "detail": "ChatGPT 的 GPT-6 + Intelligent UI 让回答不再只是纯文字气泡。",
           "enabledBy": [
             "openai-gpt-6-intelligent-ui-2026-10-07"
@@ -369,7 +391,8 @@
         {
           "id": "fast-visual-computer-automation",
           "emoji": "⚡",
-          "title": "用更便宜更快的视觉+计算机使用模型批量处理发票录入、看图改表一类流水线",
+          "before": "发票录入、看图改表靠人工流水线，又贵又慢",
+          "after": "用更便宜更快的视觉+计算机使用模型批量处理发票录入、看图改表一类流水线",
           "detail": "GPT-6.1 Terra / Claude Haiku 5.5 / Gemini 4 Argon 等把「看得懂界面并动手」推到更实用的价位与速度。",
           "enabledBy": [
             "openai-gpt-6-1-terra-2026-10-26",
