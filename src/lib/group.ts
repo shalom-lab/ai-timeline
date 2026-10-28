@@ -2,11 +2,14 @@ import type {
   Category,
   Company,
   ProductSubcategory,
+  ScienceDiscipline,
   TimelineEvent,
 } from '../types/timeline'
 import {
   PRODUCT_SUBCATEGORY_CHIP_ORDER,
   PRODUCT_SUBCATEGORY_LABEL_ZH,
+  SCIENCE_DISCIPLINE_CHIP_ORDER,
+  SCIENCE_DISCIPLINE_LABEL_ZH,
 } from './labels'
 import { resolveCompany } from './company'
 
@@ -20,12 +23,49 @@ function sortByDateAsc(events: TimelineEvent[]): TimelineEvent[] {
   return [...events].sort((a, b) => a.date.localeCompare(b.date))
 }
 
-/** Series chip label for science (and legacy): "GPT系列" style when short family name */
+/** Series chip label (legacy / search); science board no longer groups by series. */
 export function seriesChipLabel(series: string): string {
   if (/系列$/.test(series)) return series
   // Keep multi-word product lines as-is (ChatGPT, Claude Code, …)
   if (/\s/.test(series) || series.length > 12) return series
   return `${series}系列`
+}
+
+/** Tag → discipline fallback when scienceDiscipline is missing. */
+const TAG_DISCIPLINE: { tag: string; disc: ScienceDiscipline }[] = [
+  { tag: 'biology', disc: 'life' },
+  { tag: 'genomics', disc: 'life' },
+  { tag: 'protein', disc: 'life' },
+  { tag: 'protein-design', disc: 'life' },
+  { tag: 'structural-biology', disc: 'life' },
+  { tag: 'alphafold', disc: 'life' },
+  { tag: 'alphagenome', disc: 'life' },
+  { tag: 'antibiotics', disc: 'life' },
+  { tag: 'drug-discovery', disc: 'life' },
+  { tag: 'synthetic-biology', disc: 'life' },
+  { tag: 'phage', disc: 'life' },
+  { tag: 'nobel', disc: 'life' },
+  { tag: 'evo', disc: 'life' },
+  { tag: 'mathematics', disc: 'math' },
+  { tag: 'geometry', disc: 'math' },
+  { tag: 'imo', disc: 'math' },
+  { tag: 'theorem-proving', disc: 'math' },
+  { tag: 'algorithms', disc: 'math' },
+  { tag: 'complexity-theory', disc: 'math' },
+  { tag: 'materials', disc: 'materials' },
+  { tag: 'chemistry', disc: 'materials' },
+  { tag: 'weather', disc: 'earth' },
+  { tag: 'climate', disc: 'earth' },
+  { tag: 'earth-science', disc: 'earth' },
+]
+
+export function resolveScienceDiscipline(e: TimelineEvent): ScienceDiscipline {
+  if (e.scienceDiscipline) return e.scienceDiscipline
+  const tags = e.tags ?? []
+  for (const { tag, disc } of TAG_DISCIPLINE) {
+    if (tags.includes(tag)) return disc
+  }
+  return 'other'
 }
 
 /**
@@ -54,8 +94,11 @@ export function groupKeyForEvent(
     return { key: `company:${name}`, label: name }
   }
   if (category === 'science') {
-    const s = e.series?.trim() || '其他'
-    return { key: `series:${s}`, label: seriesChipLabel(s) }
+    const disc = resolveScienceDiscipline(e)
+    return {
+      key: disc,
+      label: SCIENCE_DISCIPLINE_LABEL_ZH[disc] ?? disc,
+    }
   }
   // other — light theme buckets only when tags clearly apply; else flat
   const tags = e.tags ?? []
@@ -88,6 +131,13 @@ export function buildSubGroups(
   if (category === 'product') {
     const order = new Map(
       PRODUCT_SUBCATEGORY_CHIP_ORDER.map((k, i) => [k as string, i]),
+    )
+    groups.sort(
+      (a, b) => (order.get(a.key) ?? 99) - (order.get(b.key) ?? 99),
+    )
+  } else if (category === 'science') {
+    const order = new Map(
+      SCIENCE_DISCIPLINE_CHIP_ORDER.map((k, i) => [k as string, i]),
     )
     groups.sort(
       (a, b) => (order.get(a.key) ?? 99) - (order.get(b.key) ?? 99),

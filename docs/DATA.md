@@ -98,7 +98,7 @@ interface TimelineData {
 | --- | --- | --- | --- |
 | 1 | `model` | 大模型 | 基础/对话/多模态/文生图·视频等 **foundation model** 权重或 API 型号本身的发布；看板内按 **公司** 分组 |
 | 2 | `product` | 产品 | 面向用户或开发者的产品、客户端、工具、平台能力 |
-| 3 | `science` | 科学 | **AI 在科学领域的发现/突破**：用 AI 攻克（或显著推进）科学难题的可核验节点，如蛋白质结构、材料、药物发现演示、气候/天气模型、数学证明等。**不是**普通消费级产品上线。例：AlphaFold 3。可保留 `ai-for-science` 等 tags |
+| 3 | `science` | 科学 | **AI 在科学领域的发现/突破**：用 AI 攻克（或显著推进）科学难题的可核验节点，如蛋白质结构、材料、药物发现演示、气候/天气模型、数学证明等。**不是**普通消费级产品上线。例：AlphaFold 3。看板内按 **`scienceDiscipline`（学科）** 分组；卡片仍展示公司。可保留 `ai-for-science` 等 tags |
 | 4 | `other` | 其他 | 无法归入以上三类时（如开放协议、工程实践文）；应尽量少用 |
 
 > 一级分类 **没有** 颜色字段；色值只写在 `companies[].color`。
@@ -121,6 +121,20 @@ interface TimelineData {
 | `other_product` | 其他产品 |
 
 说明：编码类工具按形态区分——编辑器内嵌能力用 `ide`，终端代理用 `cli`，端到端软件工程智能体可用 `agent` 或 `dev_platform`（见 DEVELOPMENT 示例）。
+
+#### `scienceDiscipline`（科学二级，`category === 'science'` 时宜填写）
+
+看板「科学」列按 **学科** 分 chips/子列，**不按** `series`（GraphCast系列等）。卡片 header 仍展示 `company`（如 Google DeepMind）。
+
+| 枚举值 | 中文标签 | 覆盖 |
+| --- | --- | --- |
+| `life` | 生命科学 | 医学/基因组/蛋白/抗生素/合成生物等 |
+| `math` | 数学 | 奥数、算法发现、偏数学的理论计科 |
+| `materials` | 材料 | 晶体/材料发现等 |
+| `earth` | 地球科学 | 天气/气候/Aurora/GraphCast 等 |
+| `other` | 其他 | 仅当实在不归类 |
+
+`series` / `product` 可保留供检索与详情；UI 分组键为 `scienceDiscipline`。缺省时实现可从 tags 回退推断，但种子应显式填写。
 
 #### `eventType`（生命周期/动作）
 
@@ -195,6 +209,7 @@ interface Source {
 3. `date` / `publishedAt` / `updatedAt` / `scopeStart` 匹配 `^\d{4}-\d{2}-\d{2}$`。
 4. `sources.length >= 1`，且 `url` 为 `http:` 或 `https:`。
 5. `category === 'product'` 时推荐存在 `productSubcategory`。
+5b. `category === 'science'` 时推荐存在 `scienceDiscipline`（`life` / `math` / `materials` / `earth` / `other`）。
 6. `dateStatus !== 'unverified'`（主数据集）。
 7. `relatedIds` 若存在，须指向同文件内已有 `id`。
 8. 每个 `companies[]` 必须有合法 `#RRGGBB` 的 `color`；`colorSoft` 若存在同为 hex。
@@ -238,6 +253,8 @@ interface Source {
 相对 v0.7.3：`TimelineEvent` 新增可选 `capabilities?: ModelCapability[]`（仅大模型卡片底部能力图标：对话/思考/图像/视频/视觉/语音）；种子按发布事实 best-effort 标注。时间线 `meta.version` `0.7.4`。
 
 相对 v0.10：**移除一级分类 `concept`（概念列整体取消）**。看板四列：大模型 → 产品 → 科学 → 其他。原概念节点迁入 `product`（如 Agent Skills）或 `other`（如 MCP、Agent Harness）。`Category` / 校验 / UI 同步删除 `concept`。时间线 `meta.version` `0.11.0`。
+
+相对 v0.14.1：**科学列分组键改为 `scienceDiscipline`（学科）**，chips 为 生命科学 / 数学 / 材料 / 地球科学 / 其他；不再按 `series`（GraphCast系列等）。`series`/`product` 仍保留；卡片 header 公司展示不变。时间线 `meta.version` `0.14.2`。
 
 能力边界数据集 `0.2.0`：`workflows` → `new[]` 工作场景；UI 累积「既往已具备」默认折叠。
 

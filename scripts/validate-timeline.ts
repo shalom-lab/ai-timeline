@@ -39,6 +39,13 @@ const SUBCATS = new Set([
   'chat',
   'other_product',
 ])
+const SCIENCE_DISCS = new Set([
+  'life',
+  'math',
+  'materials',
+  'earth',
+  'other',
+])
 const EVENT_TYPES = new Set([
   'research_preview',
   'public_beta',
@@ -189,6 +196,12 @@ function validateEvent(
   }
   if (e.productSubcategory && !SUBCATS.has(e.productSubcategory)) {
     push(`${e.id}: bad productSubcategory`)
+  }
+  if (e.category === 'science' && !e.scienceDiscipline) {
+    push(`${e.id}: science events should set scienceDiscipline`)
+  }
+  if (e.scienceDiscipline && !SCIENCE_DISCS.has(e.scienceDiscipline)) {
+    push(`${e.id}: bad scienceDiscipline`)
   }
   if (!e.company?.trim()) push(`${e.id}: empty company`)
   if (!EVENT_TYPES.has(e.eventType)) push(`${e.id}: bad eventType`)

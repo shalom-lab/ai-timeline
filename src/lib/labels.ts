@@ -2,6 +2,7 @@ import type {
   Category,
   EventType,
   ProductSubcategory,
+  ScienceDiscipline,
 } from '../types/timeline'
 
 /** Board column order: 大模型 → 产品 → 科学 → 其他 */
@@ -74,6 +75,23 @@ export const PRODUCT_SUBCATEGORY_CHIP_ORDER: readonly ProductSubcategory[] = [
   'agent',
   'dev_platform',
   'other_product',
+] as const
+
+export const SCIENCE_DISCIPLINE_LABEL_ZH: Record<ScienceDiscipline, string> = {
+  life: '生命科学',
+  math: '数学',
+  materials: '材料',
+  earth: '地球科学',
+  other: '其他',
+}
+
+/** Preferred chip order under 科学 */
+export const SCIENCE_DISCIPLINE_CHIP_ORDER: readonly ScienceDiscipline[] = [
+  'life',
+  'math',
+  'materials',
+  'earth',
+  'other',
 ] as const
 
 export const EVENT_TYPE_LABEL_ZH: Record<EventType, string> = {

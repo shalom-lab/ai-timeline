@@ -17,6 +17,14 @@ export type ProductSubcategory =
   | 'chat'
   | 'other_product'
 
+/** Science column discipline chips (AI-for-science board grouping). */
+export type ScienceDiscipline =
+  | 'life'
+  | 'math'
+  | 'materials'
+  | 'earth'
+  | 'other'
+
 export type EventType =
   | 'research_preview'
   | 'public_beta'
@@ -78,6 +86,11 @@ export interface TimelineEvent {
   category: Category
   /** Required when category === 'product'; optional otherwise. */
   productSubcategory?: ProductSubcategory
+  /**
+   * Required when category === 'science': board chips / sub-columns by discipline
+   * (生命科学 / 数学 / 材料 / 地球科学), not by series.
+   */
+  scienceDiscipline?: ScienceDiscipline
   /** Display name of the company / org (match companies[].name when possible). */
   company: string
   /** Product line / model family, e.g. "ChatGPT", "Claude", "Gemini". */
