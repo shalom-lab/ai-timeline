@@ -1,0 +1,487 @@
+{
+  "meta": {
+    "name": "AI Timeline",
+    "version": "0.1.0",
+    "scopeStart": "2022-11-30",
+    "updatedAt": "2026-10-28",
+    "locale": "zh-CN"
+  },
+  "companies": [
+    { "id": "openai", "name": "OpenAI", "aliases": ["Open AI"] },
+    { "id": "anthropic", "name": "Anthropic" },
+    { "id": "google", "name": "Google", "aliases": ["Google DeepMind", "Google AI", "Alphabet"] },
+    { "id": "meta", "name": "Meta", "aliases": ["Meta AI", "Facebook AI"] },
+    { "id": "microsoft", "name": "Microsoft", "aliases": ["GitHub"] },
+    { "id": "github", "name": "GitHub", "aliases": ["GitHub Next"] },
+    { "id": "cognition", "name": "Cognition", "aliases": ["Cognition Labs"] },
+    { "id": "deepseek", "name": "DeepSeek", "aliases": ["深度求索"] }
+  ],
+  "events": [
+    {
+      "id": "openai-chatgpt-research-preview-2022-11-30",
+      "date": "2022-11-30",
+      "dateStatus": "exact",
+      "title": "OpenAI 发布 ChatGPT 研究预览",
+      "summary": "OpenAI 以研究预览形式向公众开放对话式模型 ChatGPT，免费试用；该日成为本时间线的起点。",
+      "category": "product",
+      "productSubcategory": "chat",
+      "company": "OpenAI",
+      "series": "ChatGPT",
+      "product": "ChatGPT",
+      "eventType": "research_preview",
+      "sources": [
+        {
+          "title": "Introducing ChatGPT",
+          "url": "https://openai.com/index/chatgpt/",
+          "publisher": "OpenAI",
+          "publishedAt": "2022-11-30"
+        }
+      ],
+      "tags": ["chatgpt", "scope-start", "conversational-ai"]
+    },
+    {
+      "id": "openai-chatgpt-plus-2023-02-01",
+      "date": "2023-02-01",
+      "dateStatus": "exact",
+      "title": "OpenAI 推出 ChatGPT Plus",
+      "summary": "OpenAI 推出每月 20 美元的 ChatGPT Plus 订阅，提供高峰时段优先访问、更快响应与新功能优先体验。",
+      "category": "product",
+      "productSubcategory": "chat",
+      "company": "OpenAI",
+      "series": "ChatGPT",
+      "product": "ChatGPT Plus",
+      "eventType": "ga",
+      "sources": [
+        {
+          "title": "Introducing ChatGPT Plus",
+          "url": "https://openai.com/index/chatgpt-plus/",
+          "publisher": "OpenAI",
+          "publishedAt": "2023-02-01"
+        }
+      ],
+      "relatedIds": ["openai-chatgpt-research-preview-2022-11-30"],
+      "tags": ["chatgpt", "subscription"]
+    },
+    {
+      "id": "openai-gpt-4-2023-03-14",
+      "date": "2023-03-14",
+      "dateStatus": "exact",
+      "title": "OpenAI 发布 GPT-4",
+      "summary": "OpenAI 发布多模态大模型 GPT-4；文本能力随即通过 ChatGPT Plus 与 API 开放，图像输入能力先以合作伙伴预览形式推出。",
+      "category": "model",
+      "company": "OpenAI",
+      "series": "GPT",
+      "product": "GPT-4",
+      "eventType": "first_announce",
+      "sources": [
+        {
+          "title": "GPT-4",
+          "url": "https://openai.com/index/gpt-4-research/",
+          "publisher": "OpenAI",
+          "publishedAt": "2023-03-14"
+        }
+      ],
+      "relatedIds": ["openai-chatgpt-plus-2023-02-01"],
+      "tags": ["gpt-4", "multimodal"]
+    },
+    {
+      "id": "anthropic-claude-2-public-beta-2023-07-11",
+      "date": "2023-07-11",
+      "dateStatus": "exact",
+      "title": "Anthropic 发布 Claude 2 并开放 claude.ai 公测",
+      "summary": "Anthropic 发布 Claude 2，同步推出面向公众的 beta 网站 claude.ai（起初面向美英用户），并提供商业 API。",
+      "category": "product",
+      "productSubcategory": "chat",
+      "company": "Anthropic",
+      "series": "Claude",
+      "product": "Claude 2",
+      "eventType": "public_beta",
+      "sources": [
+        {
+          "title": "Claude 2",
+          "url": "https://www.anthropic.com/news/claude-2",
+          "publisher": "Anthropic",
+          "publishedAt": "2023-07-11"
+        }
+      ],
+      "tags": ["claude", "claude-ai"]
+    },
+    {
+      "id": "meta-llama-2-open-source-2023-07-18",
+      "date": "2023-07-18",
+      "dateStatus": "exact",
+      "title": "Meta 开源 Llama 2",
+      "summary": "Meta 发布 Llama 2 预训练与微调聊天模型权重，面向研究与商业用途免费开放，并与 Microsoft 合作在 Azure 等渠道提供。",
+      "category": "model",
+      "company": "Meta",
+      "series": "Llama",
+      "product": "Llama 2",
+      "eventType": "open_source",
+      "sources": [
+        {
+          "title": "Meta and Microsoft Introduce the Next Generation of Llama",
+          "url": "https://ai.meta.com/blog/llama-2/",
+          "publisher": "Meta AI",
+          "publishedAt": "2023-07-18"
+        }
+      ],
+      "tags": ["llama", "open-weights"]
+    },
+    {
+      "id": "openai-dalle-3-2023-09-20",
+      "date": "2023-09-20",
+      "dateStatus": "exact",
+      "title": "OpenAI 发布 DALL·E 3",
+      "summary": "OpenAI 发布文生图模型 DALL·E 3，并宣布将原生集成进 ChatGPT；研究预览阶段计划随后向 Plus / Enterprise 用户开放。",
+      "category": "product",
+      "productSubcategory": "image",
+      "company": "OpenAI",
+      "series": "DALL·E",
+      "product": "DALL·E 3",
+      "eventType": "research_preview",
+      "sources": [
+        {
+          "title": "DALL·E 3",
+          "url": "https://openai.com/index/dall-e-3/",
+          "publisher": "OpenAI",
+          "publishedAt": "2023-09-20"
+        }
+      ],
+      "relatedIds": ["openai-chatgpt-plus-2023-02-01"],
+      "tags": ["image-generation", "dalle"]
+    },
+    {
+      "id": "google-gemini-first-announce-2023-12-06",
+      "date": "2023-12-06",
+      "dateStatus": "exact",
+      "title": "Google 发布 Gemini 模型家族",
+      "summary": "Google 与 Google DeepMind 发布原生多模态模型 Gemini 1.0（Ultra / Pro / Nano）；Bard 开始使用微调版 Gemini Pro。",
+      "category": "model",
+      "company": "Google",
+      "series": "Gemini",
+      "product": "Gemini 1.0",
+      "eventType": "first_announce",
+      "sources": [
+        {
+          "title": "Introducing Gemini: our largest and most capable AI model",
+          "url": "https://blog.google/technology/ai/google-gemini-ai/",
+          "publisher": "Google",
+          "publishedAt": "2023-12-06"
+        }
+      ],
+      "tags": ["gemini", "multimodal"]
+    },
+    {
+      "id": "github-copilot-chat-ga-2024-01-11",
+      "date": "2024-01-11",
+      "dateStatus": "exact",
+      "title": "GitHub Copilot Chat 对个人与组织正式可用",
+      "summary": "GitHub 宣布 Copilot Chat 在 Visual Studio Code 与 Visual Studio 中正式可用（GA），并随 Copilot 方案提供给个人与组织用户。",
+      "category": "product",
+      "productSubcategory": "ide",
+      "company": "GitHub",
+      "series": "GitHub Copilot",
+      "product": "GitHub Copilot Chat",
+      "eventType": "ga",
+      "sources": [
+        {
+          "title": "GitHub Copilot Chat now generally available for organizations and individuals",
+          "url": "https://github.blog/changelog/2024-01-11-github-copilot-chat-now-generally-available-for-organizations-and-individuals/",
+          "publisher": "GitHub",
+          "publishedAt": "2024-01-11"
+        }
+      ],
+      "tags": ["copilot", "ide", "coding"]
+    },
+    {
+      "id": "google-bard-gemini-rename-2024-02-08",
+      "date": "2024-02-08",
+      "dateStatus": "exact",
+      "title": "Google 将 Bard 更名为 Gemini",
+      "summary": "Google 将对话产品 Bard 更名为 Gemini，并推出搭载 Ultra 1.0 的 Gemini Advanced 与移动应用。",
+      "category": "product",
+      "productSubcategory": "chat",
+      "company": "Google",
+      "series": "Gemini",
+      "product": "Gemini (app)",
+      "eventType": "rename_rebrand",
+      "sources": [
+        {
+          "title": "Bard becomes Gemini: Try Ultra 1.0 and a new mobile app today",
+          "url": "https://blog.google/products-and-platforms/products/gemini/bard-gemini-advanced-app/",
+          "publisher": "Google",
+          "publishedAt": "2024-02-08"
+        }
+      ],
+      "relatedIds": ["google-gemini-first-announce-2023-12-06"],
+      "tags": ["bard", "gemini", "rebrand"]
+    },
+    {
+      "id": "openai-sora-first-announce-2024-02-15",
+      "date": "2024-02-15",
+      "dateStatus": "exact",
+      "title": "OpenAI 首次公布文生视频模型 Sora",
+      "summary": "OpenAI 首次公布文生视频模型 Sora，展示最长约一分钟的视频生成能力；当时尚未向公众广泛开放使用。",
+      "category": "product",
+      "productSubcategory": "video",
+      "company": "OpenAI",
+      "series": "Sora",
+      "product": "Sora",
+      "eventType": "first_announce",
+      "sources": [
+        {
+          "title": "Sora: Creating video from text",
+          "url": "https://openai.com/index/sora/",
+          "publisher": "OpenAI",
+          "publishedAt": "2024-02-15"
+        }
+      ],
+      "tags": ["video-generation", "sora"]
+    },
+    {
+      "id": "anthropic-claude-3-family-2024-03-04",
+      "date": "2024-03-04",
+      "dateStatus": "exact",
+      "title": "Anthropic 发布 Claude 3 家族（Opus / Sonnet / Haiku）",
+      "summary": "Anthropic 发布 Claude 3 三代模型 Opus、Sonnet、Haiku，强调智能、速度与成本分层；Opus 与 Sonnet 随即通过 API 等渠道提供。",
+      "category": "model",
+      "company": "Anthropic",
+      "series": "Claude",
+      "product": "Claude 3",
+      "eventType": "first_announce",
+      "sources": [
+        {
+          "title": "Introducing the next generation of Claude",
+          "url": "https://www.anthropic.com/news/claude-3-family",
+          "publisher": "Anthropic",
+          "publishedAt": "2024-03-04"
+        }
+      ],
+      "relatedIds": ["anthropic-claude-2-public-beta-2023-07-11"],
+      "tags": ["claude-3", "opus", "sonnet", "haiku"]
+    },
+    {
+      "id": "cognition-devin-first-announce-2024-03-12",
+      "date": "2024-03-12",
+      "dateStatus": "exact",
+      "title": "Cognition 首次公布 AI 软件工程师 Devin",
+      "summary": "Cognition 公布自主软件工程智能体 Devin，可在沙箱中使用 shell、编辑器与浏览器完成复杂工程任务；当时以早鸟候补形式开放。",
+      "category": "product",
+      "productSubcategory": "agent",
+      "company": "Cognition",
+      "series": "Devin",
+      "product": "Devin",
+      "eventType": "first_announce",
+      "sources": [
+        {
+          "title": "Introducing Devin, the first AI software engineer",
+          "url": "https://cognition.com/blog/introducing-devin",
+          "publisher": "Cognition",
+          "publishedAt": "2024-03-12"
+        }
+      ],
+      "tags": ["agent", "coding", "swe-bench"]
+    },
+    {
+      "id": "meta-llama-3-open-source-2024-04-18",
+      "date": "2024-04-18",
+      "dateStatus": "exact",
+      "title": "Meta 开源 Llama 3（8B / 70B）",
+      "summary": "Meta 发布 Llama 3 的 8B 与 70B 预训练及指令微调模型，继续以开放权重方式面向社区与商业用途提供。",
+      "category": "model",
+      "company": "Meta",
+      "series": "Llama",
+      "product": "Llama 3",
+      "eventType": "open_source",
+      "sources": [
+        {
+          "title": "Introducing Meta Llama 3: The most capable openly available LLM to date",
+          "url": "https://ai.meta.com/blog/meta-llama-3/",
+          "publisher": "Meta AI",
+          "publishedAt": "2024-04-18"
+        }
+      ],
+      "relatedIds": ["meta-llama-2-open-source-2023-07-18"],
+      "tags": ["llama", "open-weights"]
+    },
+    {
+      "id": "github-copilot-workspace-tech-preview-2024-04-29",
+      "date": "2024-04-29",
+      "dateStatus": "exact",
+      "title": "GitHub 发布 Copilot Workspace 技术预览",
+      "summary": "GitHub 推出 Copilot Workspace 技术预览：以自然语言驱动从议题到计划、实现、测试与运行的 Copilot 原生开发环境。",
+      "category": "product",
+      "productSubcategory": "dev_platform",
+      "company": "GitHub",
+      "series": "GitHub Copilot",
+      "product": "Copilot Workspace",
+      "eventType": "research_preview",
+      "sources": [
+        {
+          "title": "GitHub Copilot Workspace: Welcome to the Copilot-native developer environment",
+          "url": "https://github.blog/news-insights/product-news/github-copilot-workspace/",
+          "publisher": "GitHub",
+          "publishedAt": "2024-04-29"
+        }
+      ],
+      "relatedIds": ["github-copilot-chat-ga-2024-01-11"],
+      "tags": ["copilot", "agentic-coding", "workspace"]
+    },
+    {
+      "id": "openai-gpt-4o-2024-05-13",
+      "date": "2024-05-13",
+      "dateStatus": "exact",
+      "title": "OpenAI 发布 GPT-4o",
+      "summary": "OpenAI 发布旗舰多模态模型 GPT-4o（omni），可实时跨文本、音频与视觉推理；文本与视觉能力随即通过 ChatGPT 与 API 提供。",
+      "category": "model",
+      "company": "OpenAI",
+      "series": "GPT",
+      "product": "GPT-4o",
+      "eventType": "first_announce",
+      "sources": [
+        {
+          "title": "Hello GPT-4o",
+          "url": "https://openai.com/index/hello-gpt-4o/",
+          "publisher": "OpenAI",
+          "publishedAt": "2024-05-13"
+        }
+      ],
+      "relatedIds": ["openai-gpt-4-2023-03-14"],
+      "tags": ["gpt-4o", "multimodal"]
+    },
+    {
+      "id": "anthropic-claude-3-5-sonnet-artifacts-2024-06-21",
+      "date": "2024-06-21",
+      "dateStatus": "exact",
+      "title": "Anthropic 发布 Claude 3.5 Sonnet 与 Artifacts",
+      "summary": "Anthropic 发布 Claude 3.5 Sonnet，并在 claude.ai 引入 Artifacts 预览：在对话旁侧窗口实时查看与编辑代码、文档与设计稿。",
+      "category": "product",
+      "productSubcategory": "work_assistant",
+      "company": "Anthropic",
+      "series": "Claude",
+      "product": "Claude 3.5 Sonnet / Artifacts",
+      "eventType": "major_upgrade",
+      "sources": [
+        {
+          "title": "Introducing Claude 3.5 Sonnet",
+          "url": "https://www.anthropic.com/news/claude-3-5-sonnet",
+          "publisher": "Anthropic",
+          "publishedAt": "2024-06-21"
+        }
+      ],
+      "relatedIds": ["anthropic-claude-3-family-2024-03-04"],
+      "tags": ["claude-3.5", "artifacts", "coding"]
+    },
+    {
+      "id": "openai-o1-preview-2024-09-12",
+      "date": "2024-09-12",
+      "dateStatus": "exact",
+      "title": "OpenAI 发布 o1-preview 推理模型系列",
+      "summary": "OpenAI 发布专注复杂推理的 o1-preview 与 o1-mini，面向 ChatGPT Plus/Team 与高阶 API 用户，以更长「思考」时间提升科学、数学与编程表现。",
+      "category": "model",
+      "company": "OpenAI",
+      "series": "o1",
+      "product": "o1-preview",
+      "eventType": "research_preview",
+      "sources": [
+        {
+          "title": "Introducing OpenAI o1-preview",
+          "url": "https://openai.com/index/introducing-openai-o1-preview/",
+          "publisher": "OpenAI",
+          "publishedAt": "2024-09-12"
+        }
+      ],
+      "tags": ["reasoning", "o1"]
+    },
+    {
+      "id": "deepseek-r1-open-source-2025-01-20",
+      "date": "2025-01-20",
+      "dateStatus": "exact",
+      "title": "DeepSeek 开源 DeepSeek-R1 推理模型",
+      "summary": "深度求索发布 DeepSeek-R1，开源模型权重、技术报告与蒸馏小模型（MIT 许可），宣称在数学、代码与推理任务上对标 OpenAI o1。",
+      "category": "model",
+      "company": "DeepSeek",
+      "series": "DeepSeek-R1",
+      "product": "DeepSeek-R1",
+      "eventType": "open_source",
+      "sources": [
+        {
+          "title": "DeepSeek-R1 Release",
+          "url": "https://www.deepseek.com/en/news/deepseek-r1/",
+          "publisher": "DeepSeek",
+          "publishedAt": "2025-01-20"
+        }
+      ],
+      "relatedIds": ["openai-o1-preview-2024-09-12"],
+      "tags": ["reasoning", "open-weights", "r1"]
+    },
+    {
+      "id": "openai-operator-research-preview-2025-01-23",
+      "date": "2025-01-23",
+      "dateStatus": "exact",
+      "title": "OpenAI 发布 Operator 研究预览",
+      "summary": "OpenAI 以研究预览形式向美国 Pro 用户开放 Operator：可操控自有浏览器完成填表、下单等网页任务的智能体。",
+      "category": "product",
+      "productSubcategory": "agent",
+      "company": "OpenAI",
+      "series": "Operator",
+      "product": "Operator",
+      "eventType": "research_preview",
+      "sources": [
+        {
+          "title": "Introducing Operator",
+          "url": "https://openai.com/index/introducing-operator/",
+          "publisher": "OpenAI",
+          "publishedAt": "2025-01-23"
+        }
+      ],
+      "tags": ["agent", "browser-use", "cua"]
+    },
+    {
+      "id": "anthropic-claude-code-research-preview-2025-02-24",
+      "date": "2025-02-24",
+      "dateStatus": "exact",
+      "title": "Anthropic 发布 Claude Code 研究预览",
+      "summary": "Anthropic 在发布 Claude 3.7 Sonnet 的同时，以有限研究预览形式推出终端智能体编码工具 Claude Code，可在用户监督下读写代码、跑测试并提交推送。",
+      "category": "product",
+      "productSubcategory": "cli",
+      "company": "Anthropic",
+      "series": "Claude Code",
+      "product": "Claude Code",
+      "eventType": "research_preview",
+      "sources": [
+        {
+          "title": "Claude 3.7 Sonnet and Claude Code",
+          "url": "https://www.anthropic.com/news/claude-3-7-sonnet",
+          "publisher": "Anthropic",
+          "publishedAt": "2025-02-24"
+        }
+      ],
+      "relatedIds": ["anthropic-claude-3-5-sonnet-artifacts-2024-06-21"],
+      "tags": ["cli", "agentic-coding", "claude-code"]
+    },
+    {
+      "id": "google-gemini-cli-open-source-2025-06-25",
+      "date": "2025-06-25",
+      "dateStatus": "exact",
+      "title": "Google 开源发布 Gemini CLI",
+      "summary": "Google 推出开源（Apache 2.0）终端 AI 智能体 Gemini CLI，将 Gemini 接入命令行，支持编码、检索增强与 MCP 扩展；个人账号可免费获得较高用量额度。",
+      "category": "product",
+      "productSubcategory": "cli",
+      "company": "Google",
+      "series": "Gemini",
+      "product": "Gemini CLI",
+      "eventType": "open_source",
+      "sources": [
+        {
+          "title": "Gemini CLI: your open-source AI agent",
+          "url": "https://blog.google/innovation-and-ai/technology/developers-tools/introducing-gemini-cli-open-source-ai-agent/",
+          "publisher": "Google",
+          "publishedAt": "2025-06-25"
+        }
+      ],
+      "relatedIds": ["anthropic-claude-code-research-preview-2025-02-24"],
+      "tags": ["cli", "agentic-coding", "open-source", "mcp"]
+    }
+  ]
+}
