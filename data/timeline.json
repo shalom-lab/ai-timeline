@@ -1,7 +1,7 @@
 {
   "meta": {
     "name": "AI纪年",
-    "version": "0.7.1",
+    "version": "0.7.2",
     "scopeStart": "2022-11-30",
     "updatedAt": "2026-10-28",
     "locale": "zh-CN",
@@ -163,6 +163,50 @@
       ],
       "color": "#1A73E8",
       "colorSoft": "#D2E3FC"
+    },
+    {
+      "id": "zhipu",
+      "name": "Zhipu AI",
+      "aliases": [
+        "智谱",
+        "智谱AI",
+        "ChatGLM",
+        "GLM",
+        "清言",
+        "BigModel"
+      ],
+      "color": "#2454FF",
+      "colorSoft": "#D6E0FF"
+    },
+    {
+      "id": "cursor",
+      "name": "Cursor",
+      "aliases": [
+        "Anysphere",
+        "Cursor.sh"
+      ],
+      "color": "#7C3AED",
+      "colorSoft": "#EDE4FF"
+    },
+    {
+      "id": "openclaw",
+      "name": "OpenClaw",
+      "aliases": [
+        "Clawd",
+        "Moltbot",
+        "小龙虾"
+      ],
+      "color": "#E11D48",
+      "colorSoft": "#FFE4EA"
+    },
+    {
+      "id": "qoder",
+      "name": "Qoder",
+      "aliases": [
+        "QoderWork"
+      ],
+      "color": "#0EA5E9",
+      "colorSoft": "#DFF3FC"
     }
   ],
   "events": [
@@ -248,6 +292,32 @@
       ]
     },
     {
+      "id": "cursor-ide-public-2023-03-14",
+      "date": "2023-03-14",
+      "dateStatus": "exact",
+      "title": "Cursor AI 编辑器公开发布（v0.0.37）",
+      "summary": "Anysphere 发布 Cursor v0.0.37：面向 Windows/Linux 的 AI 代码编辑器公开迭代，定位为与 AI 结对编程的 IDE。",
+      "category": "product",
+      "productSubcategory": "ide",
+      "company": "Cursor",
+      "series": "Cursor",
+      "product": "Cursor",
+      "eventType": "public_beta",
+      "sources": [
+        {
+          "title": "v0.0.37 (2023-03-14)",
+          "url": "https://cursor.com/changelog/0-0-37",
+          "publisher": "Cursor",
+          "publishedAt": "2023-03-14"
+        }
+      ],
+      "tags": [
+        "ide",
+        "coding",
+        "cursor"
+      ]
+    },
+    {
       "id": "openai-gpt-4-2023-03-14",
       "date": "2023-03-14",
       "dateStatus": "exact",
@@ -272,6 +342,38 @@
       "tags": [
         "gpt-4",
         "multimodal"
+      ]
+    },
+    {
+      "id": "zhipu-chatglm-6b-open-source-2023-03-14",
+      "date": "2023-03-14",
+      "dateStatus": "exact",
+      "title": "智谱开源 ChatGLM-6B",
+      "summary": "智谱 / THUDM 开源双语对话模型 ChatGLM-6B（约 62 亿参数），可在消费级显卡本地部署，与 chatglm.cn 对话产品同期推进。",
+      "category": "model",
+      "company": "Zhipu AI",
+      "series": "ChatGLM",
+      "product": "ChatGLM-6B",
+      "eventType": "open_source",
+      "sources": [
+        {
+          "title": "THUDM/ChatGLM-6B",
+          "url": "https://github.com/THUDM/ChatGLM-6B",
+          "publisher": "THUDM / Zhipu AI",
+          "publishedAt": "2023-03-14"
+        },
+        {
+          "title": "ChatGLM：千亿基座的对话模型启动内测，单卡版模型已全面开源",
+          "url": "https://news.qq.com/rain/a/20230314A07EFC00",
+          "publisher": "腾讯新闻",
+          "publishedAt": "2023-03-14"
+        }
+      ],
+      "tags": [
+        "chatglm",
+        "glm",
+        "open-source",
+        "foundation-model"
       ]
     },
     {
@@ -565,6 +667,34 @@
         "copilot",
         "ide",
         "coding"
+      ]
+    },
+    {
+      "id": "zhipu-glm-4-2024-01-16",
+      "date": "2024-01-16",
+      "dateStatus": "exact",
+      "title": "智谱发布基座大模型 GLM-4",
+      "summary": "智谱 AI 在技术开放日发布新一代基座模型 GLM-4（含 All Tools / GLMs），支持更长上下文与工具调用，并通过 bigmodel.cn API 与 chatglm.cn 对外提供。",
+      "category": "model",
+      "company": "Zhipu AI",
+      "series": "GLM",
+      "product": "GLM-4",
+      "eventType": "ga",
+      "sources": [
+        {
+          "title": "智谱AI发布新一代基座大模型GLM-4",
+          "url": "https://www.news.cn/tech/20240116/19d92dc316544dfba1cdc8bbba6b566f/c.html",
+          "publisher": "新华网",
+          "publishedAt": "2024-01-16"
+        }
+      ],
+      "relatedIds": [
+        "zhipu-chatglm-6b-open-source-2023-03-14"
+      ],
+      "tags": [
+        "glm",
+        "foundation-model",
+        "agent"
       ]
     },
     {
@@ -1302,6 +1432,35 @@
       ]
     },
     {
+      "id": "xai-grok-ios-beta-2024-12-23",
+      "date": "2024-12-23",
+      "dateStatus": "exact",
+      "title": "xAI 上架 Grok 独立 iOS 应用（Beta）",
+      "summary": "xAI 在 App Store 上架独立 Grok iOS 应用并开启 Beta（先于部分地区），用户可在 X 之外直接使用 Grok 2 对话与图像能力。",
+      "category": "product",
+      "productSubcategory": "chat",
+      "company": "xAI",
+      "series": "Grok",
+      "product": "Grok iOS",
+      "eventType": "public_beta",
+      "sources": [
+        {
+          "title": "XAI is testing its Grok app",
+          "url": "https://www.theverge.com/2024/12/23/24327971/xai-is-testing-its-grok-app",
+          "publisher": "The Verge",
+          "publishedAt": "2024-12-23"
+        }
+      ],
+      "relatedIds": [
+        "xai-grok-2-2024-08-13"
+      ],
+      "tags": [
+        "grok",
+        "ios",
+        "chat"
+      ]
+    },
+    {
       "id": "deepseek-v3-open-source-2024-12-26",
       "date": "2024-12-26",
       "dateStatus": "exact",
@@ -1549,6 +1708,67 @@
       ]
     },
     {
+      "id": "openai-codex-cli-2025-04-16",
+      "date": "2025-04-16",
+      "dateStatus": "exact",
+      "title": "OpenAI 发布开源 Codex CLI",
+      "summary": "OpenAI 发布开源终端编码代理 Codex CLI，可在本地读写代码并执行命令，与同日推出的 o3 / o4-mini 等模型配合使用。",
+      "category": "product",
+      "productSubcategory": "cli",
+      "company": "OpenAI",
+      "series": "Codex",
+      "product": "Codex CLI",
+      "eventType": "open_source",
+      "sources": [
+        {
+          "title": "OpenAI debuts Codex CLI, an open source coding tool for terminals",
+          "url": "https://techcrunch.com/2025/04/16/openai-debuts-codex-cli-an-open-source-coding-tool-for-terminals/",
+          "publisher": "TechCrunch",
+          "publishedAt": "2025-04-16"
+        },
+        {
+          "title": "openai/codex",
+          "url": "https://github.com/openai/codex",
+          "publisher": "OpenAI",
+          "publishedAt": "2025-04-16"
+        }
+      ],
+      "tags": [
+        "codex",
+        "cli",
+        "coding-agent"
+      ]
+    },
+    {
+      "id": "openai-codex-research-preview-2025-05-16",
+      "date": "2025-05-16",
+      "dateStatus": "exact",
+      "title": "OpenAI 发布 Codex 云端软件工程代理（研究预览）",
+      "summary": "OpenAI 推出云端软件工程代理 Codex（研究预览，由 codex-1 驱动），可在隔离沙箱中并行完成功能开发、修 bug、提 PR；向 ChatGPT Pro / Business / Enterprise 滚动开放。",
+      "category": "product",
+      "productSubcategory": "agent",
+      "company": "OpenAI",
+      "series": "Codex",
+      "product": "Codex",
+      "eventType": "research_preview",
+      "sources": [
+        {
+          "title": "Introducing Codex",
+          "url": "https://openai.com/index/introducing-codex/",
+          "publisher": "OpenAI",
+          "publishedAt": "2025-05-16"
+        }
+      ],
+      "relatedIds": [
+        "openai-codex-cli-2025-04-16"
+      ],
+      "tags": [
+        "codex",
+        "coding-agent",
+        "chatgpt"
+      ]
+    },
+    {
       "id": "anthropic-claude-4-2025-05-22",
       "date": "2025-05-22",
       "dateStatus": "exact",
@@ -1656,6 +1876,93 @@
         "agent",
         "agent-harness",
         "concept"
+      ]
+    },
+    {
+      "id": "openclaw-rename-launch-2026-01-29",
+      "date": "2026-01-29",
+      "dateStatus": "exact",
+      "title": "OpenClaw 正式定名并发布",
+      "summary": "开源本地 AI 助手项目由 Clawd / Moltbot 正式更名为 OpenClaw，强调在自有机器上运行、接入 WhatsApp/Telegram/Discord/Slack 等聊天通道的开放智能体平台。",
+      "category": "product",
+      "productSubcategory": "agent",
+      "company": "OpenClaw",
+      "series": "OpenClaw",
+      "product": "OpenClaw",
+      "eventType": "rename_rebrand",
+      "sources": [
+        {
+          "title": "Introducing OpenClaw",
+          "url": "https://openclaw.ai/blog/introducing-openclaw",
+          "publisher": "OpenClaw",
+          "publishedAt": "2026-01-29"
+        }
+      ],
+      "tags": [
+        "openclaw",
+        "agent",
+        "open-source"
+      ]
+    },
+    {
+      "id": "qoder-qoderwork-2026-02-12",
+      "date": "2026-02-12",
+      "dateStatus": "exact",
+      "title": "Qoder 发布桌面 AI 工作助手 QoderWork",
+      "summary": "Qoder 正式推出桌面 AI 工作助手 QoderWork（macOS 公测）：可在本地授权目录操作文件、生成办公文档，并通过 MCP 连接外部工具完成实际任务。",
+      "category": "product",
+      "productSubcategory": "work_assistant",
+      "company": "Qoder",
+      "series": "QoderWork",
+      "product": "QoderWork",
+      "eventType": "public_beta",
+      "sources": [
+        {
+          "title": "QoderWork：不只是聊天，帮你把事情做完的 AI 工作助手",
+          "url": "https://qoder.com/zh/blog/qoder-work",
+          "publisher": "Qoder",
+          "publishedAt": "2026-02-12"
+        }
+      ],
+      "tags": [
+        "qoder",
+        "work-assistant",
+        "desktop-agent"
+      ]
+    },
+    {
+      "id": "tencent-workbuddy-2026-03-09",
+      "date": "2026-03-09",
+      "dateStatus": "exact",
+      "title": "腾讯云上线 WorkBuddy",
+      "summary": "腾讯云推出商用桌面 AI 智能体 WorkBuddy：兼容 OpenClaw 技能生态，强调免部署与企业微信等远程协作，面向个人与企业开箱即用。",
+      "category": "product",
+      "productSubcategory": "agent",
+      "company": "Tencent",
+      "series": "WorkBuddy",
+      "product": "WorkBuddy",
+      "eventType": "ga",
+      "sources": [
+        {
+          "title": "WorkBuddy",
+          "url": "https://cloud.tencent.com/product/workbuddy",
+          "publisher": "腾讯云",
+          "publishedAt": "2026-03-09"
+        },
+        {
+          "title": "腾讯版「龙虾」WorkBuddy正式上线",
+          "url": "https://finance.sina.com.cn/roll/2026-03-09/doc-inhqknru0776253.shtml",
+          "publisher": "新浪财经",
+          "publishedAt": "2026-03-09"
+        }
+      ],
+      "relatedIds": [
+        "openclaw-rename-launch-2026-01-29"
+      ],
+      "tags": [
+        "workbuddy",
+        "agent",
+        "openclaw"
       ]
     }
   ]

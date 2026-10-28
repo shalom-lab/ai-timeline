@@ -23,6 +23,7 @@ export const COMPANY_LOGO_IDS = new Set([
   'moonshot',
   'minimax',
   'deepmind', // Google mark fallback — see SOURCES.md
+  'cursor',
 ])
 
 /** @deprecated use COMPANY_LOGO_IDS / hasCompanyLogo */

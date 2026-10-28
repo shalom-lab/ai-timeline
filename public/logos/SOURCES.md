@@ -24,3 +24,6 @@ All marks are third-party brand assets (not invented geometry).
 ## Brand tint
 
 Simple Icons ships monochrome paths. For single-color marks we set `fill` to `companies[].color` so card icons are not black. **Google / DeepMind / Microsoft** keep true multi-color marks (Google four-color G; Microsoft four-square).
+
+| cursor.svg | Simple Icons v16 (`cursor`), tinted `#7C3AED` |
+| zhipu / openclaw / qoder | *no SI mark* — letter avatar |

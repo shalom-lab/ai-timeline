@@ -217,6 +217,8 @@ interface Source {
 
 时间线 `meta.version` `0.7.0`。
 
+相对 v0.7：补录 Codex / 智谱 GLM / Cursor / Grok iOS / OpenClaw / QoderWork / WorkBuddy 等可核验节点；概念列取消强制主题 chips。`meta.version` `0.7.2`。
+
 ---
 
 ## 7. 最小示意
