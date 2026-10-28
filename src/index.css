@@ -7,7 +7,7 @@
   --muted: #64748b;
   --shadow: 0 1px 2px rgba(15, 23, 42, 0.04), 0 8px 24px rgba(15, 23, 42, 0.06);
   --radius: 12px;
-  --rail-w: 118px;
+  --rail-w: 148px;
   --header-banner-h: auto;
   font-family:
     'Inter',
@@ -86,10 +86,10 @@ a {
 
 .app-header__banner {
   display: grid;
-  grid-template-columns: minmax(180px, 1fr) minmax(280px, 520px) auto;
+  grid-template-columns: minmax(200px, 1.1fr) minmax(240px, 480px) auto;
   align-items: center;
-  gap: 1rem;
-  padding: 0.75rem 1.25rem;
+  gap: 1rem 1.25rem;
+  padding: 0.7rem 1.25rem;
 }
 
 .app-header__brand {
@@ -110,12 +110,27 @@ a {
   flex-shrink: 0;
 }
 
+.app-header__titles {
+  min-width: 0;
+}
+
 .app-header__brand h1 {
   margin: 0;
-  font-size: 1.15rem;
+  font-size: 1.2rem;
   letter-spacing: -0.02em;
   font-weight: 700;
   line-height: 1.2;
+  display: flex;
+  align-items: baseline;
+  gap: 0.45rem;
+  flex-wrap: wrap;
+}
+
+.app-header__en {
+  font-size: 0.72rem;
+  font-weight: 560;
+  letter-spacing: 0.02em;
+  opacity: 0.55;
 }
 
 .app-header__subtitle {
@@ -159,60 +174,7 @@ a {
   font-size: 0.88rem;
 }
 
-.app-header__utils {
-  display: flex;
-  justify-content: flex-end;
-  gap: 0.35rem;
-}
-
-.app-header__util-btn {
-  width: 34px;
-  height: 34px;
-  border-radius: 999px;
-  display: grid;
-  place-items: center;
-  background: rgba(255, 255, 255, 0.12);
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  font-size: 0.95rem;
-}
-
-.app-header__toolbar {
-  padding: 0.55rem 1.25rem 0.7rem;
-  background: #fbfcfe;
-  border-top: 1px solid #eef1f6;
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.year-chips {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.35rem;
-}
-
-.year-chips button {
-  border: 1px solid var(--border);
-  background: var(--surface);
-  border-radius: 999px;
-  padding: 0.22rem 0.75rem;
-  font-size: 0.78rem;
-  font-weight: 600;
-  color: var(--muted);
-  cursor: pointer;
-  transition: 0.15s ease;
-}
-
-.year-chips button:hover {
-  border-color: #cbd5e1;
-  color: var(--text);
-}
-
-.year-chips button.is-active {
-  background: #1e3a8a;
-  border-color: #1e3a8a;
-  color: #fff;
-}
+/* Theme toggle removed until real light/dark exists. */
 
 .filter-row {
   display: flex;
@@ -250,10 +212,16 @@ a {
 .event-legend {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.55rem 0.85rem;
-  margin-left: auto;
-  font-size: 0.72rem;
-  color: var(--muted);
+  gap: 0.4rem 0.7rem;
+  justify-content: flex-end;
+  font-size: 0.68rem;
+  color: inherit;
+  opacity: 0.82;
+  max-width: 340px;
+}
+
+.event-legend--banner {
+  justify-self: end;
 }
 
 .event-legend__item {
@@ -285,7 +253,7 @@ a {
   display: flex;
   gap: 0.65rem;
   min-width: 0;
-  min-height: calc(100vh - 170px);
+  min-height: calc(100vh - 110px);
   padding-right: 0.5rem;
   overflow-x: auto;
 }
@@ -307,27 +275,67 @@ a {
 /* ─── Timeline rail (time-proportional within each year) ─── */
 .timeline-rail {
   position: sticky;
-  top: 140px;
+  top: 88px;
   align-self: start;
-  padding: 0.35rem 0.4rem 1rem 0.35rem;
+  padding: 0.4rem 0.55rem 1rem 0.55rem;
   overflow-y: auto;
-  max-height: calc(100vh - 160px);
+  max-height: calc(100vh - 100px);
   scrollbar-width: thin;
 }
 
 .timeline-rail__year {
   position: relative;
-  margin-bottom: 0.65rem;
+  margin-bottom: 0.55rem;
 }
 
 .timeline-rail__year-label {
-  font-size: 0.78rem;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  width: 100%;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  font-size: 0.8rem;
   font-weight: 800;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  margin: 0 0 0.2rem 0;
-  padding-left: 0.15rem;
-  color: #64748b;
+  margin: 0 0 0.25rem 0;
+  padding: 0.2rem 0.25rem;
+  border-radius: 6px;
+  color: #475569;
+  text-align: left;
+}
+
+.timeline-rail__year-label:hover {
+  background: #eef2f7;
+  color: #0f172a;
+}
+
+.timeline-rail__year-chevron {
+  font-size: 0.7rem;
+  width: 0.85rem;
+  color: #94a3b8;
+  flex-shrink: 0;
+}
+
+.timeline-rail__year-text {
+  flex: 1;
+  min-width: 0;
+}
+
+.timeline-rail__year-count {
+  font-size: 0.65rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: #94a3b8;
+  background: #f1f5f9;
+  border-radius: 999px;
+  padding: 0.05rem 0.4rem;
+}
+
+.timeline-rail__year.is-collapsed .timeline-rail__year-label {
+  margin-bottom: 0;
 }
 
 .timeline-rail__track {
@@ -448,10 +456,10 @@ a {
 
 .cat-column__solo-btn {
   margin-left: auto;
-  border: 1px solid var(--border);
-  background: #f8fafc;
-  color: #64748b;
-  border-radius: 6px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: #94a3b8;
+  border-radius: 5px;
   padding: 0.18rem 0.65rem;
   font-size: 0.72rem;
   font-weight: 700;
@@ -460,18 +468,19 @@ a {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  transition: color 0.12s ease, background 0.12s ease, border-color 0.12s ease;
 }
 
 .cat-column__solo-btn.is-icon {
-  width: 28px;
-  height: 28px;
+  width: 24px;
+  height: 24px;
   padding: 0;
 }
 
 .cat-column__solo-btn:hover,
 .cat-column__solo-btn.is-active {
-  background: color-mix(in srgb, var(--accent) 12%, #fff);
-  border-color: color-mix(in srgb, var(--accent) 35%, var(--border));
+  background: color-mix(in srgb, var(--accent) 10%, #fff);
+  border-color: color-mix(in srgb, var(--accent) 28%, transparent);
   color: var(--accent);
 }
 
@@ -878,8 +887,9 @@ a {
     gap: 0.65rem;
   }
 
-  .app-header__utils {
-    display: none;
+  .event-legend--banner {
+    justify-self: start;
+    max-width: none;
   }
 
   .board {

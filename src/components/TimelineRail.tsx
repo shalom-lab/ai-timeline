@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useMemo, useState, useCallback } from 'react'
 import type { Company, TimelineEvent } from '../types/timeline'
 import { companyColor } from '../lib/company'
 
@@ -58,7 +58,6 @@ function placeYear(year: string, events: TimelineEvent[]): YearBlock {
   const dMax = Math.max(...days)
   const span = Math.max(1, dMax - dMin)
 
-  // Ideal body height from calendar span; grow if many events need min gaps.
   const spanHeight = Math.min(
     MAX_YEAR_BODY,
     Math.max(MIN_YEAR_BODY, span * PX_PER_DAY + sorted.length * 4),
@@ -70,14 +69,12 @@ function placeYear(year: string, events: TimelineEvent[]): YearBlock {
     dMin === dMax ? bodyHeight / 2 : ((d - dMin) / span) * bodyHeight,
   )
 
-  // Forward pass: enforce minimum gap (push down).
   const tops: number[] = []
   for (let i = 0; i < ideal.length; i++) {
     const prev = i === 0 ? -MIN_GAP : tops[i - 1]
     tops.push(Math.max(ideal[i], prev + MIN_GAP))
   }
 
-  // If we overflowed, scale back into [0, bodyHeight] while keeping order.
   const last = tops[tops.length - 1]
   let track = bodyHeight
   if (last > bodyHeight && last > 0) {
@@ -112,7 +109,9 @@ function buildBlocks(events: TimelineEvent[]): YearBlock[] {
 }
 
 function focusCard(id: string) {
-  const el = document.querySelector<HTMLElement>(`[data-event-id="${CSS.escape(id)}"]`)
+  const el = document.querySelector<HTMLElement>(
+    `[data-event-id="${CSS.escape(id)}"]`,
+  )
   if (!el) return
   el.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' })
 }
@@ -124,44 +123,69 @@ export default function TimelineRail({
   onSelect,
 }: Props) {
   const blocks = useMemo(() => buildBlocks(events), [events])
+  const [collapsed, setCollapsed] = useState<Record<string, boolean>>({})
+
+  const toggleYear = useCallback((year: string) => {
+    setCollapsed((c) => ({ ...c, [year]: !c[year] }))
+  }, [])
 
   return (
-    <nav className="timeline-rail" aria-label="时间轴（按日历日比例）">
-      {blocks.map((block) => (
-        <div key={block.year} className="timeline-rail__year">
-          <div className="timeline-rail__year-label">{block.year}</div>
+    <nav className="timeline-rail" aria-label="时间轴（按年折叠，按日历日比例）">
+      {blocks.map((block) => {
+        const isCollapsed = !!collapsed[block.year]
+        return (
           <div
-            className="timeline-rail__track"
-            style={{ height: block.height }}
+            key={block.year}
+            className={`timeline-rail__year${isCollapsed ? ' is-collapsed' : ''}`}
           >
-            <div className="timeline-rail__line" aria-hidden />
-            {block.items.map(({ event, top, label }) => {
-              const { color } = companyColor(companies, event.company)
-              const selected = event.id === selectedId
-              return (
-                <button
-                  key={event.id}
-                  type="button"
-                  className={`timeline-rail__item${selected ? ' is-selected' : ''}`}
-                  style={{ top }}
-                  title={`${event.date} · ${event.title}`}
-                  aria-label={`${event.date} ${event.title}`}
-                  onClick={() => {
-                    onSelect(event.id)
-                    requestAnimationFrame(() => focusCard(event.id))
-                  }}
-                >
-                  <span
-                    className="timeline-rail__dot"
-                    style={{ background: color }}
-                  />
-                  <span className="timeline-rail__md">{label}</span>
-                </button>
-              )
-            })}
+            <button
+              type="button"
+              className="timeline-rail__year-label"
+              aria-expanded={!isCollapsed}
+              title={isCollapsed ? `展开 ${block.year}` : `折叠 ${block.year}`}
+              onClick={() => toggleYear(block.year)}
+            >
+              <span className="timeline-rail__year-chevron" aria-hidden>
+                {isCollapsed ? '▸' : '▾'}
+              </span>
+              <span className="timeline-rail__year-text">{block.year}</span>
+              <span className="timeline-rail__year-count">{block.items.length}</span>
+            </button>
+            {!isCollapsed ? (
+              <div
+                className="timeline-rail__track"
+                style={{ height: block.height }}
+              >
+                <div className="timeline-rail__line" aria-hidden />
+                {block.items.map(({ event, top, label }) => {
+                  const { color } = companyColor(companies, event.company)
+                  const selected = event.id === selectedId
+                  return (
+                    <button
+                      key={event.id}
+                      type="button"
+                      className={`timeline-rail__item${selected ? ' is-selected' : ''}`}
+                      style={{ top }}
+                      title={`${event.date} · ${event.title}`}
+                      aria-label={`${event.date} ${event.title}`}
+                      onClick={() => {
+                        onSelect(event.id)
+                        requestAnimationFrame(() => focusCard(event.id))
+                      }}
+                    >
+                      <span
+                        className="timeline-rail__dot"
+                        style={{ background: color }}
+                      />
+                      <span className="timeline-rail__md">{label}</span>
+                    </button>
+                  )
+                })}
+              </div>
+            ) : null}
           </div>
-        </div>
-      ))}
+        )
+      })}
     </nav>
   )
 }

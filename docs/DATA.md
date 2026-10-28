@@ -1,4 +1,4 @@
-# AI Timeline 数据规范
+# AI纪年（AI Timeline）数据规范
 
 本文定义 **AI Timeline** 的权威数据结构与字段语义。字段名使用英文（与 TypeScript / JSON 一致）；说明使用中文。实现以 `src/types/timeline.ts` 与 `data/timeline.json` 为准。
 
@@ -31,7 +31,7 @@ interface TimelineData {
 
 | 字段 | 类型 | 必填 | 说明 |
 | --- | --- | --- | --- |
-| `name` | `string` | 是 | 数据集名称，如 `"AI Timeline"` |
+| `name` | `string` | 是 | 数据集名称，如 `"AI纪年"` |
 | `version` | `string` | 是 | 语义化版本，数据破坏性变更需升 major |
 | `scopeStart` | `string` | 是 | 时间线起点，固定 `"2022-11-30"` |
 | `updatedAt` | `string` | 是 | 本文件最近修订日，`YYYY-MM-DD` |

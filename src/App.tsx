@@ -8,7 +8,14 @@ import CategoryColumn from './components/CategoryColumn'
 
 const DEFAULT_FILTERS: Filters = {
   query: '',
-  year: 'all',
+}
+
+const EMPTY_SUB: Record<Category, string[]> = {
+  model: [],
+  product: [],
+  concept: [],
+  science: [],
+  other: [],
 }
 
 function matchesQuery(e: TimelineEvent, q: string): boolean {
@@ -32,29 +39,12 @@ export default function App() {
   const [filters, setFilters] = useState<Filters>(DEFAULT_FILTERS)
   const [selectedId, setSelectedId] = useState<string | null>(null)
   const [soloCategory, setSoloCategory] = useState<Category | null>(null)
-  const [subFilters, setSubFilters] = useState<Record<Category, string>>({
-    model: 'all',
-    product: 'all',
-    concept: 'all',
-    science: 'all',
-    other: 'all',
-  })
-
-  const years = useMemo(() => {
-    const set = new Set(events.map((e) => e.date.slice(0, 4)))
-    return [...set].sort()
-  }, [events])
+  const [subFilters, setSubFilters] = useState<Record<Category, string[]>>(EMPTY_SUB)
 
   const filtered = useMemo(() => {
     const q = filters.query.trim().toLowerCase()
     return events
-      .filter((e) => {
-        if (filters.year !== 'all' && !e.date.startsWith(filters.year)) {
-          return false
-        }
-        if (!matchesQuery(e, q)) return false
-        return true
-      })
+      .filter((e) => matchesQuery(e, q))
       .sort((a, b) => a.date.localeCompare(b.date))
   }, [events, filters])
 
@@ -78,19 +68,28 @@ export default function App() {
     }
   }, [filtered, selectedId])
 
+  useEffect(() => {
+    if (soloCategory && byCategory[soloCategory].length === 0) {
+      setSoloCategory(null)
+    }
+  }, [soloCategory, byCategory])
+
   const patchFilters = useCallback((patch: Partial<Filters>) => {
     setFilters((f) => ({ ...f, ...patch }))
   }, [])
 
+  const categoriesWithEvents = BOARD_CATEGORY_ORDER.filter(
+    (c) => byCategory[c].length > 0,
+  )
+
   const visibleCategories = soloCategory
-    ? BOARD_CATEGORY_ORDER.filter((c) => c === soloCategory)
-    : BOARD_CATEGORY_ORDER
+    ? categoriesWithEvents.filter((c) => c === soloCategory)
+    : categoriesWithEvents
 
   return (
     <div className="app-shell">
       <Header
         meta={meta}
-        years={years}
         filters={filters}
         onChange={patchFilters}
         eventCount={filtered.length}
@@ -120,8 +119,8 @@ export default function App() {
                 }}
                 onExitSolo={() => setSoloCategory(null)}
                 subFilter={subFilters[cat]}
-                onSubFilter={(key) =>
-                  setSubFilters((s) => ({ ...s, [cat]: key }))
+                onSubFilter={(keys) =>
+                  setSubFilters((s) => ({ ...s, [cat]: keys }))
                 }
                 selectedId={selectedId}
                 onSelect={setSelectedId}

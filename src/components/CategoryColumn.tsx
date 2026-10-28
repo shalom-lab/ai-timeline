@@ -12,8 +12,9 @@ type Props = {
   isSolo: boolean
   onSolo: () => void
   onExitSolo: () => void
-  subFilter: string
-  onSubFilter: (key: string) => void
+  /** Selected series/subcategory keys; empty = show all */
+  subFilter: string[]
+  onSubFilter: (keys: string[]) => void
   selectedId: string | null
   onSelect: (id: string | null) => void
 }
@@ -53,14 +54,14 @@ const ICONS: Record<Category, ReactNode> = {
   ),
 }
 
-/** Expand / maximize — enter 独占 */
+/** Compact maximize / focus — enter 独占 (~14px) */
 function IconSoloEnter() {
   return (
-    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden>
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden>
       <path
-        d="M9 3H3v6M15 3h6v6M9 21H3v-6M21 15v6h-6"
+        d="M4 9V5h4M20 9V5h-4M4 15v4h4M20 15v4h-4"
         stroke="currentColor"
-        strokeWidth="2"
+        strokeWidth="1.75"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
@@ -68,24 +69,16 @@ function IconSoloEnter() {
   )
 }
 
-/** X-in-square / exit-focus — leave 独占 */
+/** Compact minimize / exit-focus — leave 独占 (~14px) */
 function IconSoloExit() {
   return (
-    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden>
-      <rect
-        x="3.5"
-        y="3.5"
-        width="17"
-        height="17"
-        rx="2.5"
-        stroke="currentColor"
-        strokeWidth="2"
-      />
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden>
       <path
-        d="M9 9l6 6M15 9l-6 6"
+        d="M9 5v4H5M15 5v4h4M9 19v-4H5M15 19v-4h4"
         stroke="currentColor"
-        strokeWidth="2"
+        strokeWidth="1.75"
         strokeLinecap="round"
+        strokeLinejoin="round"
       />
     </svg>
   )
@@ -105,10 +98,22 @@ export default function CategoryColumn({
 }: Props) {
   const theme = CATEGORY_THEME[category]
   const groups = buildSubGroups(category, events)
-  const visibleGroups =
-    subFilter === 'all'
-      ? groups
-      : groups.filter((g) => g.key === subFilter)
+  const showAll = subFilter.length === 0
+  const visibleGroups = showAll
+    ? groups
+    : groups.filter((g) => subFilter.includes(g.key))
+
+  const toggleChip = (key: string) => {
+    if (key === 'all') {
+      onSubFilter([])
+      return
+    }
+    if (subFilter.includes(key)) {
+      onSubFilter(subFilter.filter((k) => k !== key))
+    } else {
+      onSubFilter([...subFilter, key])
+    }
+  }
 
   return (
     <section
@@ -155,11 +160,11 @@ export default function CategoryColumn({
         )}
       </div>
 
-      <div className="cat-column__chips">
+      <div className="cat-column__chips" role="group" aria-label="子类多选">
         <button
           type="button"
-          className={subFilter === 'all' ? 'is-active' : ''}
-          onClick={() => onSubFilter('all')}
+          className={showAll ? 'is-active' : ''}
+          onClick={() => toggleChip('all')}
         >
           全部
         </button>
@@ -167,8 +172,9 @@ export default function CategoryColumn({
           <button
             key={g.key}
             type="button"
-            className={subFilter === g.key ? 'is-active' : ''}
-            onClick={() => onSubFilter(g.key)}
+            className={!showAll && subFilter.includes(g.key) ? 'is-active' : ''}
+            aria-pressed={!showAll && subFilter.includes(g.key)}
+            onClick={() => toggleChip(g.key)}
           >
             {g.label}
             <em>{g.events.length}</em>

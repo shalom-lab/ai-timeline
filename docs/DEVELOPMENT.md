@@ -1,4 +1,4 @@
-# AI Timeline 开发与贡献指南
+# AI纪年（AI Timeline）开发与贡献指南
 
 面向数据贡献者与后续 UI 开发者。数据规范正文见 [`DATA.md`](./DATA.md)。
 
