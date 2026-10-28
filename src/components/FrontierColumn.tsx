@@ -5,6 +5,8 @@ import { FRONTIER_LABEL_ZH, FRONTIER_THEME } from '../types/capability'
 type Props = {
   months: CapabilityMonth[]
   onSelectEvent?: (id: string) => void
+  /** Skip title band when the active board tab already names this panel. */
+  omitTitle?: boolean
 }
 
 function IconFrontier() {
@@ -108,7 +110,7 @@ function MonthCard({
   )
 }
 
-export default function FrontierColumn({ months, onSelectEvent }: Props) {
+export default function FrontierColumn({ months, onSelectEvent, omitTitle = false }: Props) {
   const theme = FRONTIER_THEME
   const newCount = months.reduce((n, m) => n + m.new.length, 0)
 
@@ -129,21 +131,23 @@ export default function FrontierColumn({ months, onSelectEvent }: Props) {
       style={{ ['--accent' as string]: theme.accent }}
       aria-label={FRONTIER_LABEL_ZH}
     >
-      <div className="cat-column__header">
-        <span
-          className="cat-column__header-icon"
-          style={{ color: theme.accent, background: theme.headerSoft }}
-        >
-          <IconFrontier />
-        </span>
-        <span className="cat-column__header-title">{FRONTIER_LABEL_ZH}</span>
-        <span
-          className="cat-column__header-count"
-          style={{ color: theme.accent, background: theme.headerSoft }}
-        >
-          {newCount}
-        </span>
-      </div>
+      {!omitTitle ? (
+        <div className="cat-column__header">
+          <span
+            className="cat-column__header-icon"
+            style={{ color: theme.accent, background: theme.headerSoft }}
+          >
+            <IconFrontier />
+          </span>
+          <span className="cat-column__header-title">{FRONTIER_LABEL_ZH}</span>
+          <span
+            className="cat-column__header-count"
+            style={{ color: theme.accent, background: theme.headerSoft }}
+          >
+            {newCount}
+          </span>
+        </div>
+      ) : null}
 
       <p className="frontier-column__hint">
         工作场景快照：截止该月末，普通人+AI

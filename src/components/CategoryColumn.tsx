@@ -33,6 +33,11 @@ type Props = {
   bumpMuteFuture?: boolean
   /** Hide the category title band (e.g. compact「其他」block under 能力边界). */
   hideHeader?: boolean
+  /**
+   * Skip the redundant category title/count row (tabs already name the panel).
+   * Chips stay; head shrinks to the chip row only.
+   */
+  omitTitle?: boolean
 }
 
 const ICONS: Record<Category, ReactNode> = {
@@ -230,6 +235,7 @@ export default function CategoryColumn({
   bumpSolid = false,
   bumpMuteFuture = false,
   hideHeader = false,
+  omitTitle = false,
 }: Props) {
   const theme = CATEGORY_THEME[category]
   const bodyRef = useRef<HTMLDivElement>(null)
@@ -291,25 +297,41 @@ export default function CategoryColumn({
       style={{ ['--accent' as string]: theme.accent }}
       aria-label={CATEGORY_LABEL_ZH[category]}
     >
-      {!hideHeader ? (
-        <div className="cat-column__head">
-          <div className="cat-column__header">
-            <span
-              className="cat-column__header-icon"
-              style={{ color: theme.accent, background: theme.headerSoft }}
-            >
-              {ICONS[category]}
-            </span>
-            <span className="cat-column__header-title">
-              {CATEGORY_LABEL_ZH[category]}
-            </span>
-            <span
-              className="cat-column__header-count"
-              style={{ color: theme.accent, background: theme.headerSoft }}
-            >
-              {events.length}
-            </span>
-          </div>
+      {hideHeader ? (
+        <div className="cat-column__header cat-column__header--compact">
+          <span className="cat-column__header-title">
+            {CATEGORY_LABEL_ZH[category]}
+          </span>
+          <span
+            className="cat-column__header-count"
+            style={{ color: theme.accent, background: theme.headerSoft }}
+          >
+            {events.length}
+          </span>
+        </div>
+      ) : (
+        <div
+          className={`cat-column__head${omitTitle ? ' cat-column__head--chips-only' : ''}${!showChips && omitTitle ? ' cat-column__head--empty' : ''}`}
+        >
+          {!omitTitle ? (
+            <div className="cat-column__header">
+              <span
+                className="cat-column__header-icon"
+                style={{ color: theme.accent, background: theme.headerSoft }}
+              >
+                {ICONS[category]}
+              </span>
+              <span className="cat-column__header-title">
+                {CATEGORY_LABEL_ZH[category]}
+              </span>
+              <span
+                className="cat-column__header-count"
+                style={{ color: theme.accent, background: theme.headerSoft }}
+              >
+                {events.length}
+              </span>
+            </div>
+          ) : null}
 
           {showChips ? (
             <div className="cat-column__chips" role="group" aria-label="子类多选">
@@ -335,18 +357,6 @@ export default function CategoryColumn({
               <BoardCopyButton groups={visibleGroups} />
             </div>
           ) : null}
-        </div>
-      ) : (
-        <div className="cat-column__header cat-column__header--compact">
-          <span className="cat-column__header-title">
-            {CATEGORY_LABEL_ZH[category]}
-          </span>
-          <span
-            className="cat-column__header-count"
-            style={{ color: theme.accent, background: theme.headerSoft }}
-          >
-            {events.length}
-          </span>
         </div>
       )}
 
