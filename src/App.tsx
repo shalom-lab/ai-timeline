@@ -5,7 +5,6 @@ import type { CapabilityMonth } from './types/capability'
 import { CATEGORY_LABEL_ZH } from './lib/labels'
 import { groupKeyForEvent } from './lib/group'
 import { isCurrentCalendarMonth, inDateWindow, type DateWindow } from './lib/calendar'
-import TimeWindow from './components/TimeWindow'
 import Header, { type Filters } from './components/Header'
 import TimelineRail from './components/TimelineRail'
 import CategoryColumn from './components/CategoryColumn'
@@ -424,6 +423,8 @@ export default function App() {
             frontierMode={activeTab === 'frontier'}
             mode={railMode}
             onModeChange={handleRailModeChange}
+            dateWindow={dateWindow}
+            onDateWindowChange={setDateWindow}
           />
 
           <div className="board__main">
@@ -442,7 +443,6 @@ export default function App() {
               ))}
             </nav>
 
-            {railMode === 'history' && <TimeWindow value={dateWindow} onChange={setDateWindow} />}
             <div className="board__columns" ref={boardScrollRef}>
               {activeTab === 'frontier' ? (
                 <div className="board__col-slot board__col-slot--stack">

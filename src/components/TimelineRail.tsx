@@ -4,6 +4,8 @@ import { FRONTIER_THEME } from '../types/capability'
 import { companyColor } from '../lib/company'
 import type { TimelineLayout } from '../lib/timelineLayout'
 import { YEAR_MARKER_H } from '../lib/timelineLayout'
+import type { DateWindow } from '../lib/calendar'
+import TimeWindow from './TimeWindow'
 
 type RailMode = 'history' | 'month'
 
@@ -24,6 +26,9 @@ type Props = {
   /** 既往 = full history; 本月 = same calendar month across all years. */
   mode?: RailMode
   onModeChange?: (mode: RailMode) => void
+  /** History date window — rendered under 既往|当月 when mode is history. */
+  dateWindow?: DateWindow | null
+  onDateWindowChange?: (value: DateWindow | null) => void
 }
 
 type MonthBand = {
@@ -90,6 +95,8 @@ export default function TimelineRail({
   frontierMode = false,
   mode = 'history',
   onModeChange,
+  dateWindow = null,
+  onDateWindowChange,
 }: Props) {
   const byId = useMemo(() => {
     const m = new Map<string, TimelineEvent>()
@@ -148,6 +155,11 @@ export default function TimelineRail({
             当月
           </button>
         </div>
+        {mode === 'history' && onDateWindowChange ? (
+          <TimeWindow value={dateWindow} onChange={onDateWindowChange} />
+        ) : (
+          <div className="timeline-rail__head-fill" aria-hidden />
+        )}
       </div>
       <div
         className="timeline-rail__canvas"
