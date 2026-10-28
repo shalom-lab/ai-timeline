@@ -77,6 +77,72 @@ export function formatSubcolChronology(
   return [label, ...lines].join('\n')
 }
 
+/** Join several subcol chronologies (blank line between groups). */
+export function formatBoardChronology(
+  groups: { label: string; events: TimelineEvent[] }[],
+): string {
+  return groups
+    .map((g) => formatSubcolChronology(g.label, g.events))
+    .filter((block) => block.length > 0)
+    .join('\n\n')
+}
+
+async function writeClipboard(text: string): Promise<void> {
+  try {
+    await navigator.clipboard.writeText(text)
+  } catch {
+    // Fallback for older / restricted clipboard
+    const ta = document.createElement('textarea')
+    ta.value = text
+    ta.style.position = 'fixed'
+    ta.style.left = '-9999px'
+    document.body.appendChild(ta)
+    ta.select()
+    try {
+      document.execCommand('copy')
+    } finally {
+      document.body.removeChild(ta)
+    }
+  }
+}
+
+function ClipboardIcon({ size = 14 }: { size?: number }) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden
+    >
+      <rect x="9" y="9" width="13" height="13" rx="2" />
+      <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+    </svg>
+  )
+}
+
+function CheckIcon({ size = 14 }: { size?: number }) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden
+    >
+      <path d="M20 6L9 17l-5-5" />
+    </svg>
+  )
+}
+
 function SubcolCopyButton({
   label,
   events,
@@ -89,23 +155,7 @@ function SubcolCopyButton({
   const onCopy = useCallback(
     async (e: MouseEvent) => {
       e.stopPropagation()
-      const text = formatSubcolChronology(label, events)
-      try {
-        await navigator.clipboard.writeText(text)
-      } catch {
-        // Fallback for older / restricted clipboard
-        const ta = document.createElement('textarea')
-        ta.value = text
-        ta.style.position = 'fixed'
-        ta.style.left = '-9999px'
-        document.body.appendChild(ta)
-        ta.select()
-        try {
-          document.execCommand('copy')
-        } finally {
-          document.body.removeChild(ta)
-        }
-      }
+      await writeClipboard(formatSubcolChronology(label, events))
       setCopied(true)
       window.setTimeout(() => setCopied(false), 1500)
     },
@@ -120,7 +170,46 @@ function SubcolCopyButton({
       title={copied ? '已复制' : `复制「${label}」年表`}
       aria-label={copied ? '已复制' : `复制「${label}」年表`}
     >
-      {copied ? '已复制' : '复制'}
+      {copied ? <CheckIcon /> : <ClipboardIcon />}
+    </button>
+  )
+}
+
+function BoardCopyButton({
+  groups,
+}: {
+  groups: { label: string; events: TimelineEvent[] }[]
+}) {
+  const [copied, setCopied] = useState(false)
+  const n = groups.length
+  const tip =
+    n <= 1
+      ? n === 1
+        ? `复制「${groups[0]!.label}」年表`
+        : '暂无可复制年表'
+      : `复制当前 ${n} 列年表`
+
+  const onCopy = useCallback(
+    async (e: MouseEvent) => {
+      e.stopPropagation()
+      if (groups.length === 0) return
+      await writeClipboard(formatBoardChronology(groups))
+      setCopied(true)
+      window.setTimeout(() => setCopied(false), 1500)
+    },
+    [groups],
+  )
+
+  return (
+    <button
+      type="button"
+      className={`cat-column__chips-copy${copied ? ' is-copied' : ''}`}
+      onClick={onCopy}
+      disabled={groups.length === 0}
+      title={copied ? '已复制' : tip}
+      aria-label={copied ? '已复制' : tip}
+    >
+      {copied ? <CheckIcon /> : <ClipboardIcon />}
     </button>
   )
 }
@@ -243,6 +332,7 @@ export default function CategoryColumn({
                   <em>{g.events.length}</em>
                 </button>
               ))}
+              <BoardCopyButton groups={visibleGroups} />
             </div>
           ) : null}
         </div>

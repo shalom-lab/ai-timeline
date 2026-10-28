@@ -651,13 +651,14 @@ a {
 .cat-column__chips {
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
   gap: 0.3rem;
   padding: 0.55rem 0.6rem 0.35rem;
   background: #fff;
   border-bottom: 1px solid #eef1f6;
 }
 
-.cat-column__chips button {
+.cat-column__chips > button:not(.cat-column__chips-copy) {
   border: 1px solid var(--border);
   background: #f8fafc;
   border-radius: 999px;
@@ -671,16 +672,51 @@ a {
   gap: 0.25rem;
 }
 
-.cat-column__chips button em {
+.cat-column__chips > button:not(.cat-column__chips-copy) em {
   font-style: normal;
   opacity: 0.7;
   font-variant-numeric: tabular-nums;
 }
 
-.cat-column__chips button.is-active {
+.cat-column__chips > button:not(.cat-column__chips-copy).is-active {
   background: color-mix(in srgb, var(--accent) 12%, #fff);
   border-color: color-mix(in srgb, var(--accent) 45%, #fff);
   color: var(--accent);
+}
+
+/* Board-level copy: icon-only, right end of chip row */
+.cat-column__chips-copy {
+  margin-left: auto;
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.55rem;
+  height: 1.55rem;
+  padding: 0;
+  border: 1px solid color-mix(in srgb, var(--accent) 22%, #e2e8f0);
+  background: #fff;
+  color: var(--muted);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: color 0.12s ease, background 0.12s ease, border-color 0.12s ease;
+}
+
+.cat-column__chips-copy:hover:not(:disabled) {
+  color: var(--accent);
+  border-color: color-mix(in srgb, var(--accent) 45%, #e2e8f0);
+  background: color-mix(in srgb, var(--accent) 8%, #fff);
+}
+
+.cat-column__chips-copy:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.cat-column__chips-copy.is-copied {
+  color: #047857;
+  border-color: #a7f3d0;
+  background: #ecfdf5;
 }
 
 .cat-column__head {
@@ -765,14 +801,16 @@ a {
 .cat-subcol__copy {
   margin-left: auto;
   flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.4rem;
+  height: 1.4rem;
+  padding: 0;
   border: 1px solid color-mix(in srgb, var(--accent) 22%, #e2e8f0);
   background: #fff;
   color: var(--muted);
-  border-radius: 4px;
-  padding: 0.05rem 0.4rem;
-  font-size: 0.62rem;
-  font-weight: 650;
-  line-height: 1.3;
+  border-radius: 5px;
   cursor: pointer;
   transition: color 0.12s ease, background 0.12s ease, border-color 0.12s ease;
 }
