@@ -986,6 +986,33 @@ a {
   gap: 0.7rem;
 }
 
+.frontier-column__time-canvas {
+  position: relative;
+  display: block;
+  min-height: 4rem;
+  width: 100%;
+}
+
+.frontier-month.is-time-placed {
+  position: absolute;
+  left: 0;
+  right: 0;
+  width: 100%;
+  transform: translateY(-50%);
+  z-index: 1;
+}
+
+.frontier-month.is-time-placed:hover {
+  z-index: 3;
+}
+
+.frontier-column .cat-column__head .frontier-column__hint {
+  border-bottom: 0;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: auto;
+}
+
 .frontier-month {
   background: #fff;
   border: 1px solid #fce7f3;

@@ -22,6 +22,13 @@ export const CANVAS_PAD_BOTTOM = 32
 /** Space from year marker bottom to first date center in that year. */
 export const AFTER_YEAR_MARKER = 56
 
+/** Minimal input for shared date→Y layout (events or frontier month proxies). */
+export type LayoutSource = {
+  id: string
+  /** YYYY-MM-DD */
+  date: string
+}
+
 export type LayoutItem = {
   id: string
   date: string
@@ -63,11 +70,38 @@ export function gapForDeltaDays(deltaDays: number): number {
   return MIN_CENTER_GAP + (MAX_CENTER_GAP - MIN_CENTER_GAP) * Math.tanh(d / GAP_TAU)
 }
 
+/** Last calendar day of YYYY-MM as YYYY-MM-DD (UTC month-end). */
+export function monthEndDate(ym: string): string {
+  const y = Number(ym.slice(0, 4))
+  const m = Number(ym.slice(5, 7))
+  const last = new Date(Date.UTC(y, m, 0)).getUTCDate()
+  return `${ym}-${String(last).padStart(2, '0')}`
+}
+
+/** Stable layout id for a frontier month card / rail marker. */
+export function frontierLayoutId(month: string): string {
+  return `frontier:${month}`
+}
+
+/** Build LayoutSource rows from frontier YYYY-MM keys (month-end dates). */
+export function frontierMonthsToLayoutSources(
+  months: ReadonlyArray<{ month: string }>,
+): LayoutSource[] {
+  return months.map((m) => ({
+    id: frontierLayoutId(m.month),
+    date: monthEndDate(m.month),
+  }))
+}
+
 /**
- * Shared date→Y for TimelineRail dots and EventCard centers.
+ * Shared date→Y for TimelineRail dots and EventCard / FrontierColumn centers.
  * Same calendar date → same centerY; order chronological; gaps soft-compressed.
+ *
+ * Accepts full TimelineEvent[] or lighter {id,date} proxies (frontier months).
  */
-export function buildTimelineLayout(events: TimelineEvent[]): TimelineLayout {
+export function buildTimelineLayout(
+  events: ReadonlyArray<LayoutSource | TimelineEvent>,
+): TimelineLayout {
   const sorted = [...events].sort(
     (a, b) => a.date.localeCompare(b.date) || a.id.localeCompare(b.id),
   )
@@ -81,7 +115,7 @@ export function buildTimelineLayout(events: TimelineEvent[]): TimelineLayout {
   }
 
   const dateOrder: string[] = []
-  const byDate = new Map<string, TimelineEvent[]>()
+  const byDate = new Map<string, LayoutSource[]>()
   for (const e of sorted) {
     let list = byDate.get(e.date)
     if (!list) {

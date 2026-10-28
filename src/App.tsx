@@ -3,11 +3,16 @@ import { timelineData, capabilityFrontierData } from './data'
 import type { Category, TimelineEvent } from './types/timeline'
 import type { CapabilityMonth } from './types/capability'
 import { BOARD_CATEGORY_ORDER } from './lib/labels'
+import { groupKeyForEvent } from './lib/group'
 import Header, { type Filters } from './components/Header'
 import TimelineRail from './components/TimelineRail'
 import CategoryColumn from './components/CategoryColumn'
 import FrontierColumn from './components/FrontierColumn'
-import { buildTimelineLayout } from './lib/timelineLayout'
+import {
+  buildTimelineLayout,
+  frontierMonthsToLayoutSources,
+  type LayoutSource,
+} from './lib/timelineLayout'
 
 const DEFAULT_FILTERS: Filters = {
   query: '',
@@ -80,6 +85,20 @@ function focusCard(id: string) {
   el.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' })
 }
 
+/** Visible events in a category after series/sub chips (empty chips = all). */
+function visibleCategoryEvents(
+  category: Category,
+  events: TimelineEvent[],
+  subKeys: string[],
+  companies: typeof timelineData.companies,
+): TimelineEvent[] {
+  if (subKeys.length === 0) return events
+  return events.filter((e) => {
+    const { key } = groupKeyForEvent(category, e, companies)
+    return subKeys.includes(key)
+  })
+}
+
 export default function App() {
   const { meta, companies, events } = timelineData
   const [filters, setFilters] = useState<Filters>(DEFAULT_FILTERS)
@@ -99,9 +118,6 @@ export default function App() {
     return filterFrontierMonths(capabilityFrontierData.months, q)
   }, [filters])
 
-  /** Shared rail ↔ card vertical positions (all search-filtered events). */
-  const layout = useMemo(() => buildTimelineLayout(filtered), [filtered])
-
   const byCategory = useMemo(() => {
     const map: Record<Category, TimelineEvent[]> = {
       model: [],
@@ -115,6 +131,45 @@ export default function App() {
     }
     return map
   }, [filtered])
+
+  /**
+   * Multi-column: shared global timeline (all search-filtered events).
+   * Solo category: contract to that column's *visible* items (honour sub-chips).
+   * Solo frontier: contract to frontier month-end dates.
+   */
+  const layoutSources = useMemo((): LayoutSource[] => {
+    if (solo === 'frontier') {
+      return frontierMonthsToLayoutSources(frontierMonths)
+    }
+    if (solo) {
+      return visibleCategoryEvents(
+        solo,
+        byCategory[solo],
+        subFilters[solo],
+        companies,
+      )
+    }
+    return filtered
+  }, [solo, filtered, byCategory, subFilters, companies, frontierMonths])
+
+  const layout = useMemo(
+    () => buildTimelineLayout(layoutSources),
+    [layoutSources],
+  )
+
+  /** Events the rail can resolve for dots / company colors (empty in frontier solo). */
+  const railEvents = useMemo((): TimelineEvent[] => {
+    if (solo === 'frontier') return []
+    if (solo) {
+      return visibleCategoryEvents(
+        solo,
+        byCategory[solo],
+        subFilters[solo],
+        companies,
+      )
+    }
+    return filtered
+  }, [solo, filtered, byCategory, subFilters, companies])
 
   useEffect(() => {
     if (selectedId && !filtered.some((e) => e.id === selectedId)) {
@@ -172,11 +227,12 @@ export default function App() {
 
       <div className="board">
         <TimelineRail
-          events={filtered}
+          events={railEvents}
           companies={companies}
           selectedId={selectedId}
           onSelect={setSelectedId}
           layout={layout}
+          frontierSolo={solo === 'frontier'}
         />
 
         <div
@@ -216,6 +272,7 @@ export default function App() {
                 }}
                 onExitSolo={() => setSolo(null)}
                 onSelectEvent={selectEventFromFrontier}
+                layout={solo === 'frontier' ? layout : undefined}
               />
             </div>
           ) : null}

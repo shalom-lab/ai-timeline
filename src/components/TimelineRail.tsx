@@ -1,5 +1,6 @@
 import { useMemo, useState, useCallback } from 'react'
 import type { Company, TimelineEvent } from '../types/timeline'
+import { FRONTIER_THEME } from '../types/capability'
 import { companyColor } from '../lib/company'
 import type { TimelineLayout } from '../lib/timelineLayout'
 import { YEAR_MARKER_H } from '../lib/timelineLayout'
@@ -9,8 +10,10 @@ type Props = {
   companies: Company[]
   selectedId: string | null
   onSelect: (id: string | null) => void
-  /** Shared date→Y layout (same as category column canvases). */
+  /** Shared date→Y layout (same as category / frontier column canvases). */
   layout: TimelineLayout
+  /** When true, layout items are frontier month proxies (no TimelineEvent). */
+  frontierSolo?: boolean
 }
 
 type MonthBand = {
@@ -58,12 +61,21 @@ function focusCard(id: string) {
   el.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' })
 }
 
+function focusFrontierMonth(month: string) {
+  const el = document.querySelector<HTMLElement>(
+    `[data-frontier-month="${CSS.escape(month)}"]`,
+  )
+  if (!el) return
+  el.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' })
+}
+
 export default function TimelineRail({
   events,
   companies,
   selectedId,
   onSelect,
   layout,
+  frontierSolo = false,
 }: Props) {
   const byId = useMemo(() => {
     const m = new Map<string, TimelineEvent>()
@@ -138,6 +150,28 @@ export default function TimelineRail({
         {layout.items.map((item) => {
           const year = item.date.slice(0, 4)
           if (hiddenYears.has(year)) return null
+
+          if (frontierSolo || item.id.startsWith('frontier:')) {
+            const month = item.ym
+            return (
+              <button
+                key={item.id}
+                type="button"
+                className="timeline-rail__item is-frontier"
+                style={{ top: item.centerY }}
+                title={`${month} · 能力边界`}
+                aria-label={`${month} 能力边界`}
+                onClick={() => focusFrontierMonth(month)}
+              >
+                <span
+                  className="timeline-rail__dot"
+                  style={{ background: FRONTIER_THEME.accent }}
+                />
+                <span className="timeline-rail__md">{item.date.slice(5)}</span>
+              </button>
+            )
+          }
+
           const event = byId.get(item.id)
           if (!event) return null
           const { color } = companyColor(companies, event.company)

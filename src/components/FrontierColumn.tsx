@@ -1,6 +1,8 @@
 import { useMemo, useState } from 'react'
 import type { CapabilityMonth, CapabilityScenario } from '../types/capability'
 import { FRONTIER_LABEL_ZH, FRONTIER_THEME } from '../types/capability'
+import type { TimelineLayout } from '../lib/timelineLayout'
+import { frontierLayoutId } from '../lib/timelineLayout'
 
 type Props = {
   months: CapabilityMonth[]
@@ -8,6 +10,8 @@ type Props = {
   onSolo: () => void
   onExitSolo: () => void
   onSelectEvent?: (id: string) => void
+  /** When set (solo frontier), month cards share Y with TimelineRail. */
+  layout?: TimelineLayout
 }
 
 function IconSoloEnter() {
@@ -90,15 +94,26 @@ function MonthCard({
   month,
   carried,
   onSelectEvent,
+  centerY,
 }: {
   month: CapabilityMonth
   carried: CapabilityScenario[]
   onSelectEvent?: (id: string) => void
+  centerY?: number
 }) {
   const [carriedOpen, setCarriedOpen] = useState(false)
+  const placed = centerY != null
 
   return (
-    <article className="frontier-month">
+    <article
+      className={`frontier-month${placed ? ' is-time-placed' : ''}`}
+      data-frontier-month={month.month}
+      style={
+        placed
+          ? { top: centerY, ['--card-center-y' as string]: `${centerY}px` }
+          : undefined
+      }
+    >
       <header className="frontier-month__head">
         <time dateTime={month.month}>{formatMonthLabel(month.month)}</time>
         <span className="frontier-month__new">+{month.new.length}</span>
@@ -145,9 +160,11 @@ export default function FrontierColumn({
   onSolo,
   onExitSolo,
   onSelectEvent,
+  layout,
 }: Props) {
   const theme = FRONTIER_THEME
   const newCount = months.reduce((n, m) => n + m.new.length, 0)
+  const timePlaced = Boolean(isSolo && layout)
 
   /** Cumulative scenarios before each month (既往已具备). */
   const carriedByMonth = useMemo(() => {
@@ -166,51 +183,74 @@ export default function FrontierColumn({
       style={{ ['--accent' as string]: theme.accent }}
       aria-label={FRONTIER_LABEL_ZH}
     >
-      <div className="cat-column__header">
-        <span
-          className="cat-column__header-icon"
-          style={{ color: theme.accent, background: theme.headerSoft }}
-        >
-          <IconFrontier />
-        </span>
-        <span className="cat-column__header-title">{FRONTIER_LABEL_ZH}</span>
-        <span
-          className="cat-column__header-count"
-          style={{ color: theme.accent, background: theme.headerSoft }}
-        >
-          {newCount}
-        </span>
-        {isSolo ? (
-          <button
-            type="button"
-            className="cat-column__solo-btn is-icon is-active"
-            onClick={onExitSolo}
-            title="退出独占"
-            aria-label="退出独占"
+      <div className={timePlaced ? 'cat-column__head' : undefined}>
+        <div className="cat-column__header">
+          <span
+            className="cat-column__header-icon"
+            style={{ color: theme.accent, background: theme.headerSoft }}
           >
-            <IconSoloExit />
-          </button>
-        ) : (
-          <button
-            type="button"
-            className="cat-column__solo-btn is-icon"
-            onClick={onSolo}
-            title="独占"
-            aria-label="独占"
+            <IconFrontier />
+          </span>
+          <span className="cat-column__header-title">{FRONTIER_LABEL_ZH}</span>
+          <span
+            className="cat-column__header-count"
+            style={{ color: theme.accent, background: theme.headerSoft }}
           >
-            <IconSoloEnter />
-          </button>
-        )}
+            {newCount}
+          </span>
+          {isSolo ? (
+            <button
+              type="button"
+              className="cat-column__solo-btn is-icon is-active"
+              onClick={onExitSolo}
+              title="退出独占"
+              aria-label="退出独占"
+            >
+              <IconSoloExit />
+            </button>
+          ) : (
+            <button
+              type="button"
+              className="cat-column__solo-btn is-icon"
+              onClick={onSolo}
+              title="独占"
+              aria-label="独占"
+            >
+              <IconSoloEnter />
+            </button>
+          )}
+        </div>
+
+        <p className="frontier-column__hint">
+          工作场景快照：截止该月末，普通人+AI
+          已经能做的事。「当月新增」默认展开；「既往已具备」默认折叠。
+        </p>
       </div>
 
-      <p className="frontier-column__hint">
-        工作场景快照：截止该月末，普通人+AI
-        已经能做的事。「当月新增」默认展开；「既往已具备」默认折叠。
-      </p>
-
-      <div className="cat-column__body frontier-column__body">
+      <div
+        className={`cat-column__body frontier-column__body${timePlaced ? ' is-time-canvas' : ''}`}
+      >
         {months.length === 0 ? (
           <p className="cat-column__empty">暂无匹配场景</p>
+        ) : timePlaced && layout ? (
+          <div
+            className="frontier-column__time-canvas"
+            style={{ height: layout.height }}
+          >
+            {months.map((m) => {
+              const cy = layout.centerY[frontierLayoutId(m.month)]
+              if (cy == null) return null
+              return (
+                <MonthCard
+                  key={m.month}
+                  month={m}
+                  carried={carriedByMonth.get(m.month) ?? []}
+                  onSelectEvent={onSelectEvent}
+                  centerY={cy}
+                />
+              )
+            })}
+          </div>
         ) : (
           months.map((m) => (
             <MonthCard
