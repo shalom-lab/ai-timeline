@@ -8,8 +8,12 @@ import DetailPopover from './DetailPopover'
 type Props = {
   event: TimelineEvent
   companies: Company[]
-  selected: boolean
-  onSelect: (id: string | null) => void
+  /** First-click pin: outer outline fixed on this card. */
+  outlined: boolean
+  /** Second-click: in-place detail popup open. */
+  detailOpen: boolean
+  onCardClick: (id: string) => void
+  onCloseDetail: () => void
   /** After focus date while bump line is shown — 还没发生 */
   isFuture?: boolean
 }
@@ -17,8 +21,10 @@ type Props = {
 export default function EventCard({
   event,
   companies,
-  selected,
-  onSelect,
+  outlined,
+  detailOpen,
+  onCardClick,
+  onCloseDetail,
   isFuture = false,
 }: Props) {
   const cardRef = useRef<HTMLElement>(null)
@@ -30,7 +36,7 @@ export default function EventCard({
   return (
     <article
       ref={cardRef}
-      className={`event-card${selected ? ' is-selected' : ''}${isFuture ? ' is-future' : ''}`}
+      className={`event-card${outlined ? ' is-outlined' : ''}${detailOpen ? ' is-detail' : ''}${isFuture ? ' is-future' : ''}`}
       data-event-id={event.id}
       style={
         {
@@ -39,16 +45,16 @@ export default function EventCard({
           background: soft,
         } as CSSProperties
       }
-      onClick={() => onSelect(selected ? null : event.id)}
+      onClick={() => onCardClick(event.id)}
       role="button"
       tabIndex={0}
       onKeyDown={(e) => {
         if (e.key === 'Enter' || e.key === ' ') {
           e.preventDefault()
-          onSelect(selected ? null : event.id)
+          onCardClick(event.id)
         }
       }}
-      aria-expanded={selected}
+      aria-expanded={detailOpen}
     >
       <header className="event-card__meta">
         <time dateTime={event.date}>{event.date}</time>
@@ -93,12 +99,12 @@ export default function EventCard({
         <ModelCapabilityIcons capabilities={event.capabilities} />
       ) : null}
 
-      {selected ? (
+      {detailOpen ? (
         <DetailPopover
           event={event}
           companies={companies}
           anchorRef={cardRef}
-          onClose={() => onSelect(null)}
+          onClose={onCloseDetail}
         />
       ) : null}
     </article>

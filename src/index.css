@@ -414,7 +414,6 @@ a {
 
 .timeline-rail__item:hover .timeline-rail__md,
 .timeline-rail__item.is-hover .timeline-rail__md,
-.timeline-rail__item.is-selected .timeline-rail__md,
 .timeline-rail__item.is-pinned .timeline-rail__md {
   color: #0f172a;
   font-weight: 700;
@@ -422,7 +421,6 @@ a {
 
 .timeline-rail__item:hover .timeline-rail__dot,
 .timeline-rail__item.is-hover .timeline-rail__dot,
-.timeline-rail__item.is-selected .timeline-rail__dot,
 .timeline-rail__item.is-pinned .timeline-rail__dot {
   transform: scale(1.25);
   box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
@@ -673,17 +671,32 @@ a {
   color: #0f172a;
 }
 
-.event-card:hover {
-  border-color: color-mix(in srgb, var(--co) 40%, var(--border));
-  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.08);
+/* Hover / first-click pin: subtle outer outline (外围框). No detail on hover. */
+.event-card:hover,
+.event-card.is-outlined {
+  border-color: color-mix(in srgb, var(--co) 45%, var(--border));
+  box-shadow:
+    0 0 0 2px color-mix(in srgb, var(--co) 32%, transparent),
+    0 4px 14px rgba(15, 23, 42, 0.06);
   transform: translateY(-1px);
   filter: saturate(1.05);
 }
 
-.event-card.is-selected {
+.event-card.is-outlined {
   border-color: var(--co);
-  box-shadow: 0 0 0 2px color-mix(in srgb, var(--co) 28%, transparent);
-  filter: saturate(1.08);
+  box-shadow:
+    0 0 0 2px color-mix(in srgb, var(--co) 36%, transparent),
+    0 4px 14px rgba(15, 23, 42, 0.07);
+  filter: saturate(1.06);
+}
+
+/* Detail open keeps the same outer outline (second click). */
+.event-card.is-detail {
+  border-color: var(--co);
+  box-shadow:
+    0 0 0 2px color-mix(in srgb, var(--co) 36%, transparent),
+    0 4px 14px rgba(15, 23, 42, 0.07);
+  filter: saturate(1.06);
 }
 
 /* After focus date while bump line is shown — 还没发生 */

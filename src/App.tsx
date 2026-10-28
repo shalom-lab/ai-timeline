@@ -102,12 +102,15 @@ function visibleCategoryEvents(
 export default function App() {
   const { meta, companies, events } = timelineData
   const [filters, setFilters] = useState<Filters>(DEFAULT_FILTERS)
-  const [selectedId, setSelectedId] = useState<string | null>(null)
+  /** First-click pin: outer outline on a card (no detail yet). */
+  const [outlinedId, setOutlinedId] = useState<string | null>(null)
+  /** Second-click: in-place detail popup. */
+  const [detailId, setDetailId] = useState<string | null>(null)
   const [solo, setSolo] = useState<SoloTarget | null>(null)
   const [subFilters, setSubFilters] = useState<Record<Category, string[]>>(EMPTY_SUB)
   /** Rail hover — dashed same-moment line (no 灰白). */
   const [hoverRailId, setHoverRailId] = useState<string | null>(null)
-  /** Click-pin — solid same-moment line + 灰白 for later cards. */
+  /** Rail click-pin — solid same-moment line + 灰白 for later cards. */
   const [bumpPinId, setBumpPinId] = useState<string | null>(null)
 
   const filtered = useMemo(() => {
@@ -180,10 +183,13 @@ export default function App() {
   }, [solo, filtered, byCategory, subFilters, companies])
 
   useEffect(() => {
-    if (selectedId && !filtered.some((e) => e.id === selectedId)) {
-      setSelectedId(null)
+    if (outlinedId && !filtered.some((e) => e.id === outlinedId)) {
+      setOutlinedId(null)
+      setDetailId(null)
+    } else if (detailId && !filtered.some((e) => e.id === detailId)) {
+      setDetailId(null)
     }
-  }, [filtered, selectedId])
+  }, [filtered, outlinedId, detailId])
 
   useEffect(() => {
     if (!solo) return
@@ -209,24 +215,63 @@ export default function App() {
     setBumpPinId(null)
   }, [solo])
 
-  /** Select card + toggle bump pin (click again clears solid+mute). */
-  const handleSelect = useCallback(
-    (id: string | null) => {
-      if (id == null) {
-        setSelectedId(null)
-        setBumpPinId(null)
+  /** Rail only: toggle solid same-moment line + 灰白. Never touches card outline/detail. */
+  const handleRailTogglePin = useCallback((id: string) => {
+    setBumpPinId((prev) => (prev === id ? null : id))
+  }, [])
+
+  /**
+   * Card click:
+   * - first click on a card → pin outer outline (no detail)
+   * - second click on the already-outlined card → open detail
+   * - click another card → move outline, close detail
+   */
+  const handleCardClick = useCallback(
+    (id: string) => {
+      if (outlinedId === id) {
+        setDetailId(id)
         return
       }
-      if (bumpPinId === id) {
-        setBumpPinId(null)
-        setSelectedId(null)
-      } else {
-        setBumpPinId(id)
-        setSelectedId(id)
-      }
+      setOutlinedId(id)
+      setDetailId(null)
     },
-    [bumpPinId],
+    [outlinedId],
   )
+
+  /** Close detail + clear outline pin (empty area / Escape / popover close). */
+  const clearCardFocus = useCallback(() => {
+    setDetailId(null)
+    setOutlinedId(null)
+  }, [])
+
+  /** Close detail only keeps outline? User: empty area clears pin. Popover close = same. */
+  const handleCloseDetail = useCallback(() => {
+    setDetailId(null)
+    setOutlinedId(null)
+  }, [])
+
+  // Click empty area (not the outlined card / detail / rail) → clear outline + detail.
+  useEffect(() => {
+    if (!outlinedId) return
+    const onDown = (e: MouseEvent) => {
+      const t = e.target
+      if (!(t instanceof Element)) return
+      if (t.closest('.detail-popover')) return
+      if (t.closest('.timeline-rail')) return
+      const card = document.querySelector(
+        `[data-event-id="${CSS.escape(outlinedId)}"]`,
+      )
+      if (card && card.contains(t)) return
+      clearCardFocus()
+    }
+    const tid = window.setTimeout(() => {
+      document.addEventListener('mousedown', onDown)
+    }, 0)
+    return () => {
+      window.clearTimeout(tid)
+      document.removeEventListener('mousedown', onDown)
+    }
+  }, [outlinedId, clearCardFocus])
 
   const patchFilters = useCallback((patch: Partial<Filters>) => {
     setFilters((f) => ({ ...f, ...patch }))
@@ -267,15 +312,13 @@ export default function App() {
     : (focusEvent?.category ?? null)
   const bumpActive = bumpFocusId != null && bumpCategory != null
 
-  const selectEventFromFrontier = useCallback(
-    (id: string) => {
-      setSolo(null)
-      setSelectedId(id)
-      setBumpPinId(id)
-      requestAnimationFrame(() => focusCard(id))
-    },
-    [],
-  )
+  const selectEventFromFrontier = useCallback((id: string) => {
+    setSolo(null)
+    // Jump + outline pin only; user second-clicks card for detail.
+    setOutlinedId(id)
+    setDetailId(null)
+    requestAnimationFrame(() => focusCard(id))
+  }, [])
 
   return (
     <div className="app-shell">
@@ -290,11 +333,10 @@ export default function App() {
         <TimelineRail
           events={railEvents}
           companies={companies}
-          selectedId={selectedId}
-          onSelect={handleSelect}
           hoverId={hoverRailId}
           onHover={setHoverRailId}
           pinId={bumpPinId}
+          onTogglePin={handleRailTogglePin}
           layout={railLayout}
           frontierSolo={solo === 'frontier'}
         />
@@ -311,7 +353,8 @@ export default function App() {
                 isSolo={solo === cat}
                 onSolo={() => {
                   setSolo(cat)
-                  setSelectedId(null)
+                  setOutlinedId(null)
+                  setDetailId(null)
                   setBumpPinId(null)
                 }}
                 onExitSolo={() => setSolo(null)}
@@ -319,8 +362,10 @@ export default function App() {
                 onSubFilter={(keys) =>
                   setSubFilters((s) => ({ ...s, [cat]: keys }))
                 }
-                selectedId={selectedId}
-                onSelect={handleSelect}
+                outlinedId={outlinedId}
+                detailId={detailId}
+                onCardClick={handleCardClick}
+                onCloseDetail={handleCloseDetail}
                 bumpActive={bumpActive && bumpCategory === cat}
                 bumpFocusDate={
                   bumpActive && bumpCategory === cat ? bumpFocusDate : null
@@ -341,7 +386,8 @@ export default function App() {
                 isSolo={solo === 'frontier'}
                 onSolo={() => {
                   setSolo('frontier')
-                  setSelectedId(null)
+                  setOutlinedId(null)
+                  setDetailId(null)
                   setBumpPinId(null)
                 }}
                 onExitSolo={() => setSolo(null)}

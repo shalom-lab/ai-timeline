@@ -16,8 +16,12 @@ type Props = {
   /** Selected series/subcategory keys; empty = show all */
   subFilter: string[]
   onSubFilter: (keys: string[]) => void
-  selectedId: string | null
-  onSelect: (id: string | null) => void
+  /** First-click pinned outline card id. */
+  outlinedId: string | null
+  /** Second-click detail popup card id. */
+  detailId: string | null
+  onCardClick: (id: string) => void
+  onCloseDetail: () => void
   /**
    * Show the same-moment slice for this category (hover dashed / pin solid).
    * Default hidden — only the active category gets the line.
@@ -105,8 +109,10 @@ export default function CategoryColumn({
   onExitSolo,
   subFilter,
   onSubFilter,
-  selectedId,
-  onSelect,
+  outlinedId,
+  detailId,
+  onCardClick,
+  onCloseDetail,
   bumpActive = false,
   bumpFocusDate = null,
   bumpFocusId = null,
@@ -269,8 +275,10 @@ export default function CategoryColumn({
                       key={e.id}
                       event={e}
                       companies={companies}
-                      selected={selectedId === e.id}
-                      onSelect={onSelect}
+                      outlined={outlinedId === e.id}
+                      detailOpen={detailId === e.id}
+                      onCardClick={onCardClick}
+                      onCloseDetail={onCloseDetail}
                       isFuture={isFuture}
                     />
                   )

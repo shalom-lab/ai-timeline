@@ -8,15 +8,13 @@ import { YEAR_MARKER_H } from '../lib/timelineLayout'
 type Props = {
   events: TimelineEvent[]
   companies: Company[]
-  /** Card detail selection (from board cards). */
-  selectedId: string | null
-  /** Select / toggle bump pin when clicking a rail date. */
-  onSelect?: (id: string | null) => void
   /** Rail hover event id — dashed same-moment line (no mute). */
   hoverId: string | null
   onHover: (id: string | null) => void
-  /** Click-pinned event id — solid line + 灰白. */
+  /** Click-pinned event id — solid line + 灰白. Rail only; never selects cards. */
   pinId?: string | null
+  /** Toggle bump pin (solid+mute). Does not select / outline cards. */
+  onTogglePin?: (id: string) => void
   /** Compact equal-step rail layout (year left / dates indented). */
   layout: TimelineLayout
   /** When true, layout items are frontier month proxies (no TimelineEvent). */
@@ -79,11 +77,10 @@ function focusFrontierMonth(month: string) {
 export default function TimelineRail({
   events,
   companies,
-  selectedId,
-  onSelect,
   hoverId,
   onHover,
   pinId = null,
+  onTogglePin,
   layout,
   frontierSolo = false,
 }: Props) {
@@ -187,14 +184,13 @@ export default function TimelineRail({
           const event = byId.get(item.id)
           if (!event) return null
           const { color } = companyColor(companies, event.company)
-          const selected = event.id === selectedId
           const hovered = event.id === hoverId
           const pinned = event.id === pinId
           return (
             <button
               key={event.id}
               type="button"
-              className={`timeline-rail__item${selected ? ' is-selected' : ''}${hovered ? ' is-hover' : ''}${pinned ? ' is-pinned' : ''}`}
+              className={`timeline-rail__item${hovered ? ' is-hover' : ''}${pinned ? ' is-pinned' : ''}`}
               style={{ top: item.centerY }}
               title={`${event.date} · ${event.title}（悬停虚线；点击实线+灰白）`}
               aria-label={`${event.date} ${event.title}`}
@@ -213,8 +209,8 @@ export default function TimelineRail({
                 onHover(null)
               }}
               onClick={() => {
-                // Toggle pin (solid+mute) via onSelect; hover remains dashed-only.
-                onSelect?.(event.id)
+                // Bump line only — never select / outline / open card detail.
+                onTogglePin?.(event.id)
                 requestAnimationFrame(() => focusCard(event.id))
               }}
             >
