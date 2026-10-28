@@ -751,7 +751,7 @@ a {
   border: 1px solid color-mix(in srgb, var(--co) 16%, var(--border));
   border-radius: 6px;
   padding: 0.65rem 0.7rem 0.55rem 0.7rem;
-  cursor: pointer;
+  cursor: default;
   box-shadow: 0 1px 2px rgba(15, 23, 42, 0.03);
   transition:
     border-color 0.15s ease,
@@ -762,9 +762,8 @@ a {
   color: #0f172a;
 }
 
-/* Hover / first-click pin: subtle outer outline (外围框). No detail on hover. */
-.event-card:hover,
-.event-card.is-outlined {
+/* Hover outline (外围框). No detail on hover. */
+.event-card:hover {
   border-color: color-mix(in srgb, var(--co) 45%, var(--border));
   box-shadow:
     0 0 0 2px color-mix(in srgb, var(--co) 32%, transparent),
@@ -773,15 +772,7 @@ a {
   filter: saturate(1.05);
 }
 
-.event-card.is-outlined {
-  border-color: var(--co);
-  box-shadow:
-    0 0 0 2px color-mix(in srgb, var(--co) 36%, transparent),
-    0 4px 14px rgba(15, 23, 42, 0.07);
-  filter: saturate(1.06);
-}
-
-/* Detail open keeps the same outer outline (second click). */
+/* Detail open (top-bar click) keeps a stronger outer outline. */
 .event-card.is-detail {
   border-color: var(--co);
   box-shadow:
@@ -823,6 +814,31 @@ a {
   gap: 0.4rem;
   align-items: center;
   margin-bottom: 0.3rem;
+  cursor: pointer;
+  border-radius: 4px;
+  margin-left: -0.15rem;
+  margin-right: -0.15rem;
+  padding: 0.1rem 0.15rem;
+}
+
+.event-card__meta:hover {
+  background: color-mix(in srgb, var(--co) 8%, transparent);
+}
+
+.event-card__meta:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--co) 55%, transparent);
+  outline-offset: 1px;
+}
+
+/* Main area below top strip: pin same-moment line (rail-equivalent). */
+.event-card__body {
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.event-card__body:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--co) 55%, transparent);
+  outline-offset: 1px;
 }
 
 .event-card__meta time {

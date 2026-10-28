@@ -1,7 +1,7 @@
 {
   "name": "ai-timeline",
   "private": true,
-  "version": "0.8.2",
+  "version": "0.8.3",
   "type": "module",
   "description": "AI纪年 (AI Timeline) — landmark events since ChatGPT public launch (2022-11-30). Data-first.",
   "scripts": {

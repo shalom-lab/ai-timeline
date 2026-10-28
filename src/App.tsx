@@ -109,9 +109,7 @@ export default function App() {
   const { meta, companies, events } = timelineData
   const [page, setPage] = useState<AppPage>(() => pageFromHash())
   const [filters, setFilters] = useState<Filters>(DEFAULT_FILTERS)
-  /** First-click pin: outer outline on a card (no detail yet). */
-  const [outlinedId, setOutlinedId] = useState<string | null>(null)
-  /** Second-click: in-place detail popup. */
+  /** Detail popover (card top-bar click). */
   const [detailId, setDetailId] = useState<string | null>(null)
   const [solo, setSolo] = useState<SoloTarget | null>(null)
   const [subFilters, setSubFilters] = useState<Record<Category, string[]>>(EMPTY_SUB)
@@ -190,13 +188,10 @@ export default function App() {
   }, [solo, filtered, byCategory, subFilters, companies])
 
   useEffect(() => {
-    if (outlinedId && !filtered.some((e) => e.id === outlinedId)) {
-      setOutlinedId(null)
-      setDetailId(null)
-    } else if (detailId && !filtered.some((e) => e.id === detailId)) {
+    if (detailId && !filtered.some((e) => e.id === detailId)) {
       setDetailId(null)
     }
-  }, [filtered, outlinedId, detailId])
+  }, [filtered, detailId])
 
   useEffect(() => {
     if (!solo) return
@@ -243,13 +238,15 @@ export default function App() {
     return () => document.removeEventListener('keydown', onKey)
   }, [clearBumpPin])
 
-  // Click outside the rail clears rail pin (hover is ephemeral; pin is sticky).
+  // Click outside rail + cards clears bump pin (card body / rail toggle pin themselves).
   useEffect(() => {
     if (!bumpPinId) return
     const onDown = (e: MouseEvent) => {
       const t = e.target
       if (!(t instanceof Element)) return
       if (t.closest('.timeline-rail')) return
+      if (t.closest('.event-card')) return
+      if (t.closest('.detail-popover')) return
       clearBumpPin()
     }
     const tid = window.setTimeout(() => {
@@ -261,49 +258,40 @@ export default function App() {
     }
   }, [bumpPinId, clearBumpPin])
 
-  /**
-   * Card click:
-   * - first click on a card → pin outer outline (no detail)
-   * - second click on the already-outlined card → open detail
-   * - click another card → move outline, close detail
-   */
-  const handleCardClick = useCallback(
-    (id: string) => {
-      if (outlinedId === id) {
-        setDetailId(id)
-        return
-      }
-      setOutlinedId(id)
-      setDetailId(null)
-    },
-    [outlinedId],
-  )
-
-  /** Close detail + clear outline pin (empty area / Escape / popover close). */
-  const clearCardFocus = useCallback(() => {
-    setDetailId(null)
-    setOutlinedId(null)
+  /** Card top bar → open detail popover. */
+  const handleOpenDetail = useCallback((id: string) => {
+    setDetailId(id)
   }, [])
 
-  /** Close detail only keeps outline? User: empty area clears pin. Popover close = same. */
+  /**
+   * Card main body → same as left rail node click:
+   * toggle solid same-moment H lines + 灰白 (cards after + rail below).
+   * Does not open detail.
+   */
+  const handlePinMoment = useCallback((id: string) => {
+    setDetailId(null)
+    setBumpPinId((prev) => (prev === id ? null : id))
+  }, [])
+
+  /** Close detail popover. */
   const handleCloseDetail = useCallback(() => {
     setDetailId(null)
-    setOutlinedId(null)
   }, [])
 
-  // Click empty area (not the outlined card / detail / rail) → clear outline + detail.
+  // Click empty area (not detail / rail / cards) → close detail.
   useEffect(() => {
-    if (!outlinedId) return
+    if (!detailId) return
     const onDown = (e: MouseEvent) => {
       const t = e.target
       if (!(t instanceof Element)) return
       if (t.closest('.detail-popover')) return
       if (t.closest('.timeline-rail')) return
+      // Header re-opens / stays; body handler closes detail itself.
       const card = document.querySelector(
-        `[data-event-id="${CSS.escape(outlinedId)}"]`,
+        `[data-event-id="${CSS.escape(detailId)}"]`,
       )
       if (card && card.contains(t)) return
-      clearCardFocus()
+      setDetailId(null)
     }
     const tid = window.setTimeout(() => {
       document.addEventListener('mousedown', onDown)
@@ -312,7 +300,7 @@ export default function App() {
       window.clearTimeout(tid)
       document.removeEventListener('mousedown', onDown)
     }
-  }, [outlinedId, clearCardFocus])
+  }, [detailId])
 
   const patchFilters = useCallback((patch: Partial<Filters>) => {
     setFilters((f) => ({ ...f, ...patch }))
@@ -368,9 +356,8 @@ export default function App() {
 
   const selectEventFromFrontier = useCallback((id: string) => {
     setSolo(null)
-    // Jump + outline pin only; user second-clicks card for detail.
-    setOutlinedId(id)
-    setDetailId(null)
+    // Jump + open detail (user picked a specific event).
+    setDetailId(id)
     requestAnimationFrame(() => focusCard(id))
   }, [])
 
@@ -417,7 +404,6 @@ export default function App() {
                 isSolo={solo === cat}
                 onSolo={() => {
                   setSolo(cat)
-                  setOutlinedId(null)
                   setDetailId(null)
                   setBumpPinId(null)
                 }}
@@ -426,9 +412,9 @@ export default function App() {
                 onSubFilter={(keys) =>
                   setSubFilters((s) => ({ ...s, [cat]: keys }))
                 }
-                outlinedId={outlinedId}
                 detailId={detailId}
-                onCardClick={handleCardClick}
+                onOpenDetail={handleOpenDetail}
+                onPinMoment={handlePinMoment}
                 onCloseDetail={handleCloseDetail}
                 bumpActive={bumpActive && bumpCategory === cat}
                 bumpFocusDate={
@@ -450,7 +436,6 @@ export default function App() {
                 isSolo={solo === 'frontier'}
                 onSolo={() => {
                   setSolo('frontier')
-                  setOutlinedId(null)
                   setDetailId(null)
                   setBumpPinId(null)
                 }}

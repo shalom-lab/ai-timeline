@@ -16,11 +16,11 @@ type Props = {
   /** Selected series/subcategory keys; empty = show all */
   subFilter: string[]
   onSubFilter: (keys: string[]) => void
-  /** First-click pinned outline card id. */
-  outlinedId: string | null
-  /** Second-click detail popup card id. */
+  /** Detail popover card id (header click). */
   detailId: string | null
-  onCardClick: (id: string) => void
+  onOpenDetail: (id: string) => void
+  /** Same as rail node: pin same-moment H + 灰白. */
+  onPinMoment: (id: string) => void
   onCloseDetail: () => void
   /**
    * Show the same-moment slice for this category (hover dashed / pin solid).
@@ -109,9 +109,9 @@ export default function CategoryColumn({
   onExitSolo,
   subFilter,
   onSubFilter,
-  outlinedId,
   detailId,
-  onCardClick,
+  onOpenDetail,
+  onPinMoment,
   onCloseDetail,
   bumpActive = false,
   bumpFocusDate = null,
@@ -275,9 +275,9 @@ export default function CategoryColumn({
                       key={e.id}
                       event={e}
                       companies={companies}
-                      outlined={outlinedId === e.id}
                       detailOpen={detailId === e.id}
-                      onCardClick={onCardClick}
+                      onOpenDetail={onOpenDetail}
+                      onPinMoment={onPinMoment}
                       onCloseDetail={onCloseDetail}
                       isFuture={isFuture}
                     />
