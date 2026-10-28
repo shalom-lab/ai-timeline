@@ -1,9 +1,9 @@
 {
   "name": "ai-timeline",
   "private": true,
-  "version": "0.6.0",
+  "version": "0.7.0",
   "type": "module",
-  "description": "AI纪年 (AI Timeline) — landmark events since ChatGPT public launch (2022-11-30). Data-first.",
+  "description": "AI\u7eaa\u5e74 (AI Timeline) \u2014 landmark events since ChatGPT public launch (2022-11-30). Data-first.",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",

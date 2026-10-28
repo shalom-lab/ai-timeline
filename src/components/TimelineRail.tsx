@@ -14,12 +14,23 @@ type Placed = {
   /** CSS top within the year track, px */
   top: number
   label: string
+  /** YYYY-MM */
+  ym: string
+}
+
+type MonthBand = {
+  ym: string
+  top: number
+  height: number
+  /** Alternating tone index within the year (adjacent months differ) */
+  tone: number
 }
 
 type YearBlock = {
   year: string
   height: number
   items: Placed[]
+  monthBands: MonthBand[]
 }
 
 const MIN_GAP = 22
@@ -29,6 +40,9 @@ const YEAR_PAD_BOTTOM = 10
 const PX_PER_DAY = 0.55
 const MIN_YEAR_BODY = 72
 const MAX_YEAR_BODY = 520
+/** Half of item hit area — bands hug the date rows */
+const ITEM_HALF = 9
+const BAND_PAD = 3
 
 function dayOfYear(iso: string): number {
   const y = Number(iso.slice(0, 4))
@@ -43,6 +57,36 @@ function mmdd(iso: string): string {
   return iso.slice(5) // MM-DD
 }
 
+function ymOf(iso: string): string {
+  return iso.slice(0, 7) // YYYY-MM
+}
+
+/** Soft month background bands: same YYYY-MM share one band; adjacent months alternate. */
+function buildMonthBands(items: Placed[]): MonthBand[] {
+  if (items.length === 0) return []
+  const bands: MonthBand[] = []
+  let i = 0
+  let tone = 0
+  while (i < items.length) {
+    const ym = items[i].ym
+    let j = i + 1
+    while (j < items.length && items[j].ym === ym) j++
+    const first = items[i]
+    const last = items[j - 1]
+    const top = Math.max(0, first.top - ITEM_HALF - BAND_PAD)
+    const bottom = last.top + ITEM_HALF + BAND_PAD
+    bands.push({
+      ym,
+      top,
+      height: Math.max(18, bottom - top),
+      tone: tone % 2,
+    })
+    tone += 1
+    i = j
+  }
+  return bands
+}
+
 /**
  * Place events by calendar day within the year, then push apart so labels
  * keep a minimum vertical gap (dense clusters expand the track).
@@ -50,7 +94,7 @@ function mmdd(iso: string): string {
 function placeYear(year: string, events: TimelineEvent[]): YearBlock {
   const sorted = [...events].sort((a, b) => a.date.localeCompare(b.date))
   if (sorted.length === 0) {
-    return { year, height: MIN_YEAR_BODY, items: [] }
+    return { year, height: MIN_YEAR_BODY, items: [], monthBands: [] }
   }
 
   const days = sorted.map((e) => dayOfYear(e.date))
@@ -85,12 +129,14 @@ function placeYear(year: string, events: TimelineEvent[]): YearBlock {
     event,
     top: YEAR_PAD_TOP + tops[i],
     label: mmdd(event.date),
+    ym: ymOf(event.date),
   }))
 
   return {
     year,
     height: YEAR_PAD_TOP + track + YEAR_PAD_BOTTOM,
     items,
+    monthBands: buildMonthBands(items),
   }
 }
 
@@ -156,6 +202,15 @@ export default function TimelineRail({
                 className="timeline-rail__track"
                 style={{ height: block.height }}
               >
+                {block.monthBands.map((band) => (
+                  <div
+                    key={band.ym}
+                    className={`timeline-rail__month-bg timeline-rail__month-bg--${band.tone}`}
+                    style={{ top: band.top, height: band.height }}
+                    data-month={band.ym}
+                    aria-hidden
+                  />
+                ))}
                 <div className="timeline-rail__line" aria-hidden />
                 {block.items.map(({ event, top, label }) => {
                   const { color } = companyColor(companies, event.company)

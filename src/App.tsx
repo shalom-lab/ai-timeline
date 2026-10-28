@@ -170,21 +170,6 @@ export default function App() {
         <div
           className={`board__columns${solo ? ' is-solo-mode' : ''}`}
         >
-          {showFrontierColumn ? (
-            <div key="frontier" className="board__col-slot board__col-slot--frontier">
-              <FrontierColumn
-                months={frontierMonths}
-                isSolo={solo === 'frontier'}
-                onSolo={() => {
-                  setSolo('frontier')
-                  setSelectedId(null)
-                }}
-                onExitSolo={() => setSolo(null)}
-                onSelectEvent={selectEventFromFrontier}
-              />
-            </div>
-          ) : null}
-
           {visibleCategories.map((cat) => (
             <div key={cat} className="board__col-slot">
               <CategoryColumn
@@ -206,6 +191,21 @@ export default function App() {
               />
             </div>
           ))}
+
+          {showFrontierColumn ? (
+            <div key="frontier" className="board__col-slot board__col-slot--frontier">
+              <FrontierColumn
+                months={frontierMonths}
+                isSolo={solo === 'frontier'}
+                onSolo={() => {
+                  setSolo('frontier')
+                  setSelectedId(null)
+                }}
+                onExitSolo={() => setSolo(null)}
+                onSelectEvent={selectEventFromFrontier}
+              />
+            </div>
+          ) : null}
         </div>
       </div>
     </div>

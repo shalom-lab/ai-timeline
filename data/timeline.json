@@ -1,7 +1,7 @@
 {
   "meta": {
     "name": "AI纪年",
-    "version": "0.6.0",
+    "version": "0.7.0",
     "scopeStart": "2022-11-30",
     "updatedAt": "2026-10-28",
     "locale": "zh-CN",
@@ -117,6 +117,21 @@
       ],
       "color": "#12B7F5",
       "colorSoft": "#D4F1FC"
+    },
+    {
+      "id": "bytedance",
+      "name": "ByteDance",
+      "aliases": [
+        "字节",
+        "字节跳动",
+        "豆包",
+        "Doubao",
+        "Seed",
+        "火山引擎",
+        "Volcengine"
+      ],
+      "color": "#325AB4",
+      "colorSoft": "#D6E0F5"
     },
     {
       "id": "moonshot",
@@ -423,8 +438,7 @@
       "dateStatus": "exact",
       "title": "OpenAI 发布 DALL·E 3",
       "summary": "OpenAI 发布文生图模型 DALL·E 3，并宣布将原生集成进 ChatGPT；研究预览阶段计划随后向 Plus / Enterprise 用户开放。",
-      "category": "product",
-      "productSubcategory": "image",
+      "category": "model",
       "company": "OpenAI",
       "series": "DALL·E",
       "product": "DALL·E 3",
@@ -441,8 +455,9 @@
         "openai-chatgpt-plus-2023-02-01"
       ],
       "tags": [
-        "image-generation",
-        "dalle"
+        "dalle",
+        "foundation-model",
+        "image-generation"
       ]
     },
     {
@@ -641,8 +656,7 @@
       "dateStatus": "exact",
       "title": "OpenAI 首次公布文生视频模型 Sora",
       "summary": "OpenAI 首次公布文生视频模型 Sora，展示最长约一分钟的视频生成能力；当时尚未向公众广泛开放使用。",
-      "category": "product",
-      "productSubcategory": "video",
+      "category": "model",
       "company": "OpenAI",
       "series": "Sora",
       "product": "Sora",
@@ -656,8 +670,9 @@
         }
       ],
       "tags": [
-        "video-generation",
-        "sora"
+        "foundation-model",
+        "sora",
+        "video-generation"
       ]
     },
     {
@@ -875,6 +890,37 @@
       "tags": [
         "gpt-4o",
         "multimodal"
+      ]
+    },
+    {
+      "id": "bytedance-doubao-family-2024-05-15",
+      "date": "2024-05-15",
+      "dateStatus": "exact",
+      "title": "字节跳动发布豆包大模型家族",
+      "summary": "字节跳动在火山引擎 FORCE 原动力大会上正式发布豆包大模型家族（通用 Pro/Lite 及语音、文生图等），并通过火山引擎面向企业开放调用。",
+      "category": "model",
+      "company": "ByteDance",
+      "series": "Doubao",
+      "product": "豆包大模型",
+      "eventType": "first_announce",
+      "sources": [
+        {
+          "title": "字节跳动发布豆包大模型，日均处理千亿级Tokens",
+          "url": "https://www.xinhuanet.com/tech/20240515/0cbd896c16e14a398c26f4195a360410/c.html",
+          "publisher": "新华网",
+          "publishedAt": "2024-05-15"
+        },
+        {
+          "title": "字节跳动豆包大模型发布，火山引擎全栈 AI 服务助力企业智能化转型",
+          "url": "https://developer.volcengine.com/articles/7369628105754804261",
+          "publisher": "火山引擎",
+          "publishedAt": "2024-05-15"
+        }
+      ],
+      "tags": [
+        "doubao",
+        "foundation-model",
+        "bytedance"
       ]
     },
     {
@@ -1307,6 +1353,35 @@
         "reasoning",
         "open-weights",
         "r1"
+      ]
+    },
+    {
+      "id": "bytedance-doubao-1-5-pro-2025-01-22",
+      "date": "2025-01-22",
+      "dateStatus": "exact",
+      "title": "字节跳动发布 Doubao-1.5-pro",
+      "summary": "豆包大模型团队正式发布 Doubao-1.5-pro（Seed1.5）：稀疏 MoE 架构，强调训练-推理一体与多模态能力；已在豆包 App 灰度并经火山引擎 API 开放。",
+      "category": "model",
+      "company": "ByteDance",
+      "series": "Doubao",
+      "product": "Doubao-1.5-pro",
+      "eventType": "ga",
+      "sources": [
+        {
+          "title": "Doubao-1.5-pro",
+          "url": "https://seed.bytedance.com/en/doubao_1_5_pro",
+          "publisher": "ByteDance Seed",
+          "publishedAt": "2025-01-22"
+        }
+      ],
+      "relatedIds": [
+        "bytedance-doubao-family-2024-05-15"
+      ],
+      "tags": [
+        "doubao",
+        "seed",
+        "moe",
+        "foundation-model"
       ]
     },
     {

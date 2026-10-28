@@ -96,7 +96,7 @@ interface TimelineData {
 
 | 展示序 | 枚举值 | 中文标签 | 用法 |
 | --- | --- | --- | --- |
-| 1 | `model` | 大模型 | 基础/对话/多模态等模型权重或 API 型号本身的发布 |
+| 1 | `model` | 大模型 | 基础/对话/多模态/文生图·视频等 **foundation model** 权重或 API 型号本身的发布；看板内按 **公司** 分组 |
 | 2 | `product` | 产品 | 面向用户或开发者的产品、客户端、工具、平台能力 |
 | 3 | `concept` | 概念 | 行业共识性概念的「公开落地/命名」节点（Agent、多模态范式等）；**不含**科学发现本身 |
 | 4 | `science` | 科学 | **AI 在科学领域的发现/突破**：用 AI 攻克（或显著推进）科学难题的可核验节点，如蛋白质结构、材料、药物发现演示、气候/天气模型、数学证明等。**不是**普通消费级产品上线。例：AlphaFold 3。可保留 `ai-for-science` 等 tags |
@@ -207,6 +207,15 @@ interface Source {
 相对 v0.2：一级 `Category` 增至五值，新增 `science`（科学：AI 科学发现/突破，非普通产品发布）；看板序为 大模型 → 产品 → 概念 → 科学 → 其他。版本 `0.3.0`。
 
 相对 v0.5：新增独立数据集 **能力边界**（`capability-frontier.json`）；扩充 foundation model 种子；`Google DeepMind` 从 Google 词典中拆出独立 `companies[].id = deepmind`。时间线 `meta.version` `0.6.0`。
+
+相对 v0.6：
+
+- **大模型列分组键改为公司**（`companies[].id` / `name`），不再按 `series` 拆开（OpenAI 的 GPT/o1/o3、DeepSeek 与 DeepSeek-R1、腾讯混元等各自成一组）。多选 chips 同步按公司过滤。
+- **图像/生成式基础模型**归入 `category: model`（例：DALL·E 3、Sora）；ChatGPT 对话产品、Cursor IDE、Claude.ai 等仍为 `product`。
+- 新增 `companies[].id = bytedance`（字节跳动）及已核验的豆包大模型节点（2024-05-15 家族发布、2025-01-22 Doubao-1.5-pro）。
+- 公司标识改为 `public/logos/{id}.svg` 实标（Simple Icons / Wikimedia），不再使用自造几何 SVG。
+
+时间线 `meta.version` `0.7.0`。
 
 ---
 

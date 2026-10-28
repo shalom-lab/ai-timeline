@@ -97,7 +97,7 @@ export default function CategoryColumn({
   onSelect,
 }: Props) {
   const theme = CATEGORY_THEME[category]
-  const groups = buildSubGroups(category, events)
+  const groups = buildSubGroups(category, events, companies)
   const showAll = subFilter.length === 0
   const visibleGroups = showAll
     ? groups

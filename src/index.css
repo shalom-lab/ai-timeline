@@ -347,6 +347,22 @@ a {
   padding-left: 0;
 }
 
+/* Same-month soft background bands (相同月份 bg同色); adjacent months alternate */
+.timeline-rail__month-bg {
+  position: absolute;
+  left: 0;
+  right: 2px;
+  border-radius: 6px;
+  pointer-events: none;
+  z-index: 0;
+}
+.timeline-rail__month-bg--0 {
+  background: #e8edf5;
+}
+.timeline-rail__month-bg--1 {
+  background: #f3f0ea;
+}
+
 .timeline-rail__line {
   position: absolute;
   left: 5px;
@@ -354,6 +370,7 @@ a {
   bottom: 6px;
   width: 1px;
   background: #d0d7e2;
+  z-index: 1;
 }
 
 .timeline-rail__item {
@@ -372,6 +389,7 @@ a {
   height: 18px;
   transform: translateY(-9px);
   border-radius: 4px;
+  z-index: 1;
 }
 
 .timeline-rail__item:hover .timeline-rail__md,
@@ -716,6 +734,15 @@ a {
   border-radius: 4px;
   overflow: hidden;
   line-height: 0;
+}
+
+.co-logo {
+  display: block;
+  object-fit: contain;
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+  max-height: 100%;
 }
 
 .co-avatar--letter {
