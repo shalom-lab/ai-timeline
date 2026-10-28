@@ -138,7 +138,7 @@ export function buildTimelineLayout(
 }
 
 /** Equal-step vertical rank for multi-subcol category boards (not day→px). */
-export const RANK_STEP = 128
+export const RANK_STEP = 152
 export const RANK_PAD_TOP = 16
 export const RANK_PAD_BOTTOM = 40
 

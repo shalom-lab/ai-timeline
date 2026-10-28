@@ -108,9 +108,9 @@ export default function BumpConnectors({ containerRef, orderedIds }: Props) {
       <path
         d={path}
         fill="none"
-        stroke="rgba(219, 39, 119, 0.35)"
-        strokeWidth={1.5}
-        strokeDasharray="5 4"
+        stroke="rgba(219, 39, 119, 0.62)"
+        strokeWidth={1.85}
+        strokeDasharray="6 5"
         strokeLinecap="round"
         strokeLinejoin="round"
       />

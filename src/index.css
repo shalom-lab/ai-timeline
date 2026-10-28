@@ -610,7 +610,7 @@ a {
 .cat-subcol__cards {
   display: flex;
   flex-direction: column;
-  gap: 0.45rem;
+  gap: 0.65rem;
 }
 
 .cat-subcol__cards.is-rank-placed {
