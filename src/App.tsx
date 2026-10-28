@@ -1,10 +1,12 @@
 import { useMemo, useState, useCallback, useEffect } from 'react'
-import { timelineData } from './data'
+import { timelineData, capabilityFrontierData } from './data'
 import type { Category, TimelineEvent } from './types/timeline'
+import type { CapabilityMonth } from './types/capability'
 import { BOARD_CATEGORY_ORDER } from './lib/labels'
 import Header, { type Filters } from './components/Header'
 import TimelineRail from './components/TimelineRail'
 import CategoryColumn from './components/CategoryColumn'
+import FrontierColumn from './components/FrontierColumn'
 
 const DEFAULT_FILTERS: Filters = {
   query: '',
@@ -17,6 +19,8 @@ const EMPTY_SUB: Record<Category, string[]> = {
   science: [],
   other: [],
 }
+
+type SoloTarget = Category | 'frontier'
 
 function matchesQuery(e: TimelineEvent, q: string): boolean {
   if (!q) return true
@@ -34,11 +38,45 @@ function matchesQuery(e: TimelineEvent, q: string): boolean {
   return hay.includes(q)
 }
 
+function filterFrontierMonths(
+  months: CapabilityMonth[],
+  q: string,
+): CapabilityMonth[] {
+  if (!q) return months
+  const out: CapabilityMonth[] = []
+  for (const m of months) {
+    const monthHit =
+      m.month.includes(q) ||
+      m.summary.toLowerCase().includes(q) ||
+      `能力边界`.includes(q)
+    const workflows = m.workflows.filter((w) => {
+      const hay = [w.title, w.how ?? '', ...(w.tags ?? []), ...(w.enabledBy ?? [])]
+        .join(' ')
+        .toLowerCase()
+      return hay.includes(q)
+    })
+    if (monthHit) {
+      out.push(m)
+    } else if (workflows.length > 0) {
+      out.push({ ...m, workflows })
+    }
+  }
+  return out
+}
+
+function focusCard(id: string) {
+  const el = document.querySelector<HTMLElement>(
+    `[data-event-id="${CSS.escape(id)}"]`,
+  )
+  if (!el) return
+  el.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' })
+}
+
 export default function App() {
   const { meta, companies, events } = timelineData
   const [filters, setFilters] = useState<Filters>(DEFAULT_FILTERS)
   const [selectedId, setSelectedId] = useState<string | null>(null)
-  const [soloCategory, setSoloCategory] = useState<Category | null>(null)
+  const [solo, setSolo] = useState<SoloTarget | null>(null)
   const [subFilters, setSubFilters] = useState<Record<Category, string[]>>(EMPTY_SUB)
 
   const filtered = useMemo(() => {
@@ -47,6 +85,11 @@ export default function App() {
       .filter((e) => matchesQuery(e, q))
       .sort((a, b) => a.date.localeCompare(b.date))
   }, [events, filters])
+
+  const frontierMonths = useMemo(() => {
+    const q = filters.query.trim().toLowerCase()
+    return filterFrontierMonths(capabilityFrontierData.months, q)
+  }, [filters])
 
   const byCategory = useMemo(() => {
     const map: Record<Category, TimelineEvent[]> = {
@@ -69,10 +112,13 @@ export default function App() {
   }, [filtered, selectedId])
 
   useEffect(() => {
-    if (soloCategory && byCategory[soloCategory].length === 0) {
-      setSoloCategory(null)
+    if (!solo) return
+    if (solo === 'frontier') {
+      if (frontierMonths.length === 0) setSolo(null)
+      return
     }
-  }, [soloCategory, byCategory])
+    if (byCategory[solo].length === 0) setSolo(null)
+  }, [solo, byCategory, frontierMonths])
 
   const patchFilters = useCallback((patch: Partial<Filters>) => {
     setFilters((f) => ({ ...f, ...patch }))
@@ -82,9 +128,27 @@ export default function App() {
     (c) => byCategory[c].length > 0,
   )
 
-  const visibleCategories = soloCategory
-    ? categoriesWithEvents.filter((c) => c === soloCategory)
-    : categoriesWithEvents
+  const showFrontier = frontierMonths.length > 0
+  const soloCategory = solo && solo !== 'frontier' ? solo : null
+
+  const visibleCategories =
+    solo === 'frontier'
+      ? []
+      : soloCategory
+        ? categoriesWithEvents.filter((c) => c === soloCategory)
+        : categoriesWithEvents
+
+  const showFrontierColumn =
+    showFrontier && (solo === null || solo === 'frontier')
+
+  const selectEventFromFrontier = useCallback(
+    (id: string) => {
+      setSolo(null)
+      setSelectedId(id)
+      requestAnimationFrame(() => focusCard(id))
+    },
+    [],
+  )
 
   return (
     <div className="app-shell">
@@ -104,20 +168,35 @@ export default function App() {
         />
 
         <div
-          className={`board__columns${soloCategory ? ' is-solo-mode' : ''}`}
+          className={`board__columns${solo ? ' is-solo-mode' : ''}`}
         >
+          {showFrontierColumn ? (
+            <div key="frontier" className="board__col-slot board__col-slot--frontier">
+              <FrontierColumn
+                months={frontierMonths}
+                isSolo={solo === 'frontier'}
+                onSolo={() => {
+                  setSolo('frontier')
+                  setSelectedId(null)
+                }}
+                onExitSolo={() => setSolo(null)}
+                onSelectEvent={selectEventFromFrontier}
+              />
+            </div>
+          ) : null}
+
           {visibleCategories.map((cat) => (
             <div key={cat} className="board__col-slot">
               <CategoryColumn
                 category={cat}
                 events={byCategory[cat]}
                 companies={companies}
-                isSolo={soloCategory === cat}
+                isSolo={solo === cat}
                 onSolo={() => {
-                  setSoloCategory(cat)
+                  setSolo(cat)
                   setSelectedId(null)
                 }}
-                onExitSolo={() => setSoloCategory(null)}
+                onExitSolo={() => setSolo(null)}
                 subFilter={subFilters[cat]}
                 onSubFilter={(keys) =>
                   setSubFilters((s) => ({ ...s, [cat]: keys }))

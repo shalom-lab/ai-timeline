@@ -18,7 +18,7 @@ v1（当前 `meta.version` 以 `0.x` / 首个 `1.0` 为目标）明确 **不做*
 | 多语言平行库 | 正文默认中文；不维护第二套平行 JSON |
 | 自动爬虫入库 | 不接受无人工来源审计的批量抓取结果直接合入 `main` |
 
-允许：补 landmark、修正死链、补充 `relatedIds` / `tags`、在规范内扩展公司词典。
+允许：补 landmark、修正死链、补充 `relatedIds` / `tags`、在规范内扩展公司词典；向 `capability-frontier.json` **追加**当月新工作流（见 DATA.md §8）。
 
 ---
 
@@ -127,9 +127,9 @@ v1（当前 `meta.version` 以 `0.x` / 首个 `1.0` 为目标）明确 **不做*
 
 ```bash
 npm install
-npm run build      # tsc + vite build，导入 data/timeline.json 做类型检查
-npm run validate   # 额外跑 invariants 校验脚本
-npm run dev        # 可选：查看占位 UI
+npm run build      # tsc + vite build，导入 timeline + capability-frontier JSON
+npm run validate   # timeline + 能力边界 invariants
+npm run dev        # 看板 UI（含能力边界列）
 ```
 
 ---
@@ -154,3 +154,14 @@ npm run dev        # 可选：查看占位 UI
 | `meta.version` | `0.2.0` |
 
 校验：`npm run validate` 会强制 `company.color` 与 `meta.ui.openingBg`。
+
+
+---
+
+## 9. 能力边界贡献（append-only）
+
+1. 只描述 **该月末新变得可实际采用** 的人机工作流；勿把往月已有能力再写一遍。
+2. `workflow.id` 全局 kebab、稳定；`enabledBy` 尽量挂到已有时间线 `events[].id`。
+3. 无新增的月份整月省略。
+4. 更新 `capability-frontier.json` 的 `meta.updatedAt`（及必要的 `meta.version`）。
+5. `npm run validate` 必须同时通过 timeline 与 frontier。

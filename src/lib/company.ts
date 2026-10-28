@@ -1,16 +1,24 @@
 import type { Company } from '../types/timeline'
 
+function norm(s: string): string {
+  return s.trim().toLowerCase().replace(/\s+/g, ' ')
+}
+
+/**
+ * Resolve event.company string → companies[] entry.
+ * Match order: exact name → exact id → aliases (never fuzzy partials).
+ */
 export function resolveCompany(
   companies: Company[],
   name: string,
 ): Company | undefined {
-  const lower = name.toLowerCase()
-  return companies.find(
-    (c) =>
-      c.name.toLowerCase() === lower ||
-      c.id === lower ||
-      c.aliases?.some((a) => a.toLowerCase() === lower),
-  )
+  const key = norm(name)
+  if (!key) return undefined
+  const byName = companies.find((c) => norm(c.name) === key)
+  if (byName) return byName
+  const byId = companies.find((c) => c.id === key)
+  if (byId) return byId
+  return companies.find((c) => c.aliases?.some((a) => norm(a) === key))
 }
 
 export function companyColor(

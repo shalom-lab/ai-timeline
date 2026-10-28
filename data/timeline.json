@@ -1,7 +1,7 @@
 {
   "meta": {
     "name": "AI纪年",
-    "version": "0.5.0",
+    "version": "0.6.0",
     "scopeStart": "2022-11-30",
     "updatedAt": "2026-10-28",
     "locale": "zh-CN",
@@ -30,10 +30,8 @@
       "id": "google",
       "name": "Google",
       "aliases": [
-        "Google DeepMind",
         "Google AI",
-        "Alphabet",
-        "DeepMind"
+        "Alphabet"
       ],
       "color": "#4285F4",
       "colorSoft": "#D9E8FC"
@@ -140,6 +138,16 @@
       ],
       "color": "#FF4D6A",
       "colorSoft": "#FFD6DE"
+    },
+    {
+      "id": "deepmind",
+      "name": "Google DeepMind",
+      "aliases": [
+        "DeepMind",
+        "Isomorphic Labs"
+      ],
+      "color": "#1A73E8",
+      "colorSoft": "#D2E3FC"
     }
   ],
   "events": [
@@ -195,6 +203,33 @@
       "tags": [
         "chatgpt",
         "subscription"
+      ]
+    },
+    {
+      "id": "openai-gpt-3-5-turbo-api-2023-03-01",
+      "date": "2023-03-01",
+      "dateStatus": "exact",
+      "title": "OpenAI 发布 GPT-3.5 Turbo API",
+      "summary": "OpenAI 通过 ChatGPT / Whisper API 向开发者开放 gpt-3.5-turbo（与当时 ChatGPT 产品同源模型），相对既有 GPT-3.5 系列大幅降价。",
+      "category": "model",
+      "company": "OpenAI",
+      "series": "GPT",
+      "product": "GPT-3.5 Turbo",
+      "eventType": "ga",
+      "sources": [
+        {
+          "title": "Introducing ChatGPT and Whisper APIs",
+          "url": "https://openai.com/index/introducing-chatgpt-and-whisper-apis/",
+          "publisher": "OpenAI",
+          "publishedAt": "2023-03-01"
+        }
+      ],
+      "relatedIds": [
+        "openai-chatgpt-research-preview-2022-11-30"
+      ],
+      "tags": [
+        "gpt-3.5",
+        "api"
       ]
     },
     {
@@ -574,6 +609,33 @@
       ]
     },
     {
+      "id": "google-gemini-1-5-pro-2024-02-15",
+      "date": "2024-02-15",
+      "dateStatus": "exact",
+      "title": "Google 发布 Gemini 1.5 Pro",
+      "summary": "Google DeepMind 宣布下一代 Gemini 1.5，首发 Gemini 1.5 Pro；强调长上下文（标准 128K，有限预览可达约 100 万 token）与 MoE 架构改进。",
+      "category": "model",
+      "company": "Google",
+      "series": "Gemini",
+      "product": "Gemini 1.5 Pro",
+      "eventType": "research_preview",
+      "sources": [
+        {
+          "title": "Our next-generation model: Gemini 1.5",
+          "url": "https://blog.google/technology/ai/google-gemini-next-generation-model-february-2024/",
+          "publisher": "Google",
+          "publishedAt": "2024-02-15"
+        }
+      ],
+      "relatedIds": [
+        "google-gemini-first-announce-2023-12-06"
+      ],
+      "tags": [
+        "gemini-1.5",
+        "long-context"
+      ]
+    },
+    {
       "id": "openai-sora-first-announce-2024-02-15",
       "date": "2024-02-15",
       "dateStatus": "exact",
@@ -769,7 +831,7 @@
       "title": "Google DeepMind 与 Isomorphic Labs 发布 AlphaFold 3",
       "summary": "Google DeepMind 与 Isomorphic Labs 发布 AlphaFold 3，可预测蛋白质、DNA、RNA、配体等生命分子结构及其相互作用；同步推出面向科研的 AlphaFold Server。属 AI 求解科学问题的里程碑（非消费级聊天产品）。",
       "category": "science",
-      "company": "Google",
+      "company": "Google DeepMind",
       "series": "AlphaFold",
       "product": "AlphaFold 3",
       "eventType": "first_announce",
@@ -816,6 +878,33 @@
       ]
     },
     {
+      "id": "google-gemini-1-5-ga-2024-05-23",
+      "date": "2024-05-23",
+      "dateStatus": "exact",
+      "title": "Google 宣布 Gemini 1.5 Pro / Flash 正式可用",
+      "summary": "Gemini API 变更日志标明 Gemini 1.5 Pro 与 Gemini 1.5 Flash 进入 GA（一般可用），便于生产接入。",
+      "category": "model",
+      "company": "Google",
+      "series": "Gemini",
+      "product": "Gemini 1.5",
+      "eventType": "ga",
+      "sources": [
+        {
+          "title": "Gemini API release notes — May 23, 2024",
+          "url": "https://ai.google.dev/gemini-api/docs/changelog",
+          "publisher": "Google",
+          "publishedAt": "2024-05-23"
+        }
+      ],
+      "relatedIds": [
+        "google-gemini-1-5-pro-2024-02-15"
+      ],
+      "tags": [
+        "gemini-1.5",
+        "flash"
+      ]
+    },
+    {
       "id": "alibaba-qwen2-open-source-2024-06-07",
       "date": "2024-06-07",
       "dateStatus": "exact",
@@ -843,6 +932,34 @@
       ]
     },
     {
+      "id": "anthropic-claude-3-5-sonnet-2024-06-21",
+      "date": "2024-06-21",
+      "dateStatus": "exact",
+      "title": "Anthropic 发布 Claude 3.5 Sonnet",
+      "summary": "Anthropic 发布 Claude 3.5 家族首款模型 Claude 3.5 Sonnet，在多项评测上超过 Claude 3 Opus，并通过 Claude.ai 与 API 开放。",
+      "category": "model",
+      "company": "Anthropic",
+      "series": "Claude",
+      "product": "Claude 3.5 Sonnet",
+      "eventType": "ga",
+      "sources": [
+        {
+          "title": "Claude 3.5 Sonnet",
+          "url": "https://www.anthropic.com/news/claude-3-5-sonnet",
+          "publisher": "Anthropic",
+          "publishedAt": "2024-06-21"
+        }
+      ],
+      "relatedIds": [
+        "anthropic-claude-3-family-2024-03-04",
+        "anthropic-claude-3-5-sonnet-artifacts-2024-06-21"
+      ],
+      "tags": [
+        "claude-3.5",
+        "sonnet"
+      ]
+    },
+    {
       "id": "anthropic-claude-3-5-sonnet-artifacts-2024-06-21",
       "date": "2024-06-21",
       "dateStatus": "exact",
@@ -863,12 +980,66 @@
         }
       ],
       "relatedIds": [
-        "anthropic-claude-3-family-2024-03-04"
+        "anthropic-claude-3-family-2024-03-04",
+        "anthropic-claude-3-5-sonnet-2024-06-21"
       ],
       "tags": [
         "claude-3.5",
         "artifacts",
         "coding"
+      ]
+    },
+    {
+      "id": "meta-llama-3-1-open-source-2024-07-23",
+      "date": "2024-07-23",
+      "dateStatus": "exact",
+      "title": "Meta 开源 Llama 3.1（含 405B）",
+      "summary": "Meta 发布 Llama 3.1，扩展至 128K 上下文并开源 8B / 70B / 405B；405B 被定位为对标前沿闭源模型的开放权重模型。",
+      "category": "model",
+      "company": "Meta",
+      "series": "Llama",
+      "product": "Llama 3.1",
+      "eventType": "open_source",
+      "sources": [
+        {
+          "title": "Introducing Llama 3.1: Our most capable models to date",
+          "url": "https://ai.meta.com/blog/meta-llama-3-1/",
+          "publisher": "Meta",
+          "publishedAt": "2024-07-23"
+        }
+      ],
+      "relatedIds": [
+        "meta-llama-3-open-source-2024-04-18"
+      ],
+      "tags": [
+        "llama-3.1",
+        "405b"
+      ]
+    },
+    {
+      "id": "xai-grok-2-2024-08-13",
+      "date": "2024-08-13",
+      "dateStatus": "exact",
+      "title": "xAI 发布 Grok-2 Beta",
+      "summary": "xAI 发布 Grok-2 与 Grok-2 mini Beta，相对 Grok-1 在推理与多模态能力上升级，并规划企业 API。",
+      "category": "model",
+      "company": "xAI",
+      "series": "Grok",
+      "product": "Grok-2",
+      "eventType": "public_beta",
+      "sources": [
+        {
+          "title": "Grok-2 Beta Release",
+          "url": "https://x.ai/news/grok-2",
+          "publisher": "xAI",
+          "publishedAt": "2024-08-13"
+        }
+      ],
+      "relatedIds": [
+        "xai-grok-1-open-weights-2024-03-17"
+      ],
+      "tags": [
+        "grok-2"
       ]
     },
     {
@@ -924,6 +1095,87 @@
       ]
     },
     {
+      "id": "alibaba-qwen2-5-open-source-2024-09-19",
+      "date": "2024-09-19",
+      "dateStatus": "exact",
+      "title": "通义千问开源 Qwen2.5 系列",
+      "summary": "Qwen 团队发布并开源 Qwen2.5 基础模型家族（含 Coder / Math 等变体），延续 Qwen2 后的主力开源线。",
+      "category": "model",
+      "company": "Alibaba",
+      "series": "Qwen",
+      "product": "Qwen2.5",
+      "eventType": "open_source",
+      "sources": [
+        {
+          "title": "Qwen2.5: A Party of Foundation Models!",
+          "url": "https://qwenlm.github.io/blog/qwen2.5/",
+          "publisher": "Qwen",
+          "publishedAt": "2024-09-19"
+        }
+      ],
+      "relatedIds": [
+        "alibaba-qwen2-open-source-2024-06-07"
+      ],
+      "tags": [
+        "qwen2.5"
+      ]
+    },
+    {
+      "id": "meta-llama-3-2-open-source-2024-09-25",
+      "date": "2024-09-25",
+      "dateStatus": "exact",
+      "title": "Meta 开源 Llama 3.2（含视觉型号）",
+      "summary": "Meta 发布 Llama 3.2：轻量 1B/3B 文本模型与 11B/90B 视觉模型，面向端侧与多模态图像理解，权重公开下载。",
+      "category": "model",
+      "company": "Meta",
+      "series": "Llama",
+      "product": "Llama 3.2",
+      "eventType": "open_source",
+      "sources": [
+        {
+          "title": "Llama 3.2: Revolutionizing edge AI and vision with open, customizable models",
+          "url": "https://ai.meta.com/blog/llama-3-2-connect-2024-Vision-edge-mobile-devices/",
+          "publisher": "Meta",
+          "publishedAt": "2024-09-25"
+        }
+      ],
+      "relatedIds": [
+        "meta-llama-3-1-open-source-2024-07-23"
+      ],
+      "tags": [
+        "llama-3.2",
+        "vision",
+        "edge"
+      ]
+    },
+    {
+      "id": "anthropic-claude-3-5-sonnet-upgrade-2024-10-22",
+      "date": "2024-10-22",
+      "dateStatus": "exact",
+      "title": "Anthropic 升级 Claude 3.5 Sonnet 并发布 3.5 Haiku",
+      "summary": "Anthropic 发布升级版 Claude 3.5 Sonnet（编码等能力显著提升），并宣布 Claude 3.5 Haiku；同日公布 computer use 公测。",
+      "category": "model",
+      "company": "Anthropic",
+      "series": "Claude",
+      "product": "Claude 3.5 Sonnet",
+      "eventType": "major_upgrade",
+      "sources": [
+        {
+          "title": "Computer use, Claude 3.5 Sonnet, and Claude 3.5 Haiku",
+          "url": "https://www.anthropic.com/news/3-5-models-and-computer-use",
+          "publisher": "Anthropic",
+          "publishedAt": "2024-10-22"
+        }
+      ],
+      "relatedIds": [
+        "anthropic-claude-3-5-sonnet-2024-06-21"
+      ],
+      "tags": [
+        "claude-3.5",
+        "computer-use"
+      ]
+    },
+    {
       "id": "anthropic-mcp-open-source-2024-11-25",
       "date": "2024-11-25",
       "dateStatus": "exact",
@@ -947,6 +1199,86 @@
         "protocol",
         "tooling",
         "concept"
+      ]
+    },
+    {
+      "id": "openai-o1-ga-2024-12-05",
+      "date": "2024-12-05",
+      "dateStatus": "exact",
+      "title": "OpenAI 正式发布 o1（结束预览）",
+      "summary": "在「12 Days of OpenAI」首日，OpenAI 用正式版 o1 替换 ChatGPT 中的 o1-preview，并改善速度、指令遵循与多模态输入；同日推出 ChatGPT Pro。",
+      "category": "model",
+      "company": "OpenAI",
+      "series": "o1",
+      "product": "o1",
+      "eventType": "ga",
+      "sources": [
+        {
+          "title": "Introducing ChatGPT Pro",
+          "url": "https://openai.com/index/introducing-chatgpt-pro/",
+          "publisher": "OpenAI",
+          "publishedAt": "2024-12-05"
+        }
+      ],
+      "relatedIds": [
+        "openai-o1-preview-2024-09-12"
+      ],
+      "tags": [
+        "o1",
+        "reasoning"
+      ]
+    },
+    {
+      "id": "google-gemini-2-0-flash-exp-2024-12-11",
+      "date": "2024-12-11",
+      "dateStatus": "exact",
+      "title": "Google 发布 Gemini 2.0 Flash 实验版",
+      "summary": "Google 推出面向 Agent 时代的 Gemini 2.0，并以 Gemini 2.0 Flash Experimental 向开发者开放预览（多模态输出、工具使用与低延迟）。",
+      "category": "model",
+      "company": "Google",
+      "series": "Gemini",
+      "product": "Gemini 2.0 Flash",
+      "eventType": "research_preview",
+      "sources": [
+        {
+          "title": "Gemini API release notes — December 11, 2024",
+          "url": "https://ai.google.dev/gemini-api/docs/changelog",
+          "publisher": "Google",
+          "publishedAt": "2024-12-11"
+        }
+      ],
+      "relatedIds": [
+        "google-gemini-1-5-ga-2024-05-23"
+      ],
+      "tags": [
+        "gemini-2.0",
+        "flash"
+      ]
+    },
+    {
+      "id": "deepseek-v3-open-source-2024-12-26",
+      "date": "2024-12-26",
+      "dateStatus": "exact",
+      "title": "DeepSeek 开源 DeepSeek-V3",
+      "summary": "DeepSeek 正式发布并开源 DeepSeek-V3 通用大模型，作为后续 R1 推理模型的重要底座。",
+      "category": "model",
+      "company": "DeepSeek",
+      "series": "DeepSeek",
+      "product": "DeepSeek-V3",
+      "eventType": "open_source",
+      "sources": [
+        {
+          "title": "deepseek-ai/DeepSeek-V3",
+          "url": "https://github.com/deepseek-ai/DeepSeek-V3",
+          "publisher": "DeepSeek",
+          "publishedAt": "2024-12-26"
+        }
+      ],
+      "relatedIds": [
+        "deepseek-r1-open-source-2025-01-20"
+      ],
+      "tags": [
+        "deepseek-v3"
       ]
     },
     {
@@ -1004,6 +1336,88 @@
       ]
     },
     {
+      "id": "openai-o3-mini-2025-01-31",
+      "date": "2025-01-31",
+      "dateStatus": "exact",
+      "title": "OpenAI 发布 o3-mini",
+      "summary": "OpenAI 推出推理模型 o3-mini，面向 ChatGPT Plus/Team/Pro 与部分 API 层级，强调更低成本的 STEM 与编码推理。",
+      "category": "model",
+      "company": "OpenAI",
+      "series": "o3",
+      "product": "o3-mini",
+      "eventType": "ga",
+      "sources": [
+        {
+          "title": "OpenAI o3-mini",
+          "url": "https://openai.com/index/openai-o3-mini/",
+          "publisher": "OpenAI",
+          "publishedAt": "2025-01-31"
+        }
+      ],
+      "relatedIds": [
+        "openai-o1-ga-2024-12-05"
+      ],
+      "tags": [
+        "o3",
+        "reasoning"
+      ]
+    },
+    {
+      "id": "google-gemini-2-0-flash-ga-2025-02-05",
+      "date": "2025-02-05",
+      "dateStatus": "exact",
+      "title": "Google 宣布 Gemini 2.0 Flash 正式可用",
+      "summary": "Google DeepMind 宣布更新后的 Gemini 2.0 Flash 经 Gemini API / AI Studio / Vertex AI 正式可用，并同期推出 2.0 Pro 实验版与 Flash-Lite 预览。",
+      "category": "model",
+      "company": "Google",
+      "series": "Gemini",
+      "product": "Gemini 2.0 Flash",
+      "eventType": "ga",
+      "sources": [
+        {
+          "title": "Gemini 2.0 is now available to everyone",
+          "url": "https://blog.google/technology/google-deepmind/gemini-model-updates-february-2025/",
+          "publisher": "Google",
+          "publishedAt": "2025-02-05"
+        }
+      ],
+      "relatedIds": [
+        "google-gemini-2-0-flash-exp-2024-12-11"
+      ],
+      "tags": [
+        "gemini-2.0",
+        "flash"
+      ]
+    },
+    {
+      "id": "anthropic-claude-3-7-sonnet-2025-02-24",
+      "date": "2025-02-24",
+      "dateStatus": "exact",
+      "title": "Anthropic 发布 Claude 3.7 Sonnet",
+      "summary": "Anthropic 发布混合推理模型 Claude 3.7 Sonnet（可近即时回答或扩展思考），在 Claude 各档与 API / Bedrock / Vertex 上线；同日推出 Claude Code 研究预览。",
+      "category": "model",
+      "company": "Anthropic",
+      "series": "Claude",
+      "product": "Claude 3.7 Sonnet",
+      "eventType": "ga",
+      "sources": [
+        {
+          "title": "Claude 3.7 Sonnet and Claude Code",
+          "url": "https://www.anthropic.com/news/claude-3-7-sonnet",
+          "publisher": "Anthropic",
+          "publishedAt": "2025-02-24"
+        }
+      ],
+      "relatedIds": [
+        "anthropic-claude-3-5-sonnet-upgrade-2024-10-22",
+        "anthropic-claude-code-research-preview-2025-02-24"
+      ],
+      "tags": [
+        "claude-3.7",
+        "reasoning"
+      ]
+    },
+    {
       "id": "anthropic-claude-code-research-preview-2025-02-24",
       "date": "2025-02-24",
       "dateStatus": "exact",
@@ -1024,12 +1438,67 @@
         }
       ],
       "relatedIds": [
-        "anthropic-claude-3-5-sonnet-artifacts-2024-06-21"
+        "anthropic-claude-3-5-sonnet-artifacts-2024-06-21",
+        "anthropic-claude-3-7-sonnet-2025-02-24"
       ],
       "tags": [
         "cli",
         "agentic-coding",
         "claude-code"
+      ]
+    },
+    {
+      "id": "meta-llama-4-open-source-2025-04-05",
+      "date": "2025-04-05",
+      "dateStatus": "exact",
+      "title": "Meta 开源 Llama 4（Scout / Maverick）",
+      "summary": "Meta 发布并开放 Llama 4 族群（Scout / Maverick）：原生多模态 MoE 开放权重模型，面向超长上下文与多模态智能。",
+      "category": "model",
+      "company": "Meta",
+      "series": "Llama",
+      "product": "Llama 4",
+      "eventType": "open_source",
+      "sources": [
+        {
+          "title": "The Llama 4 herd: The beginning of a new era of natively multimodal AI innovation",
+          "url": "https://ai.meta.com/blog/Llama-4-multimodal-intelligence/",
+          "publisher": "Meta",
+          "publishedAt": "2025-04-05"
+        }
+      ],
+      "relatedIds": [
+        "meta-llama-3-2-open-source-2024-09-25"
+      ],
+      "tags": [
+        "llama-4"
+      ]
+    },
+    {
+      "id": "anthropic-claude-4-2025-05-22",
+      "date": "2025-05-22",
+      "dateStatus": "exact",
+      "title": "Anthropic 发布 Claude Opus 4 与 Sonnet 4",
+      "summary": "Anthropic 发布 Claude 4 世代：Opus 4 面向长程编码与 Agent 工作流，Sonnet 4 接替 3.7 成为日常主力模型，经 Claude 产品与 API 提供。",
+      "category": "model",
+      "company": "Anthropic",
+      "series": "Claude",
+      "product": "Claude 4",
+      "eventType": "ga",
+      "sources": [
+        {
+          "title": "Introducing Claude 4",
+          "url": "https://www.anthropic.com/news/claude-4",
+          "publisher": "Anthropic",
+          "publishedAt": "2025-05-22"
+        }
+      ],
+      "relatedIds": [
+        "anthropic-claude-3-7-sonnet-2025-02-24"
+      ],
+      "tags": [
+        "claude-4",
+        "opus",
+        "sonnet"
       ]
     },
     {

@@ -1,0 +1,115 @@
+{
+  "meta": {
+    "name": "能力边界",
+    "version": "0.1.0",
+    "scopeStart": "2022-11",
+    "updatedAt": "2026-10-28",
+    "locale": "zh-CN"
+  },
+  "months": [
+    {
+      "month": "2022-11",
+      "summary": "对话式大模型首次对公众开放研究预览：普通人可以用自然语言问知识问题并得到可用回答。",
+      "workflows": [
+        {
+          "id": "chat-qa-with-llm",
+          "title": "用对话助手问知识问题并得到可用回答",
+          "how": "在 ChatGPT 研究预览中用自然语言提问，获得连贯的文字回答（仍有幻觉与知识截止风险）。",
+          "enabledBy": ["openai-chatgpt-research-preview-2022-11-30"],
+          "tags": ["chat", "qa"]
+        }
+      ]
+    },
+    {
+      "month": "2023-02",
+      "summary": "付费订阅带来高峰时段更稳定的对话访问，日常把助手当「常开工具」成为可行习惯。",
+      "workflows": [
+        {
+          "id": "paid-priority-chat-access",
+          "title": "用付费订阅获得更稳定的对话助手访问",
+          "how": "订阅 ChatGPT Plus，在高峰时段仍可优先使用，把助手纳入日常写作与问答。",
+          "enabledBy": ["openai-chatgpt-plus-2023-02-01"],
+          "tags": ["chat", "subscription"]
+        }
+      ]
+    },
+    {
+      "month": "2023-03",
+      "summary": "更强推理模型进入对话产品：复杂分析、长文与多步骤说明开始对普通 Plus 用户可用。",
+      "workflows": [
+        {
+          "id": "gpt4-complex-reasoning-chat",
+          "title": "用更强对话模型做复杂分析与多步骤推理",
+          "how": "在 ChatGPT（Plus）中切换到 GPT-4，处理更难的写作、代码解释与结构化分析任务。",
+          "enabledBy": ["openai-gpt-4-2023-03-14"],
+          "tags": ["chat", "reasoning"]
+        }
+      ]
+    },
+    {
+      "month": "2023-09",
+      "summary": "文生图进入主流对话产品：用自然语言描述即可在聊天里生成可用插图。",
+      "workflows": [
+        {
+          "id": "image-gen-in-chat-dalle3",
+          "title": "在对话里用自然语言生成插图",
+          "how": "在 ChatGPT 中调用 DALL·E 3，用文字描述生成图像并迭代改稿。",
+          "enabledBy": ["openai-dalle-3-2023-09-20"],
+          "tags": ["image", "chat"]
+        }
+      ]
+    },
+    {
+      "month": "2024-01",
+      "summary": "IDE 内对话式编程助手对个人与组织正式可用，写代码时可就地提问与改稿。",
+      "workflows": [
+        {
+          "id": "ide-chat-coding-assistant",
+          "title": "在 IDE 里用对话助手写改代码",
+          "how": "在编辑器中打开 Copilot Chat（GA），针对当前文件提问、生成补丁或解释报错。",
+          "enabledBy": ["github-copilot-chat-ga-2024-01-11"],
+          "tags": ["ide", "coding"]
+        }
+      ]
+    },
+    {
+      "month": "2024-05",
+      "summary": "原生多模态对话普及：同一会话里可看图、听声、实时语音交流。",
+      "workflows": [
+        {
+          "id": "realtime-multimodal-chat",
+          "title": "用多模态对话看图、听声并实时语音交流",
+          "how": "使用 GPT-4o 类产品：上传图片提问、语音输入，或进行低延迟实时语音对话。",
+          "enabledBy": ["openai-gpt-4o-2024-05-13"],
+          "tags": ["multimodal", "voice", "vision"]
+        }
+      ]
+    },
+    {
+      "month": "2024-09",
+      "summary": "显式「慢思考」推理模型进入产品预览：更适合竞赛级数学、编码与复杂规划。",
+      "workflows": [
+        {
+          "id": "deliberate-reasoning-model",
+          "title": "用推理模型做需要慢思考的数学与编码题",
+          "how": "在支持 o1-preview 的产品中选择推理模型，接受更长思考时间以换取更稳的难题答案。",
+          "enabledBy": ["openai-o1-preview-2024-09-12"],
+          "tags": ["reasoning", "coding"]
+        }
+      ]
+    },
+    {
+      "month": "2025-02",
+      "summary": "终端侧软件工程智能体进入研究预览：可在本地仓库里用自然语言驱动多步编码任务。",
+      "workflows": [
+        {
+          "id": "terminal-coding-agent",
+          "title": "在终端里用智能体完成多步编码任务",
+          "how": "运行 Claude Code 等 CLI 智能体，在仓库上下文中下达任务，让其读写文件并执行命令（研究预览范围）。",
+          "enabledBy": ["anthropic-claude-code-research-preview-2025-02-24"],
+          "tags": ["cli", "agent", "coding"]
+        }
+      ]
+    }
+  ]
+}

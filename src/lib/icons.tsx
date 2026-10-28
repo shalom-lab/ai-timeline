@@ -65,7 +65,6 @@ export function CompanyMark({
         </svg>
       )
     case 'google':
-    case 'deepmind':
       return (
         <svg {...common} fill="none">
           <path
@@ -84,6 +83,16 @@ export function CompanyMark({
             fill="#EA4335"
             d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
           />
+        </svg>
+      )
+    case 'deepmind':
+      // Four-dot constellation (distinct from Google G)
+      return (
+        <svg {...common} fill="none">
+          <circle cx="8" cy="8" r="3.2" fill="#4285F4" />
+          <circle cx="16" cy="8" r="3.2" fill="#EA4335" />
+          <circle cx="8" cy="16" r="3.2" fill="#FBBC05" />
+          <circle cx="16" cy="16" r="3.2" fill="#34A853" />
         </svg>
       )
     case 'meta':
@@ -286,8 +295,12 @@ export function CardMainIcon({
   const tags = event.tags ?? []
   const soft = co?.colorSoft ?? `${accent}22`
 
+  // Company mark ALWAYS wins when event.company resolves to a known id.
+  // Thematic icons are fallback only (no mark), never a substitute for the wrong logo.
   let inner: ReactNode
-  if (event.category === 'science') {
+  if (hasCompanyMark(co?.id)) {
+    inner = <CompanyMark companyId={co!.id} color={color} size={22} />
+  } else if (event.category === 'science') {
     inner = <IconScience color={color} />
   } else if (event.category === 'concept') {
     if (tags.some((t) => t.includes('agent') || t.includes('harness') || t.includes('skill'))) {
@@ -297,8 +310,6 @@ export function CardMainIcon({
     } else {
       inner = <IconConcept color={color} />
     }
-  } else if (hasCompanyMark(co?.id)) {
-    inner = <CompanyMark companyId={co!.id} color={color} size={22} />
   } else {
     inner = <IconProduct color={color} />
   }

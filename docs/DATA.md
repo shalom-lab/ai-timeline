@@ -1,6 +1,6 @@
 # AI纪年（AI Timeline）数据规范
 
-本文定义 **AI Timeline** 的权威数据结构与字段语义。字段名使用英文（与 TypeScript / JSON 一致）；说明使用中文。实现以 `src/types/timeline.ts` 与 `data/timeline.json` 为准。
+本文定义 **AI Timeline** 的权威数据结构与字段语义。字段名使用英文（与 TypeScript / JSON 一致）；说明使用中文。实现以 `src/types/timeline.ts`、`data/timeline.json`，以及独立的 `src/types/capability.ts` / `data/capability-frontier.json`（能力边界）为准。
 
 **原则：先规范与数据，后 UI。** 任何界面层只能消费本规范下的数据，不得在前端硬编码「另一套」分类或日期规则。
 
@@ -194,6 +194,8 @@ interface Source {
 | 本规范 | `docs/DATA.md` |
 | TypeScript 类型 | `src/types/timeline.ts` |
 | 种子数据 | `data/timeline.json` |
+| 能力边界类型 | `src/types/capability.ts` |
+| 能力边界种子 | `data/capability-frontier.json` |
 | 贡献与审核流程 | `docs/DEVELOPMENT.md` |
 
 变更枚举或必填字段时：**先改本文与 `timeline.ts`，再改 JSON，并在 `DEVELOPMENT.md` 记录迁移说明。** 本仓库 v0.1 未对上游 schema 做偏离；若未来有偏离，须在本节显式列出。
@@ -203,6 +205,8 @@ interface Source {
 相对 v0.1：`Company` 增加必填 `color` 与可选 `colorSoft`；`TimelineMeta` 增加可选 `ui`（`TimelineUiMeta.openingBg` / `openingFg`）。版本 `0.2.0`。
 
 相对 v0.2：一级 `Category` 增至五值，新增 `science`（科学：AI 科学发现/突破，非普通产品发布）；看板序为 大模型 → 产品 → 概念 → 科学 → 其他。版本 `0.3.0`。
+
+相对 v0.5：新增独立数据集 **能力边界**（`capability-frontier.json`）；扩充 foundation model 种子；`Google DeepMind` 从 Google 词典中拆出独立 `companies[].id = deepmind`。时间线 `meta.version` `0.6.0`。
 
 ---
 
@@ -233,3 +237,57 @@ interface Source {
 ```
 
 对照：Google Gemini CLI（2025-06-25）同为终端编码向工具，但主事实是 **Apache 2.0 开源发布**，故 `eventType` 为 `open_source`，而非 `research_preview`。细节见 `docs/DEVELOPMENT.md`。
+
+---
+
+## 8. 能力边界（Capability Frontier）— 独立数据集
+
+**与事件时间线分离。** 能力边界不是 `events[]` 的一种 category，也不混入 `timeline.json`。
+
+| 对比 | 时间线事件 (`timeline.json`) | 能力边界 (`capability-frontier.json`) |
+| --- | --- | --- |
+| 粒度 | 可核验的发布/开源/更名等节点 | **月末快照**：当月新变得普通人+AI 可实际采用的工作流 |
+| 重复 | 历史节点保留 | **只记当月新增**；勿重复往月已写过的能力 |
+| 用途 | 编年史 / 看板五列 | 判断自己是否「落后于前沿」 |
+| UI | 大模型/产品/概念/科学/其他 | 独立轨道「能力边界」（品红强调色，可独占） |
+
+根对象：
+
+```ts
+interface CapabilityFrontierData {
+  meta: {
+    name: string // "能力边界"
+    version: string
+    scopeStart: string // "2022-11"
+    updatedAt: string // YYYY-MM-DD
+    locale: string
+  }
+  months: CapabilityMonth[]
+}
+
+interface CapabilityMonth {
+  month: string // YYYY-MM
+  summary: string
+  workflows: CapabilityWorkflow[] // ONLY newly available this month
+}
+
+interface CapabilityWorkflow {
+  id: string // global unique kebab
+  title: string
+  how?: string
+  enabledBy?: string[] // timeline event ids
+  tags?: string[]
+}
+```
+
+不变式（`npm run validate` 一并校验）：
+
+1. `workflow.id` **全局唯一**（跨月）。
+2. `months` 按 `month` **升序**。
+3. `month >= meta.scopeStart` 且 `>= 2022-11`。
+4. 每条 `enabledBy` 若存在，须指向 `timeline.json` 已有 `id`。
+5. 无新增则 **省略该月**，不要写空 `workflows`。
+
+贡献规则：**只追加**新月或新 workflow；不要改写旧月把旧能力再列一遍。
+
+路径：`docs/DATA.md`（本节）· `src/types/capability.ts` · `data/capability-frontier.json`。

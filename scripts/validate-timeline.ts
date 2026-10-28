@@ -1,18 +1,26 @@
 /**
- * Invariant checks for data/timeline.json (see docs/DATA.md §5).
- * Run: npm run validate
+ * Invariant checks for data/timeline.json + data/capability-frontier.json
+ * (see docs/DATA.md). Run: npm run validate
  */
 import { readFileSync } from 'node:fs'
 import { resolve, dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import type { TimelineData, TimelineEvent, Company } from '../src/types/timeline'
+import type {
+  CapabilityFrontierData,
+  CapabilityMonth,
+  CapabilityWorkflow,
+} from '../src/types/capability'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const root = resolve(__dirname, '..')
-const dataPath = resolve(root, 'data/timeline.json')
+const timelinePath = resolve(root, 'data/timeline.json')
+const frontierPath = resolve(root, 'data/capability-frontier.json')
 
 const DATE_RE = /^\d{4}-\d{2}-\d{2}$/
+const MONTH_RE = /^\d{4}-\d{2}$/
 const HEX_RE = /^#[0-9A-Fa-f]{6}$/
+const KEBAB_RE = /^[a-z0-9]+(?:-[a-z0-9]+)*$/
 
 const CATEGORIES = new Set(['model', 'product', 'concept', 'science', 'other'])
 const SUBCATS = new Set([
@@ -43,12 +51,39 @@ const EVENT_TYPES = new Set([
 const DATE_STATUS = new Set(['exact', 'approximate', 'unverified'])
 
 function main() {
-  const data = JSON.parse(readFileSync(dataPath, 'utf8')) as TimelineData
   const errors: string[] = []
-
   const push = (m: string) => errors.push(m)
 
-  if (!data.meta) push('missing meta')
+  const timeline = JSON.parse(readFileSync(timelinePath, 'utf8')) as TimelineData
+  const eventIds = validateTimeline(timeline, push)
+
+  const frontier = JSON.parse(
+    readFileSync(frontierPath, 'utf8'),
+  ) as CapabilityFrontierData
+  validateFrontier(frontier, eventIds, push)
+
+  if (errors.length) {
+    console.error(`Validation failed (${errors.length}):`)
+    for (const e of errors) console.error(`  - ${e}`)
+    process.exit(1)
+  }
+
+  const workflowCount = frontier.months.reduce(
+    (n, m) => n + m.workflows.length,
+    0,
+  )
+  console.log(
+    `✓ OK — timeline: ${timeline.events.length} events, ${timeline.companies.length} companies; frontier: ${frontier.months.length} months, ${workflowCount} workflows`,
+  )
+}
+
+function validateTimeline(
+  data: TimelineData,
+  push: (m: string) => void,
+): Set<string> {
+  const ids = new Set<string>()
+
+  if (!data.meta) push('timeline: missing meta')
   else {
     if (data.meta.scopeStart !== '2022-11-30') {
       push(`meta.scopeStart must be 2022-11-30, got ${data.meta.scopeStart}`)
@@ -77,7 +112,6 @@ function main() {
 
   if (!Array.isArray(data.events)) push('events must be an array')
   else {
-    const ids = new Set<string>()
     for (const e of data.events) {
       validateEvent(e, data.meta.scopeStart, push)
       if (ids.has(e.id)) push(`duplicate id: ${e.id}`)
@@ -93,19 +127,11 @@ function main() {
     }
   }
 
-  if (errors.length) {
-    console.error(`Validation failed (${errors.length}):`)
-    for (const e of errors) console.error(`  - ${e}`)
-    process.exit(1)
-  }
-
-  console.log(
-    `✓ OK — ${data.events.length} events, ${data.companies.length} companies, scopeStart=${data.meta.scopeStart}, openingBg set`,
-  )
+  return ids
 }
 
 function validateCompany(c: Company, push: (m: string) => void) {
-  if (!c.id || !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(c.id)) {
+  if (!c.id || !KEBAB_RE.test(c.id)) {
     push(`bad company id: ${c.id}`)
   }
   if (!c.name?.trim()) push(`company ${c.id}: empty name`)
@@ -122,7 +148,7 @@ function validateEvent(
   scopeStart: string,
   push: (m: string) => void,
 ) {
-  if (!e.id || !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(e.id)) {
+  if (!e.id || !KEBAB_RE.test(e.id)) {
     push(`bad id: ${e.id}`)
   }
   if (!DATE_RE.test(e.date)) push(`${e.id}: bad date`)
@@ -151,6 +177,90 @@ function validateEvent(
       if (s.publishedAt && !DATE_RE.test(s.publishedAt)) {
         push(`${e.id}: bad source publishedAt`)
       }
+    }
+  }
+}
+
+function validateFrontier(
+  data: CapabilityFrontierData,
+  eventIds: Set<string>,
+  push: (m: string) => void,
+) {
+  if (!data.meta) {
+    push('frontier: missing meta')
+    return
+  }
+  if (!data.meta.name?.trim()) push('frontier meta.name empty')
+  if (!data.meta.version?.trim()) push('frontier meta.version empty')
+  if (!MONTH_RE.test(data.meta.scopeStart ?? '')) {
+    push(`frontier meta.scopeStart must be YYYY-MM, got ${data.meta.scopeStart}`)
+  } else if (data.meta.scopeStart < '2022-11') {
+    push(`frontier meta.scopeStart must be >= 2022-11`)
+  }
+  if (!DATE_RE.test(data.meta.updatedAt ?? '')) {
+    push(`frontier meta.updatedAt bad date`)
+  }
+  if (!data.meta.locale?.trim()) push('frontier meta.locale empty')
+
+  if (!Array.isArray(data.months)) {
+    push('frontier months must be an array')
+    return
+  }
+
+  const workflowIds = new Set<string>()
+  let prevMonth = ''
+
+  for (const m of data.months) {
+    validateMonth(m, data.meta.scopeStart, eventIds, workflowIds, push)
+    if (prevMonth && m.month <= prevMonth) {
+      push(`frontier months must be sorted ascending; ${m.month} after ${prevMonth}`)
+    }
+    prevMonth = m.month
+  }
+}
+
+function validateMonth(
+  m: CapabilityMonth,
+  scopeStart: string,
+  eventIds: Set<string>,
+  workflowIds: Set<string>,
+  push: (m: string) => void,
+) {
+  if (!MONTH_RE.test(m.month ?? '')) {
+    push(`frontier month bad label: ${m.month}`)
+    return
+  }
+  if (m.month < scopeStart) {
+    push(`frontier ${m.month}: before scopeStart ${scopeStart}`)
+  }
+  if (m.month < '2022-11') {
+    push(`frontier ${m.month}: before ChatGPT month 2022-11`)
+  }
+  if (!m.summary?.trim()) push(`frontier ${m.month}: empty summary`)
+  if (!Array.isArray(m.workflows) || m.workflows.length === 0) {
+    push(`frontier ${m.month}: need >=1 workflow (omit empty months instead)`)
+    return
+  }
+  for (const w of m.workflows) {
+    validateWorkflow(w, m.month, eventIds, workflowIds, push)
+  }
+}
+
+function validateWorkflow(
+  w: CapabilityWorkflow,
+  month: string,
+  eventIds: Set<string>,
+  workflowIds: Set<string>,
+  push: (m: string) => void,
+) {
+  const label = `frontier ${month}/${w.id}`
+  if (!w.id || !KEBAB_RE.test(w.id)) push(`${label}: bad workflow id`)
+  if (workflowIds.has(w.id)) push(`${label}: duplicate workflow id (global)`)
+  workflowIds.add(w.id)
+  if (!w.title?.trim()) push(`${label}: empty title`)
+  for (const eid of w.enabledBy ?? []) {
+    if (!eventIds.has(eid)) {
+      push(`${label}: enabledBy missing timeline event ${eid}`)
     }
   }
 }

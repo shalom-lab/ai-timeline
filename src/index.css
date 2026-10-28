@@ -7,7 +7,7 @@
   --muted: #64748b;
   --shadow: 0 1px 2px rgba(15, 23, 42, 0.04), 0 8px 24px rgba(15, 23, 42, 0.06);
   --radius: 12px;
-  --rail-w: 148px;
+  --rail-w: 158px;
   --header-banner-h: auto;
   font-family:
     'Inter',
@@ -272,12 +272,12 @@ a {
   max-width: 100%;
 }
 
-/* ─── Timeline rail (time-proportional within each year) ─── */
+/* ─── Timeline rail (year flush left; dates indented children) ─── */
 .timeline-rail {
   position: sticky;
   top: 88px;
   align-self: start;
-  padding: 0.4rem 0.55rem 1rem 0.55rem;
+  padding: 0.4rem 0.35rem 1rem 0.35rem;
   overflow-y: auto;
   max-height: calc(100vh - 100px);
   scrollbar-width: thin;
@@ -285,13 +285,13 @@ a {
 
 .timeline-rail__year {
   position: relative;
-  margin-bottom: 0.55rem;
+  margin-bottom: 0.65rem;
 }
 
 .timeline-rail__year-label {
   display: flex;
   align-items: center;
-  gap: 0.3rem;
+  gap: 0.28rem;
   width: 100%;
   border: 0;
   background: transparent;
@@ -300,10 +300,11 @@ a {
   font-weight: 800;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  margin: 0 0 0.25rem 0;
-  padding: 0.2rem 0.25rem;
+  margin: 0 0 0.2rem 0;
+  /* Flush left: caret + year + count */
+  padding: 0.2rem 0.15rem 0.2rem 0;
   border-radius: 6px;
-  color: #475569;
+  color: #334155;
   text-align: left;
 }
 
@@ -313,10 +314,11 @@ a {
 }
 
 .timeline-rail__year-chevron {
-  font-size: 0.7rem;
-  width: 0.85rem;
+  font-size: 0.68rem;
+  width: 0.75rem;
   color: #94a3b8;
   flex-shrink: 0;
+  line-height: 1;
 }
 
 .timeline-rail__year-text {
@@ -338,18 +340,20 @@ a {
   margin-bottom: 0;
 }
 
+/* Date children: clear indent under year; guide line aligns with dots */
 .timeline-rail__track {
   position: relative;
-  margin-left: 0.15rem;
+  margin-left: 1.05rem;
+  padding-left: 0;
 }
 
 .timeline-rail__line {
   position: absolute;
   left: 5px;
-  top: 0;
-  bottom: 0;
+  top: 2px;
+  bottom: 6px;
   width: 1px;
-  background: linear-gradient(180deg, #cbd5e1 0%, #e2e8f0 55%, #f1f5f9 100%);
+  background: #d0d7e2;
 }
 
 .timeline-rail__item {
@@ -358,7 +362,7 @@ a {
   right: 0;
   display: grid;
   grid-template-columns: 12px 1fr;
-  gap: 0.3rem;
+  gap: 0.35rem;
   align-items: center;
   border: 0;
   background: transparent;
@@ -878,6 +882,122 @@ a {
   padding: 0.12rem 0.5rem;
   font-size: 0.68rem;
   font-weight: 600;
+}
+
+
+/* ─── Capability frontier column ─── */
+.board__col-slot--frontier {
+  flex: 1.05 1 0;
+  min-width: 240px;
+}
+
+.frontier-column {
+  border-color: color-mix(in srgb, #db2777 28%, var(--border));
+}
+
+.frontier-column__hint {
+  margin: 0;
+  padding: 0.45rem 0.7rem 0.35rem;
+  font-size: 0.68rem;
+  line-height: 1.4;
+  color: #9d174d;
+  background: #fdf2f8;
+  border-bottom: 1px solid #fce7f3;
+}
+
+.frontier-column__body {
+  gap: 0.7rem;
+}
+
+.frontier-month {
+  background: #fff;
+  border: 1px solid #fce7f3;
+  border-radius: 8px;
+  padding: 0.65rem 0.7rem 0.55rem;
+  box-shadow: 0 1px 2px rgba(190, 24, 93, 0.04);
+}
+
+.frontier-month__head {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-bottom: 0.35rem;
+}
+
+.frontier-month__head time {
+  font-size: 0.78rem;
+  font-weight: 800;
+  color: #9d174d;
+  letter-spacing: 0.02em;
+}
+
+.frontier-month__new {
+  margin-left: auto;
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: #db2777;
+  background: #fce7f3;
+  border-radius: 999px;
+  padding: 0.05rem 0.4rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.frontier-month__summary {
+  margin: 0 0 0.5rem;
+  font-size: 0.72rem;
+  line-height: 1.45;
+  color: #64748b;
+}
+
+.frontier-month__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.frontier-workflow {
+  border-left: 2px solid #f9a8d4;
+  padding: 0.25rem 0 0.15rem 0.55rem;
+}
+
+.frontier-workflow__title {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #0f172a;
+  line-height: 1.35;
+}
+
+.frontier-workflow__how {
+  margin: 0.2rem 0 0;
+  font-size: 0.68rem;
+  line-height: 1.4;
+  color: #64748b;
+}
+
+.frontier-workflow__links {
+  margin-top: 0.25rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+}
+
+.frontier-workflow__link {
+  border: 1px solid #fbcfe8;
+  background: #fdf2f8;
+  color: #be185d;
+  border-radius: 999px;
+  padding: 0.05rem 0.45rem;
+  font-size: 0.62rem;
+  font-weight: 650;
+  cursor: pointer;
+}
+
+.frontier-workflow__link:hover {
+  background: #fce7f3;
+  border-color: #f9a8d4;
 }
 
 /* ─── Responsive ─── */
