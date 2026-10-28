@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState, type RefObject } from 'react'
 
-/** Anchor at mid-gap below card; column box for gutter routing. */
+/** Anchor at mid-gap below card. */
 type Anchor = {
   id: string
   date: string
@@ -14,10 +14,6 @@ type Anchor = {
   colLeft: number
   colRight: number
 }
-
-type ColBox = { left: number; right: number }
-
-type Pt = { x: number; y: number }
 
 type Props = {
   /** Category column body (positioned ancestor for overlay coords). */
@@ -41,95 +37,10 @@ const STROKE_WIDTH = 2
 const DASH = '7 5'
 /** Fallback card gap when a column has no measurable inter-card gap (~0.55rem). */
 const FALLBACK_GAP_PX = 9
-/** Treat columns as same when centers are this close (px). */
-const SAME_COL_X = 24
-/** Push same-column vertical just outside the subcol edge into the seam. */
-const SIDE_OUT = 4
-/** Inset from category left/right edges for the span caps. */
-const EDGE_PAD = 2
 /** Inset from company column edges for peer H ticks. */
-const COL_INSET = 2
-
-function pointsToPath(pts: Pt[]): string {
-  if (pts.length === 0) return ''
-  const parts = [`M ${pts[0].x.toFixed(1)} ${pts[0].y.toFixed(1)}`]
-  for (let i = 1; i < pts.length; i++) {
-    parts.push(`L ${pts[i].x.toFixed(1)} ${pts[i].y.toFixed(1)}`)
-  }
-  return parts.join(' ')
-}
-
-function sameColumn(a: Anchor, b: Anchor): boolean {
-  if (Math.abs(a.x - b.x) < SAME_COL_X) return true
-  const overlap =
-    Math.min(a.colRight, b.colRight) - Math.max(a.colLeft, b.colLeft)
-  const minW = Math.min(a.colRight - a.colLeft, b.colRight - b.colLeft)
-  return minW > 0 && overlap > minW * 0.6
-}
-
-/** Midpoint of a real inter-column gap overlapping [facingL, facingR]. */
-function pickGutterX(
-  facingL: number,
-  facingR: number,
-  cols: ColBox[],
-): number {
-  const lo = Math.min(facingL, facingR)
-  const hi = Math.max(facingL, facingR)
-  const mid = (lo + hi) / 2
-  if (hi - lo < 1) return mid
-
-  const sorted = [...cols].sort((a, b) => a.left - b.left)
-  const gaps: number[] = []
-  for (let i = 0; i < sorted.length - 1; i++) {
-    const gL = sorted[i].right
-    const gR = sorted[i + 1].left
-    if (gR - gL < 1) continue
-    if (gR < lo || gL > hi) continue
-    const segL = Math.max(gL, lo)
-    const segR = Math.min(gR, hi)
-    if (segR - segL >= 1) gaps.push((segL + segR) / 2)
-  }
-  if (gaps.length === 0) {
-    return lo + Math.min(8, (hi - lo) / 2)
-  }
-  // Prefer the gutter nearest the LEFT peer (stair early) — short H at a.y
-  // then V, then long travel at b.y stays behind cards / in gaps.
-  return gaps.reduce((best, g) => (g < best ? g : best))
-}
-
-/** Vertical only in the seam beside this column (prefer right, else left). */
-function sideGutter(a: Anchor, cols: ColBox[], containerW: number): number {
-  const sorted = [...cols].sort((c, d) => c.left - d.left)
-  for (let i = 0; i < sorted.length; i++) {
-    const c = sorted[i]
-    const overlap =
-      Math.min(a.colRight, c.right) - Math.max(a.colLeft, c.left)
-    if (overlap <= (c.right - c.left) * 0.5) continue
-    if (i < sorted.length - 1) {
-      const next = sorted[i + 1]
-      if (next.left - c.right >= 1) return (c.right + next.left) / 2
-    }
-    if (i > 0) {
-      const prev = sorted[i - 1]
-      if (c.left - prev.right >= 1) return (prev.right + c.left) / 2
-    }
-    const rightPad = Math.min(containerW - 2, c.right + SIDE_OUT)
-    const leftPad = Math.max(2, c.left - SIDE_OUT)
-    return rightPad < containerW - 4 ? rightPad : leftPad
-  }
-  return Math.min(containerW - 2, a.colRight + SIDE_OUT)
-}
-
-/**
- * Gutter immediately after the left peer toward the right peer
- * (not the midpoint of the whole span — that caused long H through neighbors).
- */
-function gutterAfterLeft(a: Anchor, b: Anchor, cols: ColBox[]): number {
-  if (a.x <= b.x) {
-    return pickGutterX(a.colRight, Math.max(a.colRight + 1, b.colLeft), cols)
-  }
-  return pickGutterX(b.colRight, Math.max(b.colRight + 1, a.colLeft), cols)
-}
+const COL_INSET = 4
+const LABEL_FONT = 10
+const LABEL_PAD_X = 5
 
 /**
  * Y at the midpoint of the vertical gap below `card` within its company column.
@@ -157,85 +68,41 @@ function midGapY(card: Anchor, columnPeers: Anchor[]): number {
   return card.bottom + gap / 2
 }
 
+/** Compact date for the H-line center label. Prefer YYYY-MM-DD. */
+function formatMomentDate(iso: string): string {
+  if (/^\d{4}-\d{2}-\d{2}$/.test(iso)) return iso
+  return iso
+}
 
-
-/**
- * Same-moment slice: H under each same-date peer in that company's mid-gap;
- * short V only in the gutter immediately after the left peer (stair early).
- * No full-bleed H at a single peer Y (that clipped through neighbor cards).
- * Connector overlay sits behind cards so residual cross-column H is hidden.
- */
-function momentSliceVertices(
-  peers: Anchor[],
-  cols: ColBox[],
-  containerW: number,
-): Pt[] {
-  if (peers.length === 0) return []
-
-  const sorted = [...peers].sort(
-    (a, b) => a.x - b.x || a.colLeft - b.colLeft || a.id.localeCompare(b.id),
-  )
-
-  const out: Pt[] = []
-  const push = (x: number, y: number) => {
-    if (out.length === 0) {
-      out.push({ x, y })
-      return
-    }
-    const last = out[out.length - 1]
-    if (Math.abs(last.x - x) < 0.5 && Math.abs(last.y - y) < 0.5) return
-    out.push({ x, y })
-  }
-
-  const leftX = EDGE_PAD
-  const rightX = Math.max(EDGE_PAD + 1, containerW - EDGE_PAD)
-
-  const first = sorted[0]
-
-  // Single peer: H only under that company column (+ tiny gutter stubs).
-  // Do NOT full-bleed at this Y — that sliced through every other column's cards.
-  if (sorted.length === 1) {
-    const p = first
-    const x0 = Math.max(leftX, p.colLeft - SIDE_OUT)
-    const x1 = Math.min(rightX, p.colRight + SIDE_OUT)
-    push(x0, p.y)
-    push(x1, p.y)
-    return out
-  }
-
-  // Multi peer: H under each peer at its mid-gap; V only in the gutter
-  // immediately after the left peer (stair early — never mid-span leap).
-  // Long H at the right peer's Y sits behind cards (z-index 0).
-  push(Math.max(leftX, first.colLeft + COL_INSET), first.y)
-  push(first.colRight - COL_INSET, first.y)
-
-  for (let i = 1; i < sorted.length; i++) {
-    const a = sorted[i - 1]
-    const b = sorted[i]
-
-    if (sameColumn(a, b)) {
-      const gx = sideGutter(a, cols, containerW)
-      push(gx, a.y)
-      push(gx, b.y)
-      push(b.colLeft + COL_INSET, b.y)
-      push(b.colRight - COL_INSET, b.y)
-      continue
-    }
-
-    const gx = gutterAfterLeft(a, b, cols)
-    push(gx, a.y)
-    push(gx, b.y)
-    push(b.colLeft + COL_INSET, b.y)
-    push(b.colRight - COL_INSET, b.y)
-  }
-
-  return out
+type HSeg = {
+  id: string
+  x1: number
+  x2: number
+  y: number
+  date: string
 }
 
 /**
- * Intra-category same-moment bump line (SVG, pointer-events none).
- * Hover → dashed (no mute). Click-pin → solid. Short gutter risers only
- * among exact same-date peers. Not a chrono path.
+ * Independent mid-gap H under each same-date peer card.
+ * No vertical gutter stairs — multiple companies = multiple separate H ticks.
+ */
+function momentHSegments(peers: Anchor[]): HSeg[] {
+  return peers.map((p) => {
+    const x1 = p.colLeft + COL_INSET
+    const x2 = Math.max(x1 + 12, p.colRight - COL_INSET)
+    return {
+      id: p.id,
+      x1,
+      x2,
+      y: p.y,
+      date: p.date,
+    }
+  })
+}
+
+/**
+ * Intra-category same-moment bump: one short H under each matching company
+ * card (mid-gap) with a centered date label. No V connectors.
  */
 export default function BumpConnectors({
   containerRef,
@@ -247,14 +114,12 @@ export default function BumpConnectors({
   solid = false,
 }: Props) {
   const [pts, setPts] = useState<Anchor[]>([])
-  const [cols, setCols] = useState<ColBox[]>([])
   const [size, setSize] = useState({ w: 0, h: 0 })
 
   const measure = useCallback(() => {
     const root = containerRef.current
     if (!root) {
       setPts([])
-      setCols([])
       setSize({ w: 0, h: 0 })
       return
     }
@@ -264,15 +129,6 @@ export default function BumpConnectors({
     setSize({ w, h })
 
     const rootBox = root.getBoundingClientRect()
-
-    const colEls = root.querySelectorAll<HTMLElement>('.cat-subcol')
-    const nextCols: ColBox[] = []
-    colEls.forEach((el) => {
-      const r = el.getBoundingClientRect()
-      const left = r.left - rootBox.left + root.scrollLeft
-      nextCols.push({ left, right: left + r.width })
-    })
-    setCols(nextCols)
 
     if (orderedIds.length < 1) {
       setPts([])
@@ -302,7 +158,6 @@ export default function BumpConnectors({
         id,
         date: orderedDates[i] ?? '',
         x: left + r.width / 2,
-        // Temporary; rewritten to mid-gap below once column peers are known.
         y: bottom,
         top,
         bottom,
@@ -313,7 +168,6 @@ export default function BumpConnectors({
       })
     }
 
-    // Group by company subcol, then place Y in the inter-card gap midpoint.
     const byCol = new Map<string, Anchor[]>()
     for (const a of raw) {
       const key = `${a.colLeft.toFixed(1)}:${a.colRight.toFixed(1)}`
@@ -389,10 +243,9 @@ export default function BumpConnectors({
     return pts.filter((p) => p.date === resolvedDate)
   }, [pts, resolvedDate])
 
-  if (!active || peers.length < 1 || size.w <= 0 || size.h <= 0) return null
+  const segs = useMemo(() => momentHSegments(peers), [peers])
 
-  const path = pointsToPath(momentSliceVertices(peers, cols, size.w))
-  if (!path) return null
+  if (!active || segs.length < 1 || size.w <= 0 || size.h <= 0) return null
 
   return (
     <svg
@@ -402,17 +255,60 @@ export default function BumpConnectors({
       viewBox={`0 0 ${size.w} ${size.h}`}
       aria-hidden
     >
-      <path
-        className="bump-connectors__moment"
-        d={path}
-        fill="none"
-        stroke={STROKE}
-        strokeWidth={STROKE_WIDTH}
-        strokeDasharray={solid ? undefined : DASH}
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        vectorEffect="non-scaling-stroke"
-      />
+      {segs.map((s) => {
+        const label = formatMomentDate(s.date)
+        const midX = (s.x1 + s.x2) / 2
+        // Approximate text width so we can gap the H stroke around the label.
+        const textW = Math.max(48, label.length * 6.2)
+        const gapL = midX - textW / 2 - LABEL_PAD_X
+        const gapR = midX + textW / 2 + LABEL_PAD_X
+        const leftEnd = Math.min(gapL, s.x2)
+        const rightStart = Math.max(gapR, s.x1)
+        return (
+          <g key={s.id} className="bump-connectors__seg">
+            {leftEnd > s.x1 + 2 ? (
+              <line
+                className="bump-connectors__moment"
+                x1={s.x1}
+                y1={s.y}
+                x2={leftEnd}
+                y2={s.y}
+                stroke={STROKE}
+                strokeWidth={STROKE_WIDTH}
+                strokeDasharray={solid ? undefined : DASH}
+                strokeLinecap="round"
+                vectorEffect="non-scaling-stroke"
+              />
+            ) : null}
+            {rightStart < s.x2 - 2 ? (
+              <line
+                className="bump-connectors__moment"
+                x1={rightStart}
+                y1={s.y}
+                x2={s.x2}
+                y2={s.y}
+                stroke={STROKE}
+                strokeWidth={STROKE_WIDTH}
+                strokeDasharray={solid ? undefined : DASH}
+                strokeLinecap="round"
+                vectorEffect="non-scaling-stroke"
+              />
+            ) : null}
+            <text
+              className="bump-connectors__date"
+              x={midX}
+              y={s.y}
+              textAnchor="middle"
+              dominantBaseline="central"
+              fontSize={LABEL_FONT}
+              fontWeight={650}
+              fill={STROKE}
+            >
+              {label}
+            </text>
+          </g>
+        )
+      })}
     </svg>
   )
 }

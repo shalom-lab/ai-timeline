@@ -325,3 +325,63 @@ interface CapabilityScenario {
 贡献规则：**只追加**新月或新 scenario 到 `new[]`；不要把旧场景再写进后续月的 `new[]`（既往由 UI 折叠展示）。文案用具体工作场景+emoji，避免产品发布腔。
 
 路径：`docs/DATA.md`（本节）· `src/types/capability.ts` · `data/capability-frontier.json`。
+
+---
+
+## 9. AI工具矩阵（`ai-tools.json`）— 独立数据集
+
+**不是历史时间线。** 只记录**当前仍可用**的产品形态一览；公司行复用 `timeline.json` 的 `companies[].id`（色与 logo 同源）。
+
+路由：客户端 hash `#/tools`（纪年看板为 `#/`），适配 GitHub Pages，无服务端路由。
+
+根对象：
+
+```ts
+interface AiToolsData {
+  meta: {
+    name: string // "AI工具"
+    version: string
+    updatedAt: string // YYYY-MM-DD
+    locale: string
+    disclaimer?: string
+  }
+  columns: { id: ToolColumnId; label: string }[]
+  rows: ToolRow[]
+}
+
+type ToolColumnId =
+  | 'llm'      // 语言模型
+  | 'image'    // 图像模型
+  | 'video'    // 视频模型
+  | 'chat'     // 对话产品
+  | 'coding'   // 编程办公
+  | 'api'      // API调用
+  | 'agent'    // 机器人/Agent
+
+interface ToolProduct {
+  name: string
+  url: string          // 产品主页
+  pricing: string      // 高层费用提示（免费档 / Plus 价 / API 按量）
+  pricingUrl?: string  // 官方定价页
+  note?: string
+}
+
+interface ToolRow {
+  companyId: string // = timeline companies[].id
+  displayName?: string
+  cells: Partial<Record<ToolColumnId, ToolProduct | ToolProduct[]>>
+}
+```
+
+不变式（`npm run validate`）：
+
+1. `rows[].companyId` 必须存在于 `timeline.json` `companies[]`。
+2. `columns[].id` 为上述枚举；无重复。
+3. 每个 cell 产品须有非空 `name` / `pricing`，且 `url`（及可选 `pricingUrl`）为 http(s)。
+4. 每行至少 1 个产品；种子不少于约 5 家主要公司。
+5. UI 可隐藏整列为空的形态列。
+
+路径：`docs/DATA.md`（本节）· `src/types/tools.ts` · `data/ai-tools.json`。
+
+相对 v0.7：新增 AI工具页与本数据集；`package.json` `0.8.0`；工具种子 `meta.version` `0.1.0`。
+

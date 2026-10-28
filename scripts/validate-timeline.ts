@@ -1,6 +1,6 @@
 /**
  * Invariant checks for data/timeline.json + data/capability-frontier.json
- * (see docs/DATA.md). Run: npm run validate
+ * + data/ai-tools.json (see docs/DATA.md). Run: npm run validate
  */
 import { readFileSync } from 'node:fs'
 import { resolve, dirname } from 'node:path'
@@ -11,11 +11,13 @@ import type {
   CapabilityMonth,
   CapabilityScenario,
 } from '../src/types/capability'
+import type { AiToolsData, ToolColumnId, ToolProduct } from '../src/types/tools'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const root = resolve(__dirname, '..')
 const timelinePath = resolve(root, 'data/timeline.json')
 const frontierPath = resolve(root, 'data/capability-frontier.json')
+const toolsPath = resolve(root, 'data/ai-tools.json')
 
 const DATE_RE = /^\d{4}-\d{2}-\d{2}$/
 const MONTH_RE = /^\d{4}-\d{2}$/
@@ -58,17 +60,31 @@ const MODEL_CAPS = new Set([
   'audio',
 ])
 
+const TOOL_COLS = new Set<ToolColumnId>([
+  'llm',
+  'image',
+  'video',
+  'chat',
+  'coding',
+  'api',
+  'agent',
+])
+
 function main() {
   const errors: string[] = []
   const push = (m: string) => errors.push(m)
 
   const timeline = JSON.parse(readFileSync(timelinePath, 'utf8')) as TimelineData
   const eventIds = validateTimeline(timeline, push)
+  const companyIds = new Set(timeline.companies.map((c) => c.id))
 
   const frontier = JSON.parse(
     readFileSync(frontierPath, 'utf8'),
   ) as CapabilityFrontierData
   validateFrontier(frontier, eventIds, push)
+
+  const tools = JSON.parse(readFileSync(toolsPath, 'utf8')) as AiToolsData
+  validateTools(tools, companyIds, push)
 
   if (errors.length) {
     console.error(`Validation failed (${errors.length}):`)
@@ -81,7 +97,7 @@ function main() {
     0,
   )
   console.log(
-    `✓ OK — timeline: ${timeline.events.length} events, ${timeline.companies.length} companies; frontier: ${frontier.months.length} months, ${scenarioCount} scenarios`,
+    `✓ OK — timeline: ${timeline.events.length} events, ${timeline.companies.length} companies; frontier: ${frontier.months.length} months, ${scenarioCount} scenarios; tools: ${tools.rows.length} rows × ${tools.columns.length} cols`,
   )
 }
 
@@ -287,5 +303,84 @@ function validateScenario(
     }
   }
 }
+
+function asProducts(v: ToolProduct | ToolProduct[] | undefined): ToolProduct[] {
+  if (!v) return []
+  return Array.isArray(v) ? v : [v]
+}
+
+function validateTools(
+  data: AiToolsData,
+  companyIds: Set<string>,
+  push: (m: string) => void,
+) {
+  if (!data.meta) {
+    push('tools: missing meta')
+    return
+  }
+  if (!data.meta.name?.trim()) push('tools meta.name empty')
+  if (!data.meta.version?.trim()) push('tools meta.version empty')
+  if (!DATE_RE.test(data.meta.updatedAt ?? '')) {
+    push('tools meta.updatedAt bad date')
+  }
+  if (!data.meta.locale?.trim()) push('tools meta.locale empty')
+
+  if (!Array.isArray(data.columns) || data.columns.length === 0) {
+    push('tools columns must be non-empty')
+    return
+  }
+  const colIds = new Set<string>()
+  for (const c of data.columns) {
+    if (!TOOL_COLS.has(c.id)) push(`tools: unknown column id ${c.id}`)
+    if (colIds.has(c.id)) push(`tools: duplicate column ${c.id}`)
+    colIds.add(c.id)
+    if (!c.label?.trim()) push(`tools column ${c.id}: empty label`)
+  }
+
+  if (!Array.isArray(data.rows) || data.rows.length < 5) {
+    push(`tools rows expected >=5 major companies, got ${data.rows?.length}`)
+    return
+  }
+  const rowIds = new Set<string>()
+  for (const row of data.rows) {
+    if (!row.companyId || !KEBAB_RE.test(row.companyId)) {
+      push(`tools: bad companyId ${row.companyId}`)
+      continue
+    }
+    if (rowIds.has(row.companyId)) {
+      push(`tools: duplicate row companyId ${row.companyId}`)
+    }
+    rowIds.add(row.companyId)
+    if (!companyIds.has(row.companyId)) {
+      push(
+        `tools row ${row.companyId}: companyId not in timeline companies[] (reuse ids)`,
+      )
+    }
+    if (!row.cells || typeof row.cells !== 'object') {
+      push(`tools row ${row.companyId}: missing cells`)
+      continue
+    }
+    let productCount = 0
+    for (const [cid, raw] of Object.entries(row.cells)) {
+      if (!TOOL_COLS.has(cid as ToolColumnId)) {
+        push(`tools row ${row.companyId}: unknown cell column ${cid}`)
+      }
+      for (const p of asProducts(raw as ToolProduct | ToolProduct[])) {
+        productCount++
+        const label = `tools ${row.companyId}/${cid}/${p.name}`
+        if (!p.name?.trim()) push(`${label}: empty name`)
+        if (!/^https?:\/\//.test(p.url ?? '')) push(`${label}: bad url`)
+        if (!p.pricing?.trim()) push(`${label}: empty pricing hint`)
+        if (p.pricingUrl && !/^https?:\/\//.test(p.pricingUrl)) {
+          push(`${label}: bad pricingUrl`)
+        }
+      }
+    }
+    if (productCount === 0) {
+      push(`tools row ${row.companyId}: need >=1 product cell`)
+    }
+  }
+}
+
 
 main()

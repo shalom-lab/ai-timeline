@@ -1,5 +1,5 @@
 import { useMemo, useState, useCallback, useEffect } from 'react'
-import { timelineData, capabilityFrontierData } from './data'
+import { timelineData, capabilityFrontierData, aiToolsData } from './data'
 import type { Category, TimelineEvent } from './types/timeline'
 import type { CapabilityMonth } from './types/capability'
 import { BOARD_CATEGORY_ORDER } from './lib/labels'
@@ -8,11 +8,17 @@ import Header, { type Filters } from './components/Header'
 import TimelineRail from './components/TimelineRail'
 import CategoryColumn from './components/CategoryColumn'
 import FrontierColumn from './components/FrontierColumn'
+import ToolsMatrix from './components/ToolsMatrix'
 import {
   buildTimelineLayout,
   frontierMonthsToLayoutSources,
   type LayoutSource,
 } from './lib/timelineLayout'
+import {
+  type AppPage,
+  pageFromHash,
+  navigate as navigateHash,
+} from './lib/route'
 
 const DEFAULT_FILTERS: Filters = {
   query: '',
@@ -101,6 +107,7 @@ function visibleCategoryEvents(
 
 export default function App() {
   const { meta, companies, events } = timelineData
+  const [page, setPage] = useState<AppPage>(() => pageFromHash())
   const [filters, setFilters] = useState<Filters>(DEFAULT_FILTERS)
   /** First-click pin: outer outline on a card (no detail yet). */
   const [outlinedId, setOutlinedId] = useState<string | null>(null)
@@ -277,6 +284,19 @@ export default function App() {
     setFilters((f) => ({ ...f, ...patch }))
   }, [])
 
+  useEffect(() => {
+    const sync = () => setPage(pageFromHash())
+    window.addEventListener('hashchange', sync)
+    sync()
+    return () => window.removeEventListener('hashchange', sync)
+  }, [])
+
+  const onNavigate = useCallback((next: AppPage) => {
+    setFilters(DEFAULT_FILTERS)
+    navigateHash(next)
+    setPage(next)
+  }, [])
+
   const categoriesWithEvents = BOARD_CATEGORY_ORDER.filter(
     (c) => byCategory[c].length > 0,
   )
@@ -327,8 +347,18 @@ export default function App() {
         filters={filters}
         onChange={patchFilters}
         eventCount={filtered.length}
+        page={page}
+        onNavigate={onNavigate}
+        toolsCount={aiToolsData.rows.length}
       />
 
+      {page === 'tools' ? (
+        <ToolsMatrix
+          data={aiToolsData}
+          companies={companies}
+          query={filters.query}
+        />
+      ) : (
       <div className="board">
         <TimelineRail
           events={railEvents}
@@ -397,6 +427,7 @@ export default function App() {
           ) : null}
         </div>
       </div>
+      )}
     </div>
   )
 }
