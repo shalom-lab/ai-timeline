@@ -1,7 +1,7 @@
 {
   "meta": {
     "name": "AI纪年",
-    "version": "0.11.0",
+    "version": "0.12.0",
     "scopeStart": "2022-11-30",
     "updatedAt": "2026-10-28",
     "locale": "zh-CN",
@@ -254,6 +254,47 @@
       ],
       "color": "#20808D",
       "colorSoft": "#D4EEF1"
+    },
+    {
+      "id": "mit",
+      "name": "MIT",
+      "aliases": [
+        "Massachusetts Institute of Technology",
+        "麻省理工"
+      ],
+      "color": "#A31F34",
+      "colorSoft": "#F8E8EB"
+    },
+    {
+      "id": "arc-institute",
+      "name": "Arc Institute",
+      "aliases": [
+        "Arc"
+      ],
+      "color": "#0F766E",
+      "colorSoft": "#E6F4F1"
+    },
+    {
+      "id": "stanford",
+      "name": "Stanford",
+      "aliases": [
+        "Stanford University",
+        "斯坦福"
+      ],
+      "color": "#8C1515",
+      "colorSoft": "#F5E8E8"
+    },
+    {
+      "id": "nobel",
+      "name": "Royal Swedish Academy of Sciences",
+      "aliases": [
+        "Nobel Prize",
+        "Nobel",
+        "诺贝尔奖",
+        "瑞典皇家科学院"
+      ],
+      "color": "#B8860B",
+      "colorSoft": "#F8F1D8"
     }
   ],
   "events": [
@@ -657,6 +698,38 @@
       ]
     },
     {
+      "id": "deepmind-graphcast-2023-11-14",
+      "date": "2023-11-14",
+      "dateStatus": "exact",
+      "title": "GraphCast 中期全球天气预报达业界领先精度",
+      "summary": "在 Science 发表 GraphCast：基于图神经网络，在不足一分钟内生成 0.25° 分辨率、最长约 10 天的全球中期预报，在大量评测指标上优于 ECMWF 确定性业务系统 HRES，并改善热带气旋等极端天气追踪。",
+      "category": "science",
+      "company": "Google DeepMind",
+      "series": "GraphCast",
+      "product": "GraphCast",
+      "eventType": "first_announce",
+      "sources": [
+        {
+          "title": "Learning skillful medium-range global weather forecasting",
+          "url": "https://www.science.org/doi/10.1126/science.adi2336",
+          "publisher": "Science",
+          "publishedAt": "2023-11-14"
+        },
+        {
+          "title": "GraphCast: AI model for faster and more accurate global weather forecasting",
+          "url": "https://deepmind.google/blog/graphcast-ai-model-for-faster-and-more-accurate-global-weather-forecasting/",
+          "publisher": "Google DeepMind",
+          "publishedAt": "2023-11-14"
+        }
+      ],
+      "tags": [
+        "ai-for-science",
+        "weather",
+        "climate",
+        "earth-science"
+      ]
+    },
+    {
       "id": "moonshot-kimi-chat-ga-2023-11-16",
       "date": "2023-11-16",
       "dateStatus": "exact",
@@ -689,6 +762,31 @@
       ]
     },
     {
+      "id": "deepmind-gnome-2023-11-29",
+      "date": "2023-11-29",
+      "dateStatus": "exact",
+      "title": "GNoME 预测约 220 万种候选晶体材料",
+      "summary": "发布 GNoME：用深度学习大规模筛选无机晶体，预测约 220 万种候选结构，其中约 38 万种被判定为稳定候选，显著扩大材料探索空间。注意：计算预测的稳定候选不等于已在实验室合成或可量产。",
+      "category": "science",
+      "company": "Google DeepMind",
+      "series": "GNoME",
+      "product": "GNoME",
+      "eventType": "first_announce",
+      "sources": [
+        {
+          "title": "Millions of new materials discovered with deep learning",
+          "url": "https://deepmind.google/blog/millions-of-new-materials-discovered-with-deep-learning/",
+          "publisher": "Google DeepMind",
+          "publishedAt": "2023-11-29"
+        }
+      ],
+      "tags": [
+        "ai-for-science",
+        "materials",
+        "chemistry"
+      ]
+    },
+    {
       "id": "google-gemini-first-announce-2023-12-06",
       "date": "2023-12-06",
       "dateStatus": "exact",
@@ -714,6 +812,31 @@
       "capabilities": [
         "chat",
         "vision"
+      ]
+    },
+    {
+      "id": "deepmind-funsearch-2023-12-14",
+      "date": "2023-12-14",
+      "dateStatus": "exact",
+      "title": "FunSearch 在数学问题中发现新构造",
+      "summary": "发布 FunSearch：大语言模型与自动评估程序结合，在集合论 cap set 等问题上发现可验证的新构造，展示 LLM 驱动的程序搜索可产出新数学结果而非仅复述已知答案。",
+      "category": "science",
+      "company": "Google DeepMind",
+      "series": "FunSearch",
+      "product": "FunSearch",
+      "eventType": "first_announce",
+      "sources": [
+        {
+          "title": "FunSearch: Making new discoveries in mathematical sciences using Large Language Models",
+          "url": "https://deepmind.google/blog/funsearch-making-new-discoveries-in-mathematical-sciences-using-large-language-models/",
+          "publisher": "Google DeepMind",
+          "publishedAt": "2023-12-14"
+        }
+      ],
+      "tags": [
+        "ai-for-science",
+        "mathematics",
+        "discovery"
       ]
     },
     {
@@ -771,6 +894,32 @@
       ],
       "capabilities": [
         "chat"
+      ]
+    },
+    {
+      "id": "deepmind-alphageometry-2024-01-17",
+      "date": "2024-01-17",
+      "dateStatus": "exact",
+      "title": "AlphaGeometry 达奥数几何金牌水平",
+      "summary": "Nature 发表 AlphaGeometry：神经—符号定理证明系统在 30 道奥林匹克平面几何题中解出 25 道，接近人类金牌选手水平，展示 AI 可完成复杂形式化几何证明。",
+      "category": "science",
+      "company": "Google DeepMind",
+      "series": "AlphaGeometry",
+      "product": "AlphaGeometry",
+      "eventType": "first_announce",
+      "sources": [
+        {
+          "title": "Solving olympiad geometry without human demonstrations",
+          "url": "https://www.nature.com/articles/s41586-023-06747-5",
+          "publisher": "Nature",
+          "publishedAt": "2024-01-17"
+        }
+      ],
+      "tags": [
+        "ai-for-science",
+        "mathematics",
+        "geometry",
+        "theorem-proving"
       ]
     },
     {
@@ -1072,14 +1221,20 @@
       "id": "google-deepmind-alphafold3-2024-05-08",
       "date": "2024-05-08",
       "dateStatus": "exact",
-      "title": "发布 AlphaFold 3（联合 Isomorphic Labs）",
-      "summary": "Google DeepMind 与 Isomorphic Labs 发布 AlphaFold 3，可预测蛋白质、DNA、RNA、配体等生命分子结构及其相互作用；同步推出面向科研的 AlphaFold Server。属 AI 求解科学问题的里程碑（非消费级聊天产品）。",
+      "title": "发布 AlphaFold 3",
+      "summary": "与 Isomorphic Labs 发布 AlphaFold 3（Nature 同日发表）：将结构预测从单体蛋白扩展到蛋白质、DNA、RNA、配体、离子及修饰残基等复合物相互作用；并推出面向科研的 AlphaFold Server。属 AI 求解结构生物学问题的里程碑。",
       "category": "science",
       "company": "Google DeepMind",
       "series": "AlphaFold",
       "product": "AlphaFold 3",
       "eventType": "first_announce",
       "sources": [
+        {
+          "title": "Accurate structure prediction of biomolecular interactions with AlphaFold 3",
+          "url": "https://www.nature.com/articles/s41586-024-07487-w",
+          "publisher": "Nature",
+          "publishedAt": "2024-05-08"
+        },
         {
           "title": "AlphaFold 3 predicts the structure and interactions of all of life’s molecules",
           "url": "https://blog.google/innovation-and-ai/products/google-deepmind-isomorphic-alphafold-3-ai-model/",
@@ -1089,9 +1244,9 @@
       ],
       "tags": [
         "ai-for-science",
-        "science",
         "alphafold",
-        "biology"
+        "biology",
+        "structural-biology"
       ]
     },
     {
@@ -1316,6 +1471,35 @@
       ]
     },
     {
+      "id": "deepmind-alphaproof-imo-silver-2024-07-25",
+      "date": "2024-07-25",
+      "dateStatus": "exact",
+      "title": "AlphaProof 与 AlphaGeometry 2 达 IMO 银牌水平",
+      "summary": "AlphaProof（形式化推理）与 AlphaGeometry 2 在国际数学奥林匹克（IMO）六道题中解出四道，达到银牌标准；部分题目以 Lean 等形式化方式给出可机检证明。",
+      "category": "science",
+      "company": "Google DeepMind",
+      "series": "AlphaProof",
+      "product": "AlphaProof",
+      "eventType": "first_announce",
+      "relatedIds": [
+        "deepmind-alphageometry-2024-01-17"
+      ],
+      "sources": [
+        {
+          "title": "AI achieves silver-medal standard solving International Mathematical Olympiad problems",
+          "url": "https://deepmind.google/blog/ai-solves-imo-problems-at-silver-medal-level/",
+          "publisher": "Google DeepMind",
+          "publishedAt": "2024-07-25"
+        }
+      ],
+      "tags": [
+        "ai-for-science",
+        "mathematics",
+        "imo",
+        "theorem-proving"
+      ]
+    },
+    {
       "id": "xai-grok-2-2024-08-13",
       "date": "2024-08-13",
       "dateStatus": "exact",
@@ -1375,6 +1559,31 @@
       "capabilities": [
         "video",
         "audio"
+      ]
+    },
+    {
+      "id": "deepmind-alphaproteo-2024-09-05",
+      "date": "2024-09-05",
+      "dateStatus": "exact",
+      "title": "AlphaProteo 设计并结合实验验证新型结合蛋白",
+      "summary": "发布 AlphaProteo：按指定靶标生成全新结合蛋白，并在实验中验证对多种靶标的高亲和力结合，推动 AI 从结构预测走向可湿实验检验的蛋白质设计。",
+      "category": "science",
+      "company": "Google DeepMind",
+      "series": "AlphaProteo",
+      "product": "AlphaProteo",
+      "eventType": "first_announce",
+      "sources": [
+        {
+          "title": "AlphaProteo generates novel proteins for biology and health research",
+          "url": "https://deepmind.google/blog/alphaproteo-generates-novel-proteins-for-biology-and-health-research/",
+          "publisher": "Google DeepMind",
+          "publishedAt": "2024-09-05"
+        }
+      ],
+      "tags": [
+        "ai-for-science",
+        "protein-design",
+        "biology"
       ]
     },
     {
@@ -1464,6 +1673,35 @@
       "capabilities": [
         "chat",
         "vision"
+      ]
+    },
+    {
+      "id": "nobel-chemistry-protein-ai-2024-10-09",
+      "date": "2024-10-09",
+      "dateStatus": "exact",
+      "title": "诺贝尔化学奖表彰蛋白质结构预测与设计",
+      "summary": "瑞典皇家科学院将 2024 年诺贝尔化学奖授予 David Baker 以及 Demis Hassabis、John Jumper，表彰计算蛋白质设计与 AlphaFold 蛋白质结构预测对生物学的基础性贡献——标志 AI for Science 获最高科学共同体认可。",
+      "category": "science",
+      "company": "Royal Swedish Academy of Sciences",
+      "series": "Nobel Prize",
+      "product": "Nobel Prize in Chemistry 2024",
+      "eventType": "other",
+      "relatedIds": [
+        "google-deepmind-alphafold3-2024-05-08"
+      ],
+      "sources": [
+        {
+          "title": "Chemistry Nobel goes to developers of AlphaFold AI that predicts protein structures",
+          "url": "https://www.nature.com/articles/d41586-024-03214-7",
+          "publisher": "Nature",
+          "publishedAt": "2024-10-09"
+        }
+      ],
+      "tags": [
+        "ai-for-science",
+        "nobel",
+        "protein",
+        "biology"
       ]
     },
     {
@@ -1797,6 +2035,38 @@
       ]
     },
     {
+      "id": "arc-evo2-announce-2025-02-19",
+      "date": "2025-02-19",
+      "dateStatus": "exact",
+      "title": "发布 Evo 2 基因组基础模型",
+      "summary": "Arc Institute 联合 Stanford 等发布开源 Evo 2：在约 9.3 万亿碱基、逾 12.8 万个基因组上训练，可预测变异影响并生成 DNA 序列，标志跨生命域基因组建模的重要节点。",
+      "category": "science",
+      "company": "Arc Institute",
+      "series": "Evo",
+      "product": "Evo 2",
+      "eventType": "first_announce",
+      "sources": [
+        {
+          "title": "Generative AI tool marks a milestone in biology and accelerates the future of life sciences",
+          "url": "https://news.stanford.edu/stories/2025/02/generative-ai-tool-marks-a-milestone-in-biology-and-accelerates-the-future-of-life-sciences",
+          "publisher": "Stanford",
+          "publishedAt": "2025-02-19"
+        },
+        {
+          "title": "AI can now model and design the genetic code for all domains of life with Evo 2",
+          "url": "https://arcinstitute.org/news/evo2",
+          "publisher": "Arc Institute",
+          "publishedAt": "2025-02-19"
+        }
+      ],
+      "tags": [
+        "ai-for-science",
+        "genomics",
+        "evo",
+        "biology"
+      ]
+    },
+    {
       "id": "anthropic-claude-3-7-sonnet-2025-02-24",
       "date": "2025-02-24",
       "dateStatus": "exact",
@@ -1922,6 +2192,32 @@
       ]
     },
     {
+      "id": "deepmind-alphaevolve-algorithms-2025-05-14",
+      "date": "2025-05-14",
+      "dateStatus": "exact",
+      "title": "AlphaEvolve 自动发现更优算法",
+      "summary": "发布 AlphaEvolve：由 Gemini 驱动的编码智能体，通过进化式搜索在矩阵乘法、组合优化等方向找到可验证的更优算法与构造，体现 AI 作为算法发现伙伴的能力。",
+      "category": "science",
+      "company": "Google DeepMind",
+      "series": "AlphaEvolve",
+      "product": "AlphaEvolve",
+      "eventType": "first_announce",
+      "sources": [
+        {
+          "title": "AlphaEvolve: A Gemini-powered coding agent for designing advanced algorithms",
+          "url": "https://deepmind.google/blog/alphaevolve-a-gemini-powered-coding-agent-for-designing-advanced-algorithms/",
+          "publisher": "Google DeepMind",
+          "publishedAt": "2025-05-14"
+        }
+      ],
+      "tags": [
+        "ai-for-science",
+        "algorithms",
+        "mathematics",
+        "discovery"
+      ]
+    },
+    {
       "id": "openai-codex-research-preview-2025-05-16",
       "date": "2025-05-16",
       "dateStatus": "exact",
@@ -1948,6 +2244,32 @@
         "codex",
         "coding-agent",
         "chatgpt"
+      ]
+    },
+    {
+      "id": "microsoft-aurora-2025-05-21",
+      "date": "2025-05-21",
+      "dateStatus": "exact",
+      "title": "Aurora 地球系统基础模型发表于 Nature",
+      "summary": "Microsoft 的 Aurora 在 Nature 发表：在逾百万小时地球物理数据上训练的基础模型，统一支持高分辨率天气、空气质量、海浪与热带气旋轨迹等多种预测，多项任务优于业务预报。",
+      "category": "science",
+      "company": "Microsoft",
+      "series": "Aurora",
+      "product": "Aurora",
+      "eventType": "first_announce",
+      "sources": [
+        {
+          "title": "A foundation model for the Earth system",
+          "url": "https://www.nature.com/articles/s41586-025-09005-y",
+          "publisher": "Nature",
+          "publishedAt": "2025-05-21"
+        }
+      ],
+      "tags": [
+        "ai-for-science",
+        "weather",
+        "climate",
+        "earth-science"
       ]
     },
     {
@@ -1984,6 +2306,35 @@
       ]
     },
     {
+      "id": "deepmind-alphagenome-2025-06-25",
+      "date": "2025-06-25",
+      "dateStatus": "exact",
+      "title": "发布 AlphaGenome 解读基因调控效应",
+      "summary": "发布 AlphaGenome：预测 DNA 序列变异对基因表达、剪接等分子功能的影响，帮助研究者优先筛选可能与疾病相关的非编码变异；后续 Atlas 再将全基因组单碱基效应制成可查询图谱。",
+      "category": "science",
+      "company": "Google DeepMind",
+      "series": "AlphaGenome",
+      "product": "AlphaGenome",
+      "eventType": "first_announce",
+      "relatedIds": [
+        "deepmind-alphagenome-atlas-2026-09-08"
+      ],
+      "sources": [
+        {
+          "title": "AlphaGenome: AI for better understanding the genome",
+          "url": "https://deepmind.google/blog/alphagenome-ai-for-better-understanding-the-genome/",
+          "publisher": "Google DeepMind",
+          "publishedAt": "2025-06-25"
+        }
+      ],
+      "tags": [
+        "ai-for-science",
+        "genomics",
+        "alphagenome",
+        "biology"
+      ]
+    },
+    {
       "id": "google-gemini-cli-open-source-2025-06-25",
       "date": "2025-06-25",
       "dateStatus": "exact",
@@ -2011,6 +2362,90 @@
         "agentic-coding",
         "open-source",
         "mcp"
+      ]
+    },
+    {
+      "id": "deepmind-gemini-deep-think-imo-gold-2025-07-21",
+      "date": "2025-07-21",
+      "dateStatus": "exact",
+      "title": "Gemini Deep Think 达 IMO 金牌标准",
+      "summary": "进阶版 Gemini（Deep Think）在国际数学奥林匹克六道题中解出五道、获 35 分，官方确认达到金牌标准，标志通用模型在竞赛级数学推理上的新高度（侧重能力验证，非独立新定理发现）。",
+      "category": "science",
+      "company": "Google DeepMind",
+      "series": "Gemini Deep Think",
+      "product": "Gemini Deep Think",
+      "eventType": "first_announce",
+      "relatedIds": [
+        "deepmind-alphaproof-imo-silver-2024-07-25"
+      ],
+      "sources": [
+        {
+          "title": "Advanced version of Gemini with Deep Think officially achieves gold-medal standard at the International Mathematical Olympiad",
+          "url": "https://deepmind.google/blog/advanced-version-of-gemini-with-deep-think-officially-achieves-gold-medal-standard-at-the-international-mathematical-olympiad/",
+          "publisher": "Google DeepMind",
+          "publishedAt": "2025-07-21"
+        }
+      ],
+      "tags": [
+        "ai-for-science",
+        "mathematics",
+        "imo",
+        "reasoning"
+      ]
+    },
+    {
+      "id": "mit-ai-antibiotics-2025-08-14",
+      "date": "2025-08-14",
+      "dateStatus": "exact",
+      "title": "生成式 AI 设计抗耐药菌候选抗生素",
+      "summary": "MIT 团队用生成式 AI 设计并筛选新型抗菌分子，实验室显示可杀死耐药淋球菌与耐甲氧西林金黄色葡萄球菌（MRSA）等。注意：体外活性候选≠已完成临床疗效与安全性验证。",
+      "category": "science",
+      "company": "MIT",
+      "series": "AI Antibiotics",
+      "product": "AI-designed antibiotics",
+      "eventType": "first_announce",
+      "sources": [
+        {
+          "title": "Using generative AI, researchers design compounds that can kill drug-resistant bacteria",
+          "url": "https://news.mit.edu/2025/using-generative-ai-researchers-design-compounds-kill-drug-resistant-bacteria-0814",
+          "publisher": "MIT News",
+          "publishedAt": "2025-08-14"
+        }
+      ],
+      "tags": [
+        "ai-for-science",
+        "antibiotics",
+        "drug-discovery",
+        "biology"
+      ]
+    },
+    {
+      "id": "deepmind-alphaevolve-complexity-theory-2025-09-30",
+      "date": "2025-09-30",
+      "dateStatus": "exact",
+      "title": "AlphaEvolve 改进理论计算机科学结果",
+      "summary": "Google Research / DeepMind 展示以 AlphaEvolve 发现可验证的组合结构，改进 MAX-4-CUT 等不可近似性上界，并将有限 gadget 提升为普遍性定理——AI 作为理论科研伙伴的实证案例。",
+      "category": "science",
+      "company": "Google DeepMind",
+      "series": "AlphaEvolve",
+      "product": "AlphaEvolve",
+      "eventType": "first_announce",
+      "relatedIds": [
+        "deepmind-alphaevolve-algorithms-2025-05-14"
+      ],
+      "sources": [
+        {
+          "title": "AI as a research partner: Advancing theoretical computer science with AlphaEvolve",
+          "url": "https://research.google/blog/ai-as-a-research-partner-advancing-theoretical-computer-science-with-alphaevolve/",
+          "publisher": "Google Research",
+          "publishedAt": "2025-09-30"
+        }
+      ],
+      "tags": [
+        "ai-for-science",
+        "complexity-theory",
+        "mathematics",
+        "algorithms"
       ]
     },
     {
@@ -2155,6 +2590,35 @@
         "chat",
         "reasoning",
         "vision"
+      ]
+    },
+    {
+      "id": "deepmind-gemini-deep-think-research-2026-02-11",
+      "date": "2026-02-11",
+      "dateStatus": "exact",
+      "title": "Gemini Deep Think 用于数学与科学研究案例",
+      "summary": "DeepMind 公开 Gemini Deep Think 在数学、物理与理论计算机科学研究中的应用案例，展示通用深度思考模型如何加速专业科研工作流（案例展示，非单一论文发表日）。",
+      "category": "science",
+      "company": "Google DeepMind",
+      "series": "Gemini Deep Think",
+      "product": "Gemini Deep Think",
+      "eventType": "first_announce",
+      "relatedIds": [
+        "deepmind-gemini-deep-think-imo-gold-2025-07-21"
+      ],
+      "sources": [
+        {
+          "title": "Gemini Deep Think: Redefining the Future of Scientific Research",
+          "url": "https://deepmind.google/blog/accelerating-mathematical-and-scientific-discovery-with-gemini-deep-think/",
+          "publisher": "Google DeepMind",
+          "publishedAt": "2026-02-11"
+        }
+      ],
+      "tags": [
+        "ai-for-science",
+        "mathematics",
+        "scientific-discovery",
+        "reasoning"
       ]
     },
     {
@@ -2362,6 +2826,35 @@
       "tags": [
         "perplexity-computer",
         "agent"
+      ]
+    },
+    {
+      "id": "arc-evo2-nature-2026-03-04",
+      "date": "2026-03-04",
+      "dateStatus": "exact",
+      "title": "Evo 2 正式发表于 Nature",
+      "summary": "Evo 2 在 Nature 正式发表：基于约 9 万亿碱基对、覆盖生命各域的基因组基础模型，可预测序列功能性质并支持生成式基因组设计，进一步巩固跨物种建模的科学证据。",
+      "category": "science",
+      "company": "Arc Institute",
+      "series": "Evo",
+      "product": "Evo 2",
+      "eventType": "first_announce",
+      "relatedIds": [
+        "arc-evo2-announce-2025-02-19"
+      ],
+      "sources": [
+        {
+          "title": "Genome modelling and design across all domains of life with Evo 2",
+          "url": "https://www.nature.com/articles/s41586-026-10176-5",
+          "publisher": "Nature",
+          "publishedAt": "2026-03-04"
+        }
+      ],
+      "tags": [
+        "ai-for-science",
+        "genomics",
+        "evo",
+        "biology"
       ]
     },
     {
@@ -3079,6 +3572,36 @@
       ]
     },
     {
+      "id": "arc-ai-phage-genomes-2026-08-06",
+      "date": "2026-08-06",
+      "dateStatus": "exact",
+      "title": "AI 设计完整噬菌体基因组并获实验活性",
+      "summary": "Science 发表：用基因组语言模型（Evo 系列）生成完整噬菌体基因组，化学合成并测试后获得 16 种具有活性、可感染特定宿主的噬菌体——从序列预测迈向基因组尺度的合成生物学创造（实验室活性≠临床治疗）。",
+      "category": "science",
+      "company": "Arc Institute",
+      "series": "Evo",
+      "product": "AI-designed bacteriophages",
+      "eventType": "first_announce",
+      "relatedIds": [
+        "arc-evo2-nature-2026-03-04",
+        "arc-evo2-announce-2025-02-19"
+      ],
+      "sources": [
+        {
+          "title": "Generative design of bacteriophages with genome language models",
+          "url": "https://www.science.org/doi/10.1126/science.aec2657",
+          "publisher": "Science",
+          "publishedAt": "2026-08-06"
+        }
+      ],
+      "tags": [
+        "ai-for-science",
+        "synthetic-biology",
+        "genomics",
+        "phage"
+      ]
+    },
+    {
       "id": "xai-grok-bot-2026-08-11",
       "date": "2026-08-11",
       "dateStatus": "exact",
@@ -3216,6 +3739,9 @@
         "alphagenome",
         "ai-for-science",
         "genomics"
+      ],
+      "relatedIds": [
+        "deepmind-alphagenome-2025-06-25"
       ]
     },
     {
