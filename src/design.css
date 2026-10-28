@@ -1,30 +1,30 @@
 /* Editorial atlas: calm surfaces, readable cards, explicit comparisons. */
-:root { --bg:#f5f6f8; --text:#202b38; --muted:#687583; --border:#e3e8eb; --rail-w:174px; --board-tabs-h:3.7rem; --timeline-head-h:3.5rem; --shadow:0 3px 15px #24374705; }
+:root { --bg:#f5f6f8; --text:#202b38; --muted:#687583; --border:#e3e8eb; --rail-w:174px; --board-tabs-h:2.45rem; --timeline-head-h:3.5rem; --shadow:0 3px 15px #24374705; }
 button, a, input, select { -webkit-tap-highlight-color:transparent; }
 button:focus-visible, a:focus-visible, select:focus-visible { outline:2px solid #198577; outline-offset:3px; }
 .app-header { position:relative; flex-shrink:0; background:#fff; box-shadow:none; }
-.app-header__banner { min-height:76px; padding:14px 32px; gap:24px; border-bottom:1px solid #edf0f2; color:var(--text); }
+.app-header__banner { min-height:52px; padding:8px 24px; gap:16px; border-bottom:1px solid #edf0f2; color:var(--text); }
 .app-header__brand { flex:0 1 auto; }
-.app-header__logo-img { width:40px; height:40px; border-radius:12px; box-shadow:none; }
-.app-header__brand h1 { font-size:1.24rem; }
-.app-header__en { font-size:.7rem; letter-spacing:.06em; }
-.app-header__subtitle { margin-top:5px; font-size:.73rem; color:var(--muted); opacity:1; }
-.app-header__nav { padding:4px; gap:4px; border-radius:10px; background:#f3f5f6; }
-.app-header__nav-btn { border:0; background:transparent; color:#687583; padding:10px 18px; border-radius:7px; font-size:.84rem; }
+.app-header__logo-img { width:32px; height:32px; border-radius:9px; box-shadow:none; }
+.app-header__brand h1 { font-size:1.1rem; line-height:1.15; }
+.app-header__en { font-size:.64rem; letter-spacing:.04em; }
+.app-header__subtitle { margin-top:1px; font-size:.66rem; line-height:1.2; color:var(--muted); opacity:1; }
+.app-header__nav { padding:3px; gap:3px; border-radius:8px; background:#f3f5f6; }
+.app-header__nav-btn { border:0; background:transparent; color:#687583; padding:5px 14px; border-radius:6px; font-size:.8rem; line-height:1.2; }
 .app-header__nav-btn:hover { background:#e8efec; color:#136c60; }
 .app-header__nav-btn.is-active { background:#fff; color:#17796b; box-shadow:0 2px 5px #233c3410; }
 .app-header__search-wrap { flex:0 1 330px; }
-.app-header__search { border:1px solid var(--border); background:#fafbfc; border-radius:9px; box-shadow:none; padding:10px 13px; }
+.app-header__search { border:1px solid var(--border); background:#fafbfc; border-radius:8px; box-shadow:none; padding:5px 11px; }
 .app-header__search:focus-within { border-color:#459d8f; box-shadow:0 0 0 3px #dceee8; }
-.app-header__search input { font-size:.82rem; min-width:0; }
+.app-header__search input { font-size:.78rem; min-width:0; line-height:1.25; }
 .page-intro__eyebrow { font-size:.65rem; font-weight:700; letter-spacing:.18em; color:#388477; }
 .board { padding:20px 24px 20px 14px; gap:18px; }
 .board__main { border:1px solid var(--border); border-radius:14px; background:#fff; }
-.board-tabs { padding:0 16px; gap:18px; align-items:stretch; flex-wrap:nowrap; overflow-x:auto; }
-.board-tabs__btn { background:transparent; border:0; border-bottom:2px solid transparent; border-radius:0; margin:0; padding:0 8px; font-size:.88rem; gap:8px; }
+.board-tabs { padding:0 12px; gap:12px; align-items:stretch; flex-wrap:nowrap; overflow-x:auto; min-height:var(--board-tabs-h); }
+.board-tabs__btn { background:transparent; border:0; border-bottom:2px solid transparent; border-radius:0; margin:0; padding:0 6px; font-size:.8rem; gap:5px; line-height:1.15; }
 .board-tabs__btn:hover { background:#f5f9f7; color:#17796b; }
 .board-tabs__btn.is-active { background:transparent; border-color:#17796b; color:#17796b; }
-.board-tabs__count { padding:2px 6px; font-size:.7rem; border-radius:5px; }
+.board-tabs__count { padding:1px 5px; font-size:.64rem; border-radius:4px; line-height:1.2; }
 .board__columns { padding:0; align-items:stretch; }
 .cat-column { border:0; border-radius:0; box-shadow:none; background:#f7f9fa; }
 .cat-column__head { height:auto; min-height:var(--timeline-head-h); overflow:visible; }
@@ -99,7 +99,7 @@ button:focus-visible, a:focus-visible, select:focus-visible { outline:2px solid 
 .frontier-month__carried-toggle { margin:10px 0 6px; border-radius:7px; padding:8px 12px; font-weight:500; }
 .frontier-compare--muted { opacity:1; background:#fafbfa; }
 @media (max-width:1100px) {
-  .app-header__banner { flex-wrap:wrap; gap:12px; padding:14px 22px; }
+  .app-header__banner { flex-wrap:wrap; gap:10px; padding:8px 18px; }
   .app-header__brand { flex:1 1 auto; max-width:none; }
   .app-header__nav { margin-left:auto; }
   .app-header__search-wrap { flex:0 1 280px; }
@@ -112,9 +112,9 @@ button:focus-visible, a:focus-visible, select:focus-visible { outline:2px solid 
 }
 @media (max-width:720px) {
   .app-shell { height:auto; max-height:none; overflow:visible; min-height:100dvh; }
-  .app-header__banner { padding:12px 16px; gap:12px; }
+  .app-header__banner { padding:8px 12px; gap:8px; }
   .app-header__en { display:none; }
-  .app-header__nav-btn { padding:10px; font-size:.78rem; }
+  .app-header__nav-btn { padding:5px 10px; font-size:.74rem; }
   .app-header__search-wrap { flex:1 1 100%; max-width:none; }
   .app-header__search { max-width:none; }
   .board { display:flex; flex-direction:column; overflow:visible; padding:12px; gap:10px; }
@@ -122,8 +122,8 @@ button:focus-visible, a:focus-visible, select:focus-visible { outline:2px solid 
   .timeline-rail__head-spacer { height:48px; position:sticky; top:0; z-index:4; background:var(--bg); }
   .timeline-rail__mode { max-width:200px; }
   .board__main { height:auto; max-height:none; overflow:hidden; flex-shrink:0; }
-  .board-tabs { gap:8px; padding:0 8px; min-height:52px; }
-  .board-tabs__btn { font-size:.79rem; padding:0 5px; gap:4px; }
+  .board-tabs { gap:6px; padding:0 6px; min-height:40px; }
+  .board-tabs__btn { font-size:.74rem; padding:0 4px; gap:3px; }
   .board__columns { overflow:visible; flex-direction:column; }
   .board__col-slot { min-width:0; }
   .has-subcols > .cat-subcol { flex-basis:272px; }
@@ -178,18 +178,18 @@ button:focus-visible, a:focus-visible, select:focus-visible { outline:2px solid 
 .frontier-pane .frontier-compare__label { font-size:.61rem; }
 .frontier-pane .frontier-compare__arrow { transform:none; }
 
-.tools-tabs.board-tabs { min-height:var(--board-tabs-h); padding:0 16px; gap:18px; margin:0; background:white; border:1px solid var(--border); border-radius:12px 12px 0 0; }
-.tools-tabs .tools-tabs__btn { border:0; border-bottom:2px solid transparent; border-radius:0; background:transparent; padding:0 8px; color:#64748b; font-size:.88rem; margin:0; }
+.tools-tabs.board-tabs { min-height:var(--board-tabs-h); padding:0 12px; gap:12px; margin:0; background:white; border:1px solid var(--border); border-radius:10px 10px 0 0; }
+.tools-tabs .tools-tabs__btn { border:0; border-bottom:2px solid transparent; border-radius:0; background:transparent; padding:0 6px; color:#64748b; font-size:.8rem; margin:0; line-height:1.15; }
 .tools-tabs .tools-tabs__btn.is-active { background:transparent; border-bottom-color:#17796b; color:#17796b; box-shadow:none; }
 .tools-tabs .tools-tabs__btn:hover { background:#f5f9f7; color:#17796b; }
 
 /* Keep both navigation bars on one shared top and baseline. */
 .timeline-rail__head-spacer { padding-top:0; }
-.timeline-rail__mode { height:var(--board-tabs-h); box-sizing:border-box; border-radius:12px 12px 0 0; background:#fff; }
-.timeline-rail__mode-btn { font-size:.88rem; box-shadow:none; border-bottom:2px solid transparent; }
+.timeline-rail__mode { height:var(--board-tabs-h); box-sizing:border-box; border-radius:10px 10px 0 0; background:#fff; }
+.timeline-rail__mode-btn { font-size:.8rem; box-shadow:none; border-bottom:2px solid transparent; line-height:1.15; }
 .timeline-rail__mode-btn.is-active { box-shadow:none; border-bottom-color:#17796b; color:#17796b; background:transparent; }
 .timeline-rail__mode-btn + .timeline-rail__mode-btn { border-left:0; }
 @media (max-width:720px) {
-  .timeline-rail__head-spacer { height:52px; }
-  .timeline-rail__mode { height:52px; }
+  .timeline-rail__head-spacer { height:40px; }
+  .timeline-rail__mode { height:40px; }
 }

@@ -45,8 +45,8 @@ export default function Header({
           <img
             className="app-header__logo-img"
             src={brandMarkSrc}
-            width={36}
-            height={36}
+            width={32}
+            height={32}
             alt=""
             draggable={false}
           />

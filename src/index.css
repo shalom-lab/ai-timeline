@@ -1,7 +1,7 @@
 :root {
   --timeline-head-h: 2.55rem;
   /* Category tab strip height (padding + btn); rail spacer stacks this + chip head. */
-  --board-tabs-h: 2.35rem;
+  --board-tabs-h: 2.2rem;
   color-scheme: light;
   --bg: #f4f6fa;
   --surface: #ffffff;
@@ -94,8 +94,8 @@ a {
 .app-header__banner {
   display: flex;
   align-items: center;
-  gap: 0.65rem 1rem;
-  padding: 0.55rem 1.1rem;
+  gap: 0.5rem 0.85rem;
+  padding: 0.4rem 1rem;
   /* brand | spacer (via nav ml:auto) | page-nav | search */
 }
 
@@ -109,9 +109,9 @@ a {
 }
 
 .app-header__logo-img {
-  width: 36px;
-  height: 36px;
-  border-radius: 10px;
+  width: 32px;
+  height: 32px;
+  border-radius: 9px;
   flex-shrink: 0;
   display: block;
   box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.18);
@@ -123,13 +123,13 @@ a {
 
 .app-header__brand h1 {
   margin: 0;
-  font-size: 1.2rem;
+  font-size: 1.1rem;
   letter-spacing: -0.02em;
   font-weight: 700;
-  line-height: 1.2;
+  line-height: 1.15;
   display: flex;
   align-items: baseline;
-  gap: 0.45rem;
+  gap: 0.4rem;
   flex-wrap: wrap;
 }
 
@@ -141,8 +141,9 @@ a {
 }
 
 .app-header__subtitle {
-  margin: 0.1rem 0 0;
-  font-size: 0.72rem;
+  margin: 0.05rem 0 0;
+  font-size: 0.66rem;
+  line-height: 1.2;
   opacity: 0.78;
   white-space: nowrap;
   overflow: hidden;
@@ -166,12 +167,12 @@ a {
   color: rgba(248, 250, 252, 0.78);
   /* Short rectangle, slight radius — same language as .board-tabs__btn */
   border-radius: 6px;
-  padding: 0.38rem 0.9rem;
-  font-size: 0.86rem;
+  padding: 0.28rem 0.75rem;
+  font-size: 0.8rem;
   font-weight: 650;
   letter-spacing: 0.02em;
   cursor: pointer;
-  line-height: 1.2;
+  line-height: 1.15;
   transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
   white-space: nowrap;
 }
@@ -206,7 +207,7 @@ a {
   background: rgba(255, 255, 255, 0.95);
   color: var(--text);
   border-radius: 999px;
-  padding: 0.45rem 0.9rem;
+  padding: 0.32rem 0.75rem;
   border: 1px solid rgba(255, 255, 255, 0.35);
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
 }
@@ -221,7 +222,8 @@ a {
   outline: 0;
   background: transparent;
   width: 100%;
-  font-size: 0.88rem;
+  font-size: 0.8rem;
+  line-height: 1.25;
 }
 
 /* Theme toggle removed until real light/dark exists. */
@@ -295,12 +297,12 @@ a {
   align-items: flex-end;
   gap: 0.28rem;
   /* Align with .board__columns content (not over the left rail). */
-  padding: 0.4rem 0.5rem 0 0;
+  padding: 0.28rem 0.45rem 0 0;
   background: var(--surface);
   border-bottom: 1px solid var(--border);
   flex-shrink: 0;
   box-sizing: border-box;
-  min-height: var(--board-tabs-h, 2.35rem);
+  min-height: var(--board-tabs-h, 2.2rem);
 }
 
 .board-tabs__btn {
@@ -313,12 +315,12 @@ a {
   color: #64748b;
   /* Short rectangle, slight radius — not capsules */
   border-radius: 6px 6px 0 0;
-  padding: 0.34rem 0.78rem;
-  font-size: 0.78rem;
+  padding: 0.26rem 0.65rem;
+  font-size: 0.76rem;
   font-weight: 650;
   letter-spacing: 0.01em;
   cursor: pointer;
-  line-height: 1.2;
+  line-height: 1.15;
   transition: background 0.12s ease, color 0.12s ease, border-color 0.12s ease;
   white-space: nowrap;
   position: relative;
@@ -439,13 +441,13 @@ a {
 /* Match .cat-column__head height so rail starts under the same head band */
 .timeline-rail__head-spacer {
   /* Tabs (right cell) + chip head — keeps rail dates aligned with cards. */
-  height: calc(var(--board-tabs-h, 2.35rem) + var(--timeline-head-h, 2.55rem));
+  height: calc(var(--board-tabs-h, 2.2rem) + var(--timeline-head-h, 2.55rem));
   flex-shrink: 0;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  padding-top: 0.12rem;
+  padding-top: 0;
 }
 
 /* Compact 既往 | 本月 — sits in the tabs-height band of the rail head */
@@ -453,7 +455,7 @@ a {
   display: inline-flex;
   align-items: stretch;
   gap: 0;
-  height: calc(var(--board-tabs-h, 2.35rem) - 0.28rem);
+  height: calc(var(--board-tabs-h, 2.2rem) - 0.2rem);
   max-width: 100%;
   border: 1px solid #e2e8f0;
   border-radius: 6px;
