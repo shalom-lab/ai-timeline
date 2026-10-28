@@ -105,14 +105,6 @@ export default function Header({
           </div>
         </div>
       </div>
-      <div className="page-intro">
-        <div>
-          <span className="page-intro__eyebrow">THE AI ATLAS / {page === 'tools' ? 'DIRECTORY' : 'CHRONICLE'}</span>
-          <h2>{page === 'tools' ? '找到你的下一件 AI 工具。' : '看见 AI 演进的每一步。'}</h2>
-          <p>{page === 'tools' ? '从模型到产品，按使用场景发现、比较与探索。' : '串联模型、产品与科学突破，理解技术如何拓展我们的能力。'}</p>
-        </div>
-        <div className="page-intro__status"><span /> 数据更新 <time>{meta.updatedAt}</time></div>
-      </div>
     </header>
   )
 }

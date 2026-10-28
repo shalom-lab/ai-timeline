@@ -17,12 +17,7 @@ button:focus-visible, a:focus-visible, select:focus-visible { outline:2px solid 
 .app-header__search { border:1px solid var(--border); background:#fafbfc; border-radius:9px; box-shadow:none; padding:10px 13px; }
 .app-header__search:focus-within { border-color:#459d8f; box-shadow:0 0 0 3px #dceee8; }
 .app-header__search input { font-size:.82rem; min-width:0; }
-.page-intro { display:flex; align-items:center; justify-content:space-between; gap:24px; padding:26px 34px 28px; background:radial-gradient(ellipse at 95% 10%,#eaf4ef 0,transparent 48%); }
 .page-intro__eyebrow { font-size:.65rem; font-weight:700; letter-spacing:.18em; color:#388477; }
-.page-intro h2 { margin:9px 0 8px; font-size:1.85rem; font-weight:650; letter-spacing:-.04em; }
-.page-intro p { margin:0; color:var(--muted); font-size:.86rem; line-height:1.7; }
-.page-intro__status { display:flex; align-items:center; gap:8px; font-size:.73rem; color:var(--muted); white-space:nowrap; }
-.page-intro__status > span { width:6px; height:6px; border-radius:50%; background:#469684; box-shadow:0 0 0 4px #e6f0eb; margin-right:4px; }
 .board { padding:20px 24px 20px 14px; gap:18px; }
 .board__main { border:1px solid var(--border); border-radius:14px; background:#fff; }
 .board-tabs { padding:0 16px; gap:18px; align-items:stretch; flex-wrap:nowrap; overflow-x:auto; }
@@ -113,8 +108,6 @@ button:focus-visible, a:focus-visible, select:focus-visible { outline:2px solid 
   .board__col-slot { min-width:0; }
   .timeline-rail { display:block; height:100%; max-height:100%; overflow-y:auto; }
   .timeline-rail__line { display:block; }
-  .page-intro { padding:22px; }
-  .page-intro__status { display:none; }
   .frontier-column__body { padding:20px; }
 }
 @media (max-width:720px) {
@@ -124,9 +117,6 @@ button:focus-visible, a:focus-visible, select:focus-visible { outline:2px solid 
   .app-header__nav-btn { padding:10px; font-size:.78rem; }
   .app-header__search-wrap { flex:1 1 100%; max-width:none; }
   .app-header__search { max-width:none; }
-  .page-intro { padding:20px 16px; }
-  .page-intro h2 { font-size:1.5rem; }
-  .page-intro p { font-size:.8rem; }
   .board { display:flex; flex-direction:column; overflow:visible; padding:12px; gap:10px; }
   .timeline-rail { height:auto; max-height:170px; padding:0 8px; flex-shrink:0; border:1px solid var(--border); border-radius:10px; }
   .timeline-rail__head-spacer { height:48px; position:sticky; top:0; z-index:4; background:var(--bg); }
