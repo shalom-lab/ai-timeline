@@ -350,14 +350,15 @@ interface AiToolsData {
   rows: ToolRow[]
 }
 
+/** Two super-groups in UI thead: 大模型 | 产品 */
 type ToolColumnId =
-  | 'llm'      // 语言模型
-  | 'image'    // 图像
-  | 'video'    // 视频
-  | 'chat'     // 对话
-  | 'coding'   // 编程办公
-  | 'api'      // API
-  | 'agent'    // Agent/搭子
+  | 'llm'      // 语言模型（大模型）
+  | 'image'    // 图像（大模型）
+  | 'video'    // 视频（大模型）
+  | 'other'    // 其他：embedding / 语音 / 新形态等（大模型）
+  | 'chat'     // 对话（产品）
+  | 'coding'   // 编程办公（产品）
+  | 'api'      // API（产品）
 
 interface ToolProduct {
   name: string
@@ -365,10 +366,13 @@ interface ToolProduct {
   pricing: string      // 高层费用提示（免费档 / Plus 价 / API 按量）
   pricingUrl?: string  // 官方定价页
   note?: string
+  /** Optional public/logos/{key} id; UI shows logos only in 产品列 */
+  logo?: string
 }
 
 interface ToolRow {
   companyId: string // = timeline companies[].id
+  /** Single brand label — no "A / B" slashes */
   displayName?: string
   cells: Partial<Record<ToolColumnId, ToolProduct | ToolProduct[]>>
 }
@@ -377,12 +381,13 @@ interface ToolRow {
 不变式（`npm run validate`）：
 
 1. `rows[].companyId` 必须存在于 `timeline.json` `companies[]`。
-2. `columns[].id` 为上述枚举；无重复。
-3. 每个 cell 产品须有非空 `name` / `pricing`，且 `url`（及可选 `pricingUrl`）为 http(s)。
-4. 每行至少 1 个产品；种子不少于约 5 家主要公司。
-5. UI 可隐藏整列为空的形态列。
+2. `columns[].id` 为上述枚举；无重复。顺序建议：大模型四列 → 产品三列。
+3. 每个 cell 产品须有非空 `name` / `pricing`，且 `url`（及可选 `pricingUrl`）为 http(s)；可选 `logo` 为 kebab-case 键。
+4. `displayName` 若存在，不得含 `/`（公司列只用单一品牌名）。
+5. 每行至少 1 个产品；种子不少于约 5 家主要公司。
+6. UI 可隐藏整列为空的形态列；两级表头按 `TOOL_COLUMN_GROUPS`（大模型 | 产品）分组。产品列（chat/coding/api）在名称旁显示小 logo（`logo` 键或行公司标）。
 
 路径：`docs/DATA.md`（本节）· `src/types/tools.ts` · `data/ai-tools.json`。
 
-相对 v0.7：新增 AI工具页与本数据集。`package.json` 现 `0.8.5`；工具数据 `meta.version` 随修订递增。
+相对 v0.13：工具矩阵去掉扁平 `agent` 列，迁入 coding/chat/other；新增 `other`；Cursor 行并入 xAI/Grok；产品列显示产品 logo。
 

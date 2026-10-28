@@ -64,10 +64,10 @@ const TOOL_COLS = new Set<ToolColumnId>([
   'llm',
   'image',
   'video',
+  'other',
   'chat',
   'coding',
   'api',
-  'agent',
 ])
 
 function main() {
@@ -356,6 +356,11 @@ function validateTools(
         `tools row ${row.companyId}: companyId not in timeline companies[] (reuse ids)`,
       )
     }
+    if (row.displayName?.includes('/')) {
+      push(
+        `tools row ${row.companyId}: displayName must be a single brand (no slash): ${row.displayName}`,
+      )
+    }
     if (!row.cells || typeof row.cells !== 'object') {
       push(`tools row ${row.companyId}: missing cells`)
       continue
@@ -373,6 +378,13 @@ function validateTools(
         if (!p.pricing?.trim()) push(`${label}: empty pricing hint`)
         if (p.pricingUrl && !/^https?:\/\//.test(p.pricingUrl)) {
           push(`${label}: bad pricingUrl`)
+        }
+        if (p.logo !== undefined) {
+          if (typeof p.logo !== 'string' || !p.logo.trim()) {
+            push(`${label}: logo must be non-empty string when set`)
+          } else if (!KEBAB_RE.test(p.logo)) {
+            push(`${label}: logo key must be kebab-case id (${p.logo})`)
+          }
         }
       }
     }

@@ -1,7 +1,7 @@
 {
   "meta": {
     "name": "AI工具",
-    "version": "0.1.3",
+    "version": "0.2.0",
     "updatedAt": "2026-10-28",
     "locale": "zh-CN",
     "disclaimer": "费用以官方定价页为准；本表仅作高层摘要。"
@@ -20,6 +20,10 @@
       "label": "视频"
     },
     {
+      "id": "other",
+      "label": "其他"
+    },
+    {
       "id": "chat",
       "label": "对话"
     },
@@ -30,10 +34,6 @@
     {
       "id": "api",
       "label": "API"
-    },
-    {
-      "id": "agent",
-      "label": "Agent/搭子"
     }
   ],
   "rows": [
@@ -58,12 +58,20 @@
           "pricing": "ChatGPT Plus/Pro 额度；详情见定价页",
           "pricingUrl": "https://chatgpt.com/pricing/"
         },
-        "chat": {
-          "name": "ChatGPT",
-          "url": "https://chatgpt.com/",
-          "pricing": "免费 · Go $8/月 · Plus $20/月 · Pro 起 $100/月",
-          "pricingUrl": "https://chatgpt.com/pricing/"
-        },
+        "chat": [
+          {
+            "name": "ChatGPT",
+            "url": "https://chatgpt.com/",
+            "pricing": "免费 · Go $8/月 · Plus $20/月 · Pro 起 $100/月",
+            "pricingUrl": "https://chatgpt.com/pricing/"
+          },
+          {
+            "name": "ChatGPT Agent / Dot",
+            "url": "https://openai.com/",
+            "pricing": "高级订阅档开放（见 ChatGPT 定价）",
+            "pricingUrl": "https://chatgpt.com/pricing/"
+          }
+        ],
         "coding": {
           "name": "Codex",
           "url": "https://openai.com/codex/",
@@ -76,12 +84,20 @@
           "pricing": "按 token / 工具用量计费",
           "pricingUrl": "https://openai.com/api/pricing/"
         },
-        "agent": {
-          "name": "ChatGPT Agent / Dot",
-          "url": "https://openai.com/",
-          "pricing": "高级订阅档开放（见 ChatGPT 定价）",
-          "pricingUrl": "https://chatgpt.com/pricing/"
-        }
+        "other": [
+          {
+            "name": "Embeddings",
+            "url": "https://platform.openai.com/docs/guides/embeddings",
+            "pricing": "API 按 token 计费",
+            "pricingUrl": "https://openai.com/api/pricing/"
+          },
+          {
+            "name": "Whisper / 语音转写",
+            "url": "https://platform.openai.com/docs/guides/speech-to-text",
+            "pricing": "API 按分钟计费",
+            "pricingUrl": "https://openai.com/api/pricing/"
+          }
+        ]
       }
     },
     {
@@ -111,7 +127,7 @@
           "pricing": "按 token 计费",
           "pricingUrl": "https://www.anthropic.com/pricing#api"
         },
-        "agent": {
+        "other": {
           "name": "Computer use / Agents",
           "url": "https://www.anthropic.com/news/developing-computer-use",
           "pricing": "API / 企业方案",
@@ -158,7 +174,7 @@
           "pricing": "免费额度 + 按量；Vertex 企业价",
           "pricingUrl": "https://ai.google.dev/pricing"
         },
-        "agent": {
+        "other": {
           "name": "Gemini Agents",
           "url": "https://ai.google.dev/",
           "pricing": "API / Workspace 方案",
@@ -214,7 +230,8 @@
           "name": "GitHub Copilot",
           "url": "https://github.com/features/copilot",
           "pricing": "Individual / Business / Enterprise 订阅",
-          "pricingUrl": "https://github.com/features/copilot#pricing"
+          "pricingUrl": "https://github.com/features/copilot#pricing",
+          "logo": "github"
         },
         "api": {
           "name": "Azure AI",
@@ -222,7 +239,7 @@
           "pricing": "Azure 按量",
           "pricingUrl": "https://azure.microsoft.com/pricing/details/cognitive-services/openai-service/"
         },
-        "agent": {
+        "other": {
           "name": "Copilot Studio / Agents",
           "url": "https://www.microsoft.com/microsoft-copilot/microsoft-copilot-studio",
           "pricing": "Power Platform / 企业许可",
@@ -251,32 +268,45 @@
           "pricing": "Premium+ 档（见 X Subscription）",
           "pricingUrl": "https://x.ai/pricing"
         },
-        "chat": {
-          "name": "Grok",
-          "url": "https://grok.com/",
-          "pricing": "免费限额 · Plus $8/月 · Premium $30/月 起",
-          "pricingUrl": "https://x.ai/pricing"
-        },
-        "coding": {
-          "name": "Cursor（X Subscription）",
-          "url": "https://cursor.com/",
-          "pricing": "与 Grok 同订：Free / Plus $8 / Premium $30 起",
-          "pricingUrl": "https://cursor.com/pricing",
-          "note": "Cursor 现为 X Subscription 一部分；见 Cursor 行"
-        },
+        "chat": [
+          {
+            "name": "Grok",
+            "url": "https://grok.com/",
+            "pricing": "免费限额 · Plus $8/月 · Premium $30/月 起",
+            "pricingUrl": "https://x.ai/pricing"
+          },
+          {
+            "name": "Grok Bot",
+            "url": "https://x.ai/",
+            "pricing": "Premium 及以上",
+            "pricingUrl": "https://x.ai/pricing"
+          }
+        ],
+        "coding": [
+          {
+            "name": "Cursor",
+            "url": "https://cursor.com/",
+            "pricing": "Free · Plus $8/月 · Premium $30/月 · Super/Ultra 更高（X Subscription）",
+            "pricingUrl": "https://cursor.com/pricing",
+            "note": "X Subscription；含 Cursor Agent / Cloud Agents；第三方模型按 API 标价从预付费扣（cursor.com/docs/models-and-pricing）",
+            "logo": "cursor"
+          },
+          {
+            "name": "Cursor Agent / Cloud Agents",
+            "url": "https://cursor.com/",
+            "pricing": "Premium 及以上含 Cloud Agents",
+            "pricingUrl": "https://cursor.com/pricing",
+            "logo": "cursor"
+          }
+        ],
         "api": {
           "name": "xAI API",
           "url": "https://docs.x.ai/",
           "pricing": "订阅含档位 API 访问；超额按量",
           "pricingUrl": "https://x.ai/pricing"
-        },
-        "agent": {
-          "name": "Grok Bot",
-          "url": "https://x.ai/",
-          "pricing": "Premium 及以上",
-          "pricingUrl": "https://x.ai/pricing"
         }
-      }
+      },
+      "displayName": "Grok"
     },
     {
       "companyId": "deepseek",
@@ -303,7 +333,6 @@
     },
     {
       "companyId": "alibaba",
-      "displayName": "Alibaba / Qwen",
       "cells": {
         "llm": {
           "name": "Qwen（通义千问）",
@@ -323,12 +352,20 @@
           "pricing": "云端按量 / 套餐",
           "pricingUrl": "https://www.alibabacloud.com/product/model-studio"
         },
-        "chat": {
-          "name": "通义 / Qwen Chat",
-          "url": "https://tongyi.aliyun.com/",
-          "pricing": "免费档 + 会员",
-          "pricingUrl": "https://tongyi.aliyun.com/"
-        },
+        "chat": [
+          {
+            "name": "通义 / Qwen Chat",
+            "url": "https://tongyi.aliyun.com/",
+            "pricing": "免费档 + 会员",
+            "pricingUrl": "https://tongyi.aliyun.com/"
+          },
+          {
+            "name": "通义应用 / Agent",
+            "url": "https://tongyi.aliyun.com/",
+            "pricing": "平台套餐",
+            "pricingUrl": "https://tongyi.aliyun.com/"
+          }
+        ],
         "coding": {
           "name": "通义灵码",
           "url": "https://lingma.aliyun.com/",
@@ -340,18 +377,12 @@
           "url": "https://www.alibabacloud.com/product/model-studio",
           "pricing": "按量计费",
           "pricingUrl": "https://www.alibabacloud.com/product/model-studio"
-        },
-        "agent": {
-          "name": "通义应用 / Agent",
-          "url": "https://tongyi.aliyun.com/",
-          "pricing": "平台套餐",
-          "pricingUrl": "https://tongyi.aliyun.com/"
         }
-      }
+      },
+      "displayName": "Qwen"
     },
     {
       "companyId": "bytedance",
-      "displayName": "ByteDance / Doubao",
       "cells": {
         "llm": {
           "name": "Doubao / Seed",
@@ -387,12 +418,20 @@
             "pricingUrl": "https://www.volcengine.com/product/doubao"
           }
         ],
-        "chat": {
-          "name": "豆包",
-          "url": "https://www.doubao.com/",
-          "pricing": "免费为主（功能限额）",
-          "pricingUrl": "https://www.doubao.com/"
-        },
+        "chat": [
+          {
+            "name": "豆包",
+            "url": "https://www.doubao.com/",
+            "pricing": "免费为主（功能限额）",
+            "pricingUrl": "https://www.doubao.com/"
+          },
+          {
+            "name": "豆包智能体",
+            "url": "https://www.doubao.com/",
+            "pricing": "App 内功能",
+            "pricingUrl": "https://www.doubao.com/"
+          }
+        ],
         "coding": {
           "name": "TRAE",
           "url": "https://www.trae.cn/",
@@ -405,25 +444,17 @@
           "pricing": "按量计费",
           "pricingUrl": "https://www.volcengine.com/product/ark"
         },
-        "agent": [
-          {
-            "name": "扣子 Coze",
-            "url": "https://www.coze.cn/",
-            "pricing": "免费 · 进阶 ¥39.9/月 起",
-            "pricingUrl": "https://docs.coze.cn/coze_pro_premium_package"
-          },
-          {
-            "name": "豆包智能体",
-            "url": "https://www.doubao.com/",
-            "pricing": "App 内功能",
-            "pricingUrl": "https://www.doubao.com/"
-          }
-        ]
-      }
+        "other": {
+          "name": "扣子 Coze",
+          "url": "https://www.coze.cn/",
+          "pricing": "免费 · 进阶 ¥39.9/月 起",
+          "pricingUrl": "https://docs.coze.cn/coze_pro_premium_package"
+        }
+      },
+      "displayName": "豆包"
     },
     {
       "companyId": "zhipu",
-      "displayName": "Zhipu / 智谱",
       "cells": {
         "llm": {
           "name": "GLM",
@@ -443,12 +474,20 @@
           "pricing": "App 限额 + API",
           "pricingUrl": "https://open.bigmodel.cn/pricing"
         },
-        "chat": {
-          "name": "清言 / Z.ai",
-          "url": "https://chatglm.cn/",
-          "pricing": "免费 + VIP/SVIP",
-          "pricingUrl": "https://chatglm.cn/"
-        },
+        "chat": [
+          {
+            "name": "清言 / Z.ai",
+            "url": "https://chatglm.cn/",
+            "pricing": "免费 + VIP/SVIP",
+            "pricingUrl": "https://chatglm.cn/"
+          },
+          {
+            "name": "清言智能体 / AutoGLM",
+            "url": "https://chatglm.cn/",
+            "pricing": "App / 平台套餐",
+            "pricingUrl": "https://chatglm.cn/"
+          }
+        ],
         "coding": {
           "name": "CodeGeeX / GLM Coding",
           "url": "https://codegeex.cn/",
@@ -460,18 +499,12 @@
           "url": "https://open.bigmodel.cn/",
           "pricing": "按 token 计费",
           "pricingUrl": "https://open.bigmodel.cn/pricing"
-        },
-        "agent": {
-          "name": "清言智能体 / AutoGLM",
-          "url": "https://chatglm.cn/",
-          "pricing": "App / 平台套餐",
-          "pricingUrl": "https://chatglm.cn/"
         }
-      }
+      },
+      "displayName": "智谱"
     },
     {
       "companyId": "moonshot",
-      "displayName": "Moonshot / Kimi",
       "cells": {
         "llm": {
           "name": "Kimi / Moonshot",
@@ -479,12 +512,20 @@
           "pricing": "对话会员 + API 按量",
           "pricingUrl": "https://platform.moonshot.cn/docs/pricing/chat"
         },
-        "chat": {
-          "name": "Kimi",
-          "url": "https://kimi.moonshot.cn/",
-          "pricing": "免费 + 会员",
-          "pricingUrl": "https://kimi.moonshot.cn/"
-        },
+        "chat": [
+          {
+            "name": "Kimi",
+            "url": "https://kimi.moonshot.cn/",
+            "pricing": "免费 + 会员",
+            "pricingUrl": "https://kimi.moonshot.cn/"
+          },
+          {
+            "name": "Kimi 助手 / Agent",
+            "url": "https://kimi.moonshot.cn/",
+            "pricing": "会员功能",
+            "pricingUrl": "https://kimi.moonshot.cn/"
+          }
+        ],
         "coding": {
           "name": "Kimi 编程 / IDE 插件",
           "url": "https://kimi.moonshot.cn/",
@@ -496,14 +537,9 @@
           "url": "https://platform.moonshot.cn/",
           "pricing": "按 token 计费",
           "pricingUrl": "https://platform.moonshot.cn/docs/pricing/chat"
-        },
-        "agent": {
-          "name": "Kimi 助手 / Agent",
-          "url": "https://kimi.moonshot.cn/",
-          "pricing": "会员功能",
-          "pricingUrl": "https://kimi.moonshot.cn/"
         }
-      }
+      },
+      "displayName": "Kimi"
     },
     {
       "companyId": "minimax",
@@ -538,7 +574,7 @@
           "pricing": "按量计费",
           "pricingUrl": "https://www.minimax.io/pricing"
         },
-        "agent": {
+        "other": {
           "name": "MiniMax Agent",
           "url": "https://www.minimax.io/",
           "pricing": "平台方案",
@@ -547,43 +583,22 @@
       }
     },
     {
-      "companyId": "cursor",
-      "cells": {
-        "coding": {
-          "name": "Cursor",
-          "url": "https://cursor.com/",
-          "pricing": "Free · Plus $8/月 · Premium $30/月 · Super/Ultra 更高（X Subscription）",
-          "pricingUrl": "https://cursor.com/pricing"
-        },
-        "agent": {
-          "name": "Cursor Agent / Cloud Agents",
-          "url": "https://cursor.com/",
-          "pricing": "Premium 及以上含 Cloud Agents",
-          "pricingUrl": "https://cursor.com/pricing"
-        },
-        "api": {
-          "name": "第三方模型（Cursor 内）",
-          "url": "https://cursor.com/docs/models-and-pricing",
-          "pricing": "Premium+ 按 API 标价从预付费扣",
-          "pricingUrl": "https://cursor.com/docs/models-and-pricing"
-        }
-      }
-    },
-    {
       "companyId": "github",
       "cells": {
-        "coding": {
-          "name": "GitHub Copilot",
-          "url": "https://github.com/features/copilot",
-          "pricing": "Free/Pro/Business/Enterprise 订阅",
-          "pricingUrl": "https://github.com/features/copilot#pricing"
-        },
-        "agent": {
-          "name": "Copilot Coding Agent",
-          "url": "https://github.com/features/copilot",
-          "pricing": "Copilot 计划内功能",
-          "pricingUrl": "https://github.com/features/copilot#pricing"
-        }
+        "coding": [
+          {
+            "name": "GitHub Copilot",
+            "url": "https://github.com/features/copilot",
+            "pricing": "Free/Pro/Business/Enterprise 订阅",
+            "pricingUrl": "https://github.com/features/copilot#pricing"
+          },
+          {
+            "name": "Copilot Coding Agent",
+            "url": "https://github.com/features/copilot",
+            "pricing": "Copilot 计划内功能",
+            "pricingUrl": "https://github.com/features/copilot#pricing"
+          }
+        ]
       }
     },
     {
@@ -613,36 +628,31 @@
           "pricing": "体验免费 · 标准 ¥99/月 起；企业旗舰 ¥198/人/月",
           "pricingUrl": "https://www.workbuddy.cn/docs/workbuddy/Pricing",
           "note": "与 CodeBuddy 同账号积分共享"
-        },
-        "agent": {
-          "name": "WorkBuddy",
-          "url": "https://cloud.tencent.com/product/workbuddy",
-          "pricing": "体验免费 · 标准 ¥99/月 起；企业旗舰 ¥198/人/月",
-          "pricingUrl": "https://www.workbuddy.cn/docs/workbuddy/Pricing"
         }
       }
     },
     {
       "companyId": "cognition",
-      "displayName": "Cognition / Devin",
       "cells": {
-        "coding": {
-          "name": "Devin Desktop（原 Windsurf）",
-          "url": "https://devin.ai/",
-          "pricing": "Free · Pro $20/月 · Max $200/月",
-          "pricingUrl": "https://devin.ai/pricing"
-        },
-        "agent": {
-          "name": "Devin Cloud / Local",
-          "url": "https://devin.ai/",
-          "pricing": "Pro 及以上含云端 Agent",
-          "pricingUrl": "https://devin.ai/pricing"
-        }
-      }
+        "coding": [
+          {
+            "name": "Devin Desktop（原 Windsurf）",
+            "url": "https://devin.ai/",
+            "pricing": "Free · Pro $20/月 · Max $200/月",
+            "pricingUrl": "https://devin.ai/pricing"
+          },
+          {
+            "name": "Devin Cloud / Local",
+            "url": "https://devin.ai/",
+            "pricing": "Pro 及以上含云端 Agent",
+            "pricingUrl": "https://devin.ai/pricing"
+          }
+        ]
+      },
+      "displayName": "Devin"
     },
     {
       "companyId": "baidu",
-      "displayName": "Baidu / 文心",
       "cells": {
         "llm": {
           "name": "文心 / ERNIE",
@@ -662,7 +672,8 @@
           "pricing": "按 token 计费",
           "pricingUrl": "https://cloud.baidu.com/doc/qianfan/s/wmh4sv6ya"
         }
-      }
+      },
+      "displayName": "文心"
     },
     {
       "companyId": "midjourney",
@@ -678,18 +689,20 @@
     {
       "companyId": "perplexity",
       "cells": {
-        "chat": {
-          "name": "Perplexity",
-          "url": "https://www.perplexity.ai/",
-          "pricing": "免费 · Pro $17/月起（年付） · Max 更高",
-          "pricingUrl": "https://www.perplexity.ai/hub/pricing"
-        },
-        "agent": {
-          "name": "Perplexity Computer",
-          "url": "https://www.perplexity.ai/",
-          "pricing": "Pro / Max 计划内",
-          "pricingUrl": "https://www.perplexity.ai/hub/pricing"
-        }
+        "chat": [
+          {
+            "name": "Perplexity",
+            "url": "https://www.perplexity.ai/",
+            "pricing": "免费 · Pro $17/月起（年付） · Max 更高",
+            "pricingUrl": "https://www.perplexity.ai/hub/pricing"
+          },
+          {
+            "name": "Perplexity Computer",
+            "url": "https://www.perplexity.ai/",
+            "pricing": "Pro / Max 计划内",
+            "pricingUrl": "https://www.perplexity.ai/hub/pricing"
+          }
+        ]
       }
     }
   ]
