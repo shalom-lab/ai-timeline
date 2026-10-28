@@ -1,6 +1,14 @@
 import { useCallback, useEffect, useState, type RefObject } from 'react'
 
-type Point = { id: string; date: string; x: number; y: number }
+/** Anchor at card bottom-center; left/right for gutter-aware horizontals. */
+type Anchor = {
+  id: string
+  date: string
+  x: number
+  y: number
+  left: number
+  right: number
+}
 
 type Props = {
   /** Category column body (positioned ancestor for overlay coords). */
@@ -13,14 +21,22 @@ type Props = {
   active: boolean
   /** Focus date: at/before = color, after = muted. */
   focusDate: string | null
+  /** Focus event — path originates from this card's bottom; H-line spans gutters. */
+  focusId?: string | null
 }
 
 const STROKE_PAST = 'rgba(234, 88, 12, 0.85)'
 const STROKE_FUTURE = 'rgba(148, 163, 184, 0.55)'
 const STROKE_WIDTH = 2
 const DASH = '7 5'
+/** Pad horizontals slightly into column gutters past the card edges. */
+const GUTTER_PAD = 6
 
-function orthoPath(pts: Point[]): string {
+/**
+ * H-dominant orthogonal path through bottom anchors.
+ * Horizontal first (through card-gap / gutter band), then short vertical.
+ */
+function hDominantPath(pts: Anchor[]): string {
   if (pts.length === 0) return ''
   const parts: string[] = [`M ${pts[0].x.toFixed(1)} ${pts[0].y.toFixed(1)}`]
   for (let i = 1; i < pts.length; i++) {
@@ -31,7 +47,7 @@ function orthoPath(pts: Point[]): string {
     if (sameX || sameY) {
       parts.push(`L ${b.x.toFixed(1)} ${b.y.toFixed(1)}`)
     } else {
-      // Horizontal toward next column, then vertical to next rank.
+      // Leave A bottom → horizontal across gutters → short vertical to B bottom.
       parts.push(`L ${b.x.toFixed(1)} ${a.y.toFixed(1)}`)
       parts.push(`L ${b.x.toFixed(1)} ${b.y.toFixed(1)}`)
     }
@@ -40,9 +56,10 @@ function orthoPath(pts: Point[]): string {
 }
 
 /**
- * Continuous intra-category bump staircase (SVG overlay — no canvas).
- * Hidden by default; when active, one orthogonal dashed path through card
- * centers, split into past (color) vs future (灰白) at focusDate.
+ * Intra-category bump connectors (SVG, pointer-events none).
+ * Dense board: anchors are card **bottoms**. Primary strokes are horizontal
+ * dashed lines in the gaps between cards; verticals only link those bands.
+ * Hidden unless rail hover/pin is active. Past = color, future = 灰白.
  */
 export default function BumpConnectors({
   containerRef,
@@ -50,8 +67,9 @@ export default function BumpConnectors({
   orderedDates,
   active,
   focusDate,
+  focusId = null,
 }: Props) {
-  const [pts, setPts] = useState<Point[]>([])
+  const [pts, setPts] = useState<Anchor[]>([])
   const [size, setSize] = useState({ w: 0, h: 0 })
 
   const measure = useCallback(() => {
@@ -66,13 +84,13 @@ export default function BumpConnectors({
     const h = Math.max(root.scrollHeight, root.clientHeight)
     setSize({ w, h })
 
-    if (orderedIds.length < 2) {
+    if (orderedIds.length < 1) {
       setPts([])
       return
     }
 
     const rootBox = root.getBoundingClientRect()
-    const next: Point[] = []
+    const next: Anchor[] = []
     for (let i = 0; i < orderedIds.length; i++) {
       const id = orderedIds[i]
       const el = root.querySelector<HTMLElement>(
@@ -80,14 +98,19 @@ export default function BumpConnectors({
       )
       if (!el) continue
       const r = el.getBoundingClientRect()
+      const left = r.left - rootBox.left + root.scrollLeft
+      const top = r.top - rootBox.top + root.scrollTop
       next.push({
         id,
         date: orderedDates[i] ?? '',
-        x: r.left - rootBox.left + root.scrollLeft + r.width / 2,
-        y: r.top - rootBox.top + root.scrollTop + r.height / 2,
+        x: left + r.width / 2,
+        // Bottom edge — line leaves from here, not card center.
+        y: top + r.height,
+        left,
+        right: left + r.width,
       })
     }
-    setPts(next.length >= 2 ? next : [])
+    setPts(next)
   }, [containerRef, orderedIds, orderedDates])
 
   const idsKey = orderedIds.join('\0')
@@ -136,7 +159,7 @@ export default function BumpConnectors({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [containerRef, idsKey, datesKey, measure])
 
-  if (!active || pts.length < 2 || size.w <= 0 || size.h <= 0) return null
+  if (!active || pts.length < 1 || size.w <= 0 || size.h <= 0) return null
 
   // Last index at/before focusDate (inclusive). No focus → all past (color).
   let chop = pts.length - 1
@@ -150,10 +173,40 @@ export default function BumpConnectors({
 
   const pastPts = chop >= 0 ? pts.slice(0, chop + 1) : []
   const futurePts = chop >= 0 ? pts.slice(chop) : pts
-  const pastPath = pastPts.length >= 2 ? orthoPath(pastPts) : ''
-  // Future needs the shared focus node + at least one after.
+  const pastPath = pastPts.length >= 2 ? hDominantPath(pastPts) : ''
   const futurePath =
-    futurePts.length >= 2 && chop < pts.length - 1 ? orthoPath(futurePts) : ''
+    futurePts.length >= 2 && chop < pts.length - 1 ? hDominantPath(futurePts) : ''
+
+  // Origin card: full-width horizontal dashed band at its bottom (through gutters).
+  const origin =
+    (focusId ? pts.find((p) => p.id === focusId) : null) ??
+    (chop >= 0 ? pts[chop] : null)
+
+  const spanLeft = Math.min(
+    ...pts.map((p) => p.left - GUTTER_PAD),
+    4,
+  )
+  const spanRight = Math.max(
+    ...pts.map((p) => p.right + GUTTER_PAD),
+    size.w - 4,
+  )
+
+  const originHPath = origin
+    ? `M ${spanLeft.toFixed(1)} ${origin.y.toFixed(1)} L ${spanRight.toFixed(1)} ${origin.y.toFixed(1)}`
+    : ''
+
+  // Small vertical stub from origin card center-x down to the H-band (already at bottom).
+  // Plus per-card short bottom ticks so stations read in gutters.
+  const stationTicks = pts.map((p) => {
+    const isPast = !focusDate || p.date <= focusDate
+    const tickLeft = Math.max(spanLeft, p.left - GUTTER_PAD)
+    const tickRight = Math.min(spanRight, p.right + GUTTER_PAD)
+    return {
+      id: p.id,
+      isPast,
+      d: `M ${tickLeft.toFixed(1)} ${p.y.toFixed(1)} L ${tickRight.toFixed(1)} ${p.y.toFixed(1)}`,
+    }
+  })
 
   return (
     <svg
@@ -163,6 +216,35 @@ export default function BumpConnectors({
       viewBox={`0 0 ${size.w} ${size.h}`}
       aria-hidden
     >
+      {/* Full-width H-band at focus card bottom — primary visual */}
+      {originHPath ? (
+        <path
+          className="bump-connectors__origin-h"
+          d={originHPath}
+          fill="none"
+          stroke={STROKE_PAST}
+          strokeWidth={STROKE_WIDTH}
+          strokeDasharray={DASH}
+          strokeLinecap="round"
+          vectorEffect="non-scaling-stroke"
+        />
+      ) : null}
+
+      {/* Per-card bottom ticks (H in local gutter) */}
+      {stationTicks.map((t) => (
+        <path
+          key={`tick-${t.id}`}
+          d={t.d}
+          fill="none"
+          stroke={t.isPast ? STROKE_PAST : STROKE_FUTURE}
+          strokeWidth={STROKE_WIDTH}
+          strokeDasharray={DASH}
+          strokeLinecap="round"
+          vectorEffect="non-scaling-stroke"
+          opacity={0.55}
+        />
+      ))}
+
       {futurePath ? (
         <path
           className="bump-connectors__future"
@@ -187,15 +269,6 @@ export default function BumpConnectors({
           strokeLinecap="round"
           strokeLinejoin="round"
           vectorEffect="non-scaling-stroke"
-        />
-      ) : null}
-      {/* Single-node past (focus only): draw a short tick so the focus is visible */}
-      {!pastPath && chop >= 0 && pastPts.length === 1 ? (
-        <circle
-          cx={pastPts[0].x}
-          cy={pastPts[0].y}
-          r={3}
-          fill={STROKE_PAST}
         />
       ) : null}
     </svg>

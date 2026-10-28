@@ -589,7 +589,8 @@ a {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
   align-content: start;
-  gap: 0.55rem;
+  align-items: start;
+  gap: 0.5rem;
 }
 
 .cat-column__empty {
@@ -618,36 +619,11 @@ a {
 .cat-subcol__cards {
   display: flex;
   flex-direction: column;
-  gap: 0.65rem;
+  gap: 0.55rem;
 }
 
-.cat-subcol__cards.is-rank-placed {
-  position: relative;
-  display: block;
-  gap: 0;
-  min-height: 4rem;
-}
-
-.event-card.is-rank-placed {
-  position: absolute;
-  left: 0;
-  right: 0;
-  width: 100%;
-  transform: translateY(-50%);
-  z-index: 1;
-}
-
-.event-card.is-rank-placed:hover,
-.event-card.is-rank-placed.is-selected {
-  z-index: 3;
-}
-
-.cat-column__body.is-rank-canvas {
-  align-items: start;
-}
-
-/* ─── Intra-category bump connectors (dashed staircase above cards) ─── */
-/* Hidden by default — only mounted/stroked while rail hover or pin is active. */
+/* ─── Intra-category bump connectors (H-dominant, card bottoms) ─── */
+/* Hidden by default — only stroked while rail hover or pin is active. */
 .bump-connectors {
   position: absolute;
   left: 0;
@@ -655,14 +631,6 @@ a {
   pointer-events: none;
   z-index: 2;
   overflow: visible;
-}
-
-.bump-connectors__past {
-  /* stroke set inline — color = already happened */
-}
-
-.bump-connectors__future {
-  /* stroke set inline — 灰白 = 还没发生 */
 }
 
 .cat-column__body {
@@ -675,8 +643,7 @@ a {
   z-index: 1;
 }
 
-.cat-column__body.has-subcols,
-.cat-column__body.is-rank-canvas {
+.cat-column__body.has-subcols {
   overflow: visible;
 }
 
@@ -724,11 +691,6 @@ a {
   filter: grayscale(0.85) brightness(1.02);
   opacity: 0.65;
   transform: translateY(-1px);
-}
-
-.event-card.is-rank-placed.is-future:hover,
-.event-card.is-rank-placed.is-future.is-selected {
-  transform: translateY(-50%);
 }
 
 .event-card.is-future .event-card__title,

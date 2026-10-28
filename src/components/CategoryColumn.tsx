@@ -2,7 +2,6 @@ import { useMemo, useRef, type ReactNode } from 'react'
 import type { Category, Company, TimelineEvent } from '../types/timeline'
 import { CATEGORY_LABEL_ZH, CATEGORY_THEME } from '../lib/labels'
 import { buildSubGroups } from '../lib/group'
-import { buildCategoryRankLayout } from '../lib/timelineLayout'
 import EventCard from './EventCard'
 import BumpConnectors from './BumpConnectors'
 
@@ -26,6 +25,8 @@ type Props = {
   bumpActive?: boolean
   /** Focus date (YYYY-MM-DD): at/before color, after 灰白. */
   bumpFocusDate?: string | null
+  /** Focus event id — line originates from that card's bottom edge. */
+  bumpFocusId?: string | null
 }
 
 const ICONS: Record<Category, ReactNode> = {
@@ -104,6 +105,7 @@ export default function CategoryColumn({
   onSelect,
   bumpActive = false,
   bumpFocusDate = null,
+  bumpFocusId = null,
 }: Props) {
   const theme = CATEGORY_THEME[category]
   const bodyRef = useRef<HTMLDivElement>(null)
@@ -139,26 +141,14 @@ export default function CategoryColumn({
     return all
   }, [visibleGroups])
 
-  /**
-   * Multi-subcol: equal-step chronological ranks so later companies sit below
-   * earlier ones (DeepSeek after OpenAI). Single-group: dense document flow.
-   */
-  const rankLayout = useMemo(
-    () => (multi ? buildCategoryRankLayout(visibleEvents) : null),
-    [multi, visibleEvents],
+  /** Chrono order across the category — for bump path only (cards stay dense per company). */
+  const orderedEvents = useMemo(
+    () =>
+      [...visibleEvents].sort(
+        (a, b) => a.date.localeCompare(b.date) || a.id.localeCompare(b.id),
+      ),
+    [visibleEvents],
   )
-
-  const orderedEvents = useMemo(() => {
-    if (rankLayout) {
-      const byId = new Map(visibleEvents.map((e) => [e.id, e]))
-      return rankLayout.orderedIds
-        .map((id) => byId.get(id))
-        .filter((e): e is TimelineEvent => !!e)
-    }
-    return [...visibleEvents].sort(
-      (a, b) => a.date.localeCompare(b.date) || a.id.localeCompare(b.id),
-    )
-  }, [rankLayout, visibleEvents])
 
   const orderedIds = useMemo(
     () => orderedEvents.map((e) => e.id),
@@ -244,7 +234,7 @@ export default function CategoryColumn({
 
       <div
         ref={bodyRef}
-        className={`cat-column__body${multi ? ' has-subcols is-rank-canvas' : ''}`}
+        className={`cat-column__body${multi ? ' has-subcols' : ''}`}
       >
         <BumpConnectors
           containerRef={bodyRef}
@@ -252,6 +242,7 @@ export default function CategoryColumn({
           orderedDates={orderedDates}
           active={bumpActive}
           focusDate={bumpFocusDate}
+          focusId={bumpFocusId}
         />
 
         {visibleGroups.length === 0 ? (
@@ -262,12 +253,8 @@ export default function CategoryColumn({
               {multi ? (
                 <div className="cat-subcol__label">{g.label}</div>
               ) : null}
-              <div
-                className={`cat-subcol__cards${rankLayout ? ' is-rank-placed' : ''}`}
-                style={rankLayout ? { height: rankLayout.height } : undefined}
-              >
+              <div className="cat-subcol__cards">
                 {g.events.map((e) => {
-                  const cy = rankLayout?.centerY[e.id]
                   const isFuture =
                     muteFuture && !!bumpFocusDate && e.date > bumpFocusDate
                   return (
@@ -277,7 +264,6 @@ export default function CategoryColumn({
                       companies={companies}
                       selected={selectedId === e.id}
                       onSelect={onSelect}
-                      centerY={cy}
                       isFuture={isFuture}
                     />
                   )

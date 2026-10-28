@@ -305,6 +305,9 @@ export default function App() {
                 bumpFocusDate={
                   bumpActive && bumpCategory === cat ? bumpFocusDate : null
                 }
+                bumpFocusId={
+                  bumpActive && bumpCategory === cat ? focusRailId : null
+                }
               />
             </div>
           ))}
