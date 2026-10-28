@@ -1,5 +1,5 @@
 import { useId, type ReactNode } from 'react'
-import type { ModelCapability, TimelineEvent } from '../types/timeline'
+import type { ModelCapability } from '../types/timeline'
 import { MODEL_CAPABILITY_LABEL_ZH, MODEL_CAPABILITY_ORDER } from '../types/timeline'
 import { resolveCompany } from './company'
 import type { Company } from '../types/timeline'
@@ -127,67 +127,6 @@ export function CompanyAvatar({
   )
 }
 
-
-
-function IconScience({ color }: { color: string }) {
-  return (
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden>
-      <path
-        d="M9 3h6M10 3v4.5L5.5 18a3 3 0 0 0 2.7 4.5h7.6A3 3 0 0 0 18.5 18L14 7.5V3"
-        stroke={color}
-        strokeWidth="1.8"
-        strokeLinejoin="round"
-      />
-      <path d="M8 14h8" stroke={color} strokeWidth="1.8" />
-    </svg>
-  )
-}
-
-
-function IconProduct({ color }: { color: string }) {
-  return (
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden>
-      <rect x="4" y="4" width="16" height="16" rx="3" stroke={color} strokeWidth="1.8" />
-      <path d="M8 12h8M12 8v8" stroke={color} strokeWidth="1.8" strokeLinecap="round" />
-    </svg>
-  )
-}
-
-/** Large left tile icon for a card (company logo or thematic). */
-export function CardMainIcon({
-  event,
-  companies,
-  accent,
-}: {
-  event: TimelineEvent
-  companies: Company[]
-  accent: string
-}): ReactNode {
-  const co = resolveCompany(companies, event.company)
-  const color = co?.color ?? accent
-  const soft = co?.colorSoft ?? `${accent}22`
-
-  // Company logo ALWAYS wins when event.company resolves to a known id with asset.
-  let inner: ReactNode
-  if (hasCompanyLogo(co?.id)) {
-    inner = <CompanyLogoImg companyId={co!.id} size={22} title={co?.name} />
-  } else if (event.category === 'science') {
-    inner = <IconScience color={color} />
-  } else {
-    inner = <IconProduct color={color} />
-  }
-
-  return (
-    <span
-      className="event-card__icon-tile"
-      style={{ background: soft, color }}
-      data-company-id={co?.id ?? 'none'}
-      aria-hidden
-    >
-      {inner}
-    </span>
-  )
-}
 
 /**
  * Capability glyphs only (no chip pad behind them): per-type soft color in the SVG.

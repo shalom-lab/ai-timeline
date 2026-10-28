@@ -1,7 +1,7 @@
 {
   "meta": {
     "name": "AI纪年",
-    "version": "0.13.0",
+    "version": "0.13.1",
     "scopeStart": "2022-11-30",
     "updatedAt": "2026-10-28",
     "locale": "zh-CN",
@@ -2362,37 +2362,6 @@
       ]
     },
     {
-      "id": "baidu-ernie-4-5-x1-2025-03-16",
-      "date": "2025-03-16",
-      "dateStatus": "exact",
-      "title": "发布文心大模型 4.5 与 X1",
-      "summary": "百度发布原生多模态基础模型文心 4.5 与深度思考模型文心 X1，并同步推进文心一言免费开放策略。",
-      "category": "model",
-      "company": "Baidu",
-      "series": "ERNIE",
-      "product": "ERNIE 4.5 / X1",
-      "eventType": "ga",
-      "sources": [
-        {
-          "title": "文心大模型4.5和文心大模型X1正式发布",
-          "url": "https://home.baidu.com/home/index/news_detail/id/18020",
-          "publisher": "Baidu",
-          "publishedAt": "2025-03-16"
-        }
-      ],
-      "tags": [
-        "ernie-4.5",
-        "ernie-x1",
-        "multimodal",
-        "reasoning"
-      ],
-      "capabilities": [
-        "chat",
-        "reasoning",
-        "vision"
-      ]
-    },
-    {
       "id": "google-gemini-2-5-pro-2025-03-25",
       "date": "2025-03-25",
       "dateStatus": "exact",
@@ -3935,34 +3904,6 @@
         "workbuddy",
         "agent",
         "openclaw"
-      ]
-    },
-    {
-      "id": "midjourney-v8-alpha-2026-03-17",
-      "date": "2026-03-17",
-      "dateStatus": "exact",
-      "title": "开放 Midjourney V8 Alpha",
-      "summary": "Midjourney 在 alpha.midjourney.com 开放 V8 Alpha：指令遵循、个性化与风格参考增强，文生图速度约提升 5 倍，并引入原生 2K 的 --hd 模式。",
-      "category": "model",
-      "company": "Midjourney",
-      "series": "Midjourney",
-      "product": "Midjourney V8",
-      "eventType": "research_preview",
-      "sources": [
-        {
-          "title": "V8 Alpha",
-          "url": "https://updates.midjourney.com/v8-alpha/",
-          "publisher": "Midjourney",
-          "publishedAt": "2026-03-17"
-        }
-      ],
-      "tags": [
-        "midjourney",
-        "v8",
-        "image-generation"
-      ],
-      "capabilities": [
-        "image"
       ]
     },
     {

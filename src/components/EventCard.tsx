@@ -1,8 +1,8 @@
 import { useRef, type CSSProperties, type KeyboardEvent } from 'react'
 import type { Company, TimelineEvent } from '../types/timeline'
-import { EVENT_TYPE_COLOR, EVENT_TYPE_LABEL_ZH, CATEGORY_THEME } from '../lib/labels'
+import { EVENT_TYPE_COLOR, EVENT_TYPE_LABEL_ZH } from '../lib/labels'
 import { companyColor } from '../lib/company'
-import { CompanyAvatar, CardMainIcon, ModelCapabilityIcons } from '../lib/icons'
+import { CompanyAvatar, ModelCapabilityIcons } from '../lib/icons'
 import DetailPopover from './DetailPopover'
 
 type Props = {
@@ -32,8 +32,6 @@ export default function EventCard({
   const { color, soft } = companyColor(companies, event.company)
   const et = EVENT_TYPE_COLOR[event.eventType]
   const sourceUrl = event.sources[0]?.url
-  const accent = CATEGORY_THEME[event.category].accent
-
   const openDetail = () => onOpenDetail(event.id)
   const pinMoment = () => onPinMoment(event.id)
 
@@ -99,7 +97,6 @@ export default function EventCard({
         aria-label={`钉住 ${event.date} 同日时刻`}
       >
         <div className="event-card__main">
-          <CardMainIcon event={event} companies={companies} accent={accent} />
           <div className="event-card__copy">
             <h3 className="event-card__title">{event.title}</h3>
             <p className="event-card__summary">{event.summary}</p>
