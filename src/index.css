@@ -518,7 +518,7 @@ a {
   display: flex;
   align-items: center;
   gap: 0.28rem;
-  z-index: 2;
+  z-index: 4;
   border: 0;
   background: #f1f5f9;
   cursor: pointer;
@@ -612,7 +612,7 @@ a {
   height: 18px;
   transform: translateY(-50%);
   border-radius: 4px;
-  z-index: 1;
+  z-index: 4;
 }
 
 .timeline-rail__item:hover .timeline-rail__md,

@@ -4,7 +4,14 @@ import type { Category, TimelineEvent } from './types/timeline'
 import type { CapabilityMonth } from './types/capability'
 import { CATEGORY_LABEL_ZH } from './lib/labels'
 import { groupKeyForEvent } from './lib/group'
-import { isCurrentCalendarMonth, inDateWindow, type DateWindow } from './lib/calendar'
+import {
+  isCurrentCalendarMonth,
+  inDateWindow,
+  localMonth,
+  earliestMonth,
+  clampDateWindow,
+  type DateWindow,
+} from './lib/calendar'
 import Header, { type Filters } from './components/Header'
 import TimelineRail from './components/TimelineRail'
 import CategoryColumn from './components/CategoryColumn'
@@ -114,6 +121,19 @@ function visibleCategoryEvents(
   })
 }
 
+
+function buildDefaultDateWindow(
+  eventDates: Iterable<string>,
+  frontierMonths: Iterable<string>,
+): DateWindow {
+  const end = localMonth()
+  const min = earliestMonth(
+    [...eventDates, ...frontierMonths],
+    end,
+  )
+  return clampDateWindow({ start: min, end }, min, end)
+}
+
 export default function App() {
   const { meta, companies, events } = timelineData
   const [page, setPage] = useState<AppPage>(() => pageFromHash())
@@ -128,7 +148,23 @@ export default function App() {
   const [bumpPinId, setBumpPinId] = useState<string | null>(null)
   /** 既往 = full history rail/board; 本月 = same calendar month across all years. */
   const [railMode, setRailMode] = useState<'history' | 'month'>('history')
-  const [dateWindow, setDateWindow] = useState<DateWindow | null>(null)
+  const monthBounds = useMemo(() => {
+    const end = localMonth()
+    const min = earliestMonth(
+      [
+        ...events.map((e) => e.date),
+        ...capabilityFrontierData.months.map((m) => m.month),
+      ],
+      end,
+    )
+    return { min, max: end }
+  }, [events])
+  const [dateWindow, setDateWindow] = useState<DateWindow>(() =>
+    buildDefaultDateWindow(
+      timelineData.events.map((e) => e.date),
+      capabilityFrontierData.months.map((m) => m.month),
+    ),
+  )
 
   const filtered = useMemo(() => {
     const q = filters.query.trim().toLowerCase()
@@ -367,7 +403,12 @@ export default function App() {
       }
       setFilters(DEFAULT_FILTERS)
       setRailMode('history')
-      setDateWindow(null)
+      setDateWindow(
+        buildDefaultDateWindow(
+          events.map((e) => e.date),
+          capabilityFrontierData.months.map((m) => m.month),
+        ),
+      )
       setSubFilters(EMPTY_SUB)
       setDetailId(id)
       requestAnimationFrame(() => focusCard(id))
@@ -425,6 +466,8 @@ export default function App() {
             onModeChange={handleRailModeChange}
             dateWindow={dateWindow}
             onDateWindowChange={setDateWindow}
+            minMonth={monthBounds.min}
+            maxMonth={monthBounds.max}
           />
 
           <div className="board__main">

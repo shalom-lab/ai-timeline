@@ -1,10 +1,18 @@
-import { useMemo, useState, useCallback } from 'react'
+import { useMemo, useState, useCallback, useRef } from 'react'
 import type { Company, TimelineEvent } from '../types/timeline'
 import { FRONTIER_THEME } from '../types/capability'
 import { companyColor } from '../lib/company'
 import type { TimelineLayout } from '../lib/timelineLayout'
 import { YEAR_MARKER_H } from '../lib/timelineLayout'
-import type { DateWindow } from '../lib/calendar'
+import {
+  type DateWindow,
+  clampDateWindow,
+  clampMonth,
+  shiftDateWindow,
+  shiftMonth,
+  toMonthKey,
+  monthToIndex,
+} from '../lib/calendar'
 import TimeWindow from './TimeWindow'
 
 type RailMode = 'history' | 'month'
@@ -26,9 +34,12 @@ type Props = {
   /** 既往 = full history; 本月 = same calendar month across all years. */
   mode?: RailMode
   onModeChange?: (mode: RailMode) => void
-  /** History date window — rendered under 既往|当月 when mode is history. */
+  /** History month window — rendered under 既往|当月 when mode is history. */
   dateWindow?: DateWindow | null
-  onDateWindowChange?: (value: DateWindow | null) => void
+  onDateWindowChange?: (value: DateWindow) => void
+  /** Inclusive slider bounds YYYY-MM. */
+  minMonth?: string
+  maxMonth?: string
 }
 
 type MonthBand = {
@@ -84,6 +95,8 @@ function focusFrontierMonth(month: string) {
   el.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'nearest' })
 }
 
+type DragKind = 'move' | 'start' | 'end'
+
 export default function TimelineRail({
   events,
   companies,
@@ -97,6 +110,8 @@ export default function TimelineRail({
   onModeChange,
   dateWindow = null,
   onDateWindowChange,
+  minMonth,
+  maxMonth,
 }: Props) {
   const byId = useMemo(() => {
     const m = new Map<string, TimelineEvent>()
@@ -128,6 +143,123 @@ export default function TimelineRail({
     return s
   }, [collapsed])
 
+  /** Yellow sliding-window geometry over visible in-range rail rows. */
+  const rangeOverlay = useMemo(() => {
+    if (mode !== 'history' || !dateWindow) return null
+    const start = toMonthKey(dateWindow.start)
+    const end = toMonthKey(dateWindow.end)
+    const visible = layout.items.filter((item) => {
+      if (hiddenYears.has(item.date.slice(0, 4))) return false
+      const ym = item.ym
+      return ym >= start && ym <= end
+    })
+    if (visible.length === 0) return null
+    const top = Math.max(0, visible[0].centerY - ITEM_HALF - BAND_PAD)
+    const bottom =
+      visible[visible.length - 1].centerY + ITEM_HALF + BAND_PAD
+    return { top, height: Math.max(20, bottom - top) }
+  }, [mode, dateWindow, layout.items, hiddenYears])
+
+  const dragRef = useRef<{
+    kind: DragKind
+    originY: number
+    origin: DateWindow
+    lastDelta: number
+  } | null>(null)
+
+  const boundsReady =
+    minMonth != null &&
+    maxMonth != null &&
+    dateWindow != null &&
+    onDateWindowChange != null
+
+  const onRangePointerDown = useCallback(
+    (kind: DragKind, e: React.PointerEvent<HTMLElement>) => {
+      if (!boundsReady || !dateWindow || !minMonth || !maxMonth) return
+      e.preventDefault()
+      e.stopPropagation()
+      const target = e.currentTarget
+      target.setPointerCapture(e.pointerId)
+      dragRef.current = {
+        kind,
+        originY: e.clientY,
+        origin: { ...dateWindow },
+        lastDelta: 0,
+      }
+    },
+    [boundsReady, dateWindow, minMonth, maxMonth],
+  )
+
+  const onRangePointerMove = useCallback(
+    (e: React.PointerEvent<HTMLElement>) => {
+      const drag = dragRef.current
+      if (!drag || !onDateWindowChange || !minMonth || !maxMonth) return
+      const pxPerMonth = Math.max(14, rangeOverlay?.height
+        ? rangeOverlay.height /
+            Math.max(
+              1,
+              monthToIndex(toMonthKey(drag.origin.end)) -
+                monthToIndex(toMonthKey(drag.origin.start)) +
+                1,
+            )
+        : 22)
+      const delta = Math.round((e.clientY - drag.originY) / pxPerMonth)
+      if (delta === drag.lastDelta) return
+      drag.lastDelta = delta
+      if (drag.kind === 'move') {
+        onDateWindowChange(
+          shiftDateWindow(drag.origin, delta, minMonth, maxMonth),
+        )
+        return
+      }
+      if (drag.kind === 'start') {
+        const nextStart = clampMonth(
+          shiftMonth(toMonthKey(drag.origin.start), delta),
+          minMonth,
+          toMonthKey(drag.origin.end),
+        )
+        onDateWindowChange(
+          clampDateWindow(
+            { start: nextStart, end: toMonthKey(drag.origin.end) },
+            minMonth,
+            maxMonth,
+          ),
+        )
+        return
+      }
+      const nextEnd = clampMonth(
+        shiftMonth(toMonthKey(drag.origin.end), delta),
+        toMonthKey(drag.origin.start),
+        maxMonth,
+      )
+      onDateWindowChange(
+        clampDateWindow(
+          { start: toMonthKey(drag.origin.start), end: nextEnd },
+          minMonth,
+          maxMonth,
+        ),
+      )
+    },
+    [onDateWindowChange, minMonth, maxMonth, rangeOverlay],
+  )
+
+  const onRangePointerUp = useCallback((e: React.PointerEvent<HTMLElement>) => {
+    if (!dragRef.current) return
+    try {
+      e.currentTarget.releasePointerCapture(e.pointerId)
+    } catch {
+      /* already released */
+    }
+    dragRef.current = null
+  }, [])
+
+  const showSlider =
+    mode === 'history' &&
+    onDateWindowChange != null &&
+    dateWindow != null &&
+    minMonth != null &&
+    maxMonth != null
+
   return (
     <nav className="timeline-rail" aria-label="时间轴（日期导航，紧凑缩进）">
       <div className="timeline-rail__head-spacer">
@@ -140,7 +272,7 @@ export default function TimelineRail({
             type="button"
             className={`timeline-rail__mode-btn${mode === 'history' ? ' is-active' : ''}`}
             aria-pressed={mode === 'history'}
-            title="既往：可选择全部历史、近期或自定义时间窗"
+            title="既往：用月份滑窗选择起始月至截止月"
             onClick={() => onModeChange?.('history')}
           >
             既往
@@ -155,8 +287,13 @@ export default function TimelineRail({
             当月
           </button>
         </div>
-        {mode === 'history' && onDateWindowChange ? (
-          <TimeWindow value={dateWindow} onChange={onDateWindowChange} />
+        {showSlider ? (
+          <TimeWindow
+            value={dateWindow}
+            onChange={onDateWindowChange}
+            minMonth={minMonth}
+            maxMonth={maxMonth}
+          />
         ) : (
           <div className="timeline-rail__head-fill" aria-hidden />
         )}
@@ -231,6 +368,68 @@ export default function TimelineRail({
         ) : (
           <div className="timeline-rail__line" aria-hidden />
         )}
+
+        {rangeOverlay && boundsReady ? (
+          <div
+            className="timeline-rail__range-window"
+            style={{ top: rangeOverlay.top, height: rangeOverlay.height }}
+            role="group"
+            aria-label="月份滑动窗口"
+            onPointerDown={(e) => {
+              if (e.target !== e.currentTarget) return
+              onRangePointerDown('move', e)
+            }}
+            onPointerMove={onRangePointerMove}
+            onPointerUp={onRangePointerUp}
+            onPointerCancel={onRangePointerUp}
+          >
+            <button
+              type="button"
+              className="timeline-rail__range-grip"
+              aria-label="拖动平移月份窗"
+              title="拖动平移选中月份范围"
+              onPointerDown={(e) => onRangePointerDown('move', e)}
+              onPointerMove={onRangePointerMove}
+              onPointerUp={onRangePointerUp}
+              onPointerCancel={onRangePointerUp}
+              onKeyDown={(e) => {
+                if (!dateWindow || !minMonth || !maxMonth || !onDateWindowChange)
+                  return
+                if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
+                  e.preventDefault()
+                  onDateWindowChange(
+                    shiftDateWindow(dateWindow, 1, minMonth, maxMonth),
+                  )
+                } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
+                  e.preventDefault()
+                  onDateWindowChange(
+                    shiftDateWindow(dateWindow, -1, minMonth, maxMonth),
+                  )
+                }
+              }}
+            />
+            <button
+              type="button"
+              className="timeline-rail__range-edge timeline-rail__range-edge--start"
+              aria-label="拖动调整起始月"
+              title="拖动调整起始月"
+              onPointerDown={(e) => onRangePointerDown('start', e)}
+              onPointerMove={onRangePointerMove}
+              onPointerUp={onRangePointerUp}
+              onPointerCancel={onRangePointerUp}
+            />
+            <button
+              type="button"
+              className="timeline-rail__range-edge timeline-rail__range-edge--end"
+              aria-label="拖动调整截止月"
+              title="拖动调整截止月"
+              onPointerDown={(e) => onRangePointerDown('end', e)}
+              onPointerMove={onRangePointerMove}
+              onPointerUp={onRangePointerUp}
+              onPointerCancel={onRangePointerUp}
+            />
+          </div>
+        ) : null}
 
         {layout.items.map((item) => {
           const year = item.date.slice(0, 4)
