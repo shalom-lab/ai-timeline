@@ -1,9 +1,9 @@
-import type { ReactNode } from 'react'
+import { useMemo, useRef, type ReactNode } from 'react'
 import type { Category, Company, TimelineEvent } from '../types/timeline'
 import { CATEGORY_LABEL_ZH, CATEGORY_THEME } from '../lib/labels'
 import { buildSubGroups } from '../lib/group'
-import type { TimelineLayout } from '../lib/timelineLayout'
 import EventCard from './EventCard'
+import BumpConnectors from './BumpConnectors'
 
 type Props = {
   category: Category
@@ -18,8 +18,6 @@ type Props = {
   onSubFilter: (keys: string[]) => void
   selectedId: string | null
   onSelect: (id: string | null) => void
-  /** Shared date→Y layout with the left rail */
-  layout: TimelineLayout
 }
 
 const ICONS: Record<Category, ReactNode> = {
@@ -96,9 +94,9 @@ export default function CategoryColumn({
   onSubFilter,
   selectedId,
   onSelect,
-  layout,
 }: Props) {
   const theme = CATEGORY_THEME[category]
+  const bodyRef = useRef<HTMLDivElement>(null)
   const groups = buildSubGroups(category, events, companies)
   const showAll = subFilter.length === 0
   const visibleGroups = showAll
@@ -120,6 +118,17 @@ export default function CategoryColumn({
   const multi = visibleGroups.length > 1
   /** Skip chip row when flat / single group (e.g. concept) — 别强行分 */
   const showChips = groups.length > 1
+
+  /** Chronological ids within THIS category only — bump lines never cross categories. */
+  const orderedIds = useMemo(() => {
+    const gs = buildSubGroups(category, events, companies)
+    const vis =
+      subFilter.length === 0 ? gs : gs.filter((g) => subFilter.includes(g.key))
+    const all: TimelineEvent[] = []
+    for (const g of vis) all.push(...g.events)
+    all.sort((a, b) => a.date.localeCompare(b.date) || a.id.localeCompare(b.id))
+    return all.map((e) => e.id)
+  }, [category, events, companies, subFilter])
 
   return (
     <section
@@ -193,8 +202,11 @@ export default function CategoryColumn({
       </div>
 
       <div
-        className={`cat-column__body is-time-canvas${multi ? ' has-subcols' : ''}`}
+        ref={bodyRef}
+        className={`cat-column__body${multi ? ' has-subcols' : ''}`}
       >
+        <BumpConnectors containerRef={bodyRef} orderedIds={orderedIds} />
+
         {visibleGroups.length === 0 ? (
           <p className="cat-column__empty">暂无匹配事件</p>
         ) : (
@@ -203,24 +215,16 @@ export default function CategoryColumn({
               {multi ? (
                 <div className="cat-subcol__label">{g.label}</div>
               ) : null}
-              <div
-                className="cat-subcol__cards is-time-placed"
-                style={{ height: layout.height }}
-              >
-                {g.events.map((e) => {
-                  const cy = layout.centerY[e.id]
-                  if (cy == null) return null
-                  return (
-                    <EventCard
-                      key={e.id}
-                      event={e}
-                      companies={companies}
-                      selected={selectedId === e.id}
-                      onSelect={onSelect}
-                      centerY={cy}
-                    />
-                  )
-                })}
+              <div className="cat-subcol__cards">
+                {g.events.map((e) => (
+                  <EventCard
+                    key={e.id}
+                    event={e}
+                    companies={companies}
+                    selected={selectedId === e.id}
+                    onSelect={onSelect}
+                  />
+                ))}
               </div>
             </div>
           ))

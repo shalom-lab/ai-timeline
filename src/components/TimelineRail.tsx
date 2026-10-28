@@ -10,7 +10,7 @@ type Props = {
   companies: Company[]
   selectedId: string | null
   onSelect: (id: string | null) => void
-  /** Shared date→Y layout (same as category / frontier column canvases). */
+  /** Compact equal-step rail layout (year left / dates indented). */
   layout: TimelineLayout
   /** When true, layout items are frontier month proxies (no TimelineEvent). */
   frontierSolo?: boolean
@@ -24,7 +24,7 @@ type MonthBand = {
 }
 
 const ITEM_HALF = 9
-const BAND_PAD = 3
+const BAND_PAD = 2
 
 function buildMonthBands(
   items: { centerY: number; ym: string }[],
@@ -44,7 +44,7 @@ function buildMonthBands(
     bands.push({
       ym,
       top,
-      height: Math.max(18, bottom - top),
+      height: Math.max(16, bottom - top),
       tone: tone % 2,
     })
     tone += 1
@@ -103,8 +103,7 @@ export default function TimelineRail({
   }, [collapsed])
 
   return (
-    <nav className="timeline-rail" aria-label="时间轴（与卡片共用纵向时间刻度）">
-      {/* Matches category column head (title + chips) so canvases share Y=0 */}
+    <nav className="timeline-rail" aria-label="时间轴（日期导航，紧凑缩进）">
       <div className="timeline-rail__head-spacer" aria-hidden />
       <div
         className="timeline-rail__canvas"
@@ -121,8 +120,8 @@ export default function TimelineRail({
               aria-expanded={!isCollapsed}
               title={
                 isCollapsed
-                  ? `显示 ${y.year} 节点（占位保留）`
-                  : `隐藏 ${y.year} 节点（占位保留）`
+                  ? `显示 ${y.year} 节点`
+                  : `折叠 ${y.year} 节点`
               }
               onClick={() => toggleYear(y.year)}
             >
@@ -135,15 +134,18 @@ export default function TimelineRail({
           )
         })}
 
-        {monthBands.map((band) => (
-          <div
-            key={band.ym}
-            className={`timeline-rail__month-bg timeline-rail__month-bg--${band.tone}`}
-            style={{ top: band.top, height: band.height }}
-            data-month={band.ym}
-            aria-hidden
-          />
-        ))}
+        {monthBands.map((band) => {
+          if (hiddenYears.has(band.ym.slice(0, 4))) return null
+          return (
+            <div
+              key={band.ym}
+              className={`timeline-rail__month-bg timeline-rail__month-bg--${band.tone}`}
+              style={{ top: band.top, height: band.height }}
+              data-month={band.ym}
+              aria-hidden
+            />
+          )
+        })}
 
         <div className="timeline-rail__line" aria-hidden />
 

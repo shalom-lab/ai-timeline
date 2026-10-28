@@ -278,7 +278,7 @@ a {
   max-width: 100%;
 }
 
-/* ─── Timeline rail (shared Y canvas with cards) ─── */
+/* ─── Timeline rail (compact indented date navigator) ─── */
 .timeline-rail {
   position: sticky;
   left: 0;
@@ -291,7 +291,7 @@ a {
   background: linear-gradient(90deg, #f8fafc 70%, transparent);
 }
 
-/* Match .cat-column__head so rail canvas Y0 == card canvas Y0 */
+/* Match .cat-column__head height so rail starts under the same head band */
 .timeline-rail__head-spacer {
   height: var(--timeline-head-h, 5.75rem);
   flex-shrink: 0;
@@ -565,6 +565,7 @@ a {
 }
 
 .cat-column__body {
+  position: relative;
   flex: 0 0 auto;
   overflow: visible;
   padding: 0.55rem;
@@ -574,10 +575,6 @@ a {
   min-height: 0;
   max-height: none;
   background: linear-gradient(180deg, #fff 0%, #f8fafc 100%);
-}
-
-.cat-column__body.is-time-canvas {
-  padding-top: 0.1rem;
 }
 
 .cat-column__body.has-subcols {
@@ -616,25 +613,22 @@ a {
   gap: 0.45rem;
 }
 
-.cat-subcol__cards.is-time-placed {
-  position: relative;
-  display: block;
-  gap: 0;
-  min-height: 4rem;
-}
-
-.event-card.is-time-placed {
+/* ─── Intra-category bump connectors (dashed steps) ─── */
+.bump-connectors {
   position: absolute;
   left: 0;
-  right: 0;
+  top: 0;
   width: 100%;
-  transform: translateY(-50%);
-  z-index: 1;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+  overflow: visible;
 }
 
-.event-card.is-time-placed:hover,
-.event-card.is-time-placed.is-selected {
-  z-index: 3;
+.cat-column__body > .cat-subcol,
+.cat-column__body > .cat-column__empty {
+  position: relative;
+  z-index: 1;
 }
 
 /* ─── Event card ─── */
@@ -986,32 +980,6 @@ a {
   gap: 0.7rem;
 }
 
-.frontier-column__time-canvas {
-  position: relative;
-  display: block;
-  min-height: 4rem;
-  width: 100%;
-}
-
-.frontier-month.is-time-placed {
-  position: absolute;
-  left: 0;
-  right: 0;
-  width: 100%;
-  transform: translateY(-50%);
-  z-index: 1;
-}
-
-.frontier-month.is-time-placed:hover {
-  z-index: 3;
-}
-
-.frontier-column .cat-column__head .frontier-column__hint {
-  border-bottom: 0;
-  flex: 1 1 auto;
-  min-height: 0;
-  overflow: auto;
-}
 
 .frontier-month {
   background: #fff;

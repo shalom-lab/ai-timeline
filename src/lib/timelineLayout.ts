@@ -1,29 +1,13 @@
-import type { TimelineEvent } from '../types/timeline'
+/** Compact rail spacing (not calendar day→px). Cards use dense document flow. */
 
-/** Year marker row height inside the shared canvas (rail + columns). */
-export const YEAR_MARKER_H = 24
-/**
- * Minimum gap between consecutive *distinct-date* centers.
- * ~card height + small breath with translateY(-50%); denser than the old 148.
- */
-export const MIN_CENTER_GAP = 116
-/**
- * Soft cap for large calendar spans — longer Δdays get a bit more room,
- * but never raw linear voids. Kept close to MIN so long gaps stay compact.
- */
-export const MAX_CENTER_GAP = 140
-/**
- * tanh scale (days).
- * gap(Δ) = MIN + (MAX - MIN) * tanh(Δ / GAP_TAU)
- * Larger TAU = week/month deltas stay nearer MIN before asymptoting.
- */
-export const GAP_TAU = 48
-export const CANVAS_PAD_TOP = 6
-export const CANVAS_PAD_BOTTOM = 24
-/** Space from year marker bottom to first date center in that year. */
-export const AFTER_YEAR_MARKER = 44
+export const YEAR_MARKER_H = 26
+/** Vertical step between consecutive rail date rows. */
+export const RAIL_ITEM_STEP = 22
+export const RAIL_PAD_TOP = 8
+export const RAIL_PAD_BOTTOM = 16
+/** Gap between last date of a year and the next year marker. */
+export const RAIL_YEAR_GAP = 10
 
-/** Minimal input for shared date→Y layout (events or frontier month proxies). */
 export type LayoutSource = {
   id: string
   /** YYYY-MM-DD */
@@ -33,7 +17,7 @@ export type LayoutSource = {
 export type LayoutItem = {
   id: string
   date: string
-  /** Y of event center within the shared canvas */
+  /** Y of rail row center */
   centerY: number
   ym: string
 }
@@ -52,25 +36,6 @@ export type TimelineLayout = {
   years: LayoutYear[]
 }
 
-function utcDay(iso: string): number {
-  const y = Number(iso.slice(0, 4))
-  const m = Number(iso.slice(5, 7))
-  const d = Number(iso.slice(8, 10))
-  return Math.round(Date.UTC(y, m - 1, d) / 86_400_000)
-}
-
-/**
- * Calendar day-delta → vertical gap (px).
- *
- *   gap(Δ) = MIN_CENTER_GAP + (MAX_CENTER_GAP - MIN_CENTER_GAP) * tanh(Δ / GAP_TAU)
- *
- * Short gaps stay near MIN (dense months readable); long gaps asymptote to MAX.
- */
-export function gapForDeltaDays(deltaDays: number): number {
-  const d = Math.max(0, deltaDays)
-  return MIN_CENTER_GAP + (MAX_CENTER_GAP - MIN_CENTER_GAP) * Math.tanh(d / GAP_TAU)
-}
-
 /** Last calendar day of YYYY-MM as YYYY-MM-DD (UTC month-end). */
 export function monthEndDate(ym: string): string {
   const y = Number(ym.slice(0, 4))
@@ -79,7 +44,7 @@ export function monthEndDate(ym: string): string {
   return `${ym}-${String(last).padStart(2, '0')}`
 }
 
-/** Stable layout id for a frontier month card / rail marker. */
+/** Stable id for a frontier month rail marker. */
 export function frontierLayoutId(month: string): string {
   return `frontier:${month}`
 }
@@ -95,13 +60,11 @@ export function frontierMonthsToLayoutSources(
 }
 
 /**
- * Shared date→Y for TimelineRail dots and EventCard / FrontierColumn centers.
- * Same calendar date → same centerY; order chronological; gaps soft-compressed.
- *
- * Accepts full TimelineEvent[] or lighter {id,date} proxies (frontier months).
+ * Compact equal-step rail layout: year flush-left markers, dates indented below.
+ * Same calendar date → same centerY; order chronological; NO day→pixel scale.
  */
 export function buildTimelineLayout(
-  events: ReadonlyArray<LayoutSource | TimelineEvent>,
+  events: ReadonlyArray<LayoutSource>,
 ): TimelineLayout {
   const sorted = [...events].sort(
     (a, b) => a.date.localeCompare(b.date) || a.id.localeCompare(b.id),
@@ -109,7 +72,7 @@ export function buildTimelineLayout(
   if (sorted.length === 0) {
     return {
       centerY: {},
-      height: CANVAS_PAD_TOP + CANVAS_PAD_BOTTOM,
+      height: RAIL_PAD_TOP + RAIL_PAD_BOTTOM,
       items: [],
       years: [],
     }
@@ -137,39 +100,23 @@ export function buildTimelineLayout(
   const items: LayoutItem[] = []
   const years: LayoutYear[] = []
 
-  let prevCenter = -Infinity
-  let prevDay = 0
+  let cursor = RAIL_PAD_TOP
   let prevYear = ''
 
   for (const date of dateOrder) {
     const year = date.slice(0, 4)
-    const day = utcDay(date)
-    let nextY: number
-
     if (year !== prevYear) {
-      // Place year marker below previous content (or at pad for the first year)
-      const markerTop =
-        prevCenter === -Infinity
-          ? CANVAS_PAD_TOP
-          : prevCenter + gapForDeltaDays(Math.max(1, day - prevDay)) * 0.35
+      if (prevYear !== '') cursor += RAIL_YEAR_GAP
       years.push({
         year,
-        top: markerTop,
+        top: cursor,
         count: yearCounts.get(year) ?? 0,
       })
-      // First date of this year sits under the marker
-      const underMarker = markerTop + YEAR_MARKER_H + AFTER_YEAR_MARKER
-      const fromPrev =
-        prevCenter === -Infinity
-          ? underMarker
-          : prevCenter + gapForDeltaDays(day - prevDay)
-      // Prefer calendar gap from previous date, but never climb back into the marker
-      nextY = Math.max(underMarker, fromPrev)
+      cursor += YEAR_MARKER_H
       prevYear = year
-    } else {
-      nextY = prevCenter + gapForDeltaDays(day - prevDay)
     }
 
+    const nextY = cursor + RAIL_ITEM_STEP / 2
     for (const e of byDate.get(date)!) {
       centerY[e.id] = nextY
       items.push({
@@ -179,13 +126,12 @@ export function buildTimelineLayout(
         ym: e.date.slice(0, 7),
       })
     }
-    prevCenter = nextY
-    prevDay = day
+    cursor += RAIL_ITEM_STEP
   }
 
   return {
     centerY,
-    height: prevCenter + CANVAS_PAD_BOTTOM,
+    height: cursor + RAIL_PAD_BOTTOM,
     items,
     years,
   }

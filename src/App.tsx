@@ -133,11 +133,10 @@ export default function App() {
   }, [filtered])
 
   /**
-   * Multi-column: shared global timeline (all search-filtered events).
-   * Solo category: contract to that column's *visible* items (honour sub-chips).
-   * Solo frontier: contract to frontier month-end dates.
+   * Rail sources only (cards are dense-packed, not driven by this layout).
+   * Solo contracts to that column / frontier months; multi uses all filtered.
    */
-  const layoutSources = useMemo((): LayoutSource[] => {
+  const railSources = useMemo((): LayoutSource[] => {
     if (solo === 'frontier') {
       return frontierMonthsToLayoutSources(frontierMonths)
     }
@@ -152,12 +151,11 @@ export default function App() {
     return filtered
   }, [solo, filtered, byCategory, subFilters, companies, frontierMonths])
 
-  const layout = useMemo(
-    () => buildTimelineLayout(layoutSources),
-    [layoutSources],
+  const railLayout = useMemo(
+    () => buildTimelineLayout(railSources),
+    [railSources],
   )
 
-  /** Events the rail can resolve for dots / company colors (empty in frontier solo). */
   const railEvents = useMemo((): TimelineEvent[] => {
     if (solo === 'frontier') return []
     if (solo) {
@@ -231,7 +229,7 @@ export default function App() {
           companies={companies}
           selectedId={selectedId}
           onSelect={setSelectedId}
-          layout={layout}
+          layout={railLayout}
           frontierSolo={solo === 'frontier'}
         />
 
@@ -256,7 +254,6 @@ export default function App() {
                 }
                 selectedId={selectedId}
                 onSelect={setSelectedId}
-                layout={layout}
               />
             </div>
           ))}
@@ -272,7 +269,6 @@ export default function App() {
                 }}
                 onExitSolo={() => setSolo(null)}
                 onSelectEvent={selectEventFromFrontier}
-                layout={solo === 'frontier' ? layout : undefined}
               />
             </div>
           ) : null}
