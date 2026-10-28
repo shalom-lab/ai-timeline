@@ -404,22 +404,16 @@ a {
 
 .timeline-rail__item:hover .timeline-rail__md,
 .timeline-rail__item.is-hover .timeline-rail__md,
-.timeline-rail__item.is-selected .timeline-rail__md,
-.timeline-rail__item.is-pinned .timeline-rail__md {
+.timeline-rail__item.is-selected .timeline-rail__md {
   color: #0f172a;
   font-weight: 700;
 }
 
 .timeline-rail__item:hover .timeline-rail__dot,
 .timeline-rail__item.is-hover .timeline-rail__dot,
-.timeline-rail__item.is-selected .timeline-rail__dot,
-.timeline-rail__item.is-pinned .timeline-rail__dot {
+.timeline-rail__item.is-selected .timeline-rail__dot {
   transform: scale(1.25);
   box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
-}
-
-.timeline-rail__item.is-pinned .timeline-rail__dot {
-  box-shadow: 0 0 0 3px rgba(234, 88, 12, 0.35);
 }
 
 .timeline-rail__dot {
