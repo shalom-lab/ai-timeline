@@ -1,36 +1,29 @@
 # AI纪年（AI Timeline）
 
-从 **ChatGPT 公众研究预览上线（2022-11-30）** 起的 AI 里程碑时间线。
+**要干啥：** 把 ChatGPT 公众研究预览上线（2022-11-30）以来的 AI 大事，按时间串成一份可读的「纪年」——看清什么时候出现了哪些大模型、产品与科学突破，普通人+AI 的能力边界又推进到哪一步；另附一张「现在能用啥」的 AI 工具矩阵，方便对照选型。
 
-技术栈：TypeScript + React + Vite。数据规范优先；纪年页为 **4 个 Tab**（大模型 / 产品 / 科学 / 能力边界）+ 左侧时间轴轨；「能力边界」仅展示 capability-frontier 月末快照（不混入时间线事件卡）。另有独立 **AI工具** 矩阵页（`#/tools`，Tab：**模型 | 产品**）。支持搜索、按年折叠时间轴与卡片原地详情浮层；系列 chips 支持多选。站点品牌标：`public/brand/mark.svg` / `public/favicon.*`。
+不是新闻聚合，也不是百科全收录：只收有官方可核日期与链接的里程碑，优先帮人建立时间感与能力感。
 
-**站点（GitHub Pages）：** https://shalom-lab.github.io/ai-timeline/
+**在线站点：** https://shalom-lab.github.io/ai-timeline/
 
-## 界面要点
+## 两页
 
-- 顶栏：品牌「AI纪年」+ meta 居左（`meta.ui.openingBg` 作紧凑 banner）；**纪年 | AI工具** 靠右贴近搜索（短矩形 Tab）；无主题切换、无顶部年份 chips
-- 左侧时间轴轨（略加宽）：头顶紧凑 **既往 | 本月** 模式切换（对齐右侧分类 Tab 高度）；**既往**为全部历史日期，**本月**仅显示当前日历月（轨与右侧卡片/能力边界同步过滤，无事件时安静空态）；按年分组，点击年标题可**折叠/展开**该年日期；标签为 `MM-DD`，悬停看完整日期与标题；**点击**节点滚动并钉住同日横线+灰白（卡片与该节点以下轨段），悬停仅虚线不灰白；Esc / 再点 / 点空白取消钉住
-- 左侧时间轴层级：年份行左对齐（折叠三角 + 年 + 数量）；日期为缩进子级，竖线只串该年日期圆点
-- 分类 Tab（短矩形、轻微圆角，非胶囊）在右侧主栏顶部、公司 chips 之上（与 chips/卡片同列起点，不压左侧时间轴）：**大模型 | 产品 | 科学 | 能力边界**（默认大模型）；每次只展示一个面板。能力边界 Tab 仅月末工作流快照（`FrontierColumn`）。已移除列「独占」。
-- Header 页面切换（纪年 / AI工具）短矩形 Tab，与品牌 meta 分隔、靠右近搜索（不遮挡 meta）。
-- Tab 内按公司（大模型）、`productSubcategory`（产品）、`scienceDiscipline`（科学）再分子列；系列 chips **多选**（并集），「全部」清空选择；列标题与 Tab 重复故省略，chips 紧贴分类 Tab 下。子列标题与 chips 行右侧均为 **图标复制**（剪贴板 icon）：列头复制该列，chips 行右侧复制当前可见各子列年表（多列时按列分段，日期+标题）
-- 卡片：整卡背景取公司 `colorSoft`；日期 + 公司标记（按 `companies[]` 的 name/id/aliases 解析）；左侧主图标块 + 标题/摘要、`eventType` pill、来源外链；**点击顶部条（日期/公司）**打开详情浮层，**点击主区域**钉住同日横线+灰白（与左侧时间轴节点相同）；来源外链等图标独立处理
-- `science`：AI 在科学领域的发现/突破（如 AlphaFold 3），不是普通产品发布
-- 原「概念」列已取消：MCP / Agent Skills / Agent Harness 等已迁入 `product`（如 MCP→`dev_platform`，Harness/Skills→`agent`）
-- **AI工具** 页：顶下 **模型 | 产品** Tab（短矩形，对齐纪年 board tabs）；模型列为 公司+语言模型/图像/视频/其他，产品列为 公司+对话/编程办公/API；无双层 group 表头；列头旁小 icon，单元格旁产品/公司 logo；空行按 Tab 过滤；hash `#/tools/models` / `#/tools/products`
+1. **纪年** — 左侧时间轴 + 右侧分类 Tab（大模型 / 产品 / 科学 / 能力边界）。大模型按公司成列，科学按学科，产品按形态；能力边界是月末「之前 → 之后」工作流快照，不混时间线事件卡。
+2. **AI工具** — 当前可用产品矩阵（模型 / 产品 两个 Tab），单元格链到产品页并带费用摘要，不追溯历史。
 
-## 数据文档
+支持搜索、按年折叠、卡片详情、子列/多列图标复制，以及 AI工具页整表复制。
+
+## 数据优先
 
 | 文档 | 内容 |
 | --- | --- |
 | [`docs/DATA.md`](docs/DATA.md) | 完整数据规范 |
 | [`docs/DEVELOPMENT.md`](docs/DEVELOPMENT.md) | 贡献清单与审核规则 |
-| [`src/types/timeline.ts`](src/types/timeline.ts) | TypeScript 类型 |
-| [`data/timeline.json`](data/timeline.json) | 种子事件 |
+| [`data/timeline.json`](data/timeline.json) | 纪年事件 |
 | [`data/capability-frontier.json`](data/capability-frontier.json) | 能力边界月末快照 |
-| [`src/types/capability.ts`](src/types/capability.ts) | 能力边界类型 |
+| [`data/ai-tools.json`](data/ai-tools.json) | AI工具矩阵 |
 
-颜色映射在公司（`companies[].color` / `colorSoft`），不在一级分类。
+技术栈：TypeScript + React + Vite。类型见 `src/types/`。
 
 ## 本地开发
 
