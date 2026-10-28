@@ -710,11 +710,22 @@ a {
 }
 
 .cat-column__body.has-subcols {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  align-content: start;
+  display: flex;
+  flex-wrap: nowrap;
   align-items: start;
   gap: 0.5rem;
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: visible;
+  scrollbar-width: thin;
+}
+
+.has-subcols > .cat-subcol {
+  flex: 0 0 260px;
+  min-width: 240px;
+  max-width: 300px;
 }
 
 .cat-column__empty {
@@ -818,9 +829,7 @@ a {
   z-index: 1;
 }
 
-.cat-column__body.has-subcols {
-  overflow: visible;
-}
+/* has-subcols overflow controlled above (overflow-x: auto) */
 
 /* ─── Event card ─── */
 .event-card {
