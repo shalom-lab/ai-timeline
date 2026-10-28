@@ -71,8 +71,11 @@ a {
 /* ─── Shell ─── */
 .app-shell {
   min-height: 100vh;
+  height: 100dvh;
+  max-height: 100dvh;
   display: flex;
   flex-direction: column;
+  overflow: hidden;
 }
 
 /* ─── Header ─── */
@@ -239,16 +242,16 @@ a {
 }
 
 /* ─── Board ─── */
+/* Rail stays put in its grid cell; only .board__columns scrolls vertically. */
 .board {
   flex: 1;
   display: grid;
   grid-template-columns: var(--rail-w) minmax(0, 1fr);
   gap: 0;
   min-height: 0;
-  align-items: start;
+  align-items: stretch;
   padding: 0.75rem 0.75rem 1.25rem 0;
-  overflow-y: auto;
-  overflow-x: hidden;
+  overflow: hidden;
   scrollbar-width: thin;
 }
 
@@ -258,10 +261,13 @@ a {
   gap: 0.65rem;
   min-width: 0;
   min-height: 0;
+  height: 100%;
+  max-height: 100%;
   padding-right: 0.5rem;
   overflow-x: auto;
-  overflow-y: visible;
+  overflow-y: auto;
   align-items: start;
+  scrollbar-width: thin;
 }
 
 .board__col-slot {
@@ -279,15 +285,19 @@ a {
 }
 
 /* ─── Timeline rail (compact indented date navigator) ─── */
+/* Fixed in the left board column — does not scroll with .board__columns. */
 .timeline-rail {
   position: sticky;
   left: 0;
   top: 0;
-  align-self: start;
+  align-self: stretch;
   z-index: 5;
   padding: 0 0.35rem 1rem 0.35rem;
-  overflow: visible;
-  max-height: none;
+  height: 100%;
+  max-height: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
+  scrollbar-width: thin;
   background: linear-gradient(90deg, #f8fafc 70%, transparent);
 }
 
@@ -404,14 +414,16 @@ a {
 
 .timeline-rail__item:hover .timeline-rail__md,
 .timeline-rail__item.is-hover .timeline-rail__md,
-.timeline-rail__item.is-selected .timeline-rail__md {
+.timeline-rail__item.is-selected .timeline-rail__md,
+.timeline-rail__item.is-pinned .timeline-rail__md {
   color: #0f172a;
   font-weight: 700;
 }
 
 .timeline-rail__item:hover .timeline-rail__dot,
 .timeline-rail__item.is-hover .timeline-rail__dot,
-.timeline-rail__item.is-selected .timeline-rail__dot {
+.timeline-rail__item.is-selected .timeline-rail__dot,
+.timeline-rail__item.is-pinned .timeline-rail__dot {
   transform: scale(1.25);
   box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
 }
@@ -616,9 +628,10 @@ a {
   gap: 0.55rem;
 }
 
-/* ─── Intra-category same-moment bump line (H-dominant, card bottoms) ─── */
-/* Hidden by default — only stroked while rail hover is active. */
+/* ─── Intra-category same-moment bump line (H-dominant, mid-gap) ─── */
+/* Hidden by default — hover dashed / click-pin solid. */
 /* Short staircase among exact same-date peers; V only in company gutters. */
+/* Y sits in the inter-card gap midpoint, not on card borders. */
 .bump-connectors {
   position: absolute;
   left: 0;

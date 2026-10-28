@@ -10,11 +10,13 @@ type Props = {
   companies: Company[]
   /** Card detail selection (from board cards). */
   selectedId: string | null
-  /** Optional: select card when clicking a rail date (navigation only). */
+  /** Select / toggle bump pin when clicking a rail date. */
   onSelect?: (id: string | null) => void
-  /** Rail hover event id — sole driver of same-moment bump line. */
+  /** Rail hover event id — dashed same-moment line (no mute). */
   hoverId: string | null
   onHover: (id: string | null) => void
+  /** Click-pinned event id — solid line + 灰白. */
+  pinId?: string | null
   /** Compact equal-step rail layout (year left / dates indented). */
   layout: TimelineLayout
   /** When true, layout items are frontier month proxies (no TimelineEvent). */
@@ -63,7 +65,7 @@ function focusCard(id: string) {
     `[data-event-id="${CSS.escape(id)}"]`,
   )
   if (!el) return
-  el.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' })
+  el.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'nearest' })
 }
 
 function focusFrontierMonth(month: string) {
@@ -71,7 +73,7 @@ function focusFrontierMonth(month: string) {
     `[data-frontier-month="${CSS.escape(month)}"]`,
   )
   if (!el) return
-  el.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' })
+  el.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'nearest' })
 }
 
 export default function TimelineRail({
@@ -81,6 +83,7 @@ export default function TimelineRail({
   onSelect,
   hoverId,
   onHover,
+  pinId = null,
   layout,
   frontierSolo = false,
 }: Props) {
@@ -186,13 +189,14 @@ export default function TimelineRail({
           const { color } = companyColor(companies, event.company)
           const selected = event.id === selectedId
           const hovered = event.id === hoverId
+          const pinned = event.id === pinId
           return (
             <button
               key={event.id}
               type="button"
-              className={`timeline-rail__item${selected ? ' is-selected' : ''}${hovered ? ' is-hover' : ''}`}
+              className={`timeline-rail__item${selected ? ' is-selected' : ''}${hovered ? ' is-hover' : ''}${pinned ? ' is-pinned' : ''}`}
               style={{ top: item.centerY }}
-              title={`${event.date} · ${event.title}（悬停显示轨迹）`}
+              title={`${event.date} · ${event.title}（悬停虚线；点击实线+灰白）`}
               aria-label={`${event.date} ${event.title}`}
               onMouseEnter={() => onHover(event.id)}
               onMouseLeave={() => onHover(null)}
@@ -209,7 +213,7 @@ export default function TimelineRail({
                 onHover(null)
               }}
               onClick={() => {
-                // Navigation only — does not pin bump lines (hover owns that).
+                // Toggle pin (solid+mute) via onSelect; hover remains dashed-only.
                 onSelect?.(event.id)
                 requestAnimationFrame(() => focusCard(event.id))
               }}

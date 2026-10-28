@@ -1,11 +1,14 @@
 import { useCallback, useEffect, useMemo, useState, type RefObject } from 'react'
 
-/** Anchor at card bottom-center; column box for gutter routing. */
+/** Anchor at mid-gap below card; column box for gutter routing. */
 type Anchor = {
   id: string
   date: string
   x: number
+  /** Midpoint of vertical gap below the card (not the card bottom border). */
   y: number
+  top: number
+  bottom: number
   left: number
   right: number
   colLeft: number
@@ -25,15 +28,19 @@ type Props = {
   orderedDates: string[]
   /** When false, connectors stay hidden (default). */
   active: boolean
-  /** Focus date: same-moment slice; cards after this may mute. */
+  /** Focus date: same-moment slice. */
   focusDate: string | null
   /** Focus event id — preferred date source when set. */
   focusId?: string | null
+  /** Click-pin: solid stroke. Hover (unpinned): dashed. */
+  solid?: boolean
 }
 
 const STROKE = 'rgba(234, 88, 12, 0.85)'
 const STROKE_WIDTH = 2
 const DASH = '7 5'
+/** Fallback card gap when a column has no measurable inter-card gap (~0.55rem). */
+const FALLBACK_GAP_PX = 9
 /** Treat columns as same when centers are this close (px). */
 const SAME_COL_X = 24
 /** Push same-column vertical just outside the subcol edge into the seam. */
@@ -119,10 +126,37 @@ function gutterBetween(a: Anchor, b: Anchor, cols: ColBox[]): number {
 }
 
 /**
- * Same-moment slice: primarily horizontal dashed line across the category,
+ * Y at the midpoint of the vertical gap below `card` within its company column.
+ * If no card below, place at half the typical inter-card gap beneath the bottom.
+ */
+function midGapY(card: Anchor, columnPeers: Anchor[]): number {
+  const below = columnPeers
+    .filter((c) => c.id !== card.id && c.top >= card.bottom - 0.5)
+    .sort((a, b) => a.top - b.top)
+  if (below.length > 0) {
+    return (card.bottom + below[0].top) / 2
+  }
+
+  const sorted = [...columnPeers].sort((a, b) => a.top - b.top)
+  let gapSum = 0
+  let gapN = 0
+  for (let i = 0; i < sorted.length - 1; i++) {
+    const g = sorted[i + 1].top - sorted[i].bottom
+    if (g > 0.5) {
+      gapSum += g
+      gapN++
+    }
+  }
+  const gap = gapN > 0 ? gapSum / gapN : FALLBACK_GAP_PX
+  return card.bottom + gap / 2
+}
+
+/**
+ * Same-moment slice: primarily horizontal line across the category,
  * with short micro-staircase only among exact same-date peers (L→R).
  * Vertical risers live only in company gutters — meaning 「同一时刻」,
  * never a chrono succession through all history.
+ * Y is mid-gap below each peer card, not the card bottom border.
  */
 function momentSliceVertices(
   peers: Anchor[],
@@ -131,7 +165,6 @@ function momentSliceVertices(
 ): Pt[] {
   if (peers.length === 0) return []
 
-  // Left-to-right across company columns.
   const sorted = [...peers].sort(
     (a, b) => a.x - b.x || a.colLeft - b.colLeft || a.id.localeCompare(b.id),
   )
@@ -152,7 +185,6 @@ function momentSliceVertices(
   const leftX = EDGE_PAD
   const rightX = Math.max(EDGE_PAD + 1, containerW - EDGE_PAD)
 
-  // Span from category left edge at the leftmost peer's bottom Y.
   push(leftX, first.y)
   push(first.x, first.y)
 
@@ -174,22 +206,20 @@ function momentSliceVertices(
       continue
     }
 
-    // Different companies: short V only in the inter-column gutter.
     const gx = gutterBetween(a, b, cols)
     push(gx, a.y)
     push(gx, b.y)
     push(b.x, b.y)
   }
 
-  // Cap at category right edge at the rightmost peer's bottom Y.
   push(rightX, last.y)
   return out
 }
 
 /**
  * Intra-category same-moment bump line (SVG, pointer-events none).
- * Hover-only: one H-dominant dashed slice at the focus date, with short
- * gutter risers only among exact same-date peers. Not a chrono path.
+ * Hover → dashed (no mute). Click-pin → solid. Short gutter risers only
+ * among exact same-date peers. Not a chrono path.
  */
 export default function BumpConnectors({
   containerRef,
@@ -198,6 +228,7 @@ export default function BumpConnectors({
   active,
   focusDate,
   focusId = null,
+  solid = false,
 }: Props) {
   const [pts, setPts] = useState<Anchor[]>([])
   const [cols, setCols] = useState<ColBox[]>([])
@@ -232,7 +263,7 @@ export default function BumpConnectors({
       return
     }
 
-    const next: Anchor[] = []
+    const raw: Anchor[] = []
     for (let i = 0; i < orderedIds.length; i++) {
       const id = orderedIds[i]
       const el = root.querySelector<HTMLElement>(
@@ -242,6 +273,7 @@ export default function BumpConnectors({
       const r = el.getBoundingClientRect()
       const left = r.left - rootBox.left + root.scrollLeft
       const top = r.top - rootBox.top + root.scrollTop
+      const bottom = top + r.height
       const sub = el.closest('.cat-subcol')
       let colLeft = left
       let colRight = left + r.width
@@ -250,16 +282,34 @@ export default function BumpConnectors({
         colLeft = sr.left - rootBox.left + root.scrollLeft
         colRight = colLeft + sr.width
       }
-      next.push({
+      raw.push({
         id,
         date: orderedDates[i] ?? '',
         x: left + r.width / 2,
-        y: top + r.height,
+        // Temporary; rewritten to mid-gap below once column peers are known.
+        y: bottom,
+        top,
+        bottom,
         left,
         right: left + r.width,
         colLeft,
         colRight,
       })
+    }
+
+    // Group by company subcol, then place Y in the inter-card gap midpoint.
+    const byCol = new Map<string, Anchor[]>()
+    for (const a of raw) {
+      const key = `${a.colLeft.toFixed(1)}:${a.colRight.toFixed(1)}`
+      const list = byCol.get(key)
+      if (list) list.push(a)
+      else byCol.set(key, [a])
+    }
+    const next: Anchor[] = []
+    for (const group of byCol.values()) {
+      for (const a of group) {
+        next.push({ ...a, y: midGapY(a, group) })
+      }
     }
     setPts(next)
   }, [containerRef, orderedIds, orderedDates])
@@ -330,7 +380,7 @@ export default function BumpConnectors({
 
   return (
     <svg
-      className="bump-connectors"
+      className={`bump-connectors${solid ? ' is-solid' : ' is-dashed'}`}
       width={size.w}
       height={size.h}
       viewBox={`0 0 ${size.w} ${size.h}`}
@@ -342,7 +392,7 @@ export default function BumpConnectors({
         fill="none"
         stroke={STROKE}
         strokeWidth={STROKE_WIDTH}
-        strokeDasharray={DASH}
+        strokeDasharray={solid ? undefined : DASH}
         strokeLinecap="round"
         strokeLinejoin="round"
         vectorEffect="non-scaling-stroke"

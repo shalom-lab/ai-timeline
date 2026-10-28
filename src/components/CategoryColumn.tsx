@@ -19,14 +19,18 @@ type Props = {
   selectedId: string | null
   onSelect: (id: string | null) => void
   /**
-   * Show the same-moment dashed slice for this category (rail hover only).
+   * Show the same-moment slice for this category (hover dashed / pin solid).
    * Default hidden — only the active category gets the line.
    */
   bumpActive?: boolean
-  /** Focus date (YYYY-MM-DD): same-moment peers; after → optional 灰白. */
+  /** Focus date (YYYY-MM-DD): same-moment peers. */
   bumpFocusDate?: string | null
   /** Focus event id — preferred date source for the moment slice. */
   bumpFocusId?: string | null
+  /** Click-pin: solid stroke (hover uses dashed). */
+  bumpSolid?: boolean
+  /** Click-pin only: mute cards after focus date. Hover never mutes. */
+  bumpMuteFuture?: boolean
 }
 
 const ICONS: Record<Category, ReactNode> = {
@@ -106,6 +110,8 @@ export default function CategoryColumn({
   bumpActive = false,
   bumpFocusDate = null,
   bumpFocusId = null,
+  bumpSolid = false,
+  bumpMuteFuture = false,
 }: Props) {
   const theme = CATEGORY_THEME[category]
   const bodyRef = useRef<HTMLDivElement>(null)
@@ -159,7 +165,7 @@ export default function CategoryColumn({
     [orderedEvents],
   )
 
-  const muteFuture = bumpActive && !!bumpFocusDate
+  const muteFuture = bumpMuteFuture && !!bumpFocusDate
 
   return (
     <section
@@ -243,6 +249,7 @@ export default function CategoryColumn({
           active={bumpActive}
           focusDate={bumpFocusDate}
           focusId={bumpFocusId}
+          solid={bumpSolid}
         />
 
         {visibleGroups.length === 0 ? (
