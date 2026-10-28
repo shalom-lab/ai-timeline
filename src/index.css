@@ -1,5 +1,7 @@
 :root {
   --timeline-head-h: 2.55rem;
+  /* Category tab strip height (padding + btn); rail spacer stacks this + chip head. */
+  --board-tabs-h: 2.35rem;
   color-scheme: light;
   --bg: #f4f6fa;
   --surface: #ffffff;
@@ -285,16 +287,19 @@ a {
 }
 
 
-/* ─── Board category tabs (above board / above company chips) ─── */
+/* ─── Board category tabs (inside .board__main, above company chips) ─── */
 .board-tabs {
   display: flex;
   flex-wrap: wrap;
   align-items: flex-end;
   gap: 0.28rem;
-  padding: 0.4rem 0.85rem 0;
+  /* Align with .board__columns content (not over the left rail). */
+  padding: 0.4rem 0.5rem 0 0;
   background: var(--surface);
   border-bottom: 1px solid var(--border);
   flex-shrink: 0;
+  box-sizing: border-box;
+  min-height: var(--board-tabs-h, 2.35rem);
 }
 
 .board-tabs__btn {
@@ -353,7 +358,7 @@ a {
 }
 
 /* ─── Board ─── */
-/* Rail stays put in its grid cell; only .board__columns scrolls vertically. */
+/* Rail | main (tabs + columns). Rail owns the left column exclusively. */
 .board {
   flex: 1;
   display: grid;
@@ -361,7 +366,6 @@ a {
   gap: 0;
   min-height: 0;
   align-items: stretch;
-  /* Tabs strip sits above; rail flush under tabs. */
   padding: 0 0.75rem 1rem 0;
   overflow: hidden;
   scrollbar-width: thin;
@@ -371,14 +375,25 @@ a {
   --timeline-head-h: 0px;
 }
 
+/* Right cell: category tabs above scrolling columns. */
+.board__main {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+  height: 100%;
+  max-height: 100%;
+  overflow: hidden;
+}
 
 .board__columns {
   display: flex;
   gap: 0.65rem;
   min-width: 0;
   min-height: 0;
-  height: 100%;
-  max-height: 100%;
+  flex: 1 1 auto;
+  height: auto;
+  max-height: none;
   padding-right: 0.5rem;
   overflow-x: hidden;
   overflow-y: auto;
@@ -418,7 +433,8 @@ a {
 
 /* Match .cat-column__head height so rail starts under the same head band */
 .timeline-rail__head-spacer {
-  height: var(--timeline-head-h, 2.55rem);
+  /* Tabs (right cell) + chip head — keeps rail dates aligned with cards. */
+  height: calc(var(--board-tabs-h, 2.35rem) + var(--timeline-head-h, 2.55rem));
   flex-shrink: 0;
   box-sizing: border-box;
 }

@@ -403,25 +403,9 @@ export default function App() {
           query={filters.query}
         />
       ) : (
-        <>
-          <nav className="board-tabs" aria-label="分类切换">
-            {BOARD_TABS.map((t) => (
-              <button
-                key={t.id}
-                type="button"
-                className={`board-tabs__btn${activeTab === t.id ? ' is-active' : ''}`}
-                aria-current={activeTab === t.id ? 'page' : undefined}
-                onClick={() => onSelectTab(t.id)}
-              >
-                <span>{t.label}</span>
-                <em className="board-tabs__count">{tabCounts[t.id]}</em>
-              </button>
-            ))}
-          </nav>
-
-          <div
-            className={`board${boardHasChipHead ? '' : ' board--no-col-head'}`}
-          >
+        <div
+          className={`board${boardHasChipHead ? '' : ' board--no-col-head'}`}
+        >
           <TimelineRail
             events={railEvents}
             companies={companies}
@@ -433,58 +417,74 @@ export default function App() {
             frontierMode={activeTab === 'frontier'}
           />
 
-          <div className="board__columns">
-            {activeTab === 'frontier' ? (
-              <div className="board__col-slot board__col-slot--stack">
-                {byCategory.other.length > 0 ? (
+          <div className="board__main">
+            <nav className="board-tabs" aria-label="分类切换">
+              {BOARD_TABS.map((t) => (
+                <button
+                  key={t.id}
+                  type="button"
+                  className={`board-tabs__btn${activeTab === t.id ? ' is-active' : ''}`}
+                  aria-current={activeTab === t.id ? 'page' : undefined}
+                  onClick={() => onSelectTab(t.id)}
+                >
+                  <span>{t.label}</span>
+                  <em className="board-tabs__count">{tabCounts[t.id]}</em>
+                </button>
+              ))}
+            </nav>
+
+            <div className="board__columns">
+              {activeTab === 'frontier' ? (
+                <div className="board__col-slot board__col-slot--stack">
+                  {byCategory.other.length > 0 ? (
+                    <CategoryColumn
+                      category="other"
+                      events={byCategory.other}
+                      subFilter={subFilters.other}
+                      onSubFilter={(keys) =>
+                        setSubFilters((s) => ({ ...s, other: keys }))
+                      }
+                      bumpActive={false}
+                      omitTitle
+                      {...categoryColumnProps}
+                    />
+                  ) : null}
+                  <FrontierColumn
+                    months={frontierMonths}
+                    onSelectEvent={selectEventFromFrontier}
+                    omitTitle
+                  />
+                </div>
+              ) : (
+                <div className="board__col-slot">
                   <CategoryColumn
-                    category="other"
-                    events={byCategory.other}
-                    subFilter={subFilters.other}
+                    category={activeTab}
+                    events={byCategory[activeTab]}
+                    subFilter={subFilters[activeTab]}
                     onSubFilter={(keys) =>
-                      setSubFilters((s) => ({ ...s, other: keys }))
+                      setSubFilters((s) => ({ ...s, [activeTab]: keys }))
                     }
-                    bumpActive={false}
+                    bumpActive={bumpActive && bumpCategory === activeTab}
+                    bumpFocusDate={
+                      bumpActive && bumpCategory === activeTab
+                        ? bumpFocusDate
+                        : null
+                    }
+                    bumpFocusId={
+                      bumpActive && bumpCategory === activeTab
+                        ? bumpFocusId
+                        : null
+                    }
+                    bumpSolid={bumpPinned && bumpCategory === activeTab}
+                    bumpMuteFuture={bumpPinned && bumpCategory === activeTab}
                     omitTitle
                     {...categoryColumnProps}
                   />
-                ) : null}
-                <FrontierColumn
-                  months={frontierMonths}
-                  onSelectEvent={selectEventFromFrontier}
-                  omitTitle
-                />
-              </div>
-            ) : (
-              <div className="board__col-slot">
-                <CategoryColumn
-                  category={activeTab}
-                  events={byCategory[activeTab]}
-                  subFilter={subFilters[activeTab]}
-                  onSubFilter={(keys) =>
-                    setSubFilters((s) => ({ ...s, [activeTab]: keys }))
-                  }
-                  bumpActive={bumpActive && bumpCategory === activeTab}
-                  bumpFocusDate={
-                    bumpActive && bumpCategory === activeTab
-                      ? bumpFocusDate
-                      : null
-                  }
-                  bumpFocusId={
-                    bumpActive && bumpCategory === activeTab
-                      ? bumpFocusId
-                      : null
-                  }
-                  bumpSolid={bumpPinned && bumpCategory === activeTab}
-                  bumpMuteFuture={bumpPinned && bumpCategory === activeTab}
-                  omitTitle
-                  {...categoryColumnProps}
-                />
-              </div>
-            )}
+                </div>
+              )}
+            </div>
           </div>
         </div>
-        </>
       )}
     </div>
   )
