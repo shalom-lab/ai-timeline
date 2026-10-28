@@ -1,9 +1,11 @@
-import { useMemo, useState, useCallback, useEffect } from 'react'
+import { useMemo, useState, useCallback, useEffect, useRef } from 'react'
 import { timelineData, capabilityFrontierData, aiToolsData } from './data'
 import type { Category, TimelineEvent } from './types/timeline'
 import type { CapabilityMonth } from './types/capability'
 import { CATEGORY_LABEL_ZH } from './lib/labels'
 import { groupKeyForEvent } from './lib/group'
+import { isCurrentCalendarMonth, inDateWindow, type DateWindow } from './lib/calendar'
+import TimeWindow from './components/TimeWindow'
 import Header, { type Filters } from './components/Header'
 import TimelineRail from './components/TimelineRail'
 import CategoryColumn from './components/CategoryColumn'
@@ -55,11 +57,6 @@ function matchesQuery(e: TimelineEvent, q: string): boolean {
     .join(' ')
     .toLowerCase()
   return hay.includes(q)
-}
-
-/** Local calendar YYYY-MM (box / browser timezone; deploy expects UTC+8). */
-function localYearMonth(d = new Date()): string {
-  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`
 }
 
 function filterFrontierMonths(
@@ -130,25 +127,24 @@ export default function App() {
   const [hoverRailId, setHoverRailId] = useState<string | null>(null)
   /** Rail click-pin — solid same-moment line + 灰白 for later cards and rail below. */
   const [bumpPinId, setBumpPinId] = useState<string | null>(null)
-  /** 既往 = full history rail/board; 本月 = current calendar month only. */
+  /** 既往 = full history rail/board; 本月 = same calendar month across all years. */
   const [railMode, setRailMode] = useState<'history' | 'month'>('history')
+  const [dateWindow, setDateWindow] = useState<DateWindow | null>(null)
 
   const filtered = useMemo(() => {
     const q = filters.query.trim().toLowerCase()
-    const ym = localYearMonth()
     return events
       .filter((e) => matchesQuery(e, q))
-      .filter((e) => (railMode === 'month' ? e.date.startsWith(ym) : true))
+      .filter((e) => (railMode === 'month' ? isCurrentCalendarMonth(e.date) : inDateWindow(e.date, dateWindow)))
       .sort((a, b) => a.date.localeCompare(b.date))
-  }, [events, filters, railMode])
+  }, [events, filters, railMode, dateWindow])
 
   const frontierMonths = useMemo(() => {
     const q = filters.query.trim().toLowerCase()
     const months = filterFrontierMonths(capabilityFrontierData.months, q)
-    if (railMode !== 'month') return months
-    const ym = localYearMonth()
-    return months.filter((m) => m.month === ym)
-  }, [filters, railMode])
+    if (railMode !== 'month') return months.filter(m => inDateWindow(m.month, dateWindow))
+    return months.filter((m) => isCurrentCalendarMonth(m.month))
+  }, [filters, railMode, dateWindow])
 
   const byCategory = useMemo(() => {
     const map: Record<Category, TimelineEvent[]> = {
@@ -234,7 +230,7 @@ export default function App() {
   useEffect(() => {
     setHoverRailId(null)
     setBumpPinId(null)
-  }, [activeTab, railMode])
+  }, [activeTab, railMode, dateWindow])
 
   const handleRailModeChange = useCallback((mode: 'history' | 'month') => {
     setRailMode(mode)
@@ -370,6 +366,10 @@ export default function App() {
       ) {
         setActiveTab(ev.category)
       }
+      setFilters(DEFAULT_FILTERS)
+      setRailMode('history')
+      setDateWindow(null)
+      setSubFilters(EMPTY_SUB)
       setDetailId(id)
       requestAnimationFrame(() => focusCard(id))
     },
@@ -383,6 +383,11 @@ export default function App() {
     onPinMoment: handlePinMoment,
     onCloseDetail: handleCloseDetail,
   }
+
+  const boardScrollRef = useRef<HTMLDivElement>(null)
+  useEffect(() => {
+    boardScrollRef.current?.scrollTo({ top: 0, left: 0 })
+  }, [activeTab, railMode, dateWindow])
 
   const boardHasChipHead = activeTab !== 'frontier'
 
@@ -437,11 +442,13 @@ export default function App() {
               ))}
             </nav>
 
-            <div className="board__columns">
+            {railMode === 'history' && <TimeWindow value={dateWindow} onChange={setDateWindow} />}
+            <div className="board__columns" ref={boardScrollRef}>
               {activeTab === 'frontier' ? (
                 <div className="board__col-slot board__col-slot--stack">
                   <FrontierColumn
                     months={frontierMonths}
+                    allMonths={capabilityFrontierData.months}
                     onSelectEvent={selectEventFromFrontier}
                     omitTitle
                   />

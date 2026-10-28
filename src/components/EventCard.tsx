@@ -60,7 +60,7 @@ export default function EventCard({
         {
           ['--co' as string]: color,
           ['--co-soft' as string]: soft,
-          background: soft,
+
         } as CSSProperties
       }
       aria-expanded={detailOpen}

@@ -4,6 +4,7 @@ import { FRONTIER_LABEL_ZH, FRONTIER_THEME } from '../types/capability'
 
 type Props = {
   months: CapabilityMonth[]
+  allMonths?: CapabilityMonth[]
   onSelectEvent?: (id: string) => void
   /** Skip title band when the active board tab already names this panel. */
   omitTitle?: boolean
@@ -61,7 +62,7 @@ function CompareCard({
       <div className="frontier-compare__main">
         <div className="frontier-compare__cols">
           <div className="frontier-compare__col frontier-compare__col--before">
-            <span className="frontier-compare__label">之前</span>
+            <span className="frontier-compare__label">BEFORE · 原来的方式</span>
             <p className="frontier-compare__text">{s.before}</p>
           </div>
 
@@ -70,7 +71,7 @@ function CompareCard({
           </div>
 
           <div className="frontier-compare__col frontier-compare__col--after">
-            <span className="frontier-compare__label">之后</span>
+            <span className="frontier-compare__label">AFTER · 新的可能</span>
             <p className="frontier-compare__text">{s.after}</p>
             {s.detail ? <p className="frontier-compare__detail">{s.detail}</p> : null}
           </div>
@@ -91,51 +92,36 @@ function MonthCard({
   carried: CapabilityScenario[]
   onSelectEvent?: (id: string) => void
 }) {
-  const [carriedOpen, setCarriedOpen] = useState(false)
 
   return (
     <article className="frontier-month" data-frontier-month={month.month}>
       <header className="frontier-month__head">
         <time dateTime={month.month}>{formatMonthLabel(month.month)}</time>
-        <span className="frontier-month__new">+{month.new.length}</span>
+        <span className="frontier-month__new">+{month.new.length} 项新能力</span>
       </header>
       <p className="frontier-month__summary">{month.summary}</p>
 
-      <div className="frontier-month__section">
-        <div className="frontier-month__section-label">当月新增</div>
-        <ul className="frontier-month__list">
-          {month.new.map((s) => (
-            <CompareCard key={s.id} s={s} onSelectEvent={onSelectEvent} />
-          ))}
-        </ul>
-      </div>
-
-      {carried.length > 0 ? (
-        <div className="frontier-month__section frontier-month__section--carried">
-          <button
-            type="button"
-            className="frontier-month__carried-toggle"
-            aria-expanded={carriedOpen}
-            onClick={() => setCarriedOpen((v) => !v)}
-          >
-            <span aria-hidden>{carriedOpen ? '▾' : '▸'}</span>
-            既往已具备
-            <em>{carried.length}</em>
-          </button>
-          {carriedOpen ? (
-            <ul className="frontier-month__list frontier-month__list--carried">
-              {carried.map((s) => (
-                <CompareCard key={s.id} s={s} onSelectEvent={onSelectEvent} muted />
-              ))}
-            </ul>
-          ) : null}
+      <div className="frontier-month__panes-wrap">
+        <div className="frontier-month__panes">
+          <section className="frontier-pane frontier-pane--new" aria-label={`${month.month} 当月新增`}>
+            <header className="frontier-pane__head"><h3>当月新增 <span>{month.new.length}</span></h3><p>这一月，新的能力突破</p></header>
+            <ul className="frontier-month__list">{month.new.map(s => <CompareCard key={s.id} s={s} onSelectEvent={onSelectEvent} />)}</ul>
+          </section>
+          <section className="frontier-pane frontier-pane--history" aria-label={`${month.month} 既往已具备`}>
+            <header className="frontier-pane__head"><h3>既往已具备 <span>{carried.length}</span></h3><p>此前累计的能力 · 在下方独立滚动查看</p></header>
+            <div className="frontier-pane__scroll" tabIndex={0} role="region" aria-label={`${month.month} 历史能力滚动区`}>
+              {carried.length ? <ul className="frontier-month__list">{[...carried].reverse().map(s => <CompareCard key={s.id} s={s} onSelectEvent={onSelectEvent} muted />)}</ul> : <p className="frontier-pane__empty">这是收录的起点，尚无既往能力。</p>}
+            </div>
+          </section>
         </div>
-      ) : null}
+      </div>
     </article>
   )
 }
 
-export default function FrontierColumn({ months, onSelectEvent, omitTitle = false }: Props) {
+export default function FrontierColumn({ months, allMonths = months, onSelectEvent, omitTitle = false }: Props) {
+  const [newestFirst, setNewestFirst] = useState(true)
+  const displayedMonths = useMemo(() => [...months].sort((a, b) => newestFirst ? b.month.localeCompare(a.month) : a.month.localeCompare(b.month)), [months, newestFirst])
   const theme = FRONTIER_THEME
   const newCount = months.reduce((n, m) => n + m.new.length, 0)
 
@@ -143,12 +129,12 @@ export default function FrontierColumn({ months, onSelectEvent, omitTitle = fals
   const carriedByMonth = useMemo(() => {
     const map = new Map<string, CapabilityScenario[]>()
     const acc: CapabilityScenario[] = []
-    for (const m of months) {
+    for (const m of [...allMonths].sort((a, b) => a.month.localeCompare(b.month))) {
       map.set(m.month, [...acc])
       acc.push(...m.new)
     }
     return map
-  }, [months])
+  }, [allMonths])
 
   return (
     <section
@@ -174,11 +160,15 @@ export default function FrontierColumn({ months, onSelectEvent, omitTitle = fals
         </div>
       ) : null}
 
+      <div className="frontier-intro">
+        <div><span className="page-intro__eyebrow">HUMAN + AI</span><h2>从「做不到」到「做得到」</h2><p>左侧看当月新增，右侧对照此前已具备的能力。两侧均呈现原来与现在的变化。</p></div>
+        <label className="frontier-sort">时间顺序<select aria-label="能力边界时间顺序" value={newestFirst ? 'newest' : 'oldest'} onChange={e => setNewestFirst(e.target.value === 'newest')}><option value="newest">最新在前</option><option value="oldest">从起点开始</option></select></label>
+      </div>
       <div className="cat-column__body frontier-column__body">
         {months.length === 0 ? (
           <p className="cat-column__empty">暂无匹配场景</p>
         ) : (
-          months.map((m) => (
+          displayedMonths.map((m) => (
             <MonthCard
               key={m.month}
               month={m}

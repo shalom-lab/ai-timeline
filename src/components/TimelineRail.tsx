@@ -21,7 +21,7 @@ type Props = {
   layout: TimelineLayout
   /** When true, layout items are frontier month proxies (no TimelineEvent). */
   frontierMode?: boolean
-  /** 既往 = full history; 本月 = current calendar month only. */
+  /** 既往 = full history; 本月 = same calendar month across all years. */
   mode?: RailMode
   onModeChange?: (mode: RailMode) => void
 }
@@ -133,7 +133,7 @@ export default function TimelineRail({
             type="button"
             className={`timeline-rail__mode-btn${mode === 'history' ? ' is-active' : ''}`}
             aria-pressed={mode === 'history'}
-            title="既往：显示全部历史日期"
+            title="既往：可选择全部历史、近期或自定义时间窗"
             onClick={() => onModeChange?.('history')}
           >
             既往
@@ -142,10 +142,10 @@ export default function TimelineRail({
             type="button"
             className={`timeline-rail__mode-btn${mode === 'month' ? ' is-active' : ''}`}
             aria-pressed={mode === 'month'}
-            title="本月大事件：仅显示当月"
+            title="当月：查看所有年份中与当前月份相同的记录"
             onClick={() => onModeChange?.('month')}
           >
-            本月
+            当月
           </button>
         </div>
       </div>

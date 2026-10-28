@@ -26,10 +26,6 @@ export default function Header({
   onNavigate,
   toolsCount,
 }: Props) {
-  const openingBg =
-    meta.ui?.openingBg ??
-    'linear-gradient(145deg, #0B1220 0%, #1E1B4B 48%, #312E81 100%)'
-  const openingFg = meta.ui?.openingFg ?? '#F8FAFC'
   const searchPlaceholder =
     page === 'tools'
       ? '搜索公司、产品、形态、费用…'
@@ -37,13 +33,13 @@ export default function Header({
   const subtitle =
     page === 'tools'
       ? `当前可用产品 · ${toolsCount ?? '—'} 家`
-      : `自 ${meta.scopeStart} · v${meta.version} · ${eventCount} 条 · 更新 ${meta.updatedAt}`
+      : `始于 ${meta.scopeStart} · ${eventCount} 条里程碑`
 
   return (
     <header className="app-header">
       <div
         className="app-header__banner"
-        style={{ background: openingBg, color: openingFg }}
+
       >
         <div className="app-header__brand">
           <img
@@ -70,7 +66,7 @@ export default function Header({
             aria-current={page === 'timeline' ? 'page' : undefined}
             onClick={() => onNavigate('timeline')}
           >
-            纪年
+            探索纪年
           </button>
           <button
             type="button"
@@ -78,7 +74,7 @@ export default function Header({
             aria-current={page === 'tools' ? 'page' : undefined}
             onClick={() => onNavigate('tools')}
           >
-            AI工具
+            AI 工具库
           </button>
         </nav>
 
@@ -108,6 +104,14 @@ export default function Header({
             />
           </div>
         </div>
+      </div>
+      <div className="page-intro">
+        <div>
+          <span className="page-intro__eyebrow">THE AI ATLAS / {page === 'tools' ? 'DIRECTORY' : 'CHRONICLE'}</span>
+          <h2>{page === 'tools' ? '找到你的下一件 AI 工具。' : '看见 AI 演进的每一步。'}</h2>
+          <p>{page === 'tools' ? '从模型到产品，按使用场景发现、比较与探索。' : '串联模型、产品与科学突破，理解技术如何拓展我们的能力。'}</p>
+        </div>
+        <div className="page-intro__status"><span /> 数据更新 <time>{meta.updatedAt}</time></div>
       </div>
     </header>
   )

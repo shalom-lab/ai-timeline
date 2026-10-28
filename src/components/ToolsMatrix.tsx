@@ -279,12 +279,12 @@ export default function ToolsMatrix({ data, companies, query }: Props) {
 
   return (
     <div className="tools-page">
-      <nav className="tools-tabs" aria-label="形态切换">
+      <nav className="tools-tabs board-tabs" aria-label="形态切换">
         {TOOL_COLUMN_GROUPS.map((g) => (
           <button
             key={g.id}
             type="button"
-            className={`tools-tabs__btn${tab === g.id ? ' is-active' : ''}`}
+            className={`tools-tabs__btn board-tabs__btn${tab === g.id ? ' is-active' : ''}`}
             aria-current={tab === g.id ? 'page' : undefined}
             onClick={() => onSelectTab(g.id)}
           >
