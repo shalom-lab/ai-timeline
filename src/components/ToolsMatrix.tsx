@@ -52,6 +52,9 @@ function LetterAvatar({ name, color }: { name: string; color: string }) {
 }
 
 function ProductBlock({ p }: { p: ToolProduct }) {
+  const tip = p.note?.trim() || undefined
+  const nameTitle = tip ? `${p.name} — ${tip}` : undefined
+  const priceTitle = tip ? `${p.pricing} · ${tip}` : p.pricing
   return (
     <div className="tools-cell__item">
       <a
@@ -59,16 +62,16 @@ function ProductBlock({ p }: { p: ToolProduct }) {
         href={p.url}
         target="_blank"
         rel="noopener noreferrer"
+        title={nameTitle}
       >
         {p.name}
       </a>
-      <div className="tools-cell__pricing">
+      <div className="tools-cell__pricing" title={priceTitle}>
         {p.pricingUrl ? (
           <a
             href={p.pricingUrl}
             target="_blank"
             rel="noopener noreferrer"
-            title="官方定价"
           >
             {p.pricing}
           </a>
@@ -76,7 +79,6 @@ function ProductBlock({ p }: { p: ToolProduct }) {
           <span>{p.pricing}</span>
         )}
       </div>
-      {p.note ? <div className="tools-cell__note">{p.note}</div> : null}
     </div>
   )
 }
@@ -101,15 +103,13 @@ export default function ToolsMatrix({ data, companies, query }: Props) {
     })
   }, [data.rows, companies, q])
 
+  const wrapTitle = data.meta.disclaimer
+    ? `${data.meta.disclaimer} · v${data.meta.version} · ${data.meta.updatedAt}`
+    : `v${data.meta.version} · ${data.meta.updatedAt}`
+
   return (
     <div className="tools-page">
-      <p className="tools-page__hint">
-        {rows.length}/{data.rows.length} 家 · v{data.meta.version} ·{' '}
-        {data.meta.updatedAt}
-        {data.meta.disclaimer ? ` · ${data.meta.disclaimer}` : ''}
-      </p>
-
-      <div className="tools-table-wrap">
+      <div className="tools-table-wrap" title={wrapTitle}>
         <table className="tools-table">
           <thead>
             <tr>
@@ -146,13 +146,10 @@ export default function ToolsMatrix({ data, companies, query }: Props) {
                     <th scope="row" className="tools-table__co">
                       <div className="tools-row__co">
                         {hasCompanyLogo(co.id) ? (
-                          <span
-                            className="tools-row__avatar"
-                            style={{ background: co.colorSoft ?? '#EEF1F6' }}
-                          >
+                          <span className="tools-row__avatar">
                             <CompanyLogoImg
                               companyId={co.id}
-                              size={20}
+                              size={18}
                               title={name}
                             />
                           </span>
@@ -167,9 +164,7 @@ export default function ToolsMatrix({ data, companies, query }: Props) {
                       return (
                         <td key={col.id} className="tools-table__cell">
                           {products.length === 0 ? (
-                            <span className="tools-cell__empty" aria-hidden>
-                              ·
-                            </span>
+                            <span className="tools-cell__empty" aria-hidden />
                           ) : (
                             <div
                               className={
@@ -196,6 +191,9 @@ export default function ToolsMatrix({ data, companies, query }: Props) {
           </tbody>
         </table>
       </div>
+      {data.meta.disclaimer ? (
+        <p className="tools-page__foot">{data.meta.disclaimer}</p>
+      ) : null}
     </div>
   )
 }
