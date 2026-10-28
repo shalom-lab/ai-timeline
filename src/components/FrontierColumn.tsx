@@ -33,42 +33,51 @@ function CompareCard({
   onSelectEvent?: (id: string) => void
   muted?: boolean
 }) {
+  const links =
+    s.enabledBy && s.enabledBy.length > 0 && onSelectEvent ? (
+      <div className="frontier-compare__links">
+        {s.enabledBy.map((eid) => (
+          <button
+            key={eid}
+            type="button"
+            className="frontier-compare__link"
+            title={`定位事件 ${eid}`}
+            onClick={() => onSelectEvent(eid)}
+          >
+            关联事件
+          </button>
+        ))}
+      </div>
+    ) : null
+
   return (
     <li className={`frontier-compare${muted ? ' frontier-compare--muted' : ''}`}>
-      <div className="frontier-compare__top">
-        {s.emoji ? <span className="frontier-compare__emoji" aria-hidden>{s.emoji}</span> : null}
-        {s.enabledBy && s.enabledBy.length > 0 && onSelectEvent ? (
-          <div className="frontier-compare__links">
-            {s.enabledBy.map((eid) => (
-              <button
-                key={eid}
-                type="button"
-                className="frontier-compare__link"
-                title={`定位事件 ${eid}`}
-                onClick={() => onSelectEvent(eid)}
-              >
-                关联事件
-              </button>
-            ))}
+      {s.emoji ? (
+        <span className="frontier-compare__emoji" aria-hidden>
+          {s.emoji}
+        </span>
+      ) : null}
+
+      <div className="frontier-compare__main">
+        <div className="frontier-compare__cols">
+          <div className="frontier-compare__col frontier-compare__col--before">
+            <span className="frontier-compare__label">之前</span>
+            <p className="frontier-compare__text">{s.before}</p>
           </div>
-        ) : null}
-      </div>
 
-      <div className="frontier-compare__row frontier-compare__row--before">
-        <span className="frontier-compare__label">之前</span>
-        <p className="frontier-compare__text">{s.before}</p>
-      </div>
+          <div className="frontier-compare__divider" aria-hidden>
+            <span className="frontier-compare__arrow">→</span>
+          </div>
 
-      <div className="frontier-compare__divider" aria-hidden>
-        <span className="frontier-compare__arrow">↓</span>
-      </div>
+          <div className="frontier-compare__col frontier-compare__col--after">
+            <span className="frontier-compare__label">之后</span>
+            <p className="frontier-compare__text">{s.after}</p>
+            {s.detail ? <p className="frontier-compare__detail">{s.detail}</p> : null}
+          </div>
+        </div>
 
-      <div className="frontier-compare__row frontier-compare__row--after">
-        <span className="frontier-compare__label">之后</span>
-        <p className="frontier-compare__text">{s.after}</p>
+        {links}
       </div>
-
-      {s.detail ? <p className="frontier-compare__detail">{s.detail}</p> : null}
     </li>
   )
 }
@@ -164,11 +173,6 @@ export default function FrontierColumn({ months, onSelectEvent, omitTitle = fals
           </span>
         </div>
       ) : null}
-
-      <p className="frontier-column__hint">
-        工作场景快照：截止该月末，普通人+AI
-        已经能做的事。每张卡是「之前 → 之后」对比。「当月新增」默认展开；「既往已具备」默认折叠。
-      </p>
 
       <div className="cat-column__body frontier-column__body">
         {months.length === 0 ? (
