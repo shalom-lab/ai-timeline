@@ -1,7 +1,7 @@
 {
   "meta": {
     "name": "AI纪年",
-    "version": "0.7.3",
+    "version": "0.7.4",
     "scopeStart": "2022-11-30",
     "updatedAt": "2026-10-28",
     "locale": "zh-CN",
@@ -289,6 +289,9 @@
       "tags": [
         "gpt-3.5",
         "api"
+      ],
+      "capabilities": [
+        "chat"
       ]
     },
     {
@@ -342,6 +345,10 @@
       "tags": [
         "gpt-4",
         "multimodal"
+      ],
+      "capabilities": [
+        "chat",
+        "vision"
       ]
     },
     {
@@ -374,6 +381,9 @@
         "glm",
         "open-source",
         "foundation-model"
+      ],
+      "capabilities": [
+        "chat"
       ]
     },
     {
@@ -475,6 +485,9 @@
       "tags": [
         "llama",
         "open-weights"
+      ],
+      "capabilities": [
+        "chat"
       ]
     },
     {
@@ -508,6 +521,9 @@
       "tags": [
         "qwen",
         "open-weights"
+      ],
+      "capabilities": [
+        "chat"
       ]
     },
     {
@@ -532,6 +548,9 @@
       "tags": [
         "hunyuan",
         "tencent-cloud"
+      ],
+      "capabilities": [
+        "chat"
       ]
     },
     {
@@ -560,6 +579,9 @@
         "dalle",
         "foundation-model",
         "image-generation"
+      ],
+      "capabilities": [
+        "image"
       ]
     },
     {
@@ -641,6 +663,10 @@
       "tags": [
         "gemini",
         "multimodal"
+      ],
+      "capabilities": [
+        "chat",
+        "vision"
       ]
     },
     {
@@ -695,6 +721,9 @@
         "glm",
         "foundation-model",
         "agent"
+      ],
+      "capabilities": [
+        "chat"
       ]
     },
     {
@@ -722,6 +751,9 @@
       "tags": [
         "qwen",
         "open-weights"
+      ],
+      "capabilities": [
+        "chat"
       ]
     },
     {
@@ -778,6 +810,10 @@
       "tags": [
         "gemini-1.5",
         "long-context"
+      ],
+      "capabilities": [
+        "chat",
+        "vision"
       ]
     },
     {
@@ -803,6 +839,9 @@
         "foundation-model",
         "sora",
         "video-generation"
+      ],
+      "capabilities": [
+        "video"
       ]
     },
     {
@@ -832,6 +871,10 @@
         "opus",
         "sonnet",
         "haiku"
+      ],
+      "capabilities": [
+        "chat",
+        "vision"
       ]
     },
     {
@@ -886,6 +929,9 @@
         "grok",
         "open-weights",
         "moe"
+      ],
+      "capabilities": [
+        "chat"
       ]
     },
     {
@@ -911,6 +957,9 @@
         "abab",
         "moe",
         "long-context"
+      ],
+      "capabilities": [
+        "chat"
       ]
     },
     {
@@ -938,6 +987,9 @@
       "tags": [
         "llama",
         "open-weights"
+      ],
+      "capabilities": [
+        "chat"
       ]
     },
     {
@@ -1020,6 +1072,11 @@
       "tags": [
         "gpt-4o",
         "multimodal"
+      ],
+      "capabilities": [
+        "chat",
+        "vision",
+        "audio"
       ]
     },
     {
@@ -1051,6 +1108,11 @@
         "doubao",
         "foundation-model",
         "bytedance"
+      ],
+      "capabilities": [
+        "chat",
+        "image",
+        "audio"
       ]
     },
     {
@@ -1078,6 +1140,10 @@
       "tags": [
         "gemini-1.5",
         "flash"
+      ],
+      "capabilities": [
+        "chat",
+        "vision"
       ]
     },
     {
@@ -1105,6 +1171,9 @@
       "tags": [
         "qwen",
         "open-weights"
+      ],
+      "capabilities": [
+        "chat"
       ]
     },
     {
@@ -1133,6 +1202,10 @@
       "tags": [
         "claude-3.5",
         "sonnet"
+      ],
+      "capabilities": [
+        "chat",
+        "vision"
       ]
     },
     {
@@ -1190,6 +1263,9 @@
       "tags": [
         "llama-3.1",
         "405b"
+      ],
+      "capabilities": [
+        "chat"
       ]
     },
     {
@@ -1216,6 +1292,10 @@
       ],
       "tags": [
         "grok-2"
+      ],
+      "capabilities": [
+        "chat",
+        "vision"
       ]
     },
     {
@@ -1244,6 +1324,10 @@
         "video-generation",
         "multimodal",
         "hailuo"
+      ],
+      "capabilities": [
+        "video",
+        "audio"
       ]
     },
     {
@@ -1268,6 +1352,10 @@
       "tags": [
         "reasoning",
         "o1"
+      ],
+      "capabilities": [
+        "chat",
+        "reasoning"
       ]
     },
     {
@@ -1294,6 +1382,9 @@
       ],
       "tags": [
         "qwen2.5"
+      ],
+      "capabilities": [
+        "chat"
       ]
     },
     {
@@ -1322,6 +1413,10 @@
         "llama-3.2",
         "vision",
         "edge"
+      ],
+      "capabilities": [
+        "chat",
+        "vision"
       ]
     },
     {
@@ -1349,6 +1444,10 @@
       "tags": [
         "claude-3.5",
         "computer-use"
+      ],
+      "capabilities": [
+        "chat",
+        "vision"
       ]
     },
     {
@@ -1402,6 +1501,11 @@
       "tags": [
         "o1",
         "reasoning"
+      ],
+      "capabilities": [
+        "chat",
+        "reasoning",
+        "vision"
       ]
     },
     {
@@ -1429,6 +1533,10 @@
       "tags": [
         "gemini-2.0",
         "flash"
+      ],
+      "capabilities": [
+        "chat",
+        "vision"
       ]
     },
     {
@@ -1484,6 +1592,9 @@
       ],
       "tags": [
         "deepseek-v3"
+      ],
+      "capabilities": [
+        "chat"
       ]
     },
     {
@@ -1512,6 +1623,10 @@
         "reasoning",
         "open-weights",
         "r1"
+      ],
+      "capabilities": [
+        "chat",
+        "reasoning"
       ]
     },
     {
@@ -1541,6 +1656,10 @@
         "seed",
         "moe",
         "foundation-model"
+      ],
+      "capabilities": [
+        "chat",
+        "vision"
       ]
     },
     {
@@ -1594,6 +1713,10 @@
       "tags": [
         "o3",
         "reasoning"
+      ],
+      "capabilities": [
+        "chat",
+        "reasoning"
       ]
     },
     {
@@ -1621,6 +1744,10 @@
       "tags": [
         "gemini-2.0",
         "flash"
+      ],
+      "capabilities": [
+        "chat",
+        "vision"
       ]
     },
     {
@@ -1649,6 +1776,11 @@
       "tags": [
         "claude-3.7",
         "reasoning"
+      ],
+      "capabilities": [
+        "chat",
+        "reasoning",
+        "vision"
       ]
     },
     {
@@ -1705,6 +1837,10 @@
       ],
       "tags": [
         "llama-4"
+      ],
+      "capabilities": [
+        "chat",
+        "vision"
       ]
     },
     {
@@ -1794,6 +1930,11 @@
         "claude-4",
         "opus",
         "sonnet"
+      ],
+      "capabilities": [
+        "chat",
+        "reasoning",
+        "vision"
       ]
     },
     {

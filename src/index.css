@@ -797,6 +797,33 @@ a {
   color: #2563eb;
 }
 
+.event-card__caps {
+  list-style: none;
+  margin: 0.4rem 0 0;
+  padding: 0.35rem 0 0;
+  border-top: 1px solid color-mix(in srgb, var(--co) 12%, transparent);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.28rem;
+  align-items: center;
+}
+
+.event-card__cap {
+  display: inline-grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  color: color-mix(in srgb, var(--co) 75%, #334155);
+  background: color-mix(in srgb, var(--co) 10%, #fff);
+  border: 1px solid color-mix(in srgb, var(--co) 18%, transparent);
+}
+
+.event-card.is-future .event-card__caps {
+  opacity: 0.7;
+  filter: grayscale(0.6);
+}
+
 .event-card__main {
   display: flex;
   gap: 0.55rem;

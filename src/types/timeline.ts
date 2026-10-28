@@ -40,6 +40,33 @@ export interface Source {
   publishedAt?: string
 }
 
+/** Model modality/capability chips on 大模型 EventCards (release-accurate). */
+export type ModelCapability =
+  | 'chat'
+  | 'reasoning'
+  | 'image'
+  | 'video'
+  | 'vision'
+  | 'audio'
+
+export const MODEL_CAPABILITY_ORDER: readonly ModelCapability[] = [
+  'chat',
+  'reasoning',
+  'image',
+  'video',
+  'vision',
+  'audio',
+] as const
+
+export const MODEL_CAPABILITY_LABEL_ZH: Record<ModelCapability, string> = {
+  chat: '对话',
+  reasoning: '思考',
+  image: '图像',
+  video: '视频',
+  vision: '视觉',
+  audio: '语音',
+}
+
 export interface TimelineEvent {
   /** Stable kebab-case id, e.g. openai-chatgpt-research-preview-2022-11-30 */
   id: string
@@ -62,7 +89,13 @@ export interface TimelineEvent {
   sources: Source[]
   relatedIds?: string[]
   tags?: string[]
+  /**
+   * Optional modality chips for category === 'model' only.
+   * Only list capabilities the release actually had; omit rather than invent.
+   */
+  capabilities?: ModelCapability[]
 }
+
 
 export interface Company {
   id: string

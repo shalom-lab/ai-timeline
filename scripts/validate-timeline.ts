@@ -49,6 +49,14 @@ const EVENT_TYPES = new Set([
   'other',
 ])
 const DATE_STATUS = new Set(['exact', 'approximate', 'unverified'])
+const MODEL_CAPS = new Set([
+  'chat',
+  'reasoning',
+  'image',
+  'video',
+  'vision',
+  'audio',
+])
 
 function main() {
   const errors: string[] = []
@@ -168,6 +176,21 @@ function validateEvent(
   }
   if (!e.company?.trim()) push(`${e.id}: empty company`)
   if (!EVENT_TYPES.has(e.eventType)) push(`${e.id}: bad eventType`)
+  if (e.capabilities != null) {
+    if (!Array.isArray(e.capabilities)) {
+      push(`${e.id}: capabilities must be an array`)
+    } else {
+      if (e.category !== 'model' && e.capabilities.length > 0) {
+        push(`${e.id}: capabilities only allowed when category === 'model'`)
+      }
+      const seen = new Set<string>()
+      for (const c of e.capabilities) {
+        if (!MODEL_CAPS.has(c)) push(`${e.id}: bad capability ${c}`)
+        if (seen.has(c)) push(`${e.id}: duplicate capability ${c}`)
+        seen.add(c)
+      }
+    }
+  }
   if (!Array.isArray(e.sources) || e.sources.length < 1) {
     push(`${e.id}: need >=1 source`)
   } else {

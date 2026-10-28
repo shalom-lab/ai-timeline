@@ -2,7 +2,7 @@ import { useRef, type CSSProperties } from 'react'
 import type { Company, TimelineEvent } from '../types/timeline'
 import { EVENT_TYPE_COLOR, EVENT_TYPE_LABEL_ZH, CATEGORY_THEME } from '../lib/labels'
 import { companyColor } from '../lib/company'
-import { CompanyAvatar, CardMainIcon } from '../lib/icons'
+import { CompanyAvatar, CardMainIcon, ModelCapabilityIcons } from '../lib/icons'
 import DetailPopover from './DetailPopover'
 
 type Props = {
@@ -89,6 +89,9 @@ export default function EventCard({
           </a>
         ) : null}
       </footer>
+      {event.category === 'model' ? (
+        <ModelCapabilityIcons capabilities={event.capabilities} />
+      ) : null}
 
       {selected ? (
         <DetailPopover

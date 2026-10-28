@@ -148,6 +148,22 @@ interface TimelineData {
 | `product` | `string` | 否 | 更细的产品或型号名 |
 | `relatedIds` | `string[]` | 否 | 相关事件 `id`（前序版本、同日捆绑发布中的另一条等） |
 | `tags` | `string[]` | 否 | 自由小写短标签，便于筛选；不替代正式枚举 |
+| `capabilities` | `ModelCapability[]` | 否 | **仅** `category === 'model'`：该次发布实际具备的模态/能力芯片。不确定则省略，勿臆造 |
+
+#### `capabilities`（大模型能力芯片）
+
+枚举（展示序固定）：
+
+| 值 | 中文 tooltip | 含义 |
+| --- | --- | --- |
+| `chat` | 对话 | 文本对话 / 指令跟随 |
+| `reasoning` | 思考 | 显式长链推理（o1 / R1 / extended thinking 等） |
+| `image` | 图像 | 文生图 / 图像生成 |
+| `video` | 视频 | 文生视频 / 视频生成 |
+| `vision` | 视觉 | 图像理解 / 视觉输入（非生成） |
+| `audio` | 语音 | 原生语音输入或输出 |
+
+UI：大模型 EventCard **底部**显示小图标行；产品等其他一级分类不渲染此行。
 
 ### 4.5 `sources`（来源，至少 1 条）
 
@@ -184,6 +200,7 @@ interface Source {
 7. `relatedIds` 若存在，须指向同文件内已有 `id`。
 8. 每个 `companies[]` 必须有合法 `#RRGGBB` 的 `color`；`colorSoft` 若存在同为 hex。
 9. `meta.ui.openingBg` 必须非空（开篇背景）。
+10. `capabilities` 若存在：须为上述枚举子集、无重复；非 `model` 事件不得带非空 `capabilities`。
 
 ---
 
@@ -218,6 +235,8 @@ interface Source {
 时间线 `meta.version` `0.7.0`。
 
 相对 v0.7：补录 Codex / 智谱 GLM / Cursor / Grok iOS / OpenClaw / QoderWork / WorkBuddy 等可核验节点；概念列取消强制主题 chips。`meta.version` `0.7.2`。
+
+相对 v0.7.3：`TimelineEvent` 新增可选 `capabilities?: ModelCapability[]`（仅大模型卡片底部能力图标：对话/思考/图像/视频/视觉/语音）；种子按发布事实 best-effort 标注。时间线 `meta.version` `0.7.4`。
 
 能力边界数据集 `0.2.0`：`workflows` → `new[]` 工作场景；UI 累积「既往已具备」默认折叠。
 

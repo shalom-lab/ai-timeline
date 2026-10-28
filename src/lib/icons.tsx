@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react'
-import type { TimelineEvent } from '../types/timeline'
+import type { ModelCapability, TimelineEvent } from '../types/timeline'
+import { MODEL_CAPABILITY_LABEL_ZH, MODEL_CAPABILITY_ORDER } from '../types/timeline'
 import { resolveCompany } from './company'
 import type { Company } from '../types/timeline'
 
@@ -220,5 +221,80 @@ export function CardMainIcon({
     >
       {inner}
     </span>
+  )
+}
+
+
+/** Small inline SVGs for model capability chips (lucide-ish). */
+function CapIcon({ kind, size = 12 }: { kind: ModelCapability; size?: number }) {
+  const s = { width: size, height: size, viewBox: '0 0 24 24', fill: 'none' as const }
+  const stroke = { stroke: 'currentColor', strokeWidth: 2, strokeLinecap: 'round' as const, strokeLinejoin: 'round' as const }
+  switch (kind) {
+    case 'chat':
+      return (
+        <svg {...s} aria-hidden>
+          <path d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4z" {...stroke} />
+        </svg>
+      )
+    case 'reasoning':
+      return (
+        <svg {...s} aria-hidden>
+          <circle cx="12" cy="12" r="3" {...stroke} />
+          <path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4" {...stroke} />
+        </svg>
+      )
+    case 'image':
+      return (
+        <svg {...s} aria-hidden>
+          <rect x="3" y="5" width="18" height="14" rx="2" {...stroke} />
+          <circle cx="9" cy="11" r="1.6" fill="currentColor" />
+          <path d="M3 16l5-4 4 3 3-2 6 4" {...stroke} />
+        </svg>
+      )
+    case 'video':
+      return (
+        <svg {...s} aria-hidden>
+          <rect x="3" y="6" width="13" height="12" rx="2" {...stroke} />
+          <path d="M16 10l5-3v10l-5-3z" {...stroke} />
+        </svg>
+      )
+    case 'vision':
+      return (
+        <svg {...s} aria-hidden>
+          <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z" {...stroke} />
+          <circle cx="12" cy="12" r="3" {...stroke} />
+        </svg>
+      )
+    case 'audio':
+      return (
+        <svg {...s} aria-hidden>
+          <path d="M12 3v11" {...stroke} />
+          <rect x="9" y="3" width="6" height="11" rx="3" {...stroke} />
+          <path d="M5 11a7 7 0 0 0 14 0M12 18v3" {...stroke} />
+        </svg>
+      )
+  }
+}
+
+/** Compact capability icon row for category === 'model' EventCards. */
+export function ModelCapabilityIcons({
+  capabilities,
+}: {
+  capabilities?: ModelCapability[]
+}): ReactNode {
+  if (!capabilities?.length) return null
+  const order = new Map(MODEL_CAPABILITY_ORDER.map((c, i) => [c, i]))
+  const sorted = [...capabilities].sort(
+    (a, b) => (order.get(a) ?? 99) - (order.get(b) ?? 99),
+  )
+  return (
+    <ul className="event-card__caps" aria-label="模型能力">
+      {sorted.map((c) => (
+        <li key={c} className="event-card__cap" title={MODEL_CAPABILITY_LABEL_ZH[c]} data-cap={c}>
+          <CapIcon kind={c} />
+          <span className="sr-only">{MODEL_CAPABILITY_LABEL_ZH[c]}</span>
+        </li>
+      ))}
+    </ul>
   )
 }
