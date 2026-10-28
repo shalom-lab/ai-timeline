@@ -321,7 +321,9 @@ a {
   transition: background 0.12s ease, color 0.12s ease, border-color 0.12s ease;
   white-space: nowrap;
   position: relative;
+  /* Overlap nav border-bottom; inactive sit on the rule, active breaks it */
   margin-bottom: -1px;
+  z-index: 0;
 }
 
 .board-tabs__btn:hover {
@@ -330,10 +332,12 @@ a {
 }
 
 .board-tabs__btn.is-active {
-  background: #fff;
+  background: var(--surface);
   color: #0f766e;
   border-color: var(--border);
-  border-bottom-color: #fff;
+  /* Interrupt .board-tabs floor line under the selected tab only */
+  border-bottom-color: transparent;
+  z-index: 1;
 }
 
 .board-tabs__count {
@@ -1572,9 +1576,9 @@ a {
 .tools-tabs {
   display: flex;
   flex-wrap: wrap;
-  align-items: center;
+  align-items: flex-end;
   gap: 0.28rem;
-  padding: 0.15rem 0 0.35rem;
+  padding: 0.15rem 0 0;
   margin-bottom: 0.35rem;
   border-bottom: 1px solid var(--border);
   flex-shrink: 0;
@@ -1589,7 +1593,7 @@ a {
   background: #f1f5f9;
   color: #64748b;
   /* Same rectangular language as .board-tabs__btn */
-  border-radius: 6px;
+  border-radius: 6px 6px 0 0;
   padding: 0.3rem 0.85rem;
   font-size: 0.78rem;
   font-weight: 650;
@@ -1597,6 +1601,9 @@ a {
   cursor: pointer;
   line-height: 1.2;
   transition: background 0.12s ease, color 0.12s ease, border-color 0.12s ease;
+  position: relative;
+  margin-bottom: -1px;
+  z-index: 0;
 }
 
 .tools-tabs__btn:hover {
@@ -1605,9 +1612,11 @@ a {
 }
 
 .tools-tabs__btn.is-active {
-  background: #fff;
+  background: var(--surface);
   color: #0f766e;
   border-color: var(--border);
+  border-bottom-color: transparent;
+  z-index: 1;
 }
 
 .tools-page__foot {
@@ -1875,6 +1884,7 @@ a {
     background: color-mix(in srgb, var(--surface, #0f172a) 80%, #1e293b);
     color: #f8fafc;
     border-color: color-mix(in srgb, var(--border) 70%, #475569);
+    border-bottom-color: transparent;
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
   }
 

@@ -1,6 +1,6 @@
 /** AI Timeline — core data types. Keep in sync with docs/DATA.md and data/timeline.json. */
 
-/** Four primary categories. Board categories: 大模型 → 产品 → 科学 → 其他; UI tabs: 大模型 / 产品 / 科学 / 能力边界 (other sits in frontier tab). */
+/** Four primary categories. Board categories: 大模型 → 产品 → 科学 → 其他; UI tabs: 大模型 / 产品 / 科学 / 能力边界 (frontier tab is capability snapshots only). */
 export type Category = 'model' | 'product' | 'science' | 'other'
 
 export type ProductSubcategory =

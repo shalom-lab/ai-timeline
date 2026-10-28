@@ -1924,7 +1924,7 @@
       "dateStatus": "exact",
       "title": "开源 Model Context Protocol（MCP）",
       "summary": "Anthropic 发布并开源 Model Context Protocol（MCP），提出连接 AI 助手与数据源/工具的开放标准：含规范与 SDK、Claude Desktop 本地 MCP server 支持，以及开源 MCP server 仓库。",
-      "category": "other",
+      "category": "product",
       "company": "Anthropic",
       "series": "MCP",
       "product": "Model Context Protocol",
@@ -1941,7 +1941,8 @@
         "mcp",
         "protocol",
         "tooling"
-      ]
+      ],
+      "productSubcategory": "dev_platform"
     },
     {
       "id": "openai-o1-ga-2024-12-05",
@@ -3393,7 +3394,7 @@
       "dateStatus": "exact",
       "title": "提出长程 Agent Harness 实践",
       "summary": "Anthropic 工程博客发表 Effective harnesses for long-running agents，正式以 harness 描述跨多上下文窗口的长程 agent 运行骨架（initializer + coding agent 与持久交接产物），推动「agent harness」成为可复述的工程概念。",
-      "category": "other",
+      "category": "product",
       "company": "Anthropic",
       "series": "Agent Harness",
       "product": "Long-running agent harness",
@@ -3410,7 +3411,8 @@
         "harness",
         "agent",
         "agent-harness"
-      ]
+      ],
+      "productSubcategory": "agent"
     },
     {
       "id": "deepseek-v3-2-2025-12-01",

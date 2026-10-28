@@ -31,7 +31,7 @@ const EMPTY_SUB: Record<Category, string[]> = {
   other: [],
 }
 
-/** 4 tabs: 大模型 / 产品 / 科学 / 能力边界 (其他 events live inside 能力边界). */
+/** 4 tabs: 大模型 / 产品 / 科学 / 能力边界 (frontier-only; no timeline event cards mixed in). */
 type BoardTab = 'model' | 'product' | 'science' | 'frontier'
 
 const BOARD_TABS: readonly { id: BoardTab; label: string }[] = [
@@ -174,14 +174,7 @@ export default function App() {
    */
   const railSources = useMemo((): LayoutSource[] => {
     if (activeTab === 'frontier') {
-      const frontier = frontierMonthsToLayoutSources(frontierMonths)
-      const otherVisible = visibleCategoryEvents(
-        'other',
-        byCategory.other,
-        subFilters.other,
-        companies,
-      )
-      return [...otherVisible, ...frontier]
+      return frontierMonthsToLayoutSources(frontierMonths)
     }
     return visibleCategoryEvents(
       activeTab,
@@ -198,12 +191,8 @@ export default function App() {
 
   const railEvents = useMemo((): TimelineEvent[] => {
     if (activeTab === 'frontier') {
-      return visibleCategoryEvents(
-        'other',
-        byCategory.other,
-        subFilters.other,
-        companies,
-      )
+      // 能力边界 rail is month markers only (no timeline event cards).
+      return []
     }
     return visibleCategoryEvents(
       activeTab,
@@ -356,16 +345,13 @@ export default function App() {
   const selectEventFromFrontier = useCallback(
     (id: string) => {
       const ev = events.find((e) => e.id === id)
-      if (ev) {
-        if (ev.category === 'other') {
-          setActiveTab('frontier')
-        } else if (
-          ev.category === 'model' ||
+      if (
+        ev &&
+        (ev.category === 'model' ||
           ev.category === 'product' ||
-          ev.category === 'science'
-        ) {
-          setActiveTab(ev.category)
-        }
+          ev.category === 'science')
+      ) {
+        setActiveTab(ev.category)
       }
       setDetailId(id)
       requestAnimationFrame(() => focusCard(id))
@@ -381,8 +367,7 @@ export default function App() {
     onCloseDetail: handleCloseDetail,
   }
 
-  const boardHasChipHead =
-    activeTab !== 'frontier' || byCategory.other.length > 0
+  const boardHasChipHead = activeTab !== 'frontier'
 
   return (
     <div className="app-shell">
@@ -436,19 +421,6 @@ export default function App() {
             <div className="board__columns">
               {activeTab === 'frontier' ? (
                 <div className="board__col-slot board__col-slot--stack">
-                  {byCategory.other.length > 0 ? (
-                    <CategoryColumn
-                      category="other"
-                      events={byCategory.other}
-                      subFilter={subFilters.other}
-                      onSubFilter={(keys) =>
-                        setSubFilters((s) => ({ ...s, other: keys }))
-                      }
-                      bumpActive={false}
-                      omitTitle
-                      {...categoryColumnProps}
-                    />
-                  ) : null}
                   <FrontierColumn
                     months={frontierMonths}
                     onSelectEvent={selectEventFromFrontier}

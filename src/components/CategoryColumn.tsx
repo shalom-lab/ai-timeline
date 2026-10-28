@@ -31,7 +31,7 @@ type Props = {
   bumpSolid?: boolean
   /** Click-pin only: mute cards after focus date. Hover never mutes. */
   bumpMuteFuture?: boolean
-  /** Hide the category title band (e.g. compact「其他」block under 能力边界). */
+  /** Hide the category title band (Tab already names the category). */
   hideHeader?: boolean
   /**
    * Skip the redundant category title/count row (tabs already name the panel).
