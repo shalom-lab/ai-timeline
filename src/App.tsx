@@ -1,108 +1,220 @@
+import { useMemo, useState, useCallback, useEffect } from 'react'
 import { timelineData } from './data'
-import type { Company } from './types/timeline'
-import { CATEGORY_LABEL_ZH } from './types/timeline'
+import type {
+  Category,
+  EventType,
+  ProductSubcategory,
+  TimelineEvent,
+} from './types/timeline'
+import { BOARD_CATEGORY_ORDER } from './lib/labels'
+import Header, { type Filters } from './components/Header'
+import TimelineRail from './components/TimelineRail'
+import CategoryColumn from './components/CategoryColumn'
+import DetailDrawer from './components/DetailDrawer'
 
-function resolveCompany(
-  companies: Company[],
-  name: string,
-): Company | undefined {
-  const lower = name.toLowerCase()
-  return companies.find(
-    (c) =>
-      c.name.toLowerCase() === lower ||
-      c.id === lower ||
-      c.aliases?.some((a) => a.toLowerCase() === lower),
-  )
+const DEFAULT_FILTERS: Filters = {
+  query: '',
+  year: 'all',
+  company: 'all',
+  category: 'all',
+  productSubcategory: 'all',
+  eventType: 'all',
 }
 
-/** Stubby UI — data layer first; real timeline visualization comes later. */
+function matchesQuery(e: TimelineEvent, q: string): boolean {
+  if (!q) return true
+  const hay = [
+    e.title,
+    e.summary,
+    e.company,
+    e.series ?? '',
+    e.product ?? '',
+    ...(e.tags ?? []),
+    ...e.sources.map((s) => s.title),
+  ]
+    .join(' ')
+    .toLowerCase()
+  return hay.includes(q)
+}
+
 export default function App() {
   const { meta, companies, events } = timelineData
-  const sorted = [...events].sort((a, b) => a.date.localeCompare(b.date))
-  const ui = meta.ui
-  const openingBg =
-    ui?.openingBg ??
-    'linear-gradient(145deg, #0B1220 0%, #1E1B4B 48%, #312E81 100%)'
-  const openingFg = ui?.openingFg ?? '#F8FAFC'
+  const [filters, setFilters] = useState<Filters>(DEFAULT_FILTERS)
+  const [selectedId, setSelectedId] = useState<string | null>(null)
+  const [collapsed, setCollapsed] = useState<Record<Category, boolean>>({
+    model: false,
+    product: false,
+    concept: false,
+    other: false,
+  })
+  const [subFilters, setSubFilters] = useState<Record<Category, string>>({
+    model: 'all',
+    product: 'all',
+    concept: 'all',
+    other: 'all',
+  })
+
+  const years = useMemo(() => {
+    const set = new Set(events.map((e) => e.date.slice(0, 4)))
+    return [...set].sort()
+  }, [events])
+
+  const eventTypesPresent = useMemo(() => {
+    const set = new Set(events.map((e) => e.eventType))
+    return [...set] as EventType[]
+  }, [events])
+
+  const productSubsPresent = useMemo(() => {
+    const set = new Set(
+      events
+        .map((e) => e.productSubcategory)
+        .filter((x): x is ProductSubcategory => Boolean(x)),
+    )
+    return [...set]
+  }, [events])
+
+  const filtered = useMemo(() => {
+    const q = filters.query.trim().toLowerCase()
+    return events
+      .filter((e) => {
+        if (filters.year !== 'all' && !e.date.startsWith(filters.year)) {
+          return false
+        }
+        if (filters.company !== 'all' && e.company !== filters.company) {
+          return false
+        }
+        if (filters.category !== 'all' && e.category !== filters.category) {
+          return false
+        }
+        if (
+          filters.productSubcategory !== 'all' &&
+          e.productSubcategory !== filters.productSubcategory
+        ) {
+          return false
+        }
+        if (filters.eventType !== 'all' && e.eventType !== filters.eventType) {
+          return false
+        }
+        if (!matchesQuery(e, q)) return false
+        return true
+      })
+      .sort((a, b) => a.date.localeCompare(b.date))
+  }, [events, filters])
+
+  const byCategory = useMemo(() => {
+    const map: Record<Category, TimelineEvent[]> = {
+      model: [],
+      product: [],
+      concept: [],
+      other: [],
+    }
+    for (const e of filtered) {
+      map[e.category].push(e)
+    }
+    return map
+  }, [filtered])
+
+  const selected = useMemo(
+    () => filtered.find((e) => e.id === selectedId) ?? null,
+    [filtered, selectedId],
+  )
+
+  // Drop selection if filtered out
+  useEffect(() => {
+    if (selectedId && !filtered.some((e) => e.id === selectedId)) {
+      setSelectedId(null)
+    }
+  }, [filtered, selectedId])
+
+  const patchFilters = useCallback((patch: Partial<Filters>) => {
+    setFilters((f) => ({ ...f, ...patch }))
+  }, [])
+
+  const toggleCollapse = useCallback((cat: Category) => {
+    setCollapsed((c) => {
+      const next = { ...c, [cat]: !c[cat] }
+      // Never collapse all four — keep at least one open for flex focus UX
+      if (BOARD_CATEGORY_ORDER.every((k) => next[k])) {
+        return c
+      }
+      return next
+    })
+  }, [])
+
+  const focusOnly = useCallback((cat: Category) => {
+    setCollapsed({
+      model: cat !== 'model',
+      product: cat !== 'product',
+      concept: cat !== 'concept',
+      other: cat !== 'other',
+    })
+  }, [])
+
+  const expandedCount = BOARD_CATEGORY_ORDER.filter((c) => !collapsed[c]).length
 
   return (
-    <>
-      <header
-        className="hero"
-        style={{ background: openingBg, color: openingFg }}
-      >
-        <div className="hero-inner">
-          <h1>{meta.name}</h1>
-          <p className="hero-scope">
-            范围自 {meta.scopeStart} · v{meta.version} · {events.length}{' '}
-            条事件 · 数据更新 {meta.updatedAt}
-          </p>
-          <p className="hero-blurb">
-            ChatGPT 公众研究预览以来的 AI 里程碑：概念 → 大模型 → 产品 → 其他
-          </p>
-        </div>
-      </header>
+    <div className={`app-shell${selected ? ' has-drawer' : ''}`}>
+      <Header
+        meta={meta}
+        years={years}
+        companies={companies}
+        eventTypesPresent={eventTypesPresent}
+        productSubsPresent={productSubsPresent}
+        filters={filters}
+        onChange={patchFilters}
+        eventCount={filtered.length}
+      />
 
-      <main>
-        <div className="stub">
-          <strong>占位界面</strong>
-          <p style={{ margin: '0.35rem 0 0' }}>
-            颜色映射在公司级（companies[].color）；一级分类无色值。请阅读{' '}
-            <code>docs/DATA.md</code>。
-          </p>
-          <div className="company-pills">
-            {companies.map((c) => (
-              <span
-                key={c.id}
-                className="company-pill"
-                style={{
-                  background: c.colorSoft ?? '#eef1f6',
-                  borderColor: c.color,
-                  color: c.color,
-                }}
-                title={c.id}
-              >
-                <i style={{ background: c.color }} />
-                {c.name}
-              </span>
-            ))}
-          </div>
+      <div className="board">
+        <TimelineRail
+          events={filtered}
+          companies={companies}
+          selectedId={selectedId}
+          onSelect={setSelectedId}
+        />
+
+        <div
+          className="board__columns"
+          style={{ ['--expanded' as string]: String(Math.max(expandedCount, 1)) }}
+        >
+          {BOARD_CATEGORY_ORDER.map((cat) => (
+            <div
+              key={cat}
+              className={`board__col-slot${collapsed[cat] ? ' is-collapsed' : ''}`}
+              onDoubleClick={() => focusOnly(cat)}
+              title={
+                collapsed[cat]
+                  ? `点击展开「${cat}」；双击仅看本列`
+                  : '点击标题折叠；双击仅看本列'
+              }
+            >
+              <CategoryColumn
+                category={cat}
+                events={byCategory[cat]}
+                companies={companies}
+                collapsed={collapsed[cat]}
+                onToggleCollapse={() => toggleCollapse(cat)}
+                subFilter={subFilters[cat]}
+                onSubFilter={(key) =>
+                  setSubFilters((s) => ({ ...s, [cat]: key }))
+                }
+                selectedId={selectedId}
+                onSelect={setSelectedId}
+              />
+            </div>
+          ))}
         </div>
 
-        <ul className="events">
-          {sorted.map((e) => {
-            const co = resolveCompany(companies, e.company)
-            const marker = co?.color ?? '#94a3b8'
-            const soft = co?.colorSoft ?? '#eef1f6'
-            return (
-              <li
-                key={e.id}
-                className="event"
-                style={{ borderLeftColor: marker }}
-              >
-                <div className="event-mark" style={{ background: marker }} />
-                <time dateTime={e.date}>{e.date}</time>
-                <strong>{e.title}</strong>
-                <div className="badges">
-                  <span
-                    className="badge company-badge"
-                    style={{ background: soft, color: marker, borderColor: marker }}
-                  >
-                    {e.company}
-                  </span>
-                  <span className="badge">
-                    {CATEGORY_LABEL_ZH[e.category] ?? e.category}
-                  </span>
-                  <span className="badge">{e.eventType}</span>
-                  {e.productSubcategory ? (
-                    <span className="badge">{e.productSubcategory}</span>
-                  ) : null}
-                </div>
-              </li>
-            )
-          })}
-        </ul>
-      </main>
-    </>
+        {selected ? (
+          <DetailDrawer
+            event={selected}
+            companies={companies}
+            list={filtered}
+            onClose={() => setSelectedId(null)}
+            onSelect={setSelectedId}
+          />
+        ) : null}
+      </div>
+    </div>
   )
 }

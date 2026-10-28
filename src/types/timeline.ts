@@ -1,6 +1,6 @@
 /** AI Timeline — core data types. Keep in sync with docs/DATA.md and data/timeline.json. */
 
-/** Display order (docs/UI): 概念 → 大模型 → 产品 → 其他 */
+/** Docs narrative order: 概念 → 大模型 → 产品 → 其他. Board UI uses BOARD_CATEGORY_ORDER in lib/labels.ts. */
 export type Category = 'concept' | 'model' | 'product' | 'other'
 
 export type ProductSubcategory =
