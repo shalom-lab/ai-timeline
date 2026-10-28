@@ -442,6 +442,57 @@ a {
   height: calc(var(--board-tabs-h, 2.35rem) + var(--timeline-head-h, 2.55rem));
   flex-shrink: 0;
   box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  padding-top: 0.12rem;
+}
+
+/* Compact 既往 | 本月 — sits in the tabs-height band of the rail head */
+.timeline-rail__mode {
+  display: inline-flex;
+  align-items: stretch;
+  gap: 0;
+  height: calc(var(--board-tabs-h, 2.35rem) - 0.28rem);
+  max-width: 100%;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  overflow: hidden;
+  background: #f8fafc;
+  align-self: stretch;
+}
+
+.timeline-rail__mode-btn {
+  appearance: none;
+  flex: 1 1 0;
+  min-width: 0;
+  border: 0;
+  margin: 0;
+  padding: 0 0.28rem;
+  background: transparent;
+  color: #64748b;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  line-height: 1;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.12s ease, color 0.12s ease;
+}
+
+.timeline-rail__mode-btn + .timeline-rail__mode-btn {
+  border-left: 1px solid #e2e8f0;
+}
+
+.timeline-rail__mode-btn:hover {
+  color: #334155;
+  background: #f1f5f9;
+}
+
+.timeline-rail__mode-btn.is-active {
+  background: #fff;
+  color: #0f766e;
+  box-shadow: inset 0 -2px 0 #0f766e;
 }
 
 .timeline-rail__canvas {

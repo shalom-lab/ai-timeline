@@ -57,6 +57,11 @@ function matchesQuery(e: TimelineEvent, q: string): boolean {
   return hay.includes(q)
 }
 
+/** Local calendar YYYY-MM (box / browser timezone; deploy expects UTC+8). */
+function localYearMonth(d = new Date()): string {
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`
+}
+
 function filterFrontierMonths(
   months: CapabilityMonth[],
   q: string,
@@ -124,18 +129,25 @@ export default function App() {
   const [hoverRailId, setHoverRailId] = useState<string | null>(null)
   /** Rail click-pin — solid same-moment line + 灰白 for later cards and rail below. */
   const [bumpPinId, setBumpPinId] = useState<string | null>(null)
+  /** 既往 = full history rail/board; 本月 = current calendar month only. */
+  const [railMode, setRailMode] = useState<'history' | 'month'>('history')
 
   const filtered = useMemo(() => {
     const q = filters.query.trim().toLowerCase()
+    const ym = localYearMonth()
     return events
       .filter((e) => matchesQuery(e, q))
+      .filter((e) => (railMode === 'month' ? e.date.startsWith(ym) : true))
       .sort((a, b) => a.date.localeCompare(b.date))
-  }, [events, filters])
+  }, [events, filters, railMode])
 
   const frontierMonths = useMemo(() => {
     const q = filters.query.trim().toLowerCase()
-    return filterFrontierMonths(capabilityFrontierData.months, q)
-  }, [filters])
+    const months = filterFrontierMonths(capabilityFrontierData.months, q)
+    if (railMode !== 'month') return months
+    const ym = localYearMonth()
+    return months.filter((m) => m.month === ym)
+  }, [filters, railMode])
 
   const byCategory = useMemo(() => {
     const map: Record<Category, TimelineEvent[]> = {
@@ -217,11 +229,15 @@ export default function App() {
     if (bumpPinId && !byId.has(bumpPinId)) setBumpPinId(null)
   }, [byId, bumpPinId])
 
-  // Clear hover/pin when switching tabs so the line matches the view.
+  // Clear hover/pin when switching tabs or rail mode so the line matches the view.
   useEffect(() => {
     setHoverRailId(null)
     setBumpPinId(null)
-  }, [activeTab])
+  }, [activeTab, railMode])
+
+  const handleRailModeChange = useCallback((mode: 'history' | 'month') => {
+    setRailMode(mode)
+  }, [])
 
   /** Rail only: toggle solid same-moment line + 灰白. Never touches card outline/detail. */
   const handleRailTogglePin = useCallback((id: string) => {
@@ -400,6 +416,8 @@ export default function App() {
             onTogglePin={handleRailTogglePin}
             layout={railLayout}
             frontierMode={activeTab === 'frontier'}
+            mode={railMode}
+            onModeChange={handleRailModeChange}
           />
 
           <div className="board__main">

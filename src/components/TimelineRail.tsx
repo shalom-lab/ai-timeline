@@ -5,6 +5,8 @@ import { companyColor } from '../lib/company'
 import type { TimelineLayout } from '../lib/timelineLayout'
 import { YEAR_MARKER_H } from '../lib/timelineLayout'
 
+type RailMode = 'history' | 'month'
+
 type Props = {
   events: TimelineEvent[]
   companies: Company[]
@@ -19,6 +21,9 @@ type Props = {
   layout: TimelineLayout
   /** When true, layout items are frontier month proxies (no TimelineEvent). */
   frontierMode?: boolean
+  /** 既往 = full history; 本月 = current calendar month only. */
+  mode?: RailMode
+  onModeChange?: (mode: RailMode) => void
 }
 
 type MonthBand = {
@@ -83,6 +88,8 @@ export default function TimelineRail({
   onTogglePin,
   layout,
   frontierMode = false,
+  mode = 'history',
+  onModeChange,
 }: Props) {
   const byId = useMemo(() => {
     const m = new Map<string, TimelineEvent>()
@@ -116,7 +123,32 @@ export default function TimelineRail({
 
   return (
     <nav className="timeline-rail" aria-label="时间轴（日期导航，紧凑缩进）">
-      <div className="timeline-rail__head-spacer" aria-hidden />
+      <div className="timeline-rail__head-spacer">
+        <div
+          className="timeline-rail__mode"
+          role="group"
+          aria-label="时间轴模式"
+        >
+          <button
+            type="button"
+            className={`timeline-rail__mode-btn${mode === 'history' ? ' is-active' : ''}`}
+            aria-pressed={mode === 'history'}
+            title="既往：显示全部历史日期"
+            onClick={() => onModeChange?.('history')}
+          >
+            既往
+          </button>
+          <button
+            type="button"
+            className={`timeline-rail__mode-btn${mode === 'month' ? ' is-active' : ''}`}
+            aria-pressed={mode === 'month'}
+            title="本月大事件：仅显示当月"
+            onClick={() => onModeChange?.('month')}
+          >
+            本月
+          </button>
+        </div>
+      </div>
       <div
         className="timeline-rail__canvas"
         style={{ height: layout.height }}
