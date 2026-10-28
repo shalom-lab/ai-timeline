@@ -613,6 +613,31 @@ a {
   gap: 0.45rem;
 }
 
+.cat-subcol__cards.is-rank-placed {
+  position: relative;
+  display: block;
+  gap: 0;
+  min-height: 4rem;
+}
+
+.event-card.is-rank-placed {
+  position: absolute;
+  left: 0;
+  right: 0;
+  width: 100%;
+  transform: translateY(-50%);
+  z-index: 1;
+}
+
+.event-card.is-rank-placed:hover,
+.event-card.is-rank-placed.is-selected {
+  z-index: 3;
+}
+
+.cat-column__body.is-rank-canvas {
+  align-items: start;
+}
+
 /* ─── Intra-category bump connectors (dashed steps) ─── */
 .bump-connectors {
   position: absolute;

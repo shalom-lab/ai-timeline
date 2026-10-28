@@ -2,6 +2,7 @@ import { useMemo, useRef, type ReactNode } from 'react'
 import type { Category, Company, TimelineEvent } from '../types/timeline'
 import { CATEGORY_LABEL_ZH, CATEGORY_THEME } from '../lib/labels'
 import { buildSubGroups } from '../lib/group'
+import { buildCategoryRankLayout } from '../lib/timelineLayout'
 import EventCard from './EventCard'
 import BumpConnectors from './BumpConnectors'
 
@@ -97,11 +98,15 @@ export default function CategoryColumn({
 }: Props) {
   const theme = CATEGORY_THEME[category]
   const bodyRef = useRef<HTMLDivElement>(null)
-  const groups = buildSubGroups(category, events, companies)
+  const groups = useMemo(
+    () => buildSubGroups(category, events, companies),
+    [category, events, companies],
+  )
   const showAll = subFilter.length === 0
-  const visibleGroups = showAll
-    ? groups
-    : groups.filter((g) => subFilter.includes(g.key))
+  const visibleGroups = useMemo(
+    () => (showAll ? groups : groups.filter((g) => subFilter.includes(g.key))),
+    [groups, showAll, subFilter],
+  )
 
   const toggleChip = (key: string) => {
     if (key === 'all') {
@@ -119,16 +124,27 @@ export default function CategoryColumn({
   /** Skip chip row when flat / single group (e.g. concept) — 别强行分 */
   const showChips = groups.length > 1
 
-  /** Chronological ids within THIS category only — bump lines never cross categories. */
-  const orderedIds = useMemo(() => {
-    const gs = buildSubGroups(category, events, companies)
-    const vis =
-      subFilter.length === 0 ? gs : gs.filter((g) => subFilter.includes(g.key))
+  const visibleEvents = useMemo(() => {
     const all: TimelineEvent[] = []
-    for (const g of vis) all.push(...g.events)
-    all.sort((a, b) => a.date.localeCompare(b.date) || a.id.localeCompare(b.id))
-    return all.map((e) => e.id)
-  }, [category, events, companies, subFilter])
+    for (const g of visibleGroups) all.push(...g.events)
+    return all
+  }, [visibleGroups])
+
+  /**
+   * Multi-subcol: equal-step chronological ranks so later companies sit below
+   * earlier ones (DeepSeek after OpenAI). Single-group: dense document flow.
+   */
+  const rankLayout = useMemo(
+    () => (multi ? buildCategoryRankLayout(visibleEvents) : null),
+    [multi, visibleEvents],
+  )
+
+  const orderedIds = useMemo(() => {
+    if (rankLayout) return rankLayout.orderedIds
+    return [...visibleEvents]
+      .sort((a, b) => a.date.localeCompare(b.date) || a.id.localeCompare(b.id))
+      .map((e) => e.id)
+  }, [rankLayout, visibleEvents])
 
   return (
     <section
@@ -203,7 +219,7 @@ export default function CategoryColumn({
 
       <div
         ref={bodyRef}
-        className={`cat-column__body${multi ? ' has-subcols' : ''}`}
+        className={`cat-column__body${multi ? ' has-subcols is-rank-canvas' : ''}`}
       >
         <BumpConnectors containerRef={bodyRef} orderedIds={orderedIds} />
 
@@ -215,16 +231,23 @@ export default function CategoryColumn({
               {multi ? (
                 <div className="cat-subcol__label">{g.label}</div>
               ) : null}
-              <div className="cat-subcol__cards">
-                {g.events.map((e) => (
-                  <EventCard
-                    key={e.id}
-                    event={e}
-                    companies={companies}
-                    selected={selectedId === e.id}
-                    onSelect={onSelect}
-                  />
-                ))}
+              <div
+                className={`cat-subcol__cards${rankLayout ? ' is-rank-placed' : ''}`}
+                style={rankLayout ? { height: rankLayout.height } : undefined}
+              >
+                {g.events.map((e) => {
+                  const cy = rankLayout?.centerY[e.id]
+                  return (
+                    <EventCard
+                      key={e.id}
+                      event={e}
+                      companies={companies}
+                      selected={selectedId === e.id}
+                      onSelect={onSelect}
+                      centerY={cy}
+                    />
+                  )
+                })}
               </div>
             </div>
           ))
