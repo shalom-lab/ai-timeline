@@ -4,23 +4,24 @@ import type { TimelineEvent } from '../types/timeline'
 export const YEAR_MARKER_H = 24
 /**
  * Minimum gap between consecutive *distinct-date* centers.
- * Sized so ~140px cards with translateY(-50%) clear each other.
+ * ~card height + small breath with translateY(-50%); denser than the old 148.
  */
-export const MIN_CENTER_GAP = 148
+export const MIN_CENTER_GAP = 116
 /**
  * Soft cap for large calendar spans — longer Δdays get a bit more room,
- * but never raw linear voids.
+ * but never raw linear voids. Kept close to MIN so long gaps stay compact.
  */
-export const MAX_CENTER_GAP = 196
+export const MAX_CENTER_GAP = 140
 /**
  * tanh scale (days).
  * gap(Δ) = MIN + (MAX - MIN) * tanh(Δ / GAP_TAU)
+ * Larger TAU = week/month deltas stay nearer MIN before asymptoting.
  */
-export const GAP_TAU = 40
-export const CANVAS_PAD_TOP = 10
-export const CANVAS_PAD_BOTTOM = 32
+export const GAP_TAU = 48
+export const CANVAS_PAD_TOP = 6
+export const CANVAS_PAD_BOTTOM = 24
 /** Space from year marker bottom to first date center in that year. */
-export const AFTER_YEAR_MARKER = 56
+export const AFTER_YEAR_MARKER = 44
 
 /** Minimal input for shared date→Y layout (events or frontier month proxies). */
 export type LayoutSource = {
