@@ -403,15 +403,23 @@ a {
 }
 
 .timeline-rail__item:hover .timeline-rail__md,
-.timeline-rail__item.is-selected .timeline-rail__md {
+.timeline-rail__item.is-hover .timeline-rail__md,
+.timeline-rail__item.is-selected .timeline-rail__md,
+.timeline-rail__item.is-pinned .timeline-rail__md {
   color: #0f172a;
   font-weight: 700;
 }
 
 .timeline-rail__item:hover .timeline-rail__dot,
-.timeline-rail__item.is-selected .timeline-rail__dot {
+.timeline-rail__item.is-hover .timeline-rail__dot,
+.timeline-rail__item.is-selected .timeline-rail__dot,
+.timeline-rail__item.is-pinned .timeline-rail__dot {
   transform: scale(1.25);
   box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+}
+
+.timeline-rail__item.is-pinned .timeline-rail__dot {
+  box-shadow: 0 0 0 3px rgba(234, 88, 12, 0.35);
 }
 
 .timeline-rail__dot {
@@ -639,6 +647,7 @@ a {
 }
 
 /* ─── Intra-category bump connectors (dashed staircase above cards) ─── */
+/* Hidden by default — only mounted/stroked while rail hover or pin is active. */
 .bump-connectors {
   position: absolute;
   left: 0;
@@ -646,6 +655,14 @@ a {
   pointer-events: none;
   z-index: 2;
   overflow: visible;
+}
+
+.bump-connectors__past {
+  /* stroke set inline — color = already happened */
+}
+
+.bump-connectors__future {
+  /* stroke set inline — 灰白 = 还没发生 */
 }
 
 .cat-column__body {
@@ -692,6 +709,38 @@ a {
   border-color: var(--co);
   box-shadow: 0 0 0 2px color-mix(in srgb, var(--co) 28%, transparent);
   filter: saturate(1.08);
+}
+
+/* After focus date while bump line is shown — 还没发生 */
+.event-card.is-future {
+  filter: grayscale(0.92) brightness(1.04);
+  opacity: 0.55;
+  border-color: color-mix(in srgb, #94a3b8 35%, var(--border));
+  box-shadow: none;
+  color: #64748b;
+}
+
+.event-card.is-future:hover {
+  filter: grayscale(0.85) brightness(1.02);
+  opacity: 0.65;
+  transform: translateY(-1px);
+}
+
+.event-card.is-rank-placed.is-future:hover,
+.event-card.is-rank-placed.is-future.is-selected {
+  transform: translateY(-50%);
+}
+
+.event-card.is-future .event-card__title,
+.event-card.is-future .event-card__summary,
+.event-card.is-future .event-card__company,
+.event-card.is-future .event-card__meta time {
+  color: #94a3b8;
+}
+
+.event-card.is-future .event-type-pill {
+  filter: grayscale(1);
+  opacity: 0.85;
 }
 
 .event-card__meta {

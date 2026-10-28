@@ -8,8 +8,15 @@ import { YEAR_MARKER_H } from '../lib/timelineLayout'
 type Props = {
   events: TimelineEvent[]
   companies: Company[]
+  /** Card detail selection (from board cards). */
   selectedId: string | null
-  onSelect: (id: string | null) => void
+  /** Rail hover event id — temporary bump line. */
+  hoverId: string | null
+  /** Rail pinned event id — sticky bump line. */
+  pinnedId: string | null
+  onHover: (id: string | null) => void
+  /** Toggle pin for this rail event (click again to unpin). */
+  onTogglePin: (id: string) => void
   /** Compact equal-step rail layout (year left / dates indented). */
   layout: TimelineLayout
   /** When true, layout items are frontier month proxies (no TimelineEvent). */
@@ -73,7 +80,10 @@ export default function TimelineRail({
   events,
   companies,
   selectedId,
-  onSelect,
+  hoverId,
+  pinnedId,
+  onHover,
+  onTogglePin,
   layout,
   frontierSolo = false,
 }: Props) {
@@ -178,16 +188,23 @@ export default function TimelineRail({
           if (!event) return null
           const { color } = companyColor(companies, event.company)
           const selected = event.id === selectedId
+          const hovered = event.id === hoverId
+          const pinned = event.id === pinnedId
           return (
             <button
               key={event.id}
               type="button"
-              className={`timeline-rail__item${selected ? ' is-selected' : ''}`}
+              className={`timeline-rail__item${selected ? ' is-selected' : ''}${hovered ? ' is-hover' : ''}${pinned ? ' is-pinned' : ''}`}
               style={{ top: item.centerY }}
-              title={`${event.date} · ${event.title}`}
+              title={`${event.date} · ${event.title}${pinned ? '（已钉住轨迹）' : '（悬停预览 / 点击钉住轨迹）'}`}
               aria-label={`${event.date} ${event.title}`}
+              aria-pressed={pinned}
+              onMouseEnter={() => onHover(event.id)}
+              onMouseLeave={() => onHover(null)}
+              onFocus={() => onHover(event.id)}
+              onBlur={() => onHover(null)}
               onClick={() => {
-                onSelect(event.id)
+                onTogglePin(event.id)
                 requestAnimationFrame(() => focusCard(event.id))
               }}
             >

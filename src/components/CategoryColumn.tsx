@@ -19,6 +19,13 @@ type Props = {
   onSubFilter: (keys: string[]) => void
   selectedId: string | null
   onSelect: (id: string | null) => void
+  /**
+   * Show the continuous bump staircase for this category (hover or pin).
+   * Default hidden — only the active category gets the line.
+   */
+  bumpActive?: boolean
+  /** Focus date (YYYY-MM-DD): at/before color, after 灰白. */
+  bumpFocusDate?: string | null
 }
 
 const ICONS: Record<Category, ReactNode> = {
@@ -95,6 +102,8 @@ export default function CategoryColumn({
   onSubFilter,
   selectedId,
   onSelect,
+  bumpActive = false,
+  bumpFocusDate = null,
 }: Props) {
   const theme = CATEGORY_THEME[category]
   const bodyRef = useRef<HTMLDivElement>(null)
@@ -139,12 +148,28 @@ export default function CategoryColumn({
     [multi, visibleEvents],
   )
 
-  const orderedIds = useMemo(() => {
-    if (rankLayout) return rankLayout.orderedIds
-    return [...visibleEvents]
-      .sort((a, b) => a.date.localeCompare(b.date) || a.id.localeCompare(b.id))
-      .map((e) => e.id)
+  const orderedEvents = useMemo(() => {
+    if (rankLayout) {
+      const byId = new Map(visibleEvents.map((e) => [e.id, e]))
+      return rankLayout.orderedIds
+        .map((id) => byId.get(id))
+        .filter((e): e is TimelineEvent => !!e)
+    }
+    return [...visibleEvents].sort(
+      (a, b) => a.date.localeCompare(b.date) || a.id.localeCompare(b.id),
+    )
   }, [rankLayout, visibleEvents])
+
+  const orderedIds = useMemo(
+    () => orderedEvents.map((e) => e.id),
+    [orderedEvents],
+  )
+  const orderedDates = useMemo(
+    () => orderedEvents.map((e) => e.date),
+    [orderedEvents],
+  )
+
+  const muteFuture = bumpActive && !!bumpFocusDate
 
   return (
     <section
@@ -221,7 +246,13 @@ export default function CategoryColumn({
         ref={bodyRef}
         className={`cat-column__body${multi ? ' has-subcols is-rank-canvas' : ''}`}
       >
-        <BumpConnectors containerRef={bodyRef} orderedIds={orderedIds} />
+        <BumpConnectors
+          containerRef={bodyRef}
+          orderedIds={orderedIds}
+          orderedDates={orderedDates}
+          active={bumpActive}
+          focusDate={bumpFocusDate}
+        />
 
         {visibleGroups.length === 0 ? (
           <p className="cat-column__empty">暂无匹配事件</p>
@@ -237,6 +268,8 @@ export default function CategoryColumn({
               >
                 {g.events.map((e) => {
                   const cy = rankLayout?.centerY[e.id]
+                  const isFuture =
+                    muteFuture && !!bumpFocusDate && e.date > bumpFocusDate
                   return (
                     <EventCard
                       key={e.id}
@@ -245,6 +278,7 @@ export default function CategoryColumn({
                       selected={selectedId === e.id}
                       onSelect={onSelect}
                       centerY={cy}
+                      isFuture={isFuture}
                     />
                   )
                 })}

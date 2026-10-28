@@ -105,6 +105,10 @@ export default function App() {
   const [selectedId, setSelectedId] = useState<string | null>(null)
   const [solo, setSolo] = useState<SoloTarget | null>(null)
   const [subFilters, setSubFilters] = useState<Record<Category, string[]>>(EMPTY_SUB)
+  /** Rail hover — temporary bump staircase (event id). */
+  const [hoverRailId, setHoverRailId] = useState<string | null>(null)
+  /** Rail pin — sticky bump staircase until click-again / clear. */
+  const [pinnedRailId, setPinnedRailId] = useState<string | null>(null)
 
   const filtered = useMemo(() => {
     const q = filters.query.trim().toLowerCase()
@@ -130,6 +134,12 @@ export default function App() {
       map[e.category].push(e)
     }
     return map
+  }, [filtered])
+
+  const byId = useMemo(() => {
+    const m = new Map<string, TimelineEvent>()
+    for (const e of filtered) m.set(e.id, e)
+    return m
   }, [filtered])
 
   /**
@@ -184,8 +194,24 @@ export default function App() {
     if (byCategory[solo].length === 0) setSolo(null)
   }, [solo, byCategory, frontierMonths])
 
+  // Drop hover/pin when the event leaves the filtered set.
+  useEffect(() => {
+    if (hoverRailId && !byId.has(hoverRailId)) setHoverRailId(null)
+    if (pinnedRailId && !byId.has(pinnedRailId)) setPinnedRailId(null)
+  }, [byId, hoverRailId, pinnedRailId])
+
+  // Clear bump pin when entering/leaving solo so the line matches the view.
+  useEffect(() => {
+    setHoverRailId(null)
+    setPinnedRailId(null)
+  }, [solo])
+
   const patchFilters = useCallback((patch: Partial<Filters>) => {
     setFilters((f) => ({ ...f, ...patch }))
+  }, [])
+
+  const toggleRailPin = useCallback((id: string) => {
+    setPinnedRailId((cur) => (cur === id ? null : id))
   }, [])
 
   const categoriesWithEvents = BOARD_CATEGORY_ORDER.filter(
@@ -204,6 +230,24 @@ export default function App() {
 
   const showFrontierColumn =
     showFrontier && (solo === null || solo === 'frontier')
+
+  /**
+   * Active rail focus: hover temporarily overrides pin for preview;
+   * when not hovering, pinned sticks.
+   */
+  const focusRailId = hoverRailId ?? pinnedRailId
+  const focusEvent = focusRailId ? byId.get(focusRailId) ?? null : null
+  /** hoverDate / pinnedDate semantics for past–future chop. */
+  const bumpFocusDate = focusEvent?.date ?? null
+  /**
+   * Which category shows the staircase:
+   * prefer soloed category; else the category that owns the focused rail event.
+   * Never cross 大模型↔产品.
+   */
+  const bumpCategory: Category | null = soloCategory
+    ? soloCategory
+    : (focusEvent?.category ?? null)
+  const bumpActive = focusRailId != null && bumpCategory != null
 
   const selectEventFromFrontier = useCallback(
     (id: string) => {
@@ -228,7 +272,10 @@ export default function App() {
           events={railEvents}
           companies={companies}
           selectedId={selectedId}
-          onSelect={setSelectedId}
+          hoverId={hoverRailId}
+          pinnedId={pinnedRailId}
+          onHover={setHoverRailId}
+          onTogglePin={toggleRailPin}
           layout={railLayout}
           frontierSolo={solo === 'frontier'}
         />
@@ -254,6 +301,10 @@ export default function App() {
                 }
                 selectedId={selectedId}
                 onSelect={setSelectedId}
+                bumpActive={bumpActive && bumpCategory === cat}
+                bumpFocusDate={
+                  bumpActive && bumpCategory === cat ? bumpFocusDate : null
+                }
               />
             </div>
           ))}

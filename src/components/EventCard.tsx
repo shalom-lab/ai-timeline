@@ -12,6 +12,8 @@ type Props = {
   onSelect: (id: string | null) => void
   /** Rank-row center Y within multi-subcol category canvas */
   centerY?: number
+  /** After focus date while bump line is shown — 还没发生 */
+  isFuture?: boolean
 }
 
 export default function EventCard({
@@ -20,6 +22,7 @@ export default function EventCard({
   selected,
   onSelect,
   centerY,
+  isFuture = false,
 }: Props) {
   const cardRef = useRef<HTMLElement>(null)
   const { color, soft } = companyColor(companies, event.company)
@@ -30,7 +33,7 @@ export default function EventCard({
   return (
     <article
       ref={cardRef}
-      className={`event-card${selected ? ' is-selected' : ''}${centerY != null ? ' is-rank-placed' : ''}`}
+      className={`event-card${selected ? ' is-selected' : ''}${centerY != null ? ' is-rank-placed' : ''}${isFuture ? ' is-future' : ''}`}
       data-event-id={event.id}
       style={
         {
