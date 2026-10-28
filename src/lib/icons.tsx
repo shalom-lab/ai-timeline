@@ -231,11 +231,11 @@ export function CardMainIcon({
 }
 
 /**
- * Refined capability glyphs: subtle per-type color, soft fills (not bare outlines).
+ * Capability glyphs only (no chip pad behind them): per-type soft color in the SVG.
  * `image` is a colorful picture glyph; `reasoning` is a brain.
  * Gradient ids use React useId so many chips on one page do not collide.
  */
-function CapIcon({ kind, size = 13 }: { kind: ModelCapability; size?: number }) {
+function CapIcon({ kind, size = 18 }: { kind: ModelCapability; size?: number }) {
   const uid = useId().replace(/:/g, '')
   const s = { width: size, height: size, viewBox: '0 0 24 24', fill: 'none' as const }
   switch (kind) {
