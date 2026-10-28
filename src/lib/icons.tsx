@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react'
+import { useId, type ReactNode } from 'react'
 import type { ModelCapability, TimelineEvent } from '../types/timeline'
 import { MODEL_CAPABILITY_LABEL_ZH, MODEL_CAPABILITY_ORDER } from '../types/timeline'
 import { resolveCompany } from './company'
@@ -230,55 +230,137 @@ export function CardMainIcon({
   )
 }
 
-
-/** Small inline SVGs for model capability chips (lucide-ish). */
-function CapIcon({ kind, size = 12 }: { kind: ModelCapability; size?: number }) {
+/**
+ * Refined capability glyphs: subtle per-type color, soft fills (not bare outlines).
+ * `image` is a colorful picture glyph; `reasoning` is a brain.
+ * Gradient ids use React useId so many chips on one page do not collide.
+ */
+function CapIcon({ kind, size = 13 }: { kind: ModelCapability; size?: number }) {
+  const uid = useId().replace(/:/g, '')
   const s = { width: size, height: size, viewBox: '0 0 24 24', fill: 'none' as const }
-  const stroke = { stroke: 'currentColor', strokeWidth: 2, strokeLinecap: 'round' as const, strokeLinejoin: 'round' as const }
   switch (kind) {
-    case 'chat':
+    case 'chat': {
+      const g = `capChat-${uid}`
       return (
         <svg {...s} aria-hidden>
-          <path d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4z" {...stroke} />
+          <defs>
+            <linearGradient id={g} x1="5" y1="2" x2="19" y2="16" gradientUnits="userSpaceOnUse">
+              <stop stopColor="#93C5FD" />
+              <stop offset="1" stopColor="#3B82F6" />
+            </linearGradient>
+          </defs>
+          <path
+            d="M5 5.5A3.5 3.5 0 0 1 8.5 2h7A3.5 3.5 0 0 1 19 5.5v6A3.5 3.5 0 0 1 15.5 15H11l-4.2 2.8c-.7.47-1.65-.08-1.5-.9L6 15.2A3.5 3.5 0 0 1 5 11.5z"
+            fill={`url(#${g})`}
+            stroke="#1D4ED8"
+            strokeWidth="1.2"
+            strokeLinejoin="round"
+          />
+          <circle cx="9.2" cy="8.4" r="1" fill="#1E3A8A" />
+          <circle cx="12" cy="8.4" r="1" fill="#1E3A8A" />
+          <circle cx="14.8" cy="8.4" r="1" fill="#1E3A8A" />
         </svg>
       )
-    case 'reasoning':
+    }
+    case 'reasoning': {
+      const g = `capBrain-${uid}`
       return (
         <svg {...s} aria-hidden>
-          <circle cx="12" cy="12" r="3" {...stroke} />
-          <path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4" {...stroke} />
+          <defs>
+            <linearGradient id={g} x1="7" y1="3" x2="18" y2="19" gradientUnits="userSpaceOnUse">
+              <stop stopColor="#DDD6FE" />
+              <stop offset="1" stopColor="#8B5CF6" />
+            </linearGradient>
+          </defs>
+          <path
+            d="M9.2 4.2a3.1 3.1 0 0 1 5.6 0 3 3 0 0 1 3.7 3.4 3 3 0 0 1 1.3 4.1 3.1 3.1 0 0 1-2.3 3.8v1.7a1.6 1.6 0 0 1-1.6 1.6h-5.2a1.6 1.6 0 0 1-1.6-1.6v-1.7a3.1 3.1 0 0 1-2.3-3.8 3 3 0 0 1 1.3-4.1 3 3 0 0 1 1.1-3.4z"
+            fill={`url(#${g})`}
+            stroke="#6D28D9"
+            strokeWidth="1.15"
+            strokeLinejoin="round"
+          />
+          <path d="M10 13.8h4M10.4 11.2c.7-.8 1.4-1.2 2.1-1.2s1.4.4 2.1 1.2" stroke="#4C1D95" strokeWidth="1.2" strokeLinecap="round" />
+          <path d="M9.6 8.2c.5-.6 1.2-.9 2.4-.9s1.9.3 2.4.9" stroke="#5B21B6" strokeWidth="1.05" strokeLinecap="round" opacity="0.85" />
         </svg>
       )
-    case 'image':
+    }
+    case 'image': {
+      const sky = `capImgSky-${uid}`
+      const hill = `capImgHill-${uid}`
       return (
         <svg {...s} aria-hidden>
-          <rect x="3" y="5" width="18" height="14" rx="2" {...stroke} />
-          <circle cx="9" cy="11" r="1.6" fill="currentColor" />
-          <path d="M3 16l5-4 4 3 3-2 6 4" {...stroke} />
+          <defs>
+            <linearGradient id={sky} x1="2.5" y1="4.5" x2="21.5" y2="19.5" gradientUnits="userSpaceOnUse">
+              <stop stopColor="#BAE6FD" />
+              <stop offset="0.55" stopColor="#7DD3FC" />
+              <stop offset="1" stopColor="#38BDF8" />
+            </linearGradient>
+            <linearGradient id={hill} x1="3" y1="12" x2="21" y2="19" gradientUnits="userSpaceOnUse">
+              <stop stopColor="#86EFAC" />
+              <stop offset="1" stopColor="#22C55E" />
+            </linearGradient>
+          </defs>
+          <rect x="2.5" y="4.5" width="19" height="15" rx="2.4" fill={`url(#${sky})`} stroke="#0E7490" strokeWidth="1.15" />
+          <circle cx="8.2" cy="9.2" r="2" fill="#FBBF24" stroke="#D97706" strokeWidth="0.8" />
+          <path d="M3.2 16.8l5.1-4.2 3.4 2.6 3.1-2.4 6 4" fill={`url(#${hill})`} stroke="#15803D" strokeWidth="1" strokeLinejoin="round" />
         </svg>
       )
-    case 'video':
+    }
+    case 'video': {
+      const g = `capVid-${uid}`
       return (
         <svg {...s} aria-hidden>
-          <rect x="3" y="6" width="13" height="12" rx="2" {...stroke} />
-          <path d="M16 10l5-3v10l-5-3z" {...stroke} />
+          <defs>
+            <linearGradient id={g} x1="2.5" y1="5.5" x2="16" y2="18.5" gradientUnits="userSpaceOnUse">
+              <stop stopColor="#FDBA74" />
+              <stop offset="1" stopColor="#F97316" />
+            </linearGradient>
+          </defs>
+          <rect x="2.5" y="5.5" width="13.5" height="13" rx="2.2" fill={`url(#${g})`} stroke="#C2410C" strokeWidth="1.15" />
+          <path d="M16.2 9.2l5.1-2.8v11.2l-5.1-2.8z" fill="#FB923C" stroke="#C2410C" strokeWidth="1.1" strokeLinejoin="round" />
+          <path d="M7.2 9.6l4.2 2.4-4.2 2.4z" fill="#FFF7ED" />
         </svg>
       )
-    case 'vision':
+    }
+    case 'vision': {
+      const g = `capEye-${uid}`
       return (
         <svg {...s} aria-hidden>
-          <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z" {...stroke} />
-          <circle cx="12" cy="12" r="3" {...stroke} />
+          <defs>
+            <linearGradient id={g} x1="2.5" y1="5.4" x2="21.5" y2="18.6" gradientUnits="userSpaceOnUse">
+              <stop stopColor="#A5F3FC" />
+              <stop offset="1" stopColor="#06B6D4" />
+            </linearGradient>
+          </defs>
+          <path
+            d="M2.5 12s3.6-6.6 9.5-6.6S21.5 12 21.5 12s-3.6 6.6-9.5 6.6S2.5 12 2.5 12z"
+            fill={`url(#${g})`}
+            stroke="#0E7490"
+            strokeWidth="1.15"
+            strokeLinejoin="round"
+          />
+          <circle cx="12" cy="12" r="3.15" fill="#ECFEFF" stroke="#155E75" strokeWidth="1.1" />
+          <circle cx="12" cy="12" r="1.35" fill="#0F766E" />
+          <circle cx="12.7" cy="11.3" r="0.45" fill="#ECFEFF" />
         </svg>
       )
-    case 'audio':
+    }
+    case 'audio': {
+      const g = `capMic-${uid}`
       return (
         <svg {...s} aria-hidden>
-          <path d="M12 3v11" {...stroke} />
-          <rect x="9" y="3" width="6" height="11" rx="3" {...stroke} />
-          <path d="M5 11a7 7 0 0 0 14 0M12 18v3" {...stroke} />
+          <defs>
+            <linearGradient id={g} x1="9" y1="2.8" x2="15" y2="14" gradientUnits="userSpaceOnUse">
+              <stop stopColor="#6EE7B7" />
+              <stop offset="1" stopColor="#10B981" />
+            </linearGradient>
+          </defs>
+          <rect x="9" y="2.8" width="6" height="11.2" rx="3" fill={`url(#${g})`} stroke="#047857" strokeWidth="1.15" />
+          <path d="M5.4 11.2a6.6 6.6 0 0 0 13.2 0" stroke="#059669" strokeWidth="1.35" strokeLinecap="round" />
+          <path d="M12 17.8v3.2M9.2 21h5.6" stroke="#047857" strokeWidth="1.35" strokeLinecap="round" />
         </svg>
       )
+    }
   }
 }
 

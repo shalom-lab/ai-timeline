@@ -1,7 +1,7 @@
 {
   "meta": {
     "name": "AI纪年",
-    "version": "0.9.0",
+    "version": "0.10.0",
     "scopeStart": "2022-11-30",
     "updatedAt": "2026-10-28",
     "locale": "zh-CN",
@@ -2160,6 +2160,37 @@
       ]
     },
     {
+      "id": "bytedance-seedance-2-0-2026-02-12",
+      "date": "2026-02-12",
+      "dateStatus": "exact",
+      "title": "正式发布 Seedance 2.0",
+      "summary": "字节跳动 Seed 正式发布视频创作模型 Seedance 2.0：统一多模态音视频联合生成，支持文字/图片/音频/视频参考与编辑，最长约 15 秒多镜头输出；已上线即梦 AI、豆包与火山方舟。",
+      "category": "model",
+      "company": "ByteDance",
+      "series": "Seedance",
+      "product": "Seedance 2.0",
+      "eventType": "ga",
+      "sources": [
+        {
+          "title": "Seedance 2.0 正式发布",
+          "url": "https://seed.bytedance.com/zh/blog/official-launch-of-seedance-2-0",
+          "publisher": "ByteDance Seed",
+          "publishedAt": "2026-02-12"
+        }
+      ],
+      "tags": [
+        "seedance",
+        "video-generation",
+        "即梦",
+        "jimeng"
+      ],
+      "capabilities": [
+        "video",
+        "audio",
+        "image"
+      ]
+    },
+    {
       "id": "qoder-qoderwork-2026-02-12",
       "date": "2026-02-12",
       "dateStatus": "exact",
@@ -2215,6 +2246,36 @@
       ]
     },
     {
+      "id": "bytedance-seedream-5-0-lite-2026-02-13",
+      "date": "2026-02-13",
+      "dateStatus": "exact",
+      "title": "发布 Seedream 5.0 Lite",
+      "summary": "字节跳动 Seed 发布智能图像创作模型 Seedream 5.0 Lite：强化跨模态理解与推理、世界知识与信息可视化，并首次引入实时联网检索；已上线即梦 AI 与火山方舟。",
+      "category": "model",
+      "company": "ByteDance",
+      "series": "Seedream",
+      "product": "Seedream 5.0 Lite",
+      "eventType": "ga",
+      "sources": [
+        {
+          "title": "“思考”更深，生成更准｜Seedream 5.0 Lite 发布",
+          "url": "https://seed.bytedance.com/zh/blog/deeper-thinking-more-accurate-generation-introducing-seedream-5-0-lite",
+          "publisher": "ByteDance Seed",
+          "publishedAt": "2026-02-13"
+        }
+      ],
+      "tags": [
+        "seedream",
+        "image-generation",
+        "即梦"
+      ],
+      "capabilities": [
+        "image",
+        "vision",
+        "reasoning"
+      ]
+    },
+    {
       "id": "bytedance-seed-2-0-2026-02-14",
       "date": "2026-02-14",
       "dateStatus": "exact",
@@ -2242,6 +2303,93 @@
         "chat",
         "reasoning",
         "vision"
+      ]
+    },
+    {
+      "id": "alibaba-qwen3-5-2026-02-16",
+      "date": "2026-02-16",
+      "dateStatus": "exact",
+      "title": "开源发布 Qwen3.5（397B-A17B）",
+      "summary": "阿里通义发布并开源 Qwen3.5 系列首款原生视觉语言模型 Qwen3.5-397B-A17B：混合注意力与稀疏 MoE，约 17B 激活参数，语言覆盖扩展至 201；同步提供托管 Qwen3.5-Plus。",
+      "category": "model",
+      "company": "Alibaba",
+      "series": "Qwen",
+      "product": "Qwen3.5",
+      "eventType": "open_source",
+      "sources": [
+        {
+          "title": "Qwen3.5: Towards Native Multimodal Agents",
+          "url": "https://qwen.ai/blog?id=qwen3.5",
+          "publisher": "Qwen / Alibaba",
+          "publishedAt": "2026-02-16"
+        },
+        {
+          "title": "QwenLM/Qwen3.5 release note (2026-02-16)",
+          "url": "https://github.com/QwenLM/Qwen3.5",
+          "publisher": "GitHub / QwenLM",
+          "publishedAt": "2026-02-16"
+        }
+      ],
+      "tags": [
+        "qwen3.5",
+        "open-source",
+        "multimodal"
+      ],
+      "capabilities": [
+        "chat",
+        "reasoning",
+        "vision"
+      ]
+    },
+    {
+      "id": "perplexity-computer-2026-02-25",
+      "date": "2026-02-25",
+      "dateStatus": "exact",
+      "title": "发布 Perplexity Computer",
+      "summary": "Perplexity 发布通用数字工作者 Computer：可规划并执行跨网页、应用、文件与连接器的多步工作流，支持并行子代理与长时间后台运行；起初面向 Max 订阅者开放。",
+      "category": "product",
+      "productSubcategory": "agent",
+      "company": "Perplexity",
+      "series": "Perplexity Computer",
+      "product": "Perplexity Computer",
+      "eventType": "ga",
+      "sources": [
+        {
+          "title": "Introducing Perplexity Computer",
+          "url": "https://www.perplexity.ai/hub/blog/introducing-perplexity-computer",
+          "publisher": "Perplexity",
+          "publishedAt": "2026-02-25"
+        }
+      ],
+      "tags": [
+        "perplexity-computer",
+        "agent"
+      ]
+    },
+    {
+      "id": "cursor-automations-2026-03-05",
+      "date": "2026-03-05",
+      "dateStatus": "exact",
+      "title": "发布 Cursor Automations",
+      "summary": "Cursor 发布 Automations：可按日程或 Slack / Linear / GitHub / PagerDuty / Webhook 等事件触发始终在线的云端代理，用于代码审查、监控与日常工程杂务。",
+      "category": "product",
+      "productSubcategory": "agent",
+      "company": "Cursor",
+      "series": "Cursor",
+      "product": "Cursor Automations",
+      "eventType": "ga",
+      "sources": [
+        {
+          "title": "Build agents that run automatically",
+          "url": "https://cursor.com/blog/automations",
+          "publisher": "Cursor",
+          "publishedAt": "2026-03-05"
+        }
+      ],
+      "tags": [
+        "cursor",
+        "automations",
+        "cloud-agents"
       ]
     },
     {
@@ -2309,6 +2457,60 @@
       ]
     },
     {
+      "id": "midjourney-v8-alpha-2026-03-17",
+      "date": "2026-03-17",
+      "dateStatus": "exact",
+      "title": "开放 Midjourney V8 Alpha",
+      "summary": "Midjourney 在 alpha.midjourney.com 开放 V8 Alpha：指令遵循、个性化与风格参考增强，文生图速度约提升 5 倍，并引入原生 2K 的 --hd 模式。",
+      "category": "model",
+      "company": "Midjourney",
+      "series": "Midjourney",
+      "product": "Midjourney V8",
+      "eventType": "research_preview",
+      "sources": [
+        {
+          "title": "V8 Alpha",
+          "url": "https://updates.midjourney.com/v8-alpha/",
+          "publisher": "Midjourney",
+          "publishedAt": "2026-03-17"
+        }
+      ],
+      "tags": [
+        "midjourney",
+        "v8",
+        "image-generation"
+      ],
+      "capabilities": [
+        "image"
+      ]
+    },
+    {
+      "id": "bytedance-trae-solo-beta-2026-03-31",
+      "date": "2026-03-31",
+      "dateStatus": "exact",
+      "title": "开放 TRAE SOLO 免费 Beta",
+      "summary": "字节跳动 TRAE 推出独立产品 SOLO 免费 Beta（需邀请码）：面向产品全生命周期的 AI 代理，含 Code Mode 与 More Than Coding（MTC）模式，提供 Desktop 与 Web。",
+      "category": "product",
+      "productSubcategory": "work_assistant",
+      "company": "ByteDance",
+      "series": "TRAE",
+      "product": "TRAE SOLO",
+      "eventType": "public_beta",
+      "sources": [
+        {
+          "title": "Introducing The New SOLO",
+          "url": "https://www.trae.ai/blog/new_solo_beta_0331",
+          "publisher": "TRAE / ByteDance",
+          "publishedAt": "2026-03-31"
+        }
+      ],
+      "tags": [
+        "trae",
+        "solo",
+        "agent"
+      ]
+    },
+    {
       "id": "alibaba-qwen3-6-plus-2026-04-02",
       "date": "2026-04-02",
       "dateStatus": "exact",
@@ -2359,6 +2561,67 @@
       "tags": [
         "cursor-3",
         "agents-window"
+      ]
+    },
+    {
+      "id": "meta-muse-spark-2026-04-08",
+      "date": "2026-04-08",
+      "dateStatus": "exact",
+      "title": "发布 Muse Spark",
+      "summary": "Meta Superintelligence Labs 发布 Muse 系列首款模型 Muse Spark：为 Meta 产品打造的推理与多模态模型，当日起驱动 Meta AI 应用与 meta.ai，并提供面向精选合作伙伴的 API 私有预览。",
+      "category": "model",
+      "company": "Meta",
+      "series": "Muse",
+      "product": "Muse Spark",
+      "eventType": "ga",
+      "sources": [
+        {
+          "title": "Introducing Muse Spark: MSL’s First Model, Purpose-Built to Prioritize People",
+          "url": "https://about.fb.com/news/2026/04/introducing-muse-spark-meta-superintelligence-labs/",
+          "publisher": "Meta",
+          "publishedAt": "2026-04-08"
+        }
+      ],
+      "tags": [
+        "muse",
+        "muse-spark",
+        "meta-ai",
+        "msl"
+      ],
+      "capabilities": [
+        "chat",
+        "reasoning",
+        "vision",
+        "image",
+        "audio"
+      ]
+    },
+    {
+      "id": "bytedance-seed3d-2-0-2026-04-23",
+      "date": "2026-04-23",
+      "dateStatus": "exact",
+      "title": "发布 Seed3D 2.0",
+      "summary": "字节跳动 Seed 正式发布 3D 生成大模型 Seed3D 2.0：Coarse-to-Fine 两阶段几何与统一 PBR 材质生成，并拓展部件分割、关节化与场景组合；技术报告公开，API 上线火山引擎。",
+      "category": "model",
+      "company": "ByteDance",
+      "series": "Seed3D",
+      "product": "Seed3D 2.0",
+      "eventType": "ga",
+      "sources": [
+        {
+          "title": "Seed3D 2.0 发布，更高精度、更强可用性",
+          "url": "https://seed.bytedance.com/zh/blog/seed3d-2-0-released-higher-precision-and-greater-usability",
+          "publisher": "ByteDance Seed",
+          "publishedAt": "2026-04-23"
+        }
+      ],
+      "tags": [
+        "seed3d",
+        "3d-generation"
+      ],
+      "capabilities": [
+        "image",
+        "vision"
       ]
     },
     {
@@ -2418,6 +2681,35 @@
       "capabilities": [
         "chat",
         "reasoning"
+      ]
+    },
+    {
+      "id": "openai-sora-discontinued-2026-04-26",
+      "date": "2026-04-26",
+      "dateStatus": "exact",
+      "title": "停用 Sora 网页与 App",
+      "summary": "OpenAI 于 2026-04-26 停用 Sora 网页与 App 体验；官方帮助中心同步说明 Sora API 将于 2026-09-24 关停，并提供内容导出指引。",
+      "category": "product",
+      "productSubcategory": "video",
+      "company": "OpenAI",
+      "series": "Sora",
+      "product": "Sora",
+      "eventType": "discontinued",
+      "relatedIds": [
+        "openai-sora-first-announce-2024-02-15"
+      ],
+      "sources": [
+        {
+          "title": "What to know about the Sora discontinuation",
+          "url": "https://help.openai.com/en/articles/20001152-what-to-know-about-the-sora-discontinuation",
+          "publisher": "OpenAI",
+          "publishedAt": "2026-04-26"
+        }
+      ],
+      "tags": [
+        "sora",
+        "discontinued",
+        "video"
       ]
     },
     {
@@ -2508,6 +2800,35 @@
       ]
     },
     {
+      "id": "bytedance-trae-work-rename-2026-06-09",
+      "date": "2026-06-09",
+      "dateStatus": "exact",
+      "title": "将 TRAE SOLO 更名为 TRAE Work",
+      "summary": "TRAE 宣布 SOLO 正式演进为 TRAE Work：面向全职角色的 AI 工作助手（Desktop / Web / Mobile），与面向工程深度的 TRAE IDE 并列，含 Work Mode 与 Code Mode。",
+      "category": "product",
+      "productSubcategory": "work_assistant",
+      "company": "ByteDance",
+      "series": "TRAE",
+      "product": "TRAE Work",
+      "eventType": "rename_rebrand",
+      "relatedIds": [
+        "bytedance-trae-solo-beta-2026-03-31"
+      ],
+      "sources": [
+        {
+          "title": "Introducing TRAE Work",
+          "url": "https://www.trae.ai/blog/trae_work_0609",
+          "publisher": "TRAE / ByteDance",
+          "publishedAt": "2026-06-09"
+        }
+      ],
+      "tags": [
+        "trae",
+        "trae-work",
+        "rename"
+      ]
+    },
+    {
       "id": "anthropic-claude-sonnet-5-2026-06-30",
       "date": "2026-06-30",
       "dateStatus": "exact",
@@ -2533,6 +2854,38 @@
       "capabilities": [
         "chat",
         "reasoning",
+        "vision"
+      ]
+    },
+    {
+      "id": "bytedance-seedream-5-0-pro-2026-07-08",
+      "date": "2026-07-08",
+      "dateStatus": "exact",
+      "title": "发布 Seedream 5.0 Pro",
+      "summary": "字节跳动 Seed 正式发布多模态图像创作模型 Seedream 5.0 Pro：强化复杂信息可视化、交互式像素级编辑、真实影像质感与十余种语言原生渲染；陆续上线火山方舟、豆包与即梦。",
+      "category": "model",
+      "company": "ByteDance",
+      "series": "Seedream",
+      "product": "Seedream 5.0 Pro",
+      "eventType": "ga",
+      "relatedIds": [
+        "bytedance-seedream-5-0-lite-2026-02-13"
+      ],
+      "sources": [
+        {
+          "title": "不止“生成”，更懂“设计”｜Seedream 5.0 Pro 发布",
+          "url": "https://seed.bytedance.com/zh/blog/beyond-generation-it-understands-design-introducing-seedream-5-0-pro",
+          "publisher": "ByteDance Seed",
+          "publishedAt": "2026-07-08"
+        }
+      ],
+      "tags": [
+        "seedream",
+        "image-generation",
+        "即梦"
+      ],
+      "capabilities": [
+        "image",
         "vision"
       ]
     },
@@ -2603,6 +2956,36 @@
       ]
     },
     {
+      "id": "xai-grok-4-5-2026-07-16",
+      "date": "2026-07-16",
+      "dateStatus": "exact",
+      "title": "发布 Grok 4.5",
+      "summary": "xAI（SpaceXSI）发布 Grok 4.5：面向编程、代理任务与知识工作的旗舰模型，与 Cursor 联合训练；当日在 Grok Build、Cursor 与 API 可用，定价约 $2/$6 每百万输入/输出 token。",
+      "category": "model",
+      "company": "xAI",
+      "series": "Grok",
+      "product": "Grok 4.5",
+      "eventType": "ga",
+      "sources": [
+        {
+          "title": "Introducing Grok 4.5",
+          "url": "https://x.ai/news/grok-4-5",
+          "publisher": "xAI",
+          "publishedAt": "2026-07-16"
+        }
+      ],
+      "tags": [
+        "grok-4.5",
+        "coding",
+        "agentic"
+      ],
+      "capabilities": [
+        "chat",
+        "reasoning",
+        "vision"
+      ]
+    },
+    {
       "id": "anthropic-claude-opus-5-2026-07-24",
       "date": "2026-07-24",
       "dateStatus": "exact",
@@ -2629,6 +3012,39 @@
         "chat",
         "reasoning",
         "vision"
+      ]
+    },
+    {
+      "id": "bytedance-seedance-2-5-2026-07-31",
+      "date": "2026-07-31",
+      "dateStatus": "exact",
+      "title": "正式发布 Seedance 2.5",
+      "summary": "字节跳动 Seed 正式发布 Seedance 2.5：单次最长约 30 秒一镜成片并支持多轮延长，多模态参考升至最多 30 图/10 视频/10 音频，并强化时间戳级编辑；陆续上线即梦 AI 与豆包专业版。",
+      "category": "model",
+      "company": "ByteDance",
+      "series": "Seedance",
+      "product": "Seedance 2.5",
+      "eventType": "ga",
+      "relatedIds": [
+        "bytedance-seedance-2-0-2026-02-12"
+      ],
+      "sources": [
+        {
+          "title": "一镜成片，随心参考｜Seedance 2.5 正式发布",
+          "url": "https://seed.bytedance.com/zh/blog/one-take-creation-flexible-referencing-introducing-seedance-2-5",
+          "publisher": "ByteDance Seed",
+          "publishedAt": "2026-07-31"
+        }
+      ],
+      "tags": [
+        "seedance",
+        "video-generation",
+        "即梦"
+      ],
+      "capabilities": [
+        "video",
+        "audio",
+        "image"
       ]
     },
     {
@@ -2662,6 +3078,32 @@
         "chat",
         "reasoning",
         "vision"
+      ]
+    },
+    {
+      "id": "xai-grok-bot-2026-08-11",
+      "date": "2026-08-11",
+      "dateStatus": "exact",
+      "title": "发布 Grok Bot（Beta）",
+      "summary": "xAI 发布 Grok Bot Beta：具备独立云电脑的始终在线 AI 队友，可登录既有应用跨邮箱/网页端到端完成任务；面向 SuperGrok 与 Cursor 部分套餐开放，用量与 Grok/Cursor 计划分开计量。",
+      "category": "product",
+      "productSubcategory": "agent",
+      "company": "xAI",
+      "series": "Grok Bot",
+      "product": "Grok Bot",
+      "eventType": "public_beta",
+      "sources": [
+        {
+          "title": "Introducing Grok Bot",
+          "url": "https://x.ai/news/introducing-grok-bot",
+          "publisher": "xAI",
+          "publishedAt": "2026-08-11"
+        }
+      ],
+      "tags": [
+        "grok-bot",
+        "agent",
+        "cloud-computer"
       ]
     },
     {
@@ -2754,6 +3196,31 @@
       ]
     },
     {
+      "id": "deepmind-alphagenome-atlas-2026-09-08",
+      "date": "2026-09-08",
+      "dateStatus": "exact",
+      "title": "发布 AlphaGenome Atlas",
+      "summary": "Google DeepMind 发布 AlphaGenome Atlas：预计算约 90 亿种人类单碱基变异的分子效应预测，并给出 AVI 影响评分与特征归因，供学术研究通过网站与 API 使用。",
+      "category": "science",
+      "company": "Google DeepMind",
+      "series": "AlphaGenome",
+      "product": "AlphaGenome Atlas",
+      "eventType": "ga",
+      "sources": [
+        {
+          "title": "AlphaGenome Atlas: A predictive map of every possible DNA letter change in the human genome",
+          "url": "https://deepmind.google/blog/alphagenome-atlas-a-predictive-map-of-every-possible-dna-letter-change-in-the-human-genome/",
+          "publisher": "Google DeepMind",
+          "publishedAt": "2026-09-08"
+        }
+      ],
+      "tags": [
+        "alphagenome",
+        "ai-for-science",
+        "genomics"
+      ]
+    },
+    {
       "id": "deepseek-v4-1-flash-2026-09-10",
       "date": "2026-09-10",
       "dateStatus": "exact",
@@ -2813,6 +3280,45 @@
         "gpt-live-1",
         "api",
         "voice"
+      ]
+    },
+    {
+      "id": "xai-grok-4-7-2026-09-21",
+      "date": "2026-09-21",
+      "dateStatus": "exact",
+      "title": "发布 Grok 4.7",
+      "summary": "xAI 发布 Grok 4.7：在 Grok 4.6 之上强化长时编程与知识工作，原生理解 Grok Bot harness；与 Cursor 同日公布，API 型号为 grok-4.7（约 50 万上下文）。",
+      "category": "model",
+      "company": "xAI",
+      "series": "Grok",
+      "product": "Grok 4.7",
+      "eventType": "ga",
+      "relatedIds": [
+        "xai-grok-4-6-2026-08-12"
+      ],
+      "sources": [
+        {
+          "title": "Introducing Grok 4.7",
+          "url": "https://x.ai/news/grok-4-7",
+          "publisher": "xAI",
+          "publishedAt": "2026-09-21"
+        },
+        {
+          "title": "Release Notes — Grok 4.7 (September 21)",
+          "url": "https://docs.x.ai/developers/release-notes",
+          "publisher": "xAI Docs",
+          "publishedAt": "2026-09-21"
+        }
+      ],
+      "tags": [
+        "grok-4.7",
+        "coding",
+        "agentic"
+      ],
+      "capabilities": [
+        "chat",
+        "reasoning",
+        "vision"
       ]
     },
     {
@@ -3003,6 +3509,40 @@
         "gpt-6",
         "intelligent-ui",
         "chatgpt"
+      ]
+    },
+    {
+      "id": "meta-muse-wonder-2026-10-12",
+      "date": "2026-10-12",
+      "dateStatus": "exact",
+      "title": "发布 Muse Wonder 与 Muse Wonder Full",
+      "summary": "Meta 发布面向代理任务的 Muse Wonder 系列：Muse Wonder 经 Meta Model API 与 Muse Code 向开发者开放，Muse Wonder Full 面向 Muse Code 订阅者；强调 Active Memory / Active Focus 与专业域代理表现。",
+      "category": "model",
+      "company": "Meta",
+      "series": "Muse",
+      "product": "Muse Wonder",
+      "eventType": "ga",
+      "relatedIds": [
+        "meta-muse-spark-2026-04-08"
+      ],
+      "sources": [
+        {
+          "title": "Introducing Muse Wonder and Muse Wonder Full: Frontier Models for Agents",
+          "url": "https://about.fb.com/news/2026/10/introducing-muse-wonder-models/",
+          "publisher": "Meta",
+          "publishedAt": "2026-10-12"
+        }
+      ],
+      "tags": [
+        "muse",
+        "muse-wonder",
+        "agents",
+        "msl"
+      ],
+      "capabilities": [
+        "chat",
+        "reasoning",
+        "vision"
       ]
     },
     {
