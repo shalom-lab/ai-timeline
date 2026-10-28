@@ -638,22 +638,29 @@ a {
   align-items: start;
 }
 
-/* ─── Intra-category bump connectors (dashed steps) ─── */
+/* ─── Intra-category bump connectors (dashed staircase above cards) ─── */
 .bump-connectors {
   position: absolute;
   left: 0;
   top: 0;
-  width: 100%;
-  height: 100%;
   pointer-events: none;
-  z-index: 0;
+  z-index: 2;
   overflow: visible;
+}
+
+.cat-column__body {
+  isolation: isolate;
 }
 
 .cat-column__body > .cat-subcol,
 .cat-column__body > .cat-column__empty {
   position: relative;
   z-index: 1;
+}
+
+.cat-column__body.has-subcols,
+.cat-column__body.is-rank-canvas {
+  overflow: visible;
 }
 
 /* ─── Event card ─── */
