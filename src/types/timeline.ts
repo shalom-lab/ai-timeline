@@ -1,6 +1,7 @@
 /** AI Timeline — core data types. Keep in sync with docs/DATA.md and data/timeline.json. */
 
-export type Category = 'model' | 'product' | 'concept' | 'other'
+/** Display order (docs/UI): 概念 → 大模型 → 产品 → 其他 */
+export type Category = 'concept' | 'model' | 'product' | 'other'
 
 export type ProductSubcategory =
   | 'ide'
@@ -67,6 +68,17 @@ export interface Company {
   id: string
   name: string
   aliases?: string[]
+  /** Primary brand color for timeline chips/markers, #RRGGBB */
+  color: string
+  /** Optional softer tint for backgrounds, #RRGGBB */
+  colorSoft?: string
+}
+
+export interface TimelineUiMeta {
+  /** Opening/hero background: CSS value (gradient preferred) or image URL */
+  openingBg: string
+  /** Optional overlay/text color for hero */
+  openingFg?: string
 }
 
 export interface TimelineMeta {
@@ -77,10 +89,26 @@ export interface TimelineMeta {
   /** Dataset last-updated date, YYYY-MM-DD. */
   updatedAt: string
   locale: string
+  ui?: TimelineUiMeta
 }
 
 export interface TimelineData {
   meta: TimelineMeta
   companies: Company[]
   events: TimelineEvent[]
+}
+
+/** Canonical primary-category display order (zh labels in docs). */
+export const CATEGORY_DISPLAY_ORDER: readonly Category[] = [
+  'concept',
+  'model',
+  'product',
+  'other',
+] as const
+
+export const CATEGORY_LABEL_ZH: Record<Category, string> = {
+  concept: '概念',
+  model: '大模型',
+  product: '产品',
+  other: '其他',
 }

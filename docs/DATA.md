@@ -36,18 +36,30 @@ interface TimelineData {
 | `scopeStart` | `string` | 是 | 时间线起点，固定 `"2022-11-30"` |
 | `updatedAt` | `string` | 是 | 本文件最近修订日，`YYYY-MM-DD` |
 | `locale` | `string` | 是 | 正文默认语言标签，当前 `"zh-CN"`（字段名仍为英文） |
+| `ui` | `TimelineUiMeta` | 否（v0.2 种子必填 `openingBg`） | 开篇/Hero 等展示元数据 |
+
+#### `meta.ui`（`TimelineUiMeta`）
+
+| 字段 | 类型 | 必填 | 说明 |
+| --- | --- | --- | --- |
+| `openingBg` | `string` | 是（校验脚本要求） | 开篇/Hero 背景：优先 CSS 渐变，也可为图片 URL |
+| `openingFg` | `string` | 否 | Hero 文字色，`#RRGGBB` |
 
 ---
 
 ## 3. `companies`（公司/组织词典）
 
-用于规范化展示名与别名检索，**不是**事件必填外键（事件里写可读的 `company` 字符串，宜与本表 `name` 对齐）。
+用于规范化展示名、别名检索与 **品牌色**；**不是**事件必填外键（事件里写可读的 `company` 字符串，宜与本表 `name` 对齐）。
+
+**颜色映射属于公司，不属于一级分类**——`category` 无 `color` 字段；UI 应按 `companies[]` 的 `name`/`id`/`aliases` 解析事件的 `company` 字符串后取色。
 
 | 字段 | 类型 | 必填 | 说明 |
 | --- | --- | --- | --- |
-| `id` | `string` | 是 | 稳定 kebab id，如 `openai`、`anthropic` |
+| `id` | `string` | 是 | 稳定 kebab id，如 `openai`、`anthropic`、`xai` |
 | `name` | `string` | 是 | 规范显示名 |
 | `aliases` | `string[]` | 否 | 曾用名、品牌别称，便于搜索与去重 |
+| `color` | `string` | 是 | 主品牌色 `#RRGGBB`，用于时间线标记与公司胶囊 |
+| `colorSoft` | `string` | 否 | 浅底 tint `#RRGGBB`，用于胶囊背景等 |
 
 ---
 
@@ -80,12 +92,16 @@ interface TimelineData {
 
 #### `category`（一级）
 
-| 枚举值 | 中文标签 | 用法 |
-| --- | --- | --- |
-| `model` | 大模型 | 基础/对话/多模态等模型权重或 API 模型本身的发布 |
-| `product` | 产品 | 面向用户或开发者的产品、客户端、工具、平台能力 |
-| `concept` | 概念 | 行业共识性概念的「公开落地/命名」节点（慎用） |
-| `other` | 其他 | 无法归入以上三类时；应尽量少用 |
+仅保留四个一级分类，**不增设第五个**。文档与 UI **展示顺序**（先概念/想法，再模型，再产品，最后其他）：
+
+| 展示序 | 枚举值 | 中文标签 | 用法 |
+| --- | --- | --- | --- |
+| 1 | `concept` | 概念 | 行业共识性概念的「公开落地/命名」节点；亦可标注 AI 求解科学问题等跨产品范式节点（慎用） |
+| 2 | `model` | 大模型 | 基础/对话/多模态等模型权重或 API 模型本身的发布（含 AlphaFold 等科学模型） |
+| 3 | `product` | 产品 | 面向用户或开发者的产品、客户端、工具、平台能力 |
+| 4 | `other` | 其他 | 无法归入以上三类时；应尽量少用 |
+
+> 一级分类 **没有** 颜色字段；色值只写在 `companies[].color`。
 
 #### `productSubcategory`（产品二级，`category === 'product'` 时宜填写）
 
@@ -165,6 +181,8 @@ interface Source {
 5. `category === 'product'` 时推荐存在 `productSubcategory`。
 6. `dateStatus !== 'unverified'`（主数据集）。
 7. `relatedIds` 若存在，须指向同文件内已有 `id`。
+8. 每个 `companies[]` 必须有合法 `#RRGGBB` 的 `color`；`colorSoft` 若存在同为 hex。
+9. `meta.ui.openingBg` 必须非空（开篇背景）。
 
 ---
 
@@ -181,7 +199,7 @@ interface Source {
 
 ### Schema 偏离记录（当前）
 
-无。采用任务给定的 `Category` / `ProductSubcategory` / `EventType` / `Source` / `TimelineEvent` / `TimelineData`；仅补充文档化的 `DateStatus`、`Company`、`TimelineMeta` 具名类型，语义与给定 schema 一致。
+相对 v0.1：`Company` 增加必填 `color` 与可选 `colorSoft`；`TimelineMeta` 增加可选 `ui`（`TimelineUiMeta.openingBg` / `openingFg`）。一级 `Category` 仍为四值，文档展示序改为 概念 → 大模型 → 产品 → 其他。版本 `0.2.0`（加性字段）。
 
 ---
 

@@ -14,7 +14,7 @@ v1（当前 `meta.version` 以 `0.x` / 首个 `1.0` 为目标）明确 **不做*
 | 完整编年史 | 不做「每日新闻」；只收 landmark / 可核验里程碑 |
 | 二手推断日 | 禁止用媒体「大约本周」拼凑精确 `date` |
 | 未区分阶段 | 禁止把 research preview 写成 GA |
-| UI / 部署 | 本阶段以数据层为主；**尚未配置 GitHub Pages**（见根 README「下一步」） |
+| UI / 部署 | 本阶段以数据层为主；占位 UI + GitHub Actions 部署 Pages（见根 README） |
 | 多语言平行库 | 正文默认中文；不维护第二套平行 JSON |
 | 自动爬虫入库 | 不接受无人工来源审计的批量抓取结果直接合入 `main` |
 
@@ -30,7 +30,8 @@ v1（当前 `meta.version` 以 `0.x` / 首个 `1.0` 为目标）明确 **不做*
 2. **可核验**：至少一条官方 blog / docs / changelog / 官方新闻稿 URL；打不开或需登录墙则换镜像/归档并注明。
 3. **不猜日期**：来源未写清公历日 → **整条省略**（不要用 `unverified` 塞进主数据）。
 4. **阶段正确**：阅读原文用词（research preview / beta / GA / open source / announcing）映射到 `eventType`（见 §3）。
-5. **分类**：模型发权重/API 型号 → `model`；用户可感知产品 → `product` + 合适的 `productSubcategory`。
+5. **分类**：一级仅四类，展示序为 **概念 → 大模型 → 产品 → 其他**（`concept` → `model` → `product` → `other`）。模型发权重/API 型号 → `model`；用户可感知产品 → `product` + 合适的 `productSubcategory`；科学突破演示可用 `concept`/`other` 或具名科学模型用 `model`（并打 `ai-for-science` 等 tags）。**不要给 category 加颜色**——色在 `companies[].color`。
+5b. **公司色**：事件 `company` 宜对齐词典；新组织须在 `companies[]` 增加 `color`（`#RRGGBB`）与可选 `colorSoft`。
 6. **`id` 稳定**：kebab-case，含组织、对象、阶段语义与日期；合并后不随意改名（改名须加迁移说明）。
 7. **去重**：检索 `data/timeline.json` 是否已有同日同产品同阶段条目（见 §5）。
 8. **文案**：`title` / `summary` 陈述事实；不写未证实的「首个」「颠覆」。
@@ -138,3 +139,18 @@ npm run dev        # 可选：查看占位 UI
 - Commit 信息标明：`data: add …` / `docs: …` / `fix: …`。  
 - 仅改数据时附上主来源 URL 列表。  
 - Schema 变更与数据变更尽量分 commit，便于回滚。
+
+---
+
+## 8. Schema 迁移（0.1 → 0.2）
+
+| 变更 | 说明 |
+| --- | --- |
+| `Company.color` | 必填 `#RRGGBB`；UI 标记/胶囊取色 |
+| `Company.colorSoft` | 可选浅底色 |
+| `meta.ui.openingBg` | 开篇 Hero 背景（CSS 渐变优先） |
+| `meta.ui.openingFg` | 可选 Hero 文字色 |
+| 一级分类展示序 | 文档/UI：概念 → 大模型 → 产品 → 其他（仍仅四类） |
+| `meta.version` | `0.2.0` |
+
+校验：`npm run validate` 会强制 `company.color` 与 `meta.ui.openingBg`。

@@ -1,20 +1,146 @@
 {
   "meta": {
     "name": "AI Timeline",
-    "version": "0.1.0",
+    "version": "0.2.0",
     "scopeStart": "2022-11-30",
     "updatedAt": "2026-10-28",
-    "locale": "zh-CN"
+    "locale": "zh-CN",
+    "ui": {
+      "openingBg": "linear-gradient(145deg, #0B1220 0%, #1E1B4B 48%, #312E81 100%)",
+      "openingFg": "#F8FAFC"
+    }
   },
   "companies": [
-    { "id": "openai", "name": "OpenAI", "aliases": ["Open AI"] },
-    { "id": "anthropic", "name": "Anthropic" },
-    { "id": "google", "name": "Google", "aliases": ["Google DeepMind", "Google AI", "Alphabet"] },
-    { "id": "meta", "name": "Meta", "aliases": ["Meta AI", "Facebook AI"] },
-    { "id": "microsoft", "name": "Microsoft", "aliases": ["GitHub"] },
-    { "id": "github", "name": "GitHub", "aliases": ["GitHub Next"] },
-    { "id": "cognition", "name": "Cognition", "aliases": ["Cognition Labs"] },
-    { "id": "deepseek", "name": "DeepSeek", "aliases": ["深度求索"] }
+    {
+      "id": "openai",
+      "name": "OpenAI",
+      "aliases": [
+        "Open AI"
+      ],
+      "color": "#10A37F",
+      "colorSoft": "#D1F0E5"
+    },
+    {
+      "id": "anthropic",
+      "name": "Anthropic",
+      "color": "#CC785C",
+      "colorSoft": "#F5E6DC"
+    },
+    {
+      "id": "google",
+      "name": "Google",
+      "aliases": [
+        "Google DeepMind",
+        "Google AI",
+        "Alphabet",
+        "DeepMind"
+      ],
+      "color": "#4285F4",
+      "colorSoft": "#D9E8FC"
+    },
+    {
+      "id": "meta",
+      "name": "Meta",
+      "aliases": [
+        "Meta AI",
+        "Facebook AI"
+      ],
+      "color": "#0668E1",
+      "colorSoft": "#D0E4FA"
+    },
+    {
+      "id": "microsoft",
+      "name": "Microsoft",
+      "aliases": [
+        "MS",
+        "Microsoft 365"
+      ],
+      "color": "#00A4EF",
+      "colorSoft": "#D0EFFC"
+    },
+    {
+      "id": "github",
+      "name": "GitHub",
+      "aliases": [
+        "GitHub Next"
+      ],
+      "color": "#24292F",
+      "colorSoft": "#E4E6E8"
+    },
+    {
+      "id": "xai",
+      "name": "xAI",
+      "aliases": [
+        "X.AI",
+        "Grok"
+      ],
+      "color": "#111111",
+      "colorSoft": "#E5E5E5"
+    },
+    {
+      "id": "cognition",
+      "name": "Cognition",
+      "aliases": [
+        "Cognition Labs"
+      ],
+      "color": "#6E56CF",
+      "colorSoft": "#E4DFF5"
+    },
+    {
+      "id": "deepseek",
+      "name": "DeepSeek",
+      "aliases": [
+        "深度求索"
+      ],
+      "color": "#4D6BFE",
+      "colorSoft": "#DCE3FF"
+    },
+    {
+      "id": "alibaba",
+      "name": "Alibaba",
+      "aliases": [
+        "阿里",
+        "阿里云",
+        "Alibaba Cloud",
+        "通义",
+        "Qwen"
+      ],
+      "color": "#FF6A00",
+      "colorSoft": "#FFE2CC"
+    },
+    {
+      "id": "tencent",
+      "name": "Tencent",
+      "aliases": [
+        "腾讯",
+        "腾讯云",
+        "Hunyuan",
+        "混元"
+      ],
+      "color": "#12B7F5",
+      "colorSoft": "#D4F1FC"
+    },
+    {
+      "id": "moonshot",
+      "name": "Moonshot AI",
+      "aliases": [
+        "月之暗面",
+        "Moonshot",
+        "Kimi"
+      ],
+      "color": "#1A1A2E",
+      "colorSoft": "#E8E8ED"
+    },
+    {
+      "id": "minimax",
+      "name": "MiniMax",
+      "aliases": [
+        "海螺AI",
+        "Hailuo"
+      ],
+      "color": "#FF4D6A",
+      "colorSoft": "#FFD6DE"
+    }
   ],
   "events": [
     {
@@ -37,7 +163,11 @@
           "publishedAt": "2022-11-30"
         }
       ],
-      "tags": ["chatgpt", "scope-start", "conversational-ai"]
+      "tags": [
+        "chatgpt",
+        "scope-start",
+        "conversational-ai"
+      ]
     },
     {
       "id": "openai-chatgpt-plus-2023-02-01",
@@ -59,8 +189,13 @@
           "publishedAt": "2023-02-01"
         }
       ],
-      "relatedIds": ["openai-chatgpt-research-preview-2022-11-30"],
-      "tags": ["chatgpt", "subscription"]
+      "relatedIds": [
+        "openai-chatgpt-research-preview-2022-11-30"
+      ],
+      "tags": [
+        "chatgpt",
+        "subscription"
+      ]
     },
     {
       "id": "openai-gpt-4-2023-03-14",
@@ -81,8 +216,65 @@
           "publishedAt": "2023-03-14"
         }
       ],
-      "relatedIds": ["openai-chatgpt-plus-2023-02-01"],
-      "tags": ["gpt-4", "multimodal"]
+      "relatedIds": [
+        "openai-chatgpt-plus-2023-02-01"
+      ],
+      "tags": [
+        "gpt-4",
+        "multimodal"
+      ]
+    },
+    {
+      "id": "microsoft-365-copilot-first-announce-2023-03-16",
+      "date": "2023-03-16",
+      "dateStatus": "exact",
+      "title": "Microsoft 公布 Microsoft 365 Copilot",
+      "summary": "Microsoft 宣布将大语言模型与 Microsoft Graph、Office 应用结合的 Microsoft 365 Copilot，并介绍跨日历/邮件/文档的 Business Chat；当时面向部分企业客户预览。",
+      "category": "product",
+      "productSubcategory": "work_assistant",
+      "company": "Microsoft",
+      "series": "Microsoft 365 Copilot",
+      "product": "Microsoft 365 Copilot",
+      "eventType": "first_announce",
+      "sources": [
+        {
+          "title": "Introducing Microsoft 365 Copilot – your copilot for work",
+          "url": "https://blogs.microsoft.com/blog/2023/03/16/introducing-microsoft-365-copilot-your-copilot-for-work/",
+          "publisher": "Microsoft",
+          "publishedAt": "2023-03-16"
+        }
+      ],
+      "tags": [
+        "copilot",
+        "microsoft-365",
+        "productivity"
+      ]
+    },
+    {
+      "id": "alibaba-tongyi-qianwen-invite-2023-04-11",
+      "date": "2023-04-11",
+      "dateStatus": "exact",
+      "title": "阿里云发布通义千问并开启企业邀测",
+      "summary": "阿里云在云峰会正式发布大语言模型通义千问（Tongyi Qianwen），宣布将接入钉钉、天猫精灵等业务，并面向中国内地企业客户与开发者开放云上邀测/API 内测。",
+      "category": "product",
+      "productSubcategory": "chat",
+      "company": "Alibaba",
+      "series": "通义千问",
+      "product": "通义千问",
+      "eventType": "public_beta",
+      "sources": [
+        {
+          "title": "Alibaba Cloud Unveils New AI Model to Support Enterprises’ Intelligence Transformation",
+          "url": "https://www.alibabagroup.com/en-US/document-1582482069362049024",
+          "publisher": "Alibaba Group",
+          "publishedAt": "2023-04-11"
+        }
+      ],
+      "tags": [
+        "qwen",
+        "tongyi",
+        "alibaba-cloud"
+      ]
     },
     {
       "id": "anthropic-claude-2-public-beta-2023-07-11",
@@ -104,7 +296,10 @@
           "publishedAt": "2023-07-11"
         }
       ],
-      "tags": ["claude", "claude-ai"]
+      "tags": [
+        "claude",
+        "claude-ai"
+      ]
     },
     {
       "id": "meta-llama-2-open-source-2023-07-18",
@@ -125,7 +320,67 @@
           "publishedAt": "2023-07-18"
         }
       ],
-      "tags": ["llama", "open-weights"]
+      "tags": [
+        "llama",
+        "open-weights"
+      ]
+    },
+    {
+      "id": "alibaba-qwen-7b-open-source-2023-08-03",
+      "date": "2023-08-03",
+      "dateStatus": "exact",
+      "title": "阿里云开源 Qwen-7B / Qwen-7B-Chat",
+      "summary": "阿里云开源通义千问 70 亿参数基座与对话模型 Qwen-7B、Qwen-7B-Chat，权重与代码通过 ModelScope、Hugging Face 等渠道发布，支持研究与（在许可条件下）商用。",
+      "category": "model",
+      "company": "Alibaba",
+      "series": "Qwen",
+      "product": "Qwen-7B",
+      "eventType": "open_source",
+      "sources": [
+        {
+          "title": "Qwen-7B on Hugging Face",
+          "url": "https://huggingface.co/Qwen/Qwen-7B",
+          "publisher": "Alibaba Cloud / Qwen",
+          "publishedAt": "2023-08-03"
+        },
+        {
+          "title": "Tongyi Qianwen LICENSE AGREEMENT (Release Date: August 3, 2023)",
+          "url": "https://github.com/QwenLM/Qwen/blob/main/Tongyi%20Qianwen%20LICENSE%20AGREEMENT",
+          "publisher": "Alibaba Cloud",
+          "publishedAt": "2023-08-03"
+        }
+      ],
+      "relatedIds": [
+        "alibaba-tongyi-qianwen-invite-2023-04-11"
+      ],
+      "tags": [
+        "qwen",
+        "open-weights"
+      ]
+    },
+    {
+      "id": "tencent-hunyuan-enterprise-2023-09-07",
+      "date": "2023-09-07",
+      "dateStatus": "exact",
+      "title": "腾讯发布混元大模型并向企业开放 API",
+      "summary": "腾讯在全球数字生态大会正式亮相自研混元（Hunyuan）大模型，即日起通过腾讯云 API 向国内企业开放测试与接入；模型亦接入腾讯会议、文档等自有产品。",
+      "category": "model",
+      "company": "Tencent",
+      "series": "混元",
+      "product": "混元大模型",
+      "eventType": "first_announce",
+      "sources": [
+        {
+          "title": "Tencent Unveils Hunyuan, its Proprietary Large Foundation Model on Tencent Cloud",
+          "url": "https://www.tencent.com/tencent-unveils-hunyuan-its-proprietary-large-foundation-model-on-tencent-cloud/",
+          "publisher": "Tencent",
+          "publishedAt": "2023-09-07"
+        }
+      ],
+      "tags": [
+        "hunyuan",
+        "tencent-cloud"
+      ]
     },
     {
       "id": "openai-dalle-3-2023-09-20",
@@ -147,8 +402,70 @@
           "publishedAt": "2023-09-20"
         }
       ],
-      "relatedIds": ["openai-chatgpt-plus-2023-02-01"],
-      "tags": ["image-generation", "dalle"]
+      "relatedIds": [
+        "openai-chatgpt-plus-2023-02-01"
+      ],
+      "tags": [
+        "image-generation",
+        "dalle"
+      ]
+    },
+    {
+      "id": "xai-grok-announce-2023-11-03",
+      "date": "2023-11-03",
+      "dateStatus": "exact",
+      "title": "xAI 宣布 Grok 早期访问并介绍 Grok-1",
+      "summary": "xAI 宣布对话式 AI Grok 进入早期 beta，并介绍驱动其的前沿模型 Grok-1；产品强调幽默风格与经 X 平台的实时世界知识。",
+      "category": "product",
+      "productSubcategory": "chat",
+      "company": "xAI",
+      "series": "Grok",
+      "product": "Grok",
+      "eventType": "research_preview",
+      "sources": [
+        {
+          "title": "Announcing Grok",
+          "url": "https://x.ai/news/grok",
+          "publisher": "xAI",
+          "publishedAt": "2023-11-03"
+        }
+      ],
+      "tags": [
+        "grok",
+        "xai"
+      ]
+    },
+    {
+      "id": "moonshot-kimi-chat-ga-2023-11-16",
+      "date": "2023-11-16",
+      "dateStatus": "exact",
+      "title": "月之暗面宣布 Kimi Chat 面向全社会开放",
+      "summary": "Moonshot AI（月之暗面）宣布智能助手 Kimi Chat 即日起全面开放，无需内测资格；更新日志标明模型版本 moonshot-v1-20231115，并强化长文本等体验。",
+      "category": "product",
+      "productSubcategory": "chat",
+      "company": "Moonshot AI",
+      "series": "Kimi",
+      "product": "Kimi Chat",
+      "eventType": "ga",
+      "sources": [
+        {
+          "title": "Kimi Chat 全面开放！",
+          "url": "https://mp.weixin.qq.com/s/V4FUdkqUm2erGNliQt9WuA",
+          "publisher": "月之暗面 Kimi",
+          "publishedAt": "2023-11-16"
+        },
+        {
+          "title": "Kimi Chat 全面开放！（Internet Archive）",
+          "url": "https://web.archive.org/web/20240113113307/https://mp.weixin.qq.com/s/V4FUdkqUm2erGNliQt9WuA",
+          "publisher": "Moonshot AI (archive)",
+          "publishedAt": "2023-11-16"
+        }
+      ],
+      "tags": [
+        "kimi",
+        "long-context",
+        "moonshot"
+      ]
     },
     {
       "id": "google-gemini-first-announce-2023-12-06",
@@ -169,7 +486,10 @@
           "publishedAt": "2023-12-06"
         }
       ],
-      "tags": ["gemini", "multimodal"]
+      "tags": [
+        "gemini",
+        "multimodal"
+      ]
     },
     {
       "id": "github-copilot-chat-ga-2024-01-11",
@@ -191,7 +511,38 @@
           "publishedAt": "2024-01-11"
         }
       ],
-      "tags": ["copilot", "ide", "coding"]
+      "tags": [
+        "copilot",
+        "ide",
+        "coding"
+      ]
+    },
+    {
+      "id": "alibaba-qwen1-5-open-source-2024-02-04",
+      "date": "2024-02-04",
+      "dateStatus": "exact",
+      "title": "通义千问团队开源发布 Qwen1.5 系列",
+      "summary": "Qwen 团队开源 Qwen1.5 多尺寸基座与聊天模型（含 0.5B–72B 等），代码并入 Hugging Face transformers，并提供量化与主流推理框架支持。",
+      "category": "model",
+      "company": "Alibaba",
+      "series": "Qwen",
+      "product": "Qwen1.5",
+      "eventType": "open_source",
+      "sources": [
+        {
+          "title": "Introducing Qwen1.5",
+          "url": "https://qwenlm.github.io/blog/qwen1.5/",
+          "publisher": "Qwen Team",
+          "publishedAt": "2024-02-04"
+        }
+      ],
+      "relatedIds": [
+        "alibaba-qwen-7b-open-source-2023-08-03"
+      ],
+      "tags": [
+        "qwen",
+        "open-weights"
+      ]
     },
     {
       "id": "google-bard-gemini-rename-2024-02-08",
@@ -213,8 +564,14 @@
           "publishedAt": "2024-02-08"
         }
       ],
-      "relatedIds": ["google-gemini-first-announce-2023-12-06"],
-      "tags": ["bard", "gemini", "rebrand"]
+      "relatedIds": [
+        "google-gemini-first-announce-2023-12-06"
+      ],
+      "tags": [
+        "bard",
+        "gemini",
+        "rebrand"
+      ]
     },
     {
       "id": "openai-sora-first-announce-2024-02-15",
@@ -236,7 +593,10 @@
           "publishedAt": "2024-02-15"
         }
       ],
-      "tags": ["video-generation", "sora"]
+      "tags": [
+        "video-generation",
+        "sora"
+      ]
     },
     {
       "id": "anthropic-claude-3-family-2024-03-04",
@@ -257,8 +617,15 @@
           "publishedAt": "2024-03-04"
         }
       ],
-      "relatedIds": ["anthropic-claude-2-public-beta-2023-07-11"],
-      "tags": ["claude-3", "opus", "sonnet", "haiku"]
+      "relatedIds": [
+        "anthropic-claude-2-public-beta-2023-07-11"
+      ],
+      "tags": [
+        "claude-3",
+        "opus",
+        "sonnet",
+        "haiku"
+      ]
     },
     {
       "id": "cognition-devin-first-announce-2024-03-12",
@@ -280,7 +647,64 @@
           "publishedAt": "2024-03-12"
         }
       ],
-      "tags": ["agent", "coding", "swe-bench"]
+      "tags": [
+        "agent",
+        "coding",
+        "swe-bench"
+      ]
+    },
+    {
+      "id": "xai-grok-1-open-weights-2024-03-17",
+      "date": "2024-03-17",
+      "dateStatus": "exact",
+      "title": "xAI 开放 Grok-1 权重与架构",
+      "summary": "xAI 以 Apache 2.0 发布 3140 亿参数 MoE 基座模型 Grok-1 的权重与网络架构（预训练原始检查点，未经对话微调），并在 GitHub 提供示例推理代码。",
+      "category": "model",
+      "company": "xAI",
+      "series": "Grok",
+      "product": "Grok-1",
+      "eventType": "open_source",
+      "sources": [
+        {
+          "title": "Open Release of Grok-1",
+          "url": "https://x.ai/news/grok-os",
+          "publisher": "xAI",
+          "publishedAt": "2024-03-17"
+        }
+      ],
+      "relatedIds": [
+        "xai-grok-announce-2023-11-03"
+      ],
+      "tags": [
+        "grok",
+        "open-weights",
+        "moe"
+      ]
+    },
+    {
+      "id": "minimax-abab65-2024-04-17",
+      "date": "2024-04-17",
+      "dateStatus": "exact",
+      "title": "MiniMax 发布通用大模型 abab 6.5 系列",
+      "summary": "MiniMax 正式推出 abab 6.5 系列（含万亿参数级与高效 abab 6.5s），支持约 200k tokens 上下文，并更新到海螺 AI 与开放平台产品中。",
+      "category": "model",
+      "company": "MiniMax",
+      "series": "abab",
+      "product": "abab 6.5",
+      "eventType": "first_announce",
+      "sources": [
+        {
+          "title": "The General Large Language Model abab6.5 Series",
+          "url": "https://www.minimax.io/news/abab65-series",
+          "publisher": "MiniMax",
+          "publishedAt": "2024-04-17"
+        }
+      ],
+      "tags": [
+        "abab",
+        "moe",
+        "long-context"
+      ]
     },
     {
       "id": "meta-llama-3-open-source-2024-04-18",
@@ -301,8 +725,13 @@
           "publishedAt": "2024-04-18"
         }
       ],
-      "relatedIds": ["meta-llama-2-open-source-2023-07-18"],
-      "tags": ["llama", "open-weights"]
+      "relatedIds": [
+        "meta-llama-2-open-source-2023-07-18"
+      ],
+      "tags": [
+        "llama",
+        "open-weights"
+      ]
     },
     {
       "id": "github-copilot-workspace-tech-preview-2024-04-29",
@@ -324,8 +753,40 @@
           "publishedAt": "2024-04-29"
         }
       ],
-      "relatedIds": ["github-copilot-chat-ga-2024-01-11"],
-      "tags": ["copilot", "agentic-coding", "workspace"]
+      "relatedIds": [
+        "github-copilot-chat-ga-2024-01-11"
+      ],
+      "tags": [
+        "copilot",
+        "agentic-coding",
+        "workspace"
+      ]
+    },
+    {
+      "id": "google-deepmind-alphafold3-2024-05-08",
+      "date": "2024-05-08",
+      "dateStatus": "exact",
+      "title": "Google DeepMind 与 Isomorphic Labs 发布 AlphaFold 3",
+      "summary": "Google DeepMind 与 Isomorphic Labs 发布 AlphaFold 3，可预测蛋白质、DNA、RNA、配体等生命分子结构及其相互作用；同步推出面向科研的 AlphaFold Server。属 AI 求解科学问题的里程碑（非消费级聊天产品）。",
+      "category": "model",
+      "company": "Google",
+      "series": "AlphaFold",
+      "product": "AlphaFold 3",
+      "eventType": "first_announce",
+      "sources": [
+        {
+          "title": "AlphaFold 3 predicts the structure and interactions of all of life’s molecules",
+          "url": "https://blog.google/innovation-and-ai/products/google-deepmind-isomorphic-alphafold-3-ai-model/",
+          "publisher": "Google DeepMind / Isomorphic Labs",
+          "publishedAt": "2024-05-08"
+        }
+      ],
+      "tags": [
+        "ai-for-science",
+        "science",
+        "alphafold",
+        "biology"
+      ]
     },
     {
       "id": "openai-gpt-4o-2024-05-13",
@@ -346,8 +807,40 @@
           "publishedAt": "2024-05-13"
         }
       ],
-      "relatedIds": ["openai-gpt-4-2023-03-14"],
-      "tags": ["gpt-4o", "multimodal"]
+      "relatedIds": [
+        "openai-gpt-4-2023-03-14"
+      ],
+      "tags": [
+        "gpt-4o",
+        "multimodal"
+      ]
+    },
+    {
+      "id": "alibaba-qwen2-open-source-2024-06-07",
+      "date": "2024-06-07",
+      "dateStatus": "exact",
+      "title": "通义千问团队开源发布 Qwen2 系列",
+      "summary": "Qwen 团队开源 Qwen2 多尺寸预训练与指令微调模型（含 0.5B–72B 与 MoE 57B-A14B），强调多语言、代码与数学能力提升，并在 Hugging Face / ModelScope 提供权重。",
+      "category": "model",
+      "company": "Alibaba",
+      "series": "Qwen",
+      "product": "Qwen2",
+      "eventType": "open_source",
+      "sources": [
+        {
+          "title": "Hello Qwen2",
+          "url": "https://qwenlm.github.io/blog/qwen2/",
+          "publisher": "Qwen Team",
+          "publishedAt": "2024-06-07"
+        }
+      ],
+      "relatedIds": [
+        "alibaba-qwen1-5-open-source-2024-02-04"
+      ],
+      "tags": [
+        "qwen",
+        "open-weights"
+      ]
     },
     {
       "id": "anthropic-claude-3-5-sonnet-artifacts-2024-06-21",
@@ -369,8 +862,42 @@
           "publishedAt": "2024-06-21"
         }
       ],
-      "relatedIds": ["anthropic-claude-3-family-2024-03-04"],
-      "tags": ["claude-3.5", "artifacts", "coding"]
+      "relatedIds": [
+        "anthropic-claude-3-family-2024-03-04"
+      ],
+      "tags": [
+        "claude-3.5",
+        "artifacts",
+        "coding"
+      ]
+    },
+    {
+      "id": "minimax-video-music-announce-2024-08-31",
+      "date": "2024-08-31",
+      "dateStatus": "exact",
+      "title": "MiniMax 发布视频模型 abab-video-1 等 multimodal 能力",
+      "summary": "MiniMax 在合作伙伴日宣布发布视频模型 abab-video-1、音乐模型 abab-music-1，并更新语音模型；相关能力在开放平台与海螺 AI Web 提供。",
+      "category": "model",
+      "company": "MiniMax",
+      "series": "abab",
+      "product": "abab-video-1",
+      "eventType": "first_announce",
+      "sources": [
+        {
+          "title": "3 billion interactions with the world",
+          "url": "https://www.minimax.io/news/3-billion-interactions",
+          "publisher": "MiniMax",
+          "publishedAt": "2024-08-31"
+        }
+      ],
+      "relatedIds": [
+        "minimax-abab65-2024-04-17"
+      ],
+      "tags": [
+        "video-generation",
+        "multimodal",
+        "hailuo"
+      ]
     },
     {
       "id": "openai-o1-preview-2024-09-12",
@@ -391,7 +918,10 @@
           "publishedAt": "2024-09-12"
         }
       ],
-      "tags": ["reasoning", "o1"]
+      "tags": [
+        "reasoning",
+        "o1"
+      ]
     },
     {
       "id": "deepseek-r1-open-source-2025-01-20",
@@ -412,8 +942,14 @@
           "publishedAt": "2025-01-20"
         }
       ],
-      "relatedIds": ["openai-o1-preview-2024-09-12"],
-      "tags": ["reasoning", "open-weights", "r1"]
+      "relatedIds": [
+        "openai-o1-preview-2024-09-12"
+      ],
+      "tags": [
+        "reasoning",
+        "open-weights",
+        "r1"
+      ]
     },
     {
       "id": "openai-operator-research-preview-2025-01-23",
@@ -435,7 +971,11 @@
           "publishedAt": "2025-01-23"
         }
       ],
-      "tags": ["agent", "browser-use", "cua"]
+      "tags": [
+        "agent",
+        "browser-use",
+        "cua"
+      ]
     },
     {
       "id": "anthropic-claude-code-research-preview-2025-02-24",
@@ -457,8 +997,14 @@
           "publishedAt": "2025-02-24"
         }
       ],
-      "relatedIds": ["anthropic-claude-3-5-sonnet-artifacts-2024-06-21"],
-      "tags": ["cli", "agentic-coding", "claude-code"]
+      "relatedIds": [
+        "anthropic-claude-3-5-sonnet-artifacts-2024-06-21"
+      ],
+      "tags": [
+        "cli",
+        "agentic-coding",
+        "claude-code"
+      ]
     },
     {
       "id": "google-gemini-cli-open-source-2025-06-25",
@@ -480,8 +1026,15 @@
           "publishedAt": "2025-06-25"
         }
       ],
-      "relatedIds": ["anthropic-claude-code-research-preview-2025-02-24"],
-      "tags": ["cli", "agentic-coding", "open-source", "mcp"]
+      "relatedIds": [
+        "anthropic-claude-code-research-preview-2025-02-24"
+      ],
+      "tags": [
+        "cli",
+        "agentic-coding",
+        "open-source",
+        "mcp"
+      ]
     }
   ]
 }

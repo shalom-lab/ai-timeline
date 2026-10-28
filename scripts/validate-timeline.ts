@@ -5,15 +5,16 @@
 import { readFileSync } from 'node:fs'
 import { resolve, dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
-import type { TimelineData, TimelineEvent } from '../src/types/timeline'
+import type { TimelineData, TimelineEvent, Company } from '../src/types/timeline'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const root = resolve(__dirname, '..')
 const dataPath = resolve(root, 'data/timeline.json')
 
 const DATE_RE = /^\d{4}-\d{2}-\d{2}$/
+const HEX_RE = /^#[0-9A-Fa-f]{6}$/
 
-const CATEGORIES = new Set(['model', 'product', 'concept', 'other'])
+const CATEGORIES = new Set(['concept', 'model', 'product', 'other'])
 const SUBCATS = new Set([
   'ide',
   'cli',
@@ -41,7 +42,6 @@ const EVENT_TYPES = new Set([
 ])
 const DATE_STATUS = new Set(['exact', 'approximate', 'unverified'])
 
-
 function main() {
   const data = JSON.parse(readFileSync(dataPath, 'utf8')) as TimelineData
   const errors: string[] = []
@@ -56,10 +56,23 @@ function main() {
     for (const k of ['updatedAt', 'scopeStart'] as const) {
       if (!DATE_RE.test(data.meta[k])) push(`meta.${k} bad date`)
     }
+    if (!data.meta.ui?.openingBg?.trim()) {
+      push('meta.ui.openingBg is required (CSS gradient or image URL)')
+    }
+    if (data.meta.ui?.openingFg && !HEX_RE.test(data.meta.ui.openingFg)) {
+      push(`meta.ui.openingFg must be #RRGGBB, got ${data.meta.ui.openingFg}`)
+    }
   }
 
   if (!Array.isArray(data.companies) || data.companies.length === 0) {
     push('companies must be a non-empty array')
+  } else {
+    const companyIds = new Set<string>()
+    for (const c of data.companies) {
+      validateCompany(c, push)
+      if (companyIds.has(c.id)) push(`duplicate company id: ${c.id}`)
+      companyIds.add(c.id)
+    }
   }
 
   if (!Array.isArray(data.events)) push('events must be an array')
@@ -87,8 +100,21 @@ function main() {
   }
 
   console.log(
-    `✓ OK — ${data.events.length} events, ${data.companies.length} companies, scopeStart=${data.meta.scopeStart}`,
+    `✓ OK — ${data.events.length} events, ${data.companies.length} companies, scopeStart=${data.meta.scopeStart}, openingBg set`,
   )
+}
+
+function validateCompany(c: Company, push: (m: string) => void) {
+  if (!c.id || !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(c.id)) {
+    push(`bad company id: ${c.id}`)
+  }
+  if (!c.name?.trim()) push(`company ${c.id}: empty name`)
+  if (!HEX_RE.test(c.color ?? '')) {
+    push(`company ${c.id}: color required as #RRGGBB`)
+  }
+  if (c.colorSoft != null && !HEX_RE.test(c.colorSoft)) {
+    push(`company ${c.id}: colorSoft must be #RRGGBB`)
+  }
 }
 
 function validateEvent(
