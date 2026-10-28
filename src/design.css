@@ -33,11 +33,11 @@ button:focus-visible, a:focus-visible, select:focus-visible { outline:2px solid 
 .cat-column__chips > button:not(.cat-column__chips-copy).is-active { color:#17796b; background:#e9f3ee; border-color:#cde3d8; }
 .cat-column__body { padding:12px; background:#f7f9fa; }
 .cat-column__body.has-subcols { gap:12px; }
-.has-subcols > .cat-subcol { flex:0 0 260px; min-width:240px; max-width:300px; }
+.has-subcols > .cat-subcol { flex:0 0 210px; min-width:200px; max-width:240px; }
 .cat-subcol__label { padding:0 3px 8px; font-size:.78rem; color:#43505c; border-bottom:1px solid var(--border); margin-bottom:2px; }
 .cat-subcol__cards { gap:8px; }
 .cat-subcol__copy, .cat-column__chips-copy { width:28px; height:28px; border-color:var(--border); }
-.event-card { background:#fff; border:1px solid var(--border); border-top:2px solid color-mix(in srgb,var(--co) 65%,white); border-radius:8px; padding:8px 10px 7px; box-shadow:0 1px 3px #1b313405; }
+.event-card { background:#fff; border:1px solid var(--border); border-top:2px solid color-mix(in srgb,var(--co) 65%,white); border-radius:8px; padding:8px 8px 7px; box-shadow:0 1px 3px #1b313405; }
 .event-card:hover { box-shadow:0 3px 10px #233c3410; border-color:color-mix(in srgb,var(--co) 40%,white); }
 .event-card__meta { margin-bottom:5px; min-height:0; }
 .event-card__meta time,.event-card__company { font-size:.66rem; }
@@ -126,7 +126,7 @@ button:focus-visible, a:focus-visible, select:focus-visible { outline:2px solid 
   .board-tabs__btn { font-size:.74rem; padding:0 4px; gap:3px; }
   .board__columns { overflow:visible; flex-direction:column; }
   .board__col-slot { min-width:0; }
-  .has-subcols > .cat-subcol { flex-basis:272px; }
+  .has-subcols > .cat-subcol { flex-basis:220px; }
   .frontier-intro { padding:20px 16px; align-items:flex-start; flex-direction:column; gap:14px; }
   .frontier-sort { flex-direction:row; align-items:center; }
   .frontier-column__body { padding:20px 12px; }

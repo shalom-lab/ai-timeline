@@ -873,9 +873,9 @@ a {
 }
 
 .has-subcols > .cat-subcol {
-  flex: 0 0 260px;
-  min-width: 240px;
-  max-width: 300px;
+  flex: 0 0 210px;
+  min-width: 200px;
+  max-width: 240px;
 }
 
 .cat-column__empty {
@@ -989,7 +989,7 @@ a {
   background: var(--co-soft, var(--surface));
   border: 1px solid color-mix(in srgb, var(--co) 16%, var(--border));
   border-radius: 6px;
-  padding: 0.45rem 0.55rem 0.4rem 0.55rem;
+  padding: 0.45rem 0.4rem 0.4rem 0.4rem;
   cursor: default;
   box-shadow: 0 1px 2px rgba(15, 23, 42, 0.03);
   transition:
