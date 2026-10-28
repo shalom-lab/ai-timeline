@@ -777,6 +777,7 @@ a {
 
 .cat-column__body.has-subcols {
   display: flex;
+  flex-direction: row;
   flex-wrap: nowrap;
   align-items: start;
   gap: 0.5rem;
