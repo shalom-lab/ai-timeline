@@ -5,7 +5,7 @@ import type {
   ScienceDiscipline,
 } from '../types/timeline'
 
-/** Board column order: 大模型 → 产品 → 科学 → 其他 */
+/** Category order (data): 大模型 → 产品 → 科学 → 其他; UI tabs replace side-by-side columns */
 export const BOARD_CATEGORY_ORDER: readonly Category[] = [
   'model',
   'product',

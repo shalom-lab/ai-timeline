@@ -1,4 +1,4 @@
-import { useMemo, useRef, type ReactNode } from 'react'
+import { useMemo, useRef, useState, useCallback, type MouseEvent, type ReactNode } from 'react'
 import type { Category, Company, TimelineEvent } from '../types/timeline'
 import { CATEGORY_LABEL_ZH, CATEGORY_THEME } from '../lib/labels'
 import { buildSubGroups } from '../lib/group'
@@ -9,10 +9,6 @@ type Props = {
   category: Category
   events: TimelineEvent[]
   companies: Company[]
-  /** Whether this column is currently in 独占 mode */
-  isSolo: boolean
-  onSolo: () => void
-  onExitSolo: () => void
   /** Selected series/subcategory keys; empty = show all */
   subFilter: string[]
   onSubFilter: (keys: string[]) => void
@@ -35,6 +31,8 @@ type Props = {
   bumpSolid?: boolean
   /** Click-pin only: mute cards after focus date. Hover never mutes. */
   bumpMuteFuture?: boolean
+  /** Hide the category title band (e.g. compact「其他」block under 能力边界). */
+  hideHeader?: boolean
 }
 
 const ICONS: Record<Category, ReactNode> = {
@@ -66,31 +64,64 @@ const ICONS: Record<Category, ReactNode> = {
   ),
 }
 
-function IconSoloEnter() {
-  return (
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden>
-      <path
-        d="M4 9V5h4M20 9V5h-4M4 15v4h4M20 15v4h-4"
-        stroke="currentColor"
-        strokeWidth="1.75"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  )
+/** Plain-text chronology for clipboard: label + date + title lines. */
+export function formatSubcolChronology(
+  label: string,
+  events: TimelineEvent[],
+): string {
+  const lines = [...events]
+    .sort(
+      (a, b) => a.date.localeCompare(b.date) || a.id.localeCompare(b.id),
+    )
+    .map((e) => `${e.date}  ${e.title}`)
+  return [label, ...lines].join('\n')
 }
 
-function IconSoloExit() {
+function SubcolCopyButton({
+  label,
+  events,
+}: {
+  label: string
+  events: TimelineEvent[]
+}) {
+  const [copied, setCopied] = useState(false)
+
+  const onCopy = useCallback(
+    async (e: MouseEvent) => {
+      e.stopPropagation()
+      const text = formatSubcolChronology(label, events)
+      try {
+        await navigator.clipboard.writeText(text)
+      } catch {
+        // Fallback for older / restricted clipboard
+        const ta = document.createElement('textarea')
+        ta.value = text
+        ta.style.position = 'fixed'
+        ta.style.left = '-9999px'
+        document.body.appendChild(ta)
+        ta.select()
+        try {
+          document.execCommand('copy')
+        } finally {
+          document.body.removeChild(ta)
+        }
+      }
+      setCopied(true)
+      window.setTimeout(() => setCopied(false), 1500)
+    },
+    [label, events],
+  )
+
   return (
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden>
-      <path
-        d="M9 5v4H5M15 5v4h4M9 19v-4H5M15 19v-4h4"
-        stroke="currentColor"
-        strokeWidth="1.75"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
+    <button
+      type="button"
+      className={`cat-subcol__copy${copied ? ' is-copied' : ''}`}
+      onClick={onCopy}
+      title={copied ? '已复制' : `复制「${label}」年表`}
+      aria-label={copied ? '已复制' : `复制「${label}」年表`}
+    >
+      {copied ? '已复制' : '复制'}
+    </button>
   )
 }
 
@@ -98,9 +129,6 @@ export default function CategoryColumn({
   category,
   events,
   companies,
-  isSolo,
-  onSolo,
-  onExitSolo,
   subFilter,
   onSubFilter,
   detailId,
@@ -112,6 +140,7 @@ export default function CategoryColumn({
   bumpFocusId = null,
   bumpSolid = false,
   bumpMuteFuture = false,
+  hideHeader = false,
 }: Props) {
   const theme = CATEGORY_THEME[category]
   const bodyRef = useRef<HTMLDivElement>(null)
@@ -169,18 +198,56 @@ export default function CategoryColumn({
 
   return (
     <section
-      className={`cat-column${isSolo ? ' is-solo' : ''}`}
+      className="cat-column"
       style={{ ['--accent' as string]: theme.accent }}
       aria-label={CATEGORY_LABEL_ZH[category]}
     >
-      <div className="cat-column__head">
-        <div className="cat-column__header">
-          <span
-            className="cat-column__header-icon"
-            style={{ color: theme.accent, background: theme.headerSoft }}
-          >
-            {ICONS[category]}
-          </span>
+      {!hideHeader ? (
+        <div className="cat-column__head">
+          <div className="cat-column__header">
+            <span
+              className="cat-column__header-icon"
+              style={{ color: theme.accent, background: theme.headerSoft }}
+            >
+              {ICONS[category]}
+            </span>
+            <span className="cat-column__header-title">
+              {CATEGORY_LABEL_ZH[category]}
+            </span>
+            <span
+              className="cat-column__header-count"
+              style={{ color: theme.accent, background: theme.headerSoft }}
+            >
+              {events.length}
+            </span>
+          </div>
+
+          {showChips ? (
+            <div className="cat-column__chips" role="group" aria-label="子类多选">
+              <button
+                type="button"
+                className={showAll ? 'is-active' : ''}
+                onClick={() => toggleChip('all')}
+              >
+                全部
+              </button>
+              {groups.map((g) => (
+                <button
+                  key={g.key}
+                  type="button"
+                  className={!showAll && subFilter.includes(g.key) ? 'is-active' : ''}
+                  aria-pressed={!showAll && subFilter.includes(g.key)}
+                  onClick={() => toggleChip(g.key)}
+                >
+                  {g.label}
+                  <em>{g.events.length}</em>
+                </button>
+              ))}
+            </div>
+          ) : null}
+        </div>
+      ) : (
+        <div className="cat-column__header cat-column__header--compact">
           <span className="cat-column__header-title">
             {CATEGORY_LABEL_ZH[category]}
           </span>
@@ -190,53 +257,8 @@ export default function CategoryColumn({
           >
             {events.length}
           </span>
-          {isSolo ? (
-            <button
-              type="button"
-              className="cat-column__solo-btn is-icon is-active"
-              onClick={onExitSolo}
-              title="退出独占"
-              aria-label="退出独占"
-            >
-              <IconSoloExit />
-            </button>
-          ) : (
-            <button
-              type="button"
-              className="cat-column__solo-btn is-icon"
-              onClick={onSolo}
-              title="独占"
-              aria-label="独占"
-            >
-              <IconSoloEnter />
-            </button>
-          )}
         </div>
-
-        {showChips ? (
-          <div className="cat-column__chips" role="group" aria-label="子类多选">
-            <button
-              type="button"
-              className={showAll ? 'is-active' : ''}
-              onClick={() => toggleChip('all')}
-            >
-              全部
-            </button>
-            {groups.map((g) => (
-              <button
-                key={g.key}
-                type="button"
-                className={!showAll && subFilter.includes(g.key) ? 'is-active' : ''}
-                aria-pressed={!showAll && subFilter.includes(g.key)}
-                onClick={() => toggleChip(g.key)}
-              >
-                {g.label}
-                <em>{g.events.length}</em>
-              </button>
-            ))}
-          </div>
-        ) : null}
-      </div>
+      )}
 
       <div
         ref={bodyRef}
@@ -258,7 +280,10 @@ export default function CategoryColumn({
           visibleGroups.map((g) => (
             <div key={g.key} className="cat-subcol">
               {multi ? (
-                <div className="cat-subcol__label">{g.label}</div>
+                <div className="cat-subcol__label">
+                  <span className="cat-subcol__label-text">{g.label}</span>
+                  <SubcolCopyButton label={g.label} events={g.events} />
+                </div>
               ) : null}
               <div className="cat-subcol__cards">
                 {g.events.map((e) => {

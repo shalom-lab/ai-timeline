@@ -2,7 +2,7 @@ import { useMemo, useState, useCallback, useEffect } from 'react'
 import { timelineData, capabilityFrontierData, aiToolsData } from './data'
 import type { Category, TimelineEvent } from './types/timeline'
 import type { CapabilityMonth } from './types/capability'
-import { BOARD_CATEGORY_ORDER } from './lib/labels'
+import { CATEGORY_LABEL_ZH } from './lib/labels'
 import { groupKeyForEvent } from './lib/group'
 import Header, { type Filters } from './components/Header'
 import TimelineRail from './components/TimelineRail'
@@ -31,7 +31,15 @@ const EMPTY_SUB: Record<Category, string[]> = {
   other: [],
 }
 
-type SoloTarget = Category | 'frontier'
+/** 4 tabs: 大模型 / 产品 / 科学 / 能力边界 (其他 events live inside 能力边界). */
+type BoardTab = 'model' | 'product' | 'science' | 'frontier'
+
+const BOARD_TABS: readonly { id: BoardTab; label: string }[] = [
+  { id: 'model', label: CATEGORY_LABEL_ZH.model },
+  { id: 'product', label: CATEGORY_LABEL_ZH.product },
+  { id: 'science', label: CATEGORY_LABEL_ZH.science },
+  { id: 'frontier', label: '能力边界' },
+] as const
 
 function matchesQuery(e: TimelineEvent, q: string): boolean {
   if (!q) return true
@@ -110,7 +118,7 @@ export default function App() {
   const [filters, setFilters] = useState<Filters>(DEFAULT_FILTERS)
   /** Detail popover (card top-bar click). */
   const [detailId, setDetailId] = useState<string | null>(null)
-  const [solo, setSolo] = useState<SoloTarget | null>(null)
+  const [activeTab, setActiveTab] = useState<BoardTab>('model')
   const [subFilters, setSubFilters] = useState<Record<Category, string[]>>(EMPTY_SUB)
   /** Rail hover — dashed same-moment line (no 灰白). */
   const [hoverRailId, setHoverRailId] = useState<string | null>(null)
@@ -148,24 +156,40 @@ export default function App() {
     return m
   }, [filtered])
 
+  const frontierScenarioCount = useMemo(
+    () => frontierMonths.reduce((n, m) => n + m.new.length, 0),
+    [frontierMonths],
+  )
+
+  const tabCounts: Record<BoardTab, number> = {
+    model: byCategory.model.length,
+    product: byCategory.product.length,
+    science: byCategory.science.length,
+    frontier: frontierScenarioCount,
+  }
+
   /**
    * Rail sources only (cards are dense-packed, not driven by this layout).
-   * Solo contracts to that column / frontier months; multi uses all filtered.
+   * Active tab contracts rail to that panel's visible dates.
    */
   const railSources = useMemo((): LayoutSource[] => {
-    if (solo === 'frontier') {
-      return frontierMonthsToLayoutSources(frontierMonths)
-    }
-    if (solo) {
-      return visibleCategoryEvents(
-        solo,
-        byCategory[solo],
-        subFilters[solo],
+    if (activeTab === 'frontier') {
+      const frontier = frontierMonthsToLayoutSources(frontierMonths)
+      const otherVisible = visibleCategoryEvents(
+        'other',
+        byCategory.other,
+        subFilters.other,
         companies,
       )
+      return [...otherVisible, ...frontier]
     }
-    return filtered
-  }, [solo, filtered, byCategory, subFilters, companies, frontierMonths])
+    return visibleCategoryEvents(
+      activeTab,
+      byCategory[activeTab],
+      subFilters[activeTab],
+      companies,
+    )
+  }, [activeTab, byCategory, subFilters, companies, frontierMonths])
 
   const railLayout = useMemo(
     () => buildTimelineLayout(railSources),
@@ -173,32 +197,27 @@ export default function App() {
   )
 
   const railEvents = useMemo((): TimelineEvent[] => {
-    if (solo === 'frontier') return []
-    if (solo) {
+    if (activeTab === 'frontier') {
       return visibleCategoryEvents(
-        solo,
-        byCategory[solo],
-        subFilters[solo],
+        'other',
+        byCategory.other,
+        subFilters.other,
         companies,
       )
     }
-    return filtered
-  }, [solo, filtered, byCategory, subFilters, companies])
+    return visibleCategoryEvents(
+      activeTab,
+      byCategory[activeTab],
+      subFilters[activeTab],
+      companies,
+    )
+  }, [activeTab, byCategory, subFilters, companies])
 
   useEffect(() => {
     if (detailId && !filtered.some((e) => e.id === detailId)) {
       setDetailId(null)
     }
   }, [filtered, detailId])
-
-  useEffect(() => {
-    if (!solo) return
-    if (solo === 'frontier') {
-      if (frontierMonths.length === 0) setSolo(null)
-      return
-    }
-    if (byCategory[solo].length === 0) setSolo(null)
-  }, [solo, byCategory, frontierMonths])
 
   // Drop hover/pin when the event leaves the filtered set.
   useEffect(() => {
@@ -209,11 +228,11 @@ export default function App() {
     if (bumpPinId && !byId.has(bumpPinId)) setBumpPinId(null)
   }, [byId, bumpPinId])
 
-  // Clear hover/pin when entering/leaving solo so the line matches the view.
+  // Clear hover/pin when switching tabs so the line matches the view.
   useEffect(() => {
     setHoverRailId(null)
     setBumpPinId(null)
-  }, [solo])
+  }, [activeTab])
 
   /** Rail only: toggle solid same-moment line + 灰白. Never touches card outline/detail. */
   const handleRailTogglePin = useCallback((id: string) => {
@@ -317,47 +336,50 @@ export default function App() {
     setPage(next)
   }, [])
 
-  const categoriesWithEvents = BOARD_CATEGORY_ORDER.filter(
-    (c) => byCategory[c].length > 0,
-  )
-
-  const showFrontier = frontierMonths.length > 0
-  const soloCategory = solo && solo !== 'frontier' ? solo : null
-
-  const visibleCategories =
-    solo === 'frontier'
-      ? []
-      : soloCategory
-        ? categoriesWithEvents.filter((c) => c === soloCategory)
-        : categoriesWithEvents
-
-  const showFrontierColumn =
-    showFrontier && (solo === null || solo === 'frontier')
+  const onSelectTab = useCallback((tab: BoardTab) => {
+    setActiveTab(tab)
+    setDetailId(null)
+  }, [])
 
   /**
    * Bump connectors: hover → dashed (no mute); click-pin → solid + 灰白.
-   * Pin wins over hover for focus. Same-moment slice, not chrono succession.
+   * Only for the active category tab (not 能力边界).
    */
   const bumpPinned = bumpPinId != null
   const bumpFocusId = bumpPinId ?? hoverRailId
   const focusEvent = bumpFocusId ? byId.get(bumpFocusId) ?? null : null
   const bumpFocusDate = focusEvent?.date ?? null
-  /**
-   * Which category shows the same-moment line:
-   * prefer soloed category; else the category that owns the focus event.
-   * Never cross 大模型↔产品.
-   */
-  const bumpCategory: Category | null = soloCategory
-    ? soloCategory
-    : (focusEvent?.category ?? null)
+  const bumpCategory: Category | null =
+    activeTab === 'frontier' ? null : activeTab
   const bumpActive = bumpFocusId != null && bumpCategory != null
 
-  const selectEventFromFrontier = useCallback((id: string) => {
-    setSolo(null)
-    // Jump + open detail (user picked a specific event).
-    setDetailId(id)
-    requestAnimationFrame(() => focusCard(id))
-  }, [])
+  const selectEventFromFrontier = useCallback(
+    (id: string) => {
+      const ev = events.find((e) => e.id === id)
+      if (ev) {
+        if (ev.category === 'other') {
+          setActiveTab('frontier')
+        } else if (
+          ev.category === 'model' ||
+          ev.category === 'product' ||
+          ev.category === 'science'
+        ) {
+          setActiveTab(ev.category)
+        }
+      }
+      setDetailId(id)
+      requestAnimationFrame(() => focusCard(id))
+    },
+    [events],
+  )
+
+  const categoryColumnProps = {
+    companies,
+    detailId,
+    onOpenDetail: handleOpenDetail,
+    onPinMoment: handlePinMoment,
+    onCloseDetail: handleCloseDetail,
+  }
 
   return (
     <div className="app-shell">
@@ -378,72 +400,83 @@ export default function App() {
           query={filters.query}
         />
       ) : (
-      <div className="board">
-        <TimelineRail
-          events={railEvents}
-          companies={companies}
-          hoverId={hoverRailId}
-          onHover={setHoverRailId}
-          pinId={bumpPinId}
-          onTogglePin={handleRailTogglePin}
-          layout={railLayout}
-          frontierSolo={solo === 'frontier'}
-        />
+        <>
+          <nav className="board-tabs" aria-label="分类切换">
+            {BOARD_TABS.map((t) => (
+              <button
+                key={t.id}
+                type="button"
+                className={`board-tabs__btn${activeTab === t.id ? ' is-active' : ''}`}
+                aria-current={activeTab === t.id ? 'page' : undefined}
+                onClick={() => onSelectTab(t.id)}
+              >
+                <span>{t.label}</span>
+                <em className="board-tabs__count">{tabCounts[t.id]}</em>
+              </button>
+            ))}
+          </nav>
 
-        <div
-          className={`board__columns${solo ? ' is-solo-mode' : ''}`}
-        >
-          {visibleCategories.map((cat) => (
-            <div key={cat} className="board__col-slot">
-              <CategoryColumn
-                category={cat}
-                events={byCategory[cat]}
-                companies={companies}
-                isSolo={solo === cat}
-                onSolo={() => {
-                  setSolo(cat)
-                  setDetailId(null)
-                  setBumpPinId(null)
-                }}
-                onExitSolo={() => setSolo(null)}
-                subFilter={subFilters[cat]}
-                onSubFilter={(keys) =>
-                  setSubFilters((s) => ({ ...s, [cat]: keys }))
-                }
-                detailId={detailId}
-                onOpenDetail={handleOpenDetail}
-                onPinMoment={handlePinMoment}
-                onCloseDetail={handleCloseDetail}
-                bumpActive={bumpActive && bumpCategory === cat}
-                bumpFocusDate={
-                  bumpActive && bumpCategory === cat ? bumpFocusDate : null
-                }
-                bumpFocusId={
-                  bumpActive && bumpCategory === cat ? bumpFocusId : null
-                }
-                bumpSolid={bumpPinned && bumpCategory === cat}
-                bumpMuteFuture={bumpPinned && bumpCategory === cat}
-              />
-            </div>
-          ))}
+          <div className="board">
+            <TimelineRail
+              events={railEvents}
+              companies={companies}
+              hoverId={hoverRailId}
+              onHover={setHoverRailId}
+              pinId={bumpPinId}
+              onTogglePin={handleRailTogglePin}
+              layout={railLayout}
+              frontierMode={activeTab === 'frontier'}
+            />
 
-          {showFrontierColumn ? (
-            <div key="frontier" className="board__col-slot board__col-slot--frontier">
-              <FrontierColumn
-                months={frontierMonths}
-                isSolo={solo === 'frontier'}
-                onSolo={() => {
-                  setSolo('frontier')
-                  setDetailId(null)
-                  setBumpPinId(null)
-                }}
-                onExitSolo={() => setSolo(null)}
-                onSelectEvent={selectEventFromFrontier}
-              />
+            <div className="board__columns">
+              {activeTab === 'frontier' ? (
+                <div className="board__col-slot board__col-slot--stack">
+                  {byCategory.other.length > 0 ? (
+                    <CategoryColumn
+                      category="other"
+                      events={byCategory.other}
+                      subFilter={subFilters.other}
+                      onSubFilter={(keys) =>
+                        setSubFilters((s) => ({ ...s, other: keys }))
+                      }
+                      bumpActive={false}
+                      {...categoryColumnProps}
+                    />
+                  ) : null}
+                  <FrontierColumn
+                    months={frontierMonths}
+                    onSelectEvent={selectEventFromFrontier}
+                  />
+                </div>
+              ) : (
+                <div className="board__col-slot">
+                  <CategoryColumn
+                    category={activeTab}
+                    events={byCategory[activeTab]}
+                    subFilter={subFilters[activeTab]}
+                    onSubFilter={(keys) =>
+                      setSubFilters((s) => ({ ...s, [activeTab]: keys }))
+                    }
+                    bumpActive={bumpActive && bumpCategory === activeTab}
+                    bumpFocusDate={
+                      bumpActive && bumpCategory === activeTab
+                        ? bumpFocusDate
+                        : null
+                    }
+                    bumpFocusId={
+                      bumpActive && bumpCategory === activeTab
+                        ? bumpFocusId
+                        : null
+                    }
+                    bumpSolid={bumpPinned && bumpCategory === activeTab}
+                    bumpMuteFuture={bumpPinned && bumpCategory === activeTab}
+                    {...categoryColumnProps}
+                  />
+                </div>
+              )}
             </div>
-          ) : null}
-        </div>
-      </div>
+          </div>
+        </>
       )}
     </div>
   )

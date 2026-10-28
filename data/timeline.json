@@ -1,7 +1,7 @@
 {
   "meta": {
     "name": "AI纪年",
-    "version": "0.14.2",
+    "version": "0.15.0",
     "scopeStart": "2022-11-30",
     "updatedAt": "2026-10-28",
     "locale": "zh-CN",
@@ -162,7 +162,10 @@
       "name": "MiniMax",
       "aliases": [
         "海螺AI",
-        "Hailuo"
+        "Hailuo",
+        "海螺",
+        "海螺 AI",
+        "Hailuo AI"
       ],
       "color": "#FF4D6A",
       "colorSoft": "#FFD6DE"

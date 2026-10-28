@@ -18,7 +18,7 @@ type Props = {
   /** Compact equal-step rail layout (year left / dates indented). */
   layout: TimelineLayout
   /** When true, layout items are frontier month proxies (no TimelineEvent). */
-  frontierSolo?: boolean
+  frontierMode?: boolean
 }
 
 type MonthBand = {
@@ -82,7 +82,7 @@ export default function TimelineRail({
   pinId = null,
   onTogglePin,
   layout,
-  frontierSolo = false,
+  frontierMode = false,
 }: Props) {
   const byId = useMemo(() => {
     const m = new Map<string, TimelineEvent>()
@@ -192,7 +192,7 @@ export default function TimelineRail({
           const year = item.date.slice(0, 4)
           if (hiddenYears.has(year)) return null
 
-          if (frontierSolo || item.id.startsWith('frontier:')) {
+          if (frontierMode || item.id.startsWith('frontier:')) {
             const month = item.ym
             return (
               <button

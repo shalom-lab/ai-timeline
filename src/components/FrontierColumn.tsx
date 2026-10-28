@@ -4,38 +4,7 @@ import { FRONTIER_LABEL_ZH, FRONTIER_THEME } from '../types/capability'
 
 type Props = {
   months: CapabilityMonth[]
-  isSolo: boolean
-  onSolo: () => void
-  onExitSolo: () => void
   onSelectEvent?: (id: string) => void
-}
-
-function IconSoloEnter() {
-  return (
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden>
-      <path
-        d="M4 9V5h4M20 9V5h-4M4 15v4h4M20 15v4h-4"
-        stroke="currentColor"
-        strokeWidth="1.75"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  )
-}
-
-function IconSoloExit() {
-  return (
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden>
-      <path
-        d="M9 5v4H5M15 5v4h4M9 19v-4H5M15 19v-4h4"
-        stroke="currentColor"
-        strokeWidth="1.75"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  )
 }
 
 function IconFrontier() {
@@ -139,13 +108,7 @@ function MonthCard({
   )
 }
 
-export default function FrontierColumn({
-  months,
-  isSolo,
-  onSolo,
-  onExitSolo,
-  onSelectEvent,
-}: Props) {
+export default function FrontierColumn({ months, onSelectEvent }: Props) {
   const theme = FRONTIER_THEME
   const newCount = months.reduce((n, m) => n + m.new.length, 0)
 
@@ -162,7 +125,7 @@ export default function FrontierColumn({
 
   return (
     <section
-      className={`cat-column frontier-column${isSolo ? ' is-solo' : ''}`}
+      className="cat-column frontier-column"
       style={{ ['--accent' as string]: theme.accent }}
       aria-label={FRONTIER_LABEL_ZH}
     >
@@ -180,27 +143,6 @@ export default function FrontierColumn({
         >
           {newCount}
         </span>
-        {isSolo ? (
-          <button
-            type="button"
-            className="cat-column__solo-btn is-icon is-active"
-            onClick={onExitSolo}
-            title="退出独占"
-            aria-label="退出独占"
-          >
-            <IconSoloExit />
-          </button>
-        ) : (
-          <button
-            type="button"
-            className="cat-column__solo-btn is-icon"
-            onClick={onSolo}
-            title="独占"
-            aria-label="独占"
-          >
-            <IconSoloEnter />
-          </button>
-        )}
       </div>
 
       <p className="frontier-column__hint">
