@@ -350,7 +350,7 @@ interface CapabilityScenario {
 
 **不是历史时间线。** 只记录**当前仍可用**的产品形态一览；公司行复用 `timeline.json` 的 `companies[].id`（色与 logo 同源）。
 
-路由：客户端 hash `#/tools`（纪年看板为 `#/`），适配 GitHub Pages，无服务端路由。
+路由：客户端 hash `#/tools`（默认模型 Tab；亦可 `#/tools/models` / `#/tools/products`；纪年看板为 `#/`），适配 GitHub Pages，无服务端路由。
 
 根对象：
 
@@ -367,7 +367,7 @@ interface AiToolsData {
   rows: ToolRow[]
 }
 
-/** Two super-groups in UI thead: 大模型 | 产品 */
+/** UI tabs (single-group matrix each): 模型 | 产品 */
 type ToolColumnId =
   | 'llm'      // 语言模型（大模型）
   | 'image'    // 图像（大模型）
@@ -383,7 +383,7 @@ interface ToolProduct {
   pricing: string      // 高层费用提示（免费档 / Plus 价 / API 按量）
   pricingUrl?: string  // 官方定价页
   note?: string
-  /** Optional public/logos/{key} id; UI shows logos only in 产品列 */
+  /** Optional public/logos/{key} id; UI shows logos in both 模型/产品 cells */
   logo?: string
 }
 
@@ -402,9 +402,11 @@ interface ToolRow {
 3. 每个 cell 产品须有非空 `name` / `pricing`，且 `url`（及可选 `pricingUrl`）为 http(s)；可选 `logo` 为 kebab-case 键。
 4. `displayName` 若存在，不得含 `/`（公司列只用单一品牌名）。
 5. 每行至少 1 个产品；种子不少于约 5 家主要公司。
-6. UI 可隐藏整列为空的形态列；两级表头按 `TOOL_COLUMN_GROUPS`（大模型 | 产品）分组。产品列（chat/coding/api）在名称旁显示小 logo（`logo` 键或行公司标）。
+6. UI 以 Tab 切换 `TOOL_COLUMN_GROUPS`（模型 | 产品），每次只展示一组子列；无两级 group thead。隐藏当前 Tab 下无单元格的公司行；可隐藏整列为空的形态列。模型与产品单元格均在名称旁显示小 logo（`logo` 键或行公司标）；列头旁配简洁形态 icon。
 
 路径：`docs/DATA.md`（本节）· `src/types/tools.ts` · `data/ai-tools.json`。
 
 相对 v0.13：工具矩阵去掉扁平 `agent` 列，迁入 coding/chat/other；新增 `other`；Cursor 行并入 xAI/Grok；产品列显示产品 logo。
+
+相对 v0.15：AI工具页改为 **模型 / 产品** 两个 Tab（不再用大模型|产品双层表头）；模型单元格也显示 logo；列头配形态 icon；hash 可记 Tab。
 

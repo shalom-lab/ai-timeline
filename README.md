@@ -2,7 +2,7 @@
 
 从 **ChatGPT 公众研究预览上线（2022-11-30）** 起的 AI 里程碑时间线。
 
-技术栈：TypeScript + React + Vite。数据规范优先；纪年页为 **4 个 Tab**（大模型 / 产品 / 科学 / 能力边界）+ 左侧时间轴轨；`其他` 类事件收在「能力边界」Tab 顶部。另有独立 **AI工具** 产品矩阵页（`#/tools`）。支持搜索、按年折叠时间轴与卡片原地详情浮层；系列 chips 支持多选。站点品牌标：`public/brand/mark.svg` / `public/favicon.*`。
+技术栈：TypeScript + React + Vite。数据规范优先；纪年页为 **4 个 Tab**（大模型 / 产品 / 科学 / 能力边界）+ 左侧时间轴轨；`其他` 类事件收在「能力边界」Tab 顶部。另有独立 **AI工具** 矩阵页（`#/tools`，Tab：**模型 | 产品**）。支持搜索、按年折叠时间轴与卡片原地详情浮层；系列 chips 支持多选。站点品牌标：`public/brand/mark.svg` / `public/favicon.*`。
 
 **站点（GitHub Pages）：** https://shalom-lab.github.io/ai-timeline/
 
@@ -16,6 +16,7 @@
 - 卡片：整卡背景取公司 `colorSoft`；日期 + 公司标记（按 `companies[]` 的 name/id/aliases 解析）；左侧主图标块 + 标题/摘要、`eventType` pill、来源外链；**点击顶部条（日期/公司）**打开详情浮层，**点击主区域**钉住同日横线+灰白（与左侧时间轴节点相同）；来源外链等图标独立处理
 - `science`：AI 在科学领域的发现/突破（如 AlphaFold 3），不是普通产品发布
 - 原「概念」列已取消：MCP / Agent Skills / Agent Harness 等已迁入 `product` 或 `other`
+- **AI工具** 页：顶下 **模型 | 产品** Tab（样式对齐纪年 board tabs）；模型列为 公司+语言模型/图像/视频/其他，产品列为 公司+对话/编程办公/API；无双层 group 表头；列头旁小 icon，单元格旁产品/公司 logo；空行按 Tab 过滤；hash `#/tools/models` / `#/tools/products`
 
 ## 数据文档
 

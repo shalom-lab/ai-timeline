@@ -3,6 +3,7 @@ import type { ModelCapability } from '../types/timeline'
 import { MODEL_CAPABILITY_LABEL_ZH, MODEL_CAPABILITY_ORDER } from '../types/timeline'
 import { resolveCompany } from './company'
 import type { Company } from '../types/timeline'
+import type { ToolColumnId } from '../types/tools'
 
 /**
  * Company ids with a real brand asset under public/logos/{id}.{png|svg}.
@@ -283,4 +284,86 @@ export function ModelCapabilityIcons({
       ))}
     </ul>
   )
+}
+
+/**
+ * Calm stroke glyphs for AI工具 column headers (not brand marks).
+ * Uses currentColor so thead muted tone carries through.
+ */
+export function ToolColumnIcon({
+  columnId,
+  size = 13,
+}: {
+  columnId: ToolColumnId
+  size?: number
+}): ReactNode {
+  const s = {
+    width: size,
+    height: size,
+    viewBox: '0 0 24 24',
+    fill: 'none' as const,
+    stroke: 'currentColor',
+    strokeWidth: 1.6,
+    strokeLinecap: 'round' as const,
+    strokeLinejoin: 'round' as const,
+    'aria-hidden': true as const,
+  }
+  switch (columnId) {
+    case 'llm':
+      // chat / language bubble
+      return (
+        <svg {...s}>
+          <path d="M5 6.5A3.5 3.5 0 0 1 8.5 3h7A3.5 3.5 0 0 1 19 6.5v5A3.5 3.5 0 0 1 15.5 15H11l-4 2.7c-.65.44-1.5-.08-1.35-.85L6.2 15A3.5 3.5 0 0 1 5 11.5z" />
+          <path d="M9 8.5h6M9 11.2h3.5" />
+        </svg>
+      )
+    case 'image':
+      return (
+        <svg {...s}>
+          <rect x="3.5" y="5" width="17" height="14" rx="2.2" />
+          <circle cx="9" cy="10" r="1.4" />
+          <path d="M3.8 16.2l4.6-3.6 3.1 2.4 3-2.5 5.5 4" />
+        </svg>
+      )
+    case 'video':
+      return (
+        <svg {...s}>
+          <rect x="3" y="6" width="12.5" height="12" rx="2" />
+          <path d="M15.5 10.2l5-2.7v9l-5-2.7z" />
+        </svg>
+      )
+    case 'other':
+      // spark / misc
+      return (
+        <svg {...s}>
+          <path d="M12 3.5v3.2M12 17.3v3.2M3.5 12h3.2M17.3 12h3.2" />
+          <path d="M6.6 6.6l2.2 2.2M15.2 15.2l2.2 2.2M17.4 6.6l-2.2 2.2M8.8 15.2l-2.2 2.2" />
+          <circle cx="12" cy="12" r="2.2" />
+        </svg>
+      )
+    case 'chat':
+      return (
+        <svg {...s}>
+          <path d="M5 6.5A3.5 3.5 0 0 1 8.5 3h7A3.5 3.5 0 0 1 19 6.5v5A3.5 3.5 0 0 1 15.5 15H11l-4 2.7c-.65.44-1.5-.08-1.35-.85L6.2 15A3.5 3.5 0 0 1 5 11.5z" />
+          <circle cx="9.2" cy="9.2" r="0.85" fill="currentColor" stroke="none" />
+          <circle cx="12" cy="9.2" r="0.85" fill="currentColor" stroke="none" />
+          <circle cx="14.8" cy="9.2" r="0.85" fill="currentColor" stroke="none" />
+        </svg>
+      )
+    case 'coding':
+      return (
+        <svg {...s}>
+          <path d="M9 7.5L5.5 12 9 16.5M15 7.5L18.5 12 15 16.5" />
+        </svg>
+      )
+    case 'api':
+      // plug / connector
+      return (
+        <svg {...s}>
+          <path d="M9 4.5v5M15 4.5v5" />
+          <path d="M7.5 9.5h9v3.2a4.5 4.5 0 0 1-4.5 4.5h0a4.5 4.5 0 0 1-4.5-4.5z" />
+          <path d="M12 17.2V20" />
+        </svg>
+      )
+  }
 }

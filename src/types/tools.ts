@@ -10,7 +10,7 @@ export type ToolColumnId =
   | 'coding'
   | 'api'
 
-/** Super-group for two-level thead (大模型 | 产品). */
+/** Tab / column group: 模型 | 产品. */
 export type ToolColumnGroupId = 'models' | 'products'
 
 export interface ToolColumnDef {
@@ -21,7 +21,7 @@ export interface ToolColumnDef {
 
 export interface ToolColumnGroupDef {
   id: ToolColumnGroupId
-  /** Chinese group label */
+  /** Chinese group / tab label */
   label: string
   columns: readonly ToolColumnId[]
 }
@@ -43,8 +43,7 @@ export interface ToolProduct {
   note?: string
   /**
    * Optional logo key under public/logos/{key}.{ext} (see COMPANY_LOGO_EXT).
-   * When omitted, product cells fall back to the row company logo / letter.
-   * Only rendered in 产品 columns (chat / coding / api).
+   * When omitted, cells fall back to the row company logo / letter.
    */
   logo?: string
 }
@@ -76,11 +75,11 @@ export interface AiToolsData {
   rows: ToolRow[]
 }
 
-/** Two-level header groups: 大模型 then 产品. */
+/** Tab groups: 模型 then 产品 (UI switches one group at a time). */
 export const TOOL_COLUMN_GROUPS: readonly ToolColumnGroupDef[] = [
   {
     id: 'models',
-    label: '大模型',
+    label: '模型',
     columns: ['llm', 'image', 'video', 'other'],
   },
   {
@@ -93,7 +92,7 @@ export const TOOL_COLUMN_GROUPS: readonly ToolColumnGroupDef[] = [
 export const TOOL_COLUMN_ORDER: readonly ToolColumnId[] =
   TOOL_COLUMN_GROUPS.flatMap((g) => g.columns)
 
-/** Product-block columns that show per-product logos. */
+/** @deprecated logos now show on all columns; kept for callers that still check. */
 export const TOOL_PRODUCT_COLUMN_IDS: ReadonlySet<ToolColumnId> = new Set([
   'chat',
   'coding',

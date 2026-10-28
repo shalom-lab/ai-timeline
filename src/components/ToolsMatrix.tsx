@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import type { Company } from '../types/timeline'
 import type {
   AiToolsData,
@@ -8,12 +8,14 @@ import type {
   ToolProduct,
   ToolRow,
 } from '../types/tools'
-import {
-  TOOL_COLUMN_GROUPS,
-  TOOL_PRODUCT_COLUMN_IDS,
-} from '../types/tools'
+import { TOOL_COLUMN_GROUPS } from '../types/tools'
 import { resolveCompany } from '../lib/company'
-import { CompanyLogoImg, hasCompanyLogo } from '../lib/icons'
+import { CompanyLogoImg, hasCompanyLogo, ToolColumnIcon } from '../lib/icons'
+import {
+  navigateToolsTab,
+  toolsTabFromHash,
+  type ToolsTabId,
+} from '../lib/route'
 
 type Props = {
   data: AiToolsData
@@ -42,6 +44,10 @@ function rowMatches(row: ToolRow, co: Company | undefined, q: string): boolean {
     .join(' ')
     .toLowerCase()
   return hay.includes(q)
+}
+
+function rowHasCellsInCols(row: ToolRow, colIds: readonly ToolColumnId[]): boolean {
+  return colIds.some((id) => asList(row.cells[id]).length > 0)
 }
 
 function LetterAvatar({ name, color }: { name: string; color: string }) {
@@ -90,13 +96,11 @@ function ProductBlock({
   companyId,
   companyName,
   companyColor,
-  showLogo,
 }: {
   p: ToolProduct
   companyId: string
   companyName: string
   companyColor: string
-  showLogo: boolean
 }) {
   const tip = p.note?.trim() || undefined
   const nameTitle = tip ? `${p.name} — ${tip}` : undefined
@@ -117,13 +121,11 @@ function ProductBlock({
         rel="noopener noreferrer"
         title={nameTitle}
       >
-        {showLogo ? (
-          <ProductLogo
-            logoKey={logoKey}
-            fallbackName={companyName}
-            fallbackColor={companyColor}
-          />
-        ) : null}
+        <ProductLogo
+          logoKey={logoKey}
+          fallbackName={companyName}
+          fallbackColor={companyColor}
+        />
         <span className="tools-cell__name-text">{p.name}</span>
       </a>
       <div className="tools-cell__pricing" title={priceTitle}>
@@ -143,13 +145,23 @@ function ProductBlock({
   )
 }
 
-type ActiveGroup = {
-  group: ToolColumnGroupDef
-  cols: ToolColumnDef[]
+function groupForTab(tab: ToolsTabId): ToolColumnGroupDef {
+  return (
+    TOOL_COLUMN_GROUPS.find((g) => g.id === tab) ?? TOOL_COLUMN_GROUPS[0]
+  )
 }
 
 export default function ToolsMatrix({ data, companies, query }: Props) {
   const q = query.trim().toLowerCase()
+  const [tab, setTab] = useState<ToolsTabId>(() => toolsTabFromHash())
+
+  useEffect(() => {
+    const sync = () => setTab(toolsTabFromHash())
+    window.addEventListener('hashchange', sync)
+    return () => window.removeEventListener('hashchange', sync)
+  }, [])
+
+  const activeGroup = groupForTab(tab)
 
   const activeCols = useMemo(() => {
     const used = new Set<ToolColumnId>()
@@ -158,81 +170,66 @@ export default function ToolsMatrix({ data, companies, query }: Props) {
         if (asList(row.cells[col.id]).length > 0) used.add(col.id)
       }
     }
-    return data.columns.filter((c) => used.has(c.id))
-  }, [data])
-
-  const activeGroups = useMemo((): ActiveGroup[] => {
-    const byId = new Map(activeCols.map((c) => [c.id, c]))
-    return TOOL_COLUMN_GROUPS.map((group) => ({
-      group,
-      cols: group.columns
-        .map((id) => byId.get(id))
-        .filter((c): c is ToolColumnDef => Boolean(c)),
-    })).filter((g) => g.cols.length > 0)
-  }, [activeCols])
-
-  const flatActive = useMemo(
-    () => activeGroups.flatMap((g) => g.cols),
-    [activeGroups],
-  )
+    const byId = new Map(data.columns.map((c) => [c.id, c]))
+    return activeGroup.columns
+      .filter((id) => used.has(id))
+      .map((id) => byId.get(id))
+      .filter((c): c is ToolColumnDef => Boolean(c))
+  }, [data, activeGroup])
 
   const rows = useMemo(() => {
+    const colIds = activeCols.map((c) => c.id)
     return data.rows.filter((row) => {
+      if (!rowHasCellsInCols(row, colIds)) return false
       const co = resolveCompany(companies, row.companyId)
       return rowMatches(row, co, q)
     })
-  }, [data.rows, companies, q])
+  }, [data.rows, companies, q, activeCols])
 
   const wrapTitle = data.meta.disclaimer
     ? `${data.meta.disclaimer} · v${data.meta.version} · ${data.meta.updatedAt}`
     : `v${data.meta.version} · ${data.meta.updatedAt}`
 
-  const colCount = flatActive.length
+  const colCount = activeCols.length
+
+  const onSelectTab = (next: ToolsTabId) => {
+    setTab(next)
+    navigateToolsTab(next)
+  }
 
   return (
     <div className="tools-page">
+      <nav className="tools-tabs" aria-label="形态切换">
+        {TOOL_COLUMN_GROUPS.map((g) => (
+          <button
+            key={g.id}
+            type="button"
+            className={`tools-tabs__btn${tab === g.id ? ' is-active' : ''}`}
+            aria-current={tab === g.id ? 'page' : undefined}
+            onClick={() => onSelectTab(g.id)}
+          >
+            <span>{g.label}</span>
+          </button>
+        ))}
+      </nav>
+
       <div className="tools-table-wrap" title={wrapTitle}>
-        <table className="tools-table">
+        <table className="tools-table tools-table--tabbed">
           <thead>
-            <tr className="tools-table__group-row">
-              <th
-                className="tools-table__co-h"
-                scope="col"
-                rowSpan={2}
-              >
+            <tr className="tools-table__sub-row">
+              <th className="tools-table__co-h" scope="col">
                 公司
               </th>
-              {activeGroups.map((g, gi) => (
-                <th
-                  key={g.group.id}
-                  className={
-                    'tools-table__group-h' +
-                    (gi > 0 ? ' tools-table__group-h--split' : '')
-                  }
-                  scope="colgroup"
-                  colSpan={g.cols.length}
-                >
-                  {g.group.label}
+              {activeCols.map((c) => (
+                <th key={c.id} className="tools-table__sub-h" scope="col">
+                  <span className="tools-table__sub-h-inner">
+                    <span className="tools-table__col-icon">
+                      <ToolColumnIcon columnId={c.id} />
+                    </span>
+                    <span>{c.label}</span>
+                  </span>
                 </th>
               ))}
-            </tr>
-            <tr className="tools-table__sub-row">
-              {activeGroups.map((g, gi) =>
-                g.cols.map((c, ci) => (
-                  <th
-                    key={c.id}
-                    className={
-                      'tools-table__sub-h' +
-                      (gi > 0 && ci === 0
-                        ? ' tools-table__sub-h--split'
-                        : '')
-                    }
-                    scope="col"
-                  >
-                    {c.label}
-                  </th>
-                )),
-              )}
             </tr>
           </thead>
           <tbody>
@@ -271,48 +268,37 @@ export default function ToolsMatrix({ data, companies, query }: Props) {
                         <span className="tools-row__name">{name}</span>
                       </div>
                     </th>
-                    {activeGroups.map((g, gi) =>
-                      g.cols.map((col, ci) => {
-                        const products = asList(row.cells[col.id])
-                        const showLogo = TOOL_PRODUCT_COLUMN_IDS.has(col.id)
-                        const split =
-                          gi > 0 && ci === 0
-                            ? ' tools-table__cell--split'
-                            : ''
-                        return (
-                          <td
-                            key={col.id}
-                            className={`tools-table__cell${split}`}
-                          >
-                            {products.length === 0 ? (
-                              <span
-                                className="tools-cell__empty"
-                                aria-hidden
-                              />
-                            ) : (
-                              <div
-                                className={
-                                  products.length > 1
-                                    ? 'tools-cell__stack'
-                                    : 'tools-cell__stack tools-cell__stack--single'
-                                }
-                              >
-                                {products.map((p) => (
-                                  <ProductBlock
-                                    key={`${p.name}-${p.url}`}
-                                    p={p}
-                                    companyId={co.id}
-                                    companyName={name}
-                                    companyColor={co.color}
-                                    showLogo={showLogo}
-                                  />
-                                ))}
-                              </div>
-                            )}
-                          </td>
-                        )
-                      }),
-                    )}
+                    {activeCols.map((col) => {
+                      const products = asList(row.cells[col.id])
+                      return (
+                        <td key={col.id} className="tools-table__cell">
+                          {products.length === 0 ? (
+                            <span
+                              className="tools-cell__empty"
+                              aria-hidden
+                            />
+                          ) : (
+                            <div
+                              className={
+                                products.length > 1
+                                  ? 'tools-cell__stack'
+                                  : 'tools-cell__stack tools-cell__stack--single'
+                              }
+                            >
+                              {products.map((p) => (
+                                <ProductBlock
+                                  key={`${p.name}-${p.url}`}
+                                  p={p}
+                                  companyId={co.id}
+                                  companyName={name}
+                                  companyColor={co.color}
+                                />
+                              ))}
+                            </div>
+                          )}
+                        </td>
+                      )
+                    })}
                   </tr>
                 )
               })
