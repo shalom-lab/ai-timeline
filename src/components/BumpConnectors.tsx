@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState, type RefObject } from 'react'
 
-/** Anchor at card bottom-center; left/right for gutter-aware horizontals. */
+/** Anchor at card bottom-center; column box for gutter routing. */
 type Anchor = {
   id: string
   date: string
@@ -8,7 +8,13 @@ type Anchor = {
   y: number
   left: number
   right: number
+  colLeft: number
+  colRight: number
 }
+
+type ColBox = { left: number; right: number }
+
+type Pt = { x: number; y: number }
 
 type Props = {
   /** Category column body (positioned ancestor for overlay coords). */
@@ -21,7 +27,7 @@ type Props = {
   active: boolean
   /** Focus date: at/before = color, after = muted. */
   focusDate: string | null
-  /** Focus event — path originates from this card's bottom; H-line spans gutters. */
+  /** Focus event id — preferred chop point when set. */
   focusId?: string | null
 }
 
@@ -29,37 +35,143 @@ const STROKE_PAST = 'rgba(234, 88, 12, 0.85)'
 const STROKE_FUTURE = 'rgba(148, 163, 184, 0.55)'
 const STROKE_WIDTH = 2
 const DASH = '7 5'
-/** Pad horizontals slightly into column gutters past the card edges. */
-const GUTTER_PAD = 6
+/** Treat columns as same when centers are this close (px). */
+const SAME_COL_X = 24
+/** Push same-column vertical just outside the subcol edge into the seam. */
+const SIDE_OUT = 4
 
-/**
- * H-dominant orthogonal path through bottom anchors.
- * Horizontal first (through card-gap / gutter band), then short vertical.
- */
-function hDominantPath(pts: Anchor[]): string {
+function pointsToPath(pts: Pt[]): string {
   if (pts.length === 0) return ''
-  const parts: string[] = [`M ${pts[0].x.toFixed(1)} ${pts[0].y.toFixed(1)}`]
+  const parts = [`M ${pts[0].x.toFixed(1)} ${pts[0].y.toFixed(1)}`]
   for (let i = 1; i < pts.length; i++) {
-    const a = pts[i - 1]
-    const b = pts[i]
-    const sameX = Math.abs(a.x - b.x) < 0.5
-    const sameY = Math.abs(a.y - b.y) < 0.5
-    if (sameX || sameY) {
-      parts.push(`L ${b.x.toFixed(1)} ${b.y.toFixed(1)}`)
-    } else {
-      // Leave A bottom → horizontal across gutters → short vertical to B bottom.
-      parts.push(`L ${b.x.toFixed(1)} ${a.y.toFixed(1)}`)
-      parts.push(`L ${b.x.toFixed(1)} ${b.y.toFixed(1)}`)
-    }
+    parts.push(`L ${pts[i].x.toFixed(1)} ${pts[i].y.toFixed(1)}`)
   }
   return parts.join(' ')
 }
 
+function sameColumn(a: Anchor, b: Anchor): boolean {
+  if (Math.abs(a.x - b.x) < SAME_COL_X) return true
+  // Shared / heavily overlapping subcol bounds
+  const overlap =
+    Math.min(a.colRight, b.colRight) - Math.max(a.colLeft, b.colLeft)
+  const minW = Math.min(a.colRight - a.colLeft, b.colRight - b.colLeft)
+  return minW > 0 && overlap > minW * 0.6
+}
+
+/** Midpoint of a real inter-column gap overlapping [facingL, facingR]. */
+function pickGutterX(
+  facingL: number,
+  facingR: number,
+  cols: ColBox[],
+): number {
+  const lo = Math.min(facingL, facingR)
+  const hi = Math.max(facingL, facingR)
+  const mid = (lo + hi) / 2
+  if (hi - lo < 1) return mid
+
+  const sorted = [...cols].sort((a, b) => a.left - b.left)
+  const gaps: number[] = []
+  for (let i = 0; i < sorted.length - 1; i++) {
+    const gL = sorted[i].right
+    const gR = sorted[i + 1].left
+    if (gR - gL < 1) continue
+    // Gap overlaps the facing span
+    if (gR < lo || gL > hi) continue
+    const segL = Math.max(gL, lo)
+    const segR = Math.min(gR, hi)
+    if (segR - segL >= 1) gaps.push((segL + segR) / 2)
+  }
+  if (gaps.length === 0) {
+    // Fallback: just outside the left column's right edge (still a seam).
+    return lo + Math.min(8, (hi - lo) / 2)
+  }
+  return gaps.reduce((best, g) =>
+    Math.abs(g - mid) < Math.abs(best - mid) ? g : best,
+  )
+}
+
+/** Vertical only in the seam beside this column (prefer right, else left). */
+function sideGutter(a: Anchor, cols: ColBox[], containerW: number): number {
+  const sorted = [...cols].sort((c, d) => c.left - d.left)
+  // Prefer gap immediately to the right of this column
+  for (let i = 0; i < sorted.length; i++) {
+    const c = sorted[i]
+    const overlap =
+      Math.min(a.colRight, c.right) - Math.max(a.colLeft, c.left)
+    if (overlap <= (c.right - c.left) * 0.5) continue
+    if (i < sorted.length - 1) {
+      const next = sorted[i + 1]
+      if (next.left - c.right >= 1) return (c.right + next.left) / 2
+    }
+    // No right neighbor — use left gap or pad past right edge
+    if (i > 0) {
+      const prev = sorted[i - 1]
+      if (c.left - prev.right >= 1) return (prev.right + c.left) / 2
+    }
+    const rightPad = Math.min(containerW - 2, c.right + SIDE_OUT)
+    const leftPad = Math.max(2, c.left - SIDE_OUT)
+    return rightPad < containerW - 4 ? rightPad : leftPad
+  }
+  return Math.min(containerW - 2, a.colRight + SIDE_OUT)
+}
+
+function gutterBetween(a: Anchor, b: Anchor, cols: ColBox[]): number {
+  if (a.x <= b.x) {
+    return pickGutterX(a.colRight, b.colLeft, cols)
+  }
+  return pickGutterX(b.colRight, a.colLeft, cols)
+}
+
 /**
- * Intra-category bump connectors (SVG, pointer-events none).
- * Dense board: anchors are card **bottoms**. Primary strokes are horizontal
- * dashed lines in the gaps between cards; verticals only link those bands.
- * Hidden unless rail hover/pin is active. Past = color, future = 灰白.
+ * One continuous H/V staircase through card bottoms.
+ * Verticals exist only at gutter X (inter-company seams or side gutter).
+ */
+function stairVertices(
+  anchors: Anchor[],
+  cols: ColBox[],
+  containerW: number,
+): Pt[] {
+  if (anchors.length === 0) return []
+  const out: Pt[] = [{ x: anchors[0].x, y: anchors[0].y }]
+
+  const push = (x: number, y: number) => {
+    const last = out[out.length - 1]
+    if (Math.abs(last.x - x) < 0.5 && Math.abs(last.y - y) < 0.5) return
+    out.push({ x, y })
+  }
+
+  for (let i = 1; i < anchors.length; i++) {
+    const a = anchors[i - 1]
+    const b = anchors[i]
+    const sameY = Math.abs(a.y - b.y) < 0.5
+
+    if (sameY) {
+      // Pure horizontal along the bottom band
+      push(b.x, b.y)
+      continue
+    }
+
+    if (sameColumn(a, b)) {
+      const gx = sideGutter(a, cols, containerW)
+      push(gx, a.y)
+      push(gx, b.y)
+      push(b.x, b.y)
+      continue
+    }
+
+    // Different companies: V only in the inter-column gutter
+    const gx = gutterBetween(a, b, cols)
+    push(gx, a.y)
+    push(gx, b.y)
+    push(b.x, b.y)
+  }
+  return out
+}
+
+/**
+ * Intra-category bump staircase (SVG, pointer-events none).
+ * One continuous orthogonal path through card bottoms; verticals only in
+ * company gutters. Hidden unless rail hover/pin. Past color / future 灰白.
  */
 export default function BumpConnectors({
   containerRef,
@@ -70,12 +182,14 @@ export default function BumpConnectors({
   focusId = null,
 }: Props) {
   const [pts, setPts] = useState<Anchor[]>([])
+  const [cols, setCols] = useState<ColBox[]>([])
   const [size, setSize] = useState({ w: 0, h: 0 })
 
   const measure = useCallback(() => {
     const root = containerRef.current
     if (!root) {
       setPts([])
+      setCols([])
       setSize({ w: 0, h: 0 })
       return
     }
@@ -84,12 +198,22 @@ export default function BumpConnectors({
     const h = Math.max(root.scrollHeight, root.clientHeight)
     setSize({ w, h })
 
+    const rootBox = root.getBoundingClientRect()
+
+    const colEls = root.querySelectorAll<HTMLElement>('.cat-subcol')
+    const nextCols: ColBox[] = []
+    colEls.forEach((el) => {
+      const r = el.getBoundingClientRect()
+      const left = r.left - rootBox.left + root.scrollLeft
+      nextCols.push({ left, right: left + r.width })
+    })
+    setCols(nextCols)
+
     if (orderedIds.length < 1) {
       setPts([])
       return
     }
 
-    const rootBox = root.getBoundingClientRect()
     const next: Anchor[] = []
     for (let i = 0; i < orderedIds.length; i++) {
       const id = orderedIds[i]
@@ -100,14 +224,23 @@ export default function BumpConnectors({
       const r = el.getBoundingClientRect()
       const left = r.left - rootBox.left + root.scrollLeft
       const top = r.top - rootBox.top + root.scrollTop
+      const sub = el.closest('.cat-subcol')
+      let colLeft = left
+      let colRight = left + r.width
+      if (sub) {
+        const sr = sub.getBoundingClientRect()
+        colLeft = sr.left - rootBox.left + root.scrollLeft
+        colRight = colLeft + sr.width
+      }
       next.push({
         id,
         date: orderedDates[i] ?? '',
         x: left + r.width / 2,
-        // Bottom edge — line leaves from here, not card center.
         y: top + r.height,
         left,
         right: left + r.width,
+        colLeft,
+        colRight,
       })
     }
     setPts(next)
@@ -136,12 +269,13 @@ export default function BumpConnectors({
       const el = root.querySelector(`[data-event-id="${CSS.escape(id)}"]`)
       if (el) ro.observe(el)
     }
+    root.querySelectorAll('.cat-subcol').forEach((el) => ro.observe(el))
 
     window.addEventListener('resize', schedule)
     const board = root.closest('.board')
     board?.addEventListener('scroll', schedule, { passive: true })
-    const cols = root.closest('.board__columns')
-    cols?.addEventListener('scroll', schedule, { passive: true })
+    const boardCols = root.closest('.board__columns')
+    boardCols?.addEventListener('scroll', schedule, { passive: true })
 
     const t1 = window.setTimeout(schedule, 50)
     const t2 = window.setTimeout(schedule, 200)
@@ -151,62 +285,46 @@ export default function BumpConnectors({
       ro.disconnect()
       window.removeEventListener('resize', schedule)
       board?.removeEventListener('scroll', schedule)
-      cols?.removeEventListener('scroll', schedule)
+      boardCols?.removeEventListener('scroll', schedule)
       window.clearTimeout(t1)
       window.clearTimeout(t2)
     }
-    // idsKey/datesKey stand in for orderedIds/orderedDates identity
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [containerRef, idsKey, datesKey, measure])
 
-  if (!active || pts.length < 1 || size.w <= 0 || size.h <= 0) return null
+  if (!active || pts.length < 2 || size.w <= 0 || size.h <= 0) return null
 
-  // Last index at/before focusDate (inclusive). No focus → all past (color).
+  // Chop index: prefer focusId, else last at/before focusDate.
   let chop = pts.length - 1
-  if (focusDate) {
+  if (focusId) {
+    const idx = pts.findIndex((p) => p.id === focusId)
+    if (idx >= 0) chop = idx
+    else if (focusDate) {
+      chop = -1
+      for (let i = 0; i < pts.length; i++) {
+        if (pts[i].date <= focusDate) chop = i
+        else break
+      }
+    }
+  } else if (focusDate) {
     chop = -1
     for (let i = 0; i < pts.length; i++) {
       if (pts[i].date <= focusDate) chop = i
       else break
     }
   }
+  if (chop < 0) chop = 0
 
-  const pastPts = chop >= 0 ? pts.slice(0, chop + 1) : []
-  const futurePts = chop >= 0 ? pts.slice(chop) : pts
-  const pastPath = pastPts.length >= 2 ? hDominantPath(pastPts) : ''
+  const pastAnchors = pts.slice(0, chop + 1)
+  const futureAnchors = pts.slice(chop)
+  const pastPath =
+    pastAnchors.length >= 2
+      ? pointsToPath(stairVertices(pastAnchors, cols, size.w))
+      : ''
   const futurePath =
-    futurePts.length >= 2 && chop < pts.length - 1 ? hDominantPath(futurePts) : ''
-
-  // Origin card: full-width horizontal dashed band at its bottom (through gutters).
-  const origin =
-    (focusId ? pts.find((p) => p.id === focusId) : null) ??
-    (chop >= 0 ? pts[chop] : null)
-
-  const spanLeft = Math.min(
-    ...pts.map((p) => p.left - GUTTER_PAD),
-    4,
-  )
-  const spanRight = Math.max(
-    ...pts.map((p) => p.right + GUTTER_PAD),
-    size.w - 4,
-  )
-
-  const originHPath = origin
-    ? `M ${spanLeft.toFixed(1)} ${origin.y.toFixed(1)} L ${spanRight.toFixed(1)} ${origin.y.toFixed(1)}`
-    : ''
-
-  // Small vertical stub from origin card center-x down to the H-band (already at bottom).
-  // Plus per-card short bottom ticks so stations read in gutters.
-  const stationTicks = pts.map((p) => {
-    const isPast = !focusDate || p.date <= focusDate
-    const tickLeft = Math.max(spanLeft, p.left - GUTTER_PAD)
-    const tickRight = Math.min(spanRight, p.right + GUTTER_PAD)
-    return {
-      id: p.id,
-      isPast,
-      d: `M ${tickLeft.toFixed(1)} ${p.y.toFixed(1)} L ${tickRight.toFixed(1)} ${p.y.toFixed(1)}`,
-    }
-  })
+    futureAnchors.length >= 2 && chop < pts.length - 1
+      ? pointsToPath(stairVertices(futureAnchors, cols, size.w))
+      : ''
 
   return (
     <svg
@@ -216,35 +334,6 @@ export default function BumpConnectors({
       viewBox={`0 0 ${size.w} ${size.h}`}
       aria-hidden
     >
-      {/* Full-width H-band at focus card bottom — primary visual */}
-      {originHPath ? (
-        <path
-          className="bump-connectors__origin-h"
-          d={originHPath}
-          fill="none"
-          stroke={STROKE_PAST}
-          strokeWidth={STROKE_WIDTH}
-          strokeDasharray={DASH}
-          strokeLinecap="round"
-          vectorEffect="non-scaling-stroke"
-        />
-      ) : null}
-
-      {/* Per-card bottom ticks (H in local gutter) */}
-      {stationTicks.map((t) => (
-        <path
-          key={`tick-${t.id}`}
-          d={t.d}
-          fill="none"
-          stroke={t.isPast ? STROKE_PAST : STROKE_FUTURE}
-          strokeWidth={STROKE_WIDTH}
-          strokeDasharray={DASH}
-          strokeLinecap="round"
-          vectorEffect="non-scaling-stroke"
-          opacity={0.55}
-        />
-      ))}
-
       {futurePath ? (
         <path
           className="bump-connectors__future"
