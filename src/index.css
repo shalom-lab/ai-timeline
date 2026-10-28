@@ -11,8 +11,7 @@
   --shadow: 0 1px 2px rgba(15, 23, 42, 0.04), 0 8px 24px rgba(15, 23, 42, 0.06);
   --radius: 12px;
   --rail-w: 158px;
-  /* Stable header brand slot so 纪年 ↔ AI工具 nav tabs do not shift. */
-  --header-brand-w: 18.5rem;
+  /* Banner height hint; brand width is content-driven (nav sits near search). */
   --header-banner-h: auto;
   font-family:
     'Inter',
@@ -93,22 +92,20 @@ a {
 }
 
 .app-header__banner {
-  display: grid;
-  /* Fixed brand column across routes; nav starts at a constant x. */
-  grid-template-columns: var(--header-brand-w) auto minmax(220px, 1fr);
+  display: flex;
   align-items: center;
   gap: 0.65rem 1rem;
   padding: 0.55rem 1.1rem;
+  /* brand | spacer (via nav ml:auto) | page-nav | search */
 }
 
 .app-header__brand {
   display: flex;
   align-items: center;
   gap: 0.7rem;
-  width: 100%;
+  flex: 0 1 auto;
   min-width: 0;
-  max-width: 100%;
-  overflow: hidden;
+  /* Content-sized; page-nav is ml:auto so meta is not covered. */
 }
 
 .app-header__logo-img {
@@ -158,6 +155,8 @@ a {
   align-items: stretch;
   gap: 0.35rem;
   flex-shrink: 0;
+  /* Push 纪年 | AI工具 toward the search (right), clear of brand meta. */
+  margin-left: auto;
 }
 
 .app-header__nav-btn {
@@ -193,7 +192,9 @@ a {
 .app-header__search-wrap {
   display: flex;
   justify-content: flex-end;
+  flex: 1 1 220px;
   min-width: 0;
+  max-width: 520px;
 }
 
 .app-header__search {
@@ -1495,15 +1496,22 @@ a {
 /* ─── Responsive ─── */
 @media (max-width: 1100px) {
   .app-header__banner {
-    grid-template-columns: 1fr;
+    flex-wrap: wrap;
     gap: 0.45rem;
   }
 
+  .app-header__brand {
+    max-width: 100%;
+    flex: 1 1 100%;
+  }
+
   .app-header__nav {
-    justify-self: start;
+    margin-left: 0;
   }
 
   .app-header__search-wrap {
+    flex: 1 1 100%;
+    max-width: none;
     justify-content: stretch;
   }
 
