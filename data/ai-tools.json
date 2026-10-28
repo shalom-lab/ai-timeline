@@ -41,16 +41,18 @@
       "companyId": "openai",
       "cells": {
         "llm": {
-          "name": "GPT / o-series",
+          "name": "GPT",
           "url": "https://openai.com/gpt",
           "pricing": "Chat 含免费档；API 按量计费",
-          "pricingUrl": "https://openai.com/api/pricing/"
+          "pricingUrl": "https://openai.com/api/pricing/",
+          "note": "含 o 系列"
         },
         "image": {
-          "name": "DALL·E / GPT Image",
+          "name": "DALL·E",
           "url": "https://openai.com/index/dall-e-3/",
           "pricing": "ChatGPT 限额内可用；API 按张计费",
-          "pricingUrl": "https://openai.com/api/pricing/"
+          "pricingUrl": "https://openai.com/api/pricing/",
+          "note": "含 GPT Image"
         },
         "video": {
           "name": "Sora",
@@ -66,10 +68,11 @@
             "pricingUrl": "https://chatgpt.com/pricing/"
           },
           {
-            "name": "ChatGPT Agent / Dot",
+            "name": "ChatGPT Agent",
             "url": "https://openai.com/",
             "pricing": "高级订阅档开放（见 ChatGPT 定价）",
-            "pricingUrl": "https://chatgpt.com/pricing/"
+            "pricingUrl": "https://chatgpt.com/pricing/",
+            "note": "曾称 Dot"
           }
         ],
         "coding": {
@@ -92,7 +95,7 @@
             "pricingUrl": "https://openai.com/api/pricing/"
           },
           {
-            "name": "Whisper / 语音转写",
+            "name": "Whisper",
             "url": "https://platform.openai.com/docs/guides/speech-to-text",
             "pricing": "API 按分钟计费",
             "pricingUrl": "https://openai.com/api/pricing/"
@@ -128,10 +131,11 @@
           "pricingUrl": "https://www.anthropic.com/pricing#api"
         },
         "other": {
-          "name": "Computer use / Agents",
+          "name": "Computer use",
           "url": "https://www.anthropic.com/news/developing-computer-use",
           "pricing": "API / 企业方案",
-          "pricingUrl": "https://www.anthropic.com/pricing#api"
+          "pricingUrl": "https://www.anthropic.com/pricing#api",
+          "note": "含 Agents"
         }
       }
     },
@@ -163,16 +167,18 @@
           "pricingUrl": "https://one.google.com/about/google-ai-plans/"
         },
         "coding": {
-          "name": "Gemini CLI / Code Assist",
+          "name": "Gemini CLI",
           "url": "https://cloud.google.com/gemini/docs/codeassist/overview",
           "pricing": "个人免费档 + 云端按量/订阅",
-          "pricingUrl": "https://cloud.google.com/gemini/docs/codeassist/overview"
+          "pricingUrl": "https://cloud.google.com/gemini/docs/codeassist/overview",
+          "note": "含 Code Assist"
         },
         "api": {
-          "name": "Gemini API / Vertex",
+          "name": "Gemini API",
           "url": "https://ai.google.dev/",
           "pricing": "免费额度 + 按量；Vertex 企业价",
-          "pricingUrl": "https://ai.google.dev/pricing"
+          "pricingUrl": "https://ai.google.dev/pricing",
+          "note": "含 Vertex"
         },
         "other": {
           "name": "Gemini Agents",
@@ -192,7 +198,7 @@
           "pricingUrl": "https://www.llama.com/"
         },
         "image": {
-          "name": "Llama 视觉 / 图像能力",
+          "name": "Llama 视觉",
           "url": "https://www.llama.com/",
           "pricing": "开源/云托管按供应商",
           "pricingUrl": "https://www.llama.com/"
@@ -204,10 +210,11 @@
           "pricingUrl": "https://www.meta.ai/"
         },
         "api": {
-          "name": "Llama API / 云托管",
+          "name": "Llama API",
           "url": "https://www.llama.com/",
           "pricing": "自托管免费权重；托管按云厂商",
-          "pricingUrl": "https://www.llama.com/"
+          "pricingUrl": "https://www.llama.com/",
+          "note": "含云托管"
         }
       }
     },
@@ -215,16 +222,18 @@
       "companyId": "microsoft",
       "cells": {
         "llm": {
-          "name": "Azure OpenAI / 模型目录",
+          "name": "Azure OpenAI",
           "url": "https://azure.microsoft.com/products/ai-services/openai-service/",
           "pricing": "Azure 按量",
-          "pricingUrl": "https://azure.microsoft.com/pricing/details/cognitive-services/openai-service/"
+          "pricingUrl": "https://azure.microsoft.com/pricing/details/cognitive-services/openai-service/",
+          "note": "含模型目录"
         },
         "chat": {
-          "name": "Copilot (Microsoft 365 / Bing)",
+          "name": "Microsoft Copilot",
           "url": "https://copilot.microsoft.com/",
           "pricing": "免费消费端 + M365 Copilot 席位订阅",
-          "pricingUrl": "https://www.microsoft.com/microsoft-365/copilot"
+          "pricingUrl": "https://www.microsoft.com/microsoft-365/copilot",
+          "note": "含 Microsoft 365、Bing"
         },
         "coding": {
           "name": "GitHub Copilot",
@@ -240,10 +249,11 @@
           "pricingUrl": "https://azure.microsoft.com/pricing/details/cognitive-services/openai-service/"
         },
         "other": {
-          "name": "Copilot Studio / Agents",
+          "name": "Copilot Studio",
           "url": "https://www.microsoft.com/microsoft-copilot/microsoft-copilot-studio",
           "pricing": "Power Platform / 企业许可",
-          "pricingUrl": "https://www.microsoft.com/microsoft-copilot/microsoft-copilot-studio"
+          "pricingUrl": "https://www.microsoft.com/microsoft-copilot/microsoft-copilot-studio",
+          "note": "含 Agents"
         }
       }
     },
@@ -288,15 +298,16 @@
             "url": "https://cursor.com/",
             "pricing": "Free · Plus $8/月 · Premium $30/月 · Super/Ultra 更高（X Subscription）",
             "pricingUrl": "https://cursor.com/pricing",
-            "note": "X Subscription；含 Cursor Agent / Cloud Agents；第三方模型按 API 标价从预付费扣（cursor.com/docs/models-and-pricing）",
+            "note": "X Subscription；含 Cursor Agent、Cloud Agents；第三方模型按 API 标价从预付费扣（cursor.com/docs/models-and-pricing）",
             "logo": "cursor"
           },
           {
-            "name": "Cursor Agent / Cloud Agents",
+            "name": "Cursor Agent",
             "url": "https://cursor.com/",
             "pricing": "Premium 及以上含 Cloud Agents",
             "pricingUrl": "https://cursor.com/pricing",
-            "logo": "cursor"
+            "logo": "cursor",
+            "note": "含 Cloud Agents"
           }
         ],
         "api": {
@@ -341,10 +352,11 @@
           "pricingUrl": "https://www.alibabacloud.com/product/model-studio"
         },
         "image": {
-          "name": "Qwen-VL / 通义万相",
+          "name": "通义万相",
           "url": "https://tongyi.aliyun.com/",
           "pricing": "免费试用 + 云端按量",
-          "pricingUrl": "https://www.alibabacloud.com/product/model-studio"
+          "pricingUrl": "https://www.alibabacloud.com/product/model-studio",
+          "note": "含 Qwen-VL"
         },
         "video": {
           "name": "通义万相视频",
@@ -354,16 +366,17 @@
         },
         "chat": [
           {
-            "name": "通义 / Qwen Chat",
+            "name": "通义千问",
             "url": "https://tongyi.aliyun.com/",
             "pricing": "免费档 + 会员",
             "pricingUrl": "https://tongyi.aliyun.com/"
           },
           {
-            "name": "通义应用 / Agent",
+            "name": "通义应用",
             "url": "https://tongyi.aliyun.com/",
             "pricing": "平台套餐",
-            "pricingUrl": "https://tongyi.aliyun.com/"
+            "pricingUrl": "https://tongyi.aliyun.com/",
+            "note": "含 Agent"
           }
         ],
         "coding": {
@@ -373,10 +386,11 @@
           "pricingUrl": "https://lingma.aliyun.com/"
         },
         "api": {
-          "name": "DashScope / Model Studio",
+          "name": "DashScope",
           "url": "https://www.alibabacloud.com/product/model-studio",
           "pricing": "按量计费",
-          "pricingUrl": "https://www.alibabacloud.com/product/model-studio"
+          "pricingUrl": "https://www.alibabacloud.com/product/model-studio",
+          "note": "含 Model Studio"
         }
       },
       "displayName": "Qwen"
@@ -385,10 +399,11 @@
       "companyId": "bytedance",
       "cells": {
         "llm": {
-          "name": "Doubao / Seed",
+          "name": "Doubao",
           "url": "https://www.volcengine.com/product/doubao",
           "pricing": "火山引擎按量",
-          "pricingUrl": "https://www.volcengine.com/product/doubao"
+          "pricingUrl": "https://www.volcengine.com/product/doubao",
+          "note": "含 Seed"
         },
         "image": [
           {
@@ -412,10 +427,11 @@
             "pricingUrl": "https://jimeng.jianying.com/"
           },
           {
-            "name": "Seedance / 豆包视频",
+            "name": "Seedance",
             "url": "https://www.doubao.com/",
             "pricing": "App / 云端套餐",
-            "pricingUrl": "https://www.volcengine.com/product/doubao"
+            "pricingUrl": "https://www.volcengine.com/product/doubao",
+            "note": "豆包视频"
           }
         ],
         "chat": [
@@ -463,36 +479,41 @@
           "pricingUrl": "https://open.bigmodel.cn/pricing"
         },
         "image": {
-          "name": "CogView / GLM 图像",
+          "name": "CogView",
           "url": "https://www.zhipuai.cn/",
           "pricing": "平台按量",
-          "pricingUrl": "https://open.bigmodel.cn/pricing"
+          "pricingUrl": "https://open.bigmodel.cn/pricing",
+          "note": "GLM 图像"
         },
         "video": {
-          "name": "CogVideo / 清影",
+          "name": "清影",
           "url": "https://chatglm.cn/",
           "pricing": "App 限额 + API",
-          "pricingUrl": "https://open.bigmodel.cn/pricing"
+          "pricingUrl": "https://open.bigmodel.cn/pricing",
+          "note": "含 CogVideo"
         },
         "chat": [
           {
-            "name": "清言 / Z.ai",
+            "name": "清言",
             "url": "https://chatglm.cn/",
             "pricing": "免费 + VIP/SVIP",
-            "pricingUrl": "https://chatglm.cn/"
+            "pricingUrl": "https://chatglm.cn/",
+            "note": "Z.ai"
           },
           {
-            "name": "清言智能体 / AutoGLM",
+            "name": "AutoGLM",
             "url": "https://chatglm.cn/",
             "pricing": "App / 平台套餐",
-            "pricingUrl": "https://chatglm.cn/"
+            "pricingUrl": "https://chatglm.cn/",
+            "note": "清言智能体"
           }
         ],
         "coding": {
-          "name": "CodeGeeX / GLM Coding",
+          "name": "CodeGeeX",
           "url": "https://codegeex.cn/",
           "pricing": "个人免费档 + 商业版",
-          "pricingUrl": "https://codegeex.cn/"
+          "pricingUrl": "https://codegeex.cn/",
+          "note": "GLM Coding"
         },
         "api": {
           "name": "GLM API",
@@ -507,10 +528,11 @@
       "companyId": "moonshot",
       "cells": {
         "llm": {
-          "name": "Kimi / Moonshot",
+          "name": "Kimi",
           "url": "https://www.moonshot.cn/",
           "pricing": "对话会员 + API 按量",
-          "pricingUrl": "https://platform.moonshot.cn/docs/pricing/chat"
+          "pricingUrl": "https://platform.moonshot.cn/docs/pricing/chat",
+          "note": "Moonshot"
         },
         "chat": [
           {
@@ -520,17 +542,19 @@
             "pricingUrl": "https://kimi.moonshot.cn/"
           },
           {
-            "name": "Kimi 助手 / Agent",
+            "name": "Kimi",
             "url": "https://kimi.moonshot.cn/",
             "pricing": "会员功能",
-            "pricingUrl": "https://kimi.moonshot.cn/"
+            "pricingUrl": "https://kimi.moonshot.cn/",
+            "note": "助手与 Agent"
           }
         ],
         "coding": {
-          "name": "Kimi 编程 / IDE 插件",
+          "name": "Kimi 编程",
           "url": "https://kimi.moonshot.cn/",
           "pricing": "会员/平台",
-          "pricingUrl": "https://kimi.moonshot.cn/"
+          "pricingUrl": "https://kimi.moonshot.cn/",
+          "note": "含 IDE 插件"
         },
         "api": {
           "name": "Moonshot API",
@@ -545,10 +569,11 @@
       "companyId": "minimax",
       "cells": {
         "llm": {
-          "name": "MiniMax / M-series",
+          "name": "MiniMax",
           "url": "https://www.minimax.io/",
           "pricing": "平台按量 + 订阅",
-          "pricingUrl": "https://www.minimax.io/pricing"
+          "pricingUrl": "https://www.minimax.io/pricing",
+          "note": "含 M-series"
         },
         "image": {
           "name": "MiniMax Image",
@@ -557,16 +582,18 @@
           "pricingUrl": "https://www.minimax.io/pricing"
         },
         "video": {
-          "name": "MiniMax Video / Hailuo",
+          "name": "Hailuo",
           "url": "https://hailuoai.com/",
           "pricing": "积分/订阅",
-          "pricingUrl": "https://www.minimax.io/pricing"
+          "pricingUrl": "https://www.minimax.io/pricing",
+          "note": "MiniMax Video"
         },
         "chat": {
-          "name": "海螺 / MiniMax 对话",
+          "name": "海螺",
           "url": "https://chat.minimaxi.com/",
           "pricing": "免费 + 付费包",
-          "pricingUrl": "https://www.minimax.io/pricing"
+          "pricingUrl": "https://www.minimax.io/pricing",
+          "note": "MiniMax 对话"
         },
         "api": {
           "name": "MiniMax API",
@@ -611,10 +638,11 @@
           "pricingUrl": "https://cloud.tencent.com/product/hunyuan"
         },
         "chat": {
-          "name": "元宝 / 混元助手",
+          "name": "元宝",
           "url": "https://yuanbao.tencent.com/",
           "pricing": "免费为主",
-          "pricingUrl": "https://yuanbao.tencent.com/"
+          "pricingUrl": "https://yuanbao.tencent.com/",
+          "note": "混元助手"
         },
         "api": {
           "name": "腾讯云混元",
@@ -642,10 +670,11 @@
             "pricingUrl": "https://devin.ai/pricing"
           },
           {
-            "name": "Devin Cloud / Local",
+            "name": "Devin",
             "url": "https://devin.ai/",
             "pricing": "Pro 及以上含云端 Agent",
-            "pricingUrl": "https://devin.ai/pricing"
+            "pricingUrl": "https://devin.ai/pricing",
+            "note": "Cloud 与 Local"
           }
         ]
       },
@@ -655,10 +684,11 @@
       "companyId": "baidu",
       "cells": {
         "llm": {
-          "name": "文心 / ERNIE",
+          "name": "文心",
           "url": "https://cloud.baidu.com/product/model.html",
           "pricing": "千帆按量",
-          "pricingUrl": "https://cloud.baidu.com/doc/qianfan/s/wmh4sv6ya"
+          "pricingUrl": "https://cloud.baidu.com/doc/qianfan/s/wmh4sv6ya",
+          "note": "ERNIE"
         },
         "chat": {
           "name": "文心一言",
