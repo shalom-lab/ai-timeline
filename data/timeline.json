@@ -1,7 +1,7 @@
 {
   "meta": {
     "name": "AI纪年",
-    "version": "0.10.1",
+    "version": "0.11.0",
     "scopeStart": "2022-11-30",
     "updatedAt": "2026-10-28",
     "locale": "zh-CN",
@@ -1503,7 +1503,7 @@
       "dateStatus": "exact",
       "title": "开源 Model Context Protocol（MCP）",
       "summary": "Anthropic 发布并开源 Model Context Protocol（MCP），提出连接 AI 助手与数据源/工具的开放标准：含规范与 SDK、Claude Desktop 本地 MCP server 支持，以及开源 MCP server 仓库。",
-      "category": "concept",
+      "category": "other",
       "company": "Anthropic",
       "series": "MCP",
       "product": "Model Context Protocol",
@@ -1519,8 +1519,7 @@
       "tags": [
         "mcp",
         "protocol",
-        "tooling",
-        "concept"
+        "tooling"
       ]
     },
     {
@@ -2020,7 +2019,7 @@
       "dateStatus": "exact",
       "title": "发布 Agent Skills",
       "summary": "Anthropic 推出 Agent Skills：以文件夹形式打包指令、脚本与资源，供 Claude 按需加载以完成专项任务；覆盖 Claude.ai、API 与 Claude Code，并提供文档类预置 Skills 与自定义 Skills API。",
-      "category": "concept",
+      "category": "product",
       "company": "Anthropic",
       "series": "Agent Skills",
       "product": "Agent Skills",
@@ -2036,9 +2035,9 @@
       "tags": [
         "skill",
         "agent-skills",
-        "agent",
-        "concept"
-      ]
+        "agent"
+      ],
+      "productSubcategory": "agent"
     },
     {
       "id": "anthropic-agent-harness-engineering-2025-11-26",
@@ -2046,7 +2045,7 @@
       "dateStatus": "exact",
       "title": "提出长程 Agent Harness 实践",
       "summary": "Anthropic 工程博客发表 Effective harnesses for long-running agents，正式以 harness 描述跨多上下文窗口的长程 agent 运行骨架（initializer + coding agent 与持久交接产物），推动「agent harness」成为可复述的工程概念。",
-      "category": "concept",
+      "category": "other",
       "company": "Anthropic",
       "series": "Agent Harness",
       "product": "Long-running agent harness",
@@ -2062,8 +2061,7 @@
       "tags": [
         "harness",
         "agent",
-        "agent-harness",
-        "concept"
+        "agent-harness"
       ]
     },
     {

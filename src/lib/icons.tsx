@@ -127,26 +127,7 @@ export function CompanyAvatar({
   )
 }
 
-function IconAgent({ color }: { color: string }) {
-  return (
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden>
-      <circle cx="6" cy="12" r="2.5" stroke={color} strokeWidth="1.8" />
-      <circle cx="18" cy="6" r="2.5" stroke={color} strokeWidth="1.8" />
-      <circle cx="18" cy="18" r="2.5" stroke={color} strokeWidth="1.8" />
-      <path d="M8.3 11l7-3.5M8.3 13l7 3.5" stroke={color} strokeWidth="1.8" />
-    </svg>
-  )
-}
 
-function IconMultimodal({ color }: { color: string }) {
-  return (
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden>
-      <rect x="3" y="5" width="18" height="14" rx="2" stroke={color} strokeWidth="1.8" />
-      <circle cx="9" cy="11" r="2" fill={color} />
-      <path d="M3 16l5-4 4 3 3-2 6 4" stroke={color} strokeWidth="1.8" strokeLinejoin="round" />
-    </svg>
-  )
-}
 
 function IconScience({ color }: { color: string }) {
   return (
@@ -162,19 +143,6 @@ function IconScience({ color }: { color: string }) {
   )
 }
 
-function IconConcept({ color }: { color: string }) {
-  return (
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden>
-      <circle cx="12" cy="12" r="3" stroke={color} strokeWidth="1.8" />
-      <path
-        d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M5 19l2-2M17 7l2-2"
-        stroke={color}
-        strokeWidth="1.8"
-        strokeLinecap="round"
-      />
-    </svg>
-  )
-}
 
 function IconProduct({ color }: { color: string }) {
   return (
@@ -197,7 +165,6 @@ export function CardMainIcon({
 }): ReactNode {
   const co = resolveCompany(companies, event.company)
   const color = co?.color ?? accent
-  const tags = event.tags ?? []
   const soft = co?.colorSoft ?? `${accent}22`
 
   // Company logo ALWAYS wins when event.company resolves to a known id with asset.
@@ -206,14 +173,6 @@ export function CardMainIcon({
     inner = <CompanyLogoImg companyId={co!.id} size={22} title={co?.name} />
   } else if (event.category === 'science') {
     inner = <IconScience color={color} />
-  } else if (event.category === 'concept') {
-    if (tags.some((t) => t.includes('agent') || t.includes('harness') || t.includes('skill'))) {
-      inner = <IconAgent color={color} />
-    } else if (tags.includes('multimodal')) {
-      inner = <IconMultimodal color={color} />
-    } else {
-      inner = <IconConcept color={color} />
-    }
   } else {
     inner = <IconProduct color={color} />
   }

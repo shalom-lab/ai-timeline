@@ -27,7 +27,6 @@ const DEFAULT_FILTERS: Filters = {
 const EMPTY_SUB: Record<Category, string[]> = {
   model: [],
   product: [],
-  concept: [],
   science: [],
   other: [],
 }
@@ -134,7 +133,6 @@ export default function App() {
     const map: Record<Category, TimelineEvent[]> = {
       model: [],
       product: [],
-      concept: [],
       science: [],
       other: [],
     }

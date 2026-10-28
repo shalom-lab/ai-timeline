@@ -4,11 +4,10 @@ import type {
   ProductSubcategory,
 } from '../types/timeline'
 
-/** Board column order: 大模型 → 产品 → 概念 → 科学 → 其他 */
+/** Board column order: 大模型 → 产品 → 科学 → 其他 */
 export const BOARD_CATEGORY_ORDER: readonly Category[] = [
   'model',
   'product',
-  'concept',
   'science',
   'other',
 ] as const
@@ -16,7 +15,6 @@ export const BOARD_CATEGORY_ORDER: readonly Category[] = [
 export const CATEGORY_LABEL_ZH: Record<Category, string> = {
   model: '大模型',
   product: '产品',
-  concept: '概念',
   science: '科学',
   other: '其他',
 }
@@ -34,11 +32,6 @@ export const CATEGORY_THEME: Record<
     header: '#F8FAFC',
     headerSoft: '#ECFDF5',
     accent: '#059669',
-  },
-  concept: {
-    header: '#F8FAFC',
-    headerSoft: '#FFF7ED',
-    accent: '#EA580C',
   },
   science: {
     header: '#F8FAFC',
@@ -129,17 +122,3 @@ export const EVENT_TYPE_LEGEND: {
   { label: '其他', color: '#94A3B8', types: ['other'] },
 ]
 
-/** Theme chips for concept / other (match tags or fallback). Science lives in its own column. */
-export const CONCEPT_THEME_CHIPS = [
-  {
-    id: 'agent',
-    label: 'Agent',
-    match: (tags?: string[]) => (tags ?? []).some((t) => t.includes('agent')),
-  },
-  {
-    id: 'multimodal',
-    label: '多模态',
-    match: (tags?: string[]) => (tags ?? []).includes('multimodal'),
-  },
-  { id: 'other', label: '其他', match: () => true },
-] as const

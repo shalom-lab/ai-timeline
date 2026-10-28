@@ -52,12 +52,6 @@ const ICONS: Record<Category, ReactNode> = {
       <rect x="14" y="14" width="7" height="7" rx="1.5" />
     </svg>
   ),
-  concept: (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
-      <circle cx="12" cy="12" r="3" />
-      <path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M5 19l2-2M17 7l2-2" strokeLinecap="round" />
-    </svg>
-  ),
   science: (
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
       <path d="M9 3h6M10 3v4.5L5.5 18a3 3 0 0 0 2.7 4.5h7.6A3 3 0 0 0 18.5 18L14 7.5V3" strokeLinejoin="round" />
@@ -144,7 +138,7 @@ export default function CategoryColumn({
   }
 
   const multi = visibleGroups.length > 1
-  /** Skip chip row when flat / single group (e.g. concept) — 别强行分 */
+  /** Skip chip row when flat / single group — 别强行分 */
   const showChips = groups.length > 1
 
   const visibleEvents = useMemo(() => {

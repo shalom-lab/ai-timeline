@@ -30,7 +30,7 @@ v1（当前 `meta.version` 以 `0.x` / 首个 `1.0` 为目标）明确 **不做*
 2. **可核验**：至少一条官方 blog / docs / changelog / 官方新闻稿 URL；打不开或需登录墙则换镜像/归档并注明。
 3. **不猜日期**：来源未写清公历日 → **整条省略**（不要用 `unverified` 塞进主数据）。
 4. **阶段正确**：阅读原文用词（research preview / beta / GA / open source / announcing）映射到 `eventType`（见 §3）。
-5. **分类**：一级五类，看板序为 **大模型 → 产品 → 概念 → 科学 → 其他**（`model` → `product` → `concept` → `science` → `other`）。模型发权重/API 型号 → `model`；用户可感知产品 → `product` + 合适的 `productSubcategory`；概念落地/命名 → `concept`；**AI 科学发现/突破**（蛋白质结构、材料、药物发现、气候模型、AI 数学证明等，非普通产品上线）→ `science`（可打 `ai-for-science` 等 tags，例 AlphaFold 3）。**不要给 category 加颜色**——色在 `companies[].color`。
+5. **分类**：一级四类，看板序为 **大模型 → 产品 → 科学 → 其他**（`model` → `product` → `science` → `other`）。模型发权重/API 型号 → `model`；用户可感知产品 → `product` + 合适的 `productSubcategory`；**AI 科学发现/突破**（蛋白质结构、材料、药物发现、气候模型、AI 数学证明等，非普通产品上线）→ `science`（可打 `ai-for-science` 等 tags，例 AlphaFold 3）；协议/工程实践等难归入前三类时 → `other`。**不要给 category 加颜色**——色在 `companies[].color`。
 5b. **公司色**：事件 `company` 宜对齐词典；新组织须在 `companies[]` 增加 `color`（`#RRGGBB`）与可选 `colorSoft`。
 6. **`id` 稳定**：kebab-case，含组织、对象、阶段语义与日期；合并后不随意改名（改名须加迁移说明）。
 7. **去重**：检索 `data/timeline.json` 是否已有同日同产品同阶段条目（见 §5）。
@@ -150,7 +150,7 @@ npm run dev        # 看板 UI（含能力边界列）
 | `Company.colorSoft` | 可选浅底色 |
 | `meta.ui.openingBg` | 开篇 Hero 背景（CSS 渐变优先） |
 | `meta.ui.openingFg` | 可选 Hero 文字色 |
-| 一级分类展示序 | 文档/UI：概念 → 大模型 → 产品 → 其他（仍仅四类） |
+| 一级分类展示序 | 文档/UI：大模型 → 产品 → 科学 → 其他 |
 | `meta.version` | `0.2.0` |
 
 校验：`npm run validate` 会强制 `company.color` 与 `meta.ui.openingBg`。

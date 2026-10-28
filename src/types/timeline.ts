@@ -1,7 +1,7 @@
 /** AI Timeline — core data types. Keep in sync with docs/DATA.md and data/timeline.json. */
 
-/** Five primary categories. Board UI order: 大模型 → 产品 → 概念 → 科学 → 其他 (see BOARD_CATEGORY_ORDER). */
-export type Category = 'model' | 'product' | 'concept' | 'science' | 'other'
+/** Four primary categories. Board UI order: 大模型 → 产品 → 科学 → 其他 (see BOARD_CATEGORY_ORDER). */
+export type Category = 'model' | 'product' | 'science' | 'other'
 
 export type ProductSubcategory =
   | 'ide'
@@ -135,7 +135,6 @@ export interface TimelineData {
 export const CATEGORY_DISPLAY_ORDER: readonly Category[] = [
   'model',
   'product',
-  'concept',
   'science',
   'other',
 ] as const
@@ -143,7 +142,6 @@ export const CATEGORY_DISPLAY_ORDER: readonly Category[] = [
 export const CATEGORY_LABEL_ZH: Record<Category, string> = {
   model: '大模型',
   product: '产品',
-  concept: '概念',
   science: '科学',
   other: '其他',
 }

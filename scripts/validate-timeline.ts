@@ -24,7 +24,7 @@ const MONTH_RE = /^\d{4}-\d{2}$/
 const HEX_RE = /^#[0-9A-Fa-f]{6}$/
 const KEBAB_RE = /^[a-z0-9]+(?:-[a-z0-9]+)*$/
 
-const CATEGORIES = new Set(['model', 'product', 'concept', 'science', 'other'])
+const CATEGORIES = new Set(['model', 'product', 'science', 'other'])
 const SUBCATS = new Set([
   'ide',
   'cli',

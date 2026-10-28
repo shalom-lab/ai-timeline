@@ -57,10 +57,6 @@ export function groupKeyForEvent(
     const s = e.series?.trim() || '其他'
     return { key: `series:${s}`, label: seriesChipLabel(s) }
   }
-  // concept: flat chronological — do NOT force MCP/Skill/Harness theme chips
-  if (category === 'concept') {
-    return { key: 'flat', label: '全部' }
-  }
   // other — light theme buckets only when tags clearly apply; else flat
   const tags = e.tags ?? []
   if (tags.some((t) => ['policy', 'regulation', 'funding', 'acquisition'].includes(t))) {
