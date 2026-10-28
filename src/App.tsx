@@ -49,17 +49,24 @@ function filterFrontierMonths(
     const monthHit =
       m.month.includes(q) ||
       m.summary.toLowerCase().includes(q) ||
-      `能力边界`.includes(q)
-    const workflows = m.workflows.filter((w) => {
-      const hay = [w.title, w.how ?? '', ...(w.tags ?? []), ...(w.enabledBy ?? [])]
+      `能力边界`.includes(q) ||
+      `工作场景`.includes(q)
+    const neu = m.new.filter((w) => {
+      const hay = [
+        w.title,
+        w.detail ?? '',
+        w.emoji ?? '',
+        ...(w.tags ?? []),
+        ...(w.enabledBy ?? []),
+      ]
         .join(' ')
         .toLowerCase()
       return hay.includes(q)
     })
     if (monthHit) {
       out.push(m)
-    } else if (workflows.length > 0) {
-      out.push({ ...m, workflows })
+    } else if (neu.length > 0) {
+      out.push({ ...m, new: neu })
     }
   }
   return out

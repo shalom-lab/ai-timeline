@@ -219,6 +219,8 @@ interface Source {
 
 相对 v0.7：补录 Codex / 智谱 GLM / Cursor / Grok iOS / OpenClaw / QoderWork / WorkBuddy 等可核验节点；概念列取消强制主题 chips。`meta.version` `0.7.2`。
 
+能力边界数据集 `0.2.0`：`workflows` → `new[]` 工作场景；UI 累积「既往已具备」默认折叠。
+
 ---
 
 ## 7. 最小示意
@@ -257,8 +259,8 @@ interface Source {
 
 | 对比 | 时间线事件 (`timeline.json`) | 能力边界 (`capability-frontier.json`) |
 | --- | --- | --- |
-| 粒度 | 可核验的发布/开源/更名等节点 | **月末快照**：当月新变得普通人+AI 可实际采用的工作流 |
-| 重复 | 历史节点保留 | **只记当月新增**；勿重复往月已写过的能力 |
+| 粒度 | 可核验的发布/开源/更名等节点 | **月末快照**：截止该月末普通人+AI 已能做的**工作场景**（当月新增 + 既往累积） |
+| 重复 | 历史节点保留 | **new[] 只记当月新增**；既往场景由 UI 累积展示 |
 | 用途 | 编年史 / 看板五列 | 判断自己是否「落后于前沿」 |
 | UI | 大模型/产品/概念/科学/其他 | 独立轨道「能力边界」（品红强调色，可独占） |
 
@@ -278,17 +280,19 @@ interface CapabilityFrontierData {
 
 interface CapabilityMonth {
   month: string // YYYY-MM
-  summary: string
-  workflows: CapabilityWorkflow[] // ONLY newly available this month
+  summary: string // 截止该月末，普通人+AI 已能做的事（口语）
+  new: CapabilityScenario[] // 当月新增工作场景
 }
 
-interface CapabilityWorkflow {
-  id: string // global unique kebab
-  title: string
-  how?: string
+interface CapabilityScenario {
+  id: string // global unique kebab（首次出现月登记）
+  emoji?: string
+  title: string // 具体工作场景，非产品发布腔
+  detail?: string
   enabledBy?: string[] // timeline event ids
   tags?: string[]
 }
+// UI：既往已具备 = 本月之前所有 new 的累积（默认折叠）
 ```
 
 不变式（`npm run validate` 一并校验）：
@@ -299,6 +303,6 @@ interface CapabilityWorkflow {
 4. 每条 `enabledBy` 若存在，须指向 `timeline.json` 已有 `id`。
 5. 无新增则 **省略该月**，不要写空 `workflows`。
 
-贡献规则：**只追加**新月或新 workflow；不要改写旧月把旧能力再列一遍。
+贡献规则：**只追加**新月或新 scenario 到 `new[]`；不要把旧场景再写进后续月的 `new[]`（既往由 UI 折叠展示）。文案用具体工作场景+emoji，避免产品发布腔。
 
 路径：`docs/DATA.md`（本节）· `src/types/capability.ts` · `data/capability-frontier.json`。

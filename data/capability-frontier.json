@@ -1,7 +1,7 @@
 {
   "meta": {
     "name": "能力边界",
-    "version": "0.1.0",
+    "version": "0.2.0",
     "scopeStart": "2022-11",
     "updatedAt": "2026-10-28",
     "locale": "zh-CN"
@@ -9,105 +9,219 @@
   "months": [
     {
       "month": "2022-11",
-      "summary": "对话式大模型首次对公众开放研究预览：普通人可以用自然语言问知识问题并得到可用回答。",
-      "workflows": [
+      "summary": "截止本月末：普通人第一次能打开一个对话框，用大白话把事问清楚、把草稿写出来。",
+      "new": [
         {
-          "id": "chat-qa-with-llm",
-          "title": "用对话助手问知识问题并得到可用回答",
-          "how": "在 ChatGPT 研究预览中用自然语言提问，获得连贯的文字回答（仍有幻觉与知识截止风险）。",
-          "enabledBy": ["openai-chatgpt-research-preview-2022-11-30"],
-          "tags": ["chat", "qa"]
+          "id": "chat-learn-anything",
+          "emoji": "💬",
+          "title": "能跟 ChatGPT 闲聊，顺便让它一步步教我量子力学",
+          "detail": "研究预览里用自然语言提问；回答可能有错，重要结论要自己核对。",
+          "enabledBy": [
+            "openai-chatgpt-research-preview-2022-11-30"
+          ],
+          "tags": [
+            "chat",
+            "learn"
+          ]
+        },
+        {
+          "id": "chat-draft-everyday-writing",
+          "emoji": "✍️",
+          "title": "让对话助手帮我改邮件、写周报初稿、润色一段自我介绍",
+          "detail": "把要点丢给它，要一版可读草稿，再自己改到能发出去。",
+          "enabledBy": [
+            "openai-chatgpt-research-preview-2022-11-30"
+          ],
+          "tags": [
+            "chat",
+            "writing"
+          ]
         }
       ]
     },
     {
       "month": "2023-02",
-      "summary": "付费订阅带来高峰时段更稳定的对话访问，日常把助手当「常开工具」成为可行习惯。",
-      "workflows": [
+      "summary": "截止本月末：高峰也能连得上，把助手当成「常开工具」写东西、问问题更顺手。",
+      "new": [
         {
-          "id": "paid-priority-chat-access",
-          "title": "用付费订阅获得更稳定的对话助手访问",
-          "how": "订阅 ChatGPT Plus，在高峰时段仍可优先使用，把助手纳入日常写作与问答。",
-          "enabledBy": ["openai-chatgpt-plus-2023-02-01"],
-          "tags": ["chat", "subscription"]
+          "id": "chat-as-daily-tool",
+          "emoji": "⚡",
+          "title": "高峰时段也能稳定打开对话助手，当成每天随手用的工具",
+          "detail": "ChatGPT Plus 优先访问，排队少了，写东西/问问题不必专挑冷门时段。",
+          "enabledBy": [
+            "openai-chatgpt-plus-2023-02-01"
+          ],
+          "tags": [
+            "chat",
+            "habit"
+          ]
+        },
+        {
+          "id": "chat-resume-polish",
+          "emoji": "📄",
+          "title": "把旧简历丢给助手，让它按岗位改出几版更像样的表述",
+          "detail": "说明目标岗位和经历要点，要它改结构、补量化、压空话。",
+          "enabledBy": [
+            "openai-chatgpt-plus-2023-02-01"
+          ],
+          "tags": [
+            "chat",
+            "career"
+          ]
         }
       ]
     },
     {
       "month": "2023-03",
-      "summary": "更强推理模型进入对话产品：复杂分析、长文与多步骤说明开始对普通 Plus 用户可用。",
-      "workflows": [
+      "summary": "截止本月末：更「能想」的模型进了对话产品，难一点的分析、长文和代码解释也敢扔给它。",
+      "new": [
         {
-          "id": "gpt4-complex-reasoning-chat",
-          "title": "用更强对话模型做复杂分析与多步骤推理",
-          "how": "在 ChatGPT（Plus）中切换到 GPT-4，处理更难的写作、代码解释与结构化分析任务。",
-          "enabledBy": ["openai-gpt-4-2023-03-14"],
-          "tags": ["chat", "reasoning"]
+          "id": "chat-hard-reasoning",
+          "emoji": "🧠",
+          "title": "用更强对话模型啃复杂分析：拆方案、比选项、写带结构的长回答",
+          "detail": "在 ChatGPT Plus 里切到 GPT-4，适合多步骤说明、论证和较难的写作。",
+          "enabledBy": [
+            "openai-gpt-4-2023-03-14"
+          ],
+          "tags": [
+            "chat",
+            "reasoning"
+          ]
+        },
+        {
+          "id": "chat-explain-code",
+          "emoji": "🧩",
+          "title": "把看不懂的报错/代码贴进去，让它讲人话并给修改思路",
+          "detail": "适合自学和排查；仍要在自己环境里验证，别盲目复制执行。",
+          "enabledBy": [
+            "openai-gpt-4-2023-03-14"
+          ],
+          "tags": [
+            "chat",
+            "coding"
+          ]
+        },
+        {
+          "id": "cursor-ai-pair",
+          "emoji": "🤝",
+          "title": "用 AI 原生编辑器结对：边写边让它提议改动",
+          "detail": "Cursor 等编辑器公开可用后，个人项目可以把对话嵌进写代码的流程里。",
+          "enabledBy": [
+            "cursor-ide-public-2023-03-14"
+          ],
+          "tags": [
+            "ide",
+            "coding"
+          ]
         }
       ]
     },
     {
       "month": "2023-09",
-      "summary": "文生图进入主流对话产品：用自然语言描述即可在聊天里生成可用插图。",
-      "workflows": [
+      "summary": "截止本月末：不止写字——在聊天里用一句话画出图，还能改几版再用。",
+      "new": [
         {
-          "id": "image-gen-in-chat-dalle3",
-          "title": "在对话里用自然语言生成插图",
-          "how": "在 ChatGPT 中调用 DALL·E 3，用文字描述生成图像并迭代改稿。",
-          "enabledBy": ["openai-dalle-3-2023-09-20"],
-          "tags": ["image", "chat"]
+          "id": "chat-image-iterate",
+          "emoji": "🖼️",
+          "title": "在聊天里用一句话生成插图，再改几版直到能用",
+          "detail": "ChatGPT 里调 DALL·E 3：海报示意、幻灯片配图、概念草图都能先出一版。",
+          "enabledBy": [
+            "openai-dalle-3-2023-09-20"
+          ],
+          "tags": [
+            "image",
+            "chat"
+          ]
         }
       ]
     },
     {
       "month": "2024-01",
-      "summary": "IDE 内对话式编程助手对个人与组织正式可用，写代码时可就地提问与改稿。",
-      "workflows": [
+      "summary": "截止本月末：写代码不必来回复制——编辑器里就能对着当前文件问、改、解释。",
+      "new": [
         {
-          "id": "ide-chat-coding-assistant",
-          "title": "在 IDE 里用对话助手写改代码",
-          "how": "在编辑器中打开 Copilot Chat（GA），针对当前文件提问、生成补丁或解释报错。",
-          "enabledBy": ["github-copilot-chat-ga-2024-01-11"],
-          "tags": ["ide", "coding"]
+          "id": "ide-chat-edit-code",
+          "emoji": "💻",
+          "title": "在 IDE 里对着当前文件聊天：生成补丁、解释报错、改一小段逻辑",
+          "detail": "Copilot Chat 等正式可用后，编码时少切浏览器，问题留在编辑器上下文里。",
+          "enabledBy": [
+            "github-copilot-chat-ga-2024-01-11"
+          ],
+          "tags": [
+            "ide",
+            "coding"
+          ]
         }
       ]
     },
     {
       "month": "2024-05",
-      "summary": "原生多模态对话普及：同一会话里可看图、听声、实时语音交流。",
-      "workflows": [
+      "summary": "截止本月末：同一段对话里能看图、能听声，开会纪要和「这张截图什么意思」更省事。",
+      "new": [
         {
-          "id": "realtime-multimodal-chat",
-          "title": "用多模态对话看图、听声并实时语音交流",
-          "how": "使用 GPT-4o 类产品：上传图片提问、语音输入，或进行低延迟实时语音对话。",
-          "enabledBy": ["openai-gpt-4o-2024-05-13"],
-          "tags": ["multimodal", "voice", "vision"]
+          "id": "chat-see-image",
+          "emoji": "👀",
+          "title": "把截图/照片丢进对话，问「这是什么」「帮我读表上的数」",
+          "detail": "GPT-4o 类多模态：界面报错图、白板、菜单都可以直接问。",
+          "enabledBy": [
+            "openai-gpt-4o-2024-05-13"
+          ],
+          "tags": [
+            "vision",
+            "chat"
+          ]
+        },
+        {
+          "id": "chat-realtime-voice",
+          "emoji": "🎙️",
+          "title": "用实时语音跟助手聊：走路时口述问题，听它讲思路",
+          "detail": "低延迟语音对话，适合头脑风暴和口语练习；重要事实仍要回看文字核对。",
+          "enabledBy": [
+            "openai-gpt-4o-2024-05-13"
+          ],
+          "tags": [
+            "voice",
+            "chat"
+          ]
         }
       ]
     },
     {
       "month": "2024-09",
-      "summary": "显式「慢思考」推理模型进入产品预览：更适合竞赛级数学、编码与复杂规划。",
-      "workflows": [
+      "summary": "截止本月末：碰上要「慢慢想」的数学题、竞赛级编码，可以换推理模型多花点时间换更稳的答案。",
+      "new": [
         {
-          "id": "deliberate-reasoning-model",
-          "title": "用推理模型做需要慢思考的数学与编码题",
-          "how": "在支持 o1-preview 的产品中选择推理模型，接受更长思考时间以换取更稳的难题答案。",
-          "enabledBy": ["openai-o1-preview-2024-09-12"],
-          "tags": ["reasoning", "coding"]
+          "id": "reason-hard-stem",
+          "emoji": "🧮",
+          "title": "用「慢思考」推理模型啃难题：竞赛数学、棘手算法、复杂规划",
+          "detail": "o1-preview 等：等久一点，换更稳的推导；日常闲聊仍用更快的模型更划算。",
+          "enabledBy": [
+            "openai-o1-preview-2024-09-12"
+          ],
+          "tags": [
+            "reasoning",
+            "stem"
+          ]
         }
       ]
     },
     {
       "month": "2025-02",
-      "summary": "终端侧软件工程智能体进入研究预览：可在本地仓库里用自然语言驱动多步编码任务。",
-      "workflows": [
+      "summary": "截止本月末：不只聊天改几行——可以在终端里让智能体在仓库里多步干活（仍属预览，要盯着）。",
+      "new": [
         {
-          "id": "terminal-coding-agent",
-          "title": "在终端里用智能体完成多步编码任务",
-          "how": "运行 Claude Code 等 CLI 智能体，在仓库上下文中下达任务，让其读写文件并执行命令（研究预览范围）。",
-          "enabledBy": ["anthropic-claude-code-research-preview-2025-02-24"],
-          "tags": ["cli", "agent", "coding"]
+          "id": "cli-coding-agent",
+          "emoji": "🦞",
+          "title": "在终端里派智能体干活：改文件、跑命令、把多步编码任务往前推",
+          "detail": "Claude Code 等研究预览：给仓库上下文下任务；务必审 diff、限权限。",
+          "enabledBy": [
+            "anthropic-claude-code-research-preview-2025-02-24"
+          ],
+          "tags": [
+            "cli",
+            "agent",
+            "coding"
+          ]
         }
       ]
     }

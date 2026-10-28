@@ -9,7 +9,7 @@ import type { TimelineData, TimelineEvent, Company } from '../src/types/timeline
 import type {
   CapabilityFrontierData,
   CapabilityMonth,
-  CapabilityWorkflow,
+  CapabilityScenario,
 } from '../src/types/capability'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
@@ -68,12 +68,12 @@ function main() {
     process.exit(1)
   }
 
-  const workflowCount = frontier.months.reduce(
-    (n, m) => n + m.workflows.length,
+  const scenarioCount = frontier.months.reduce(
+    (n, m) => n + m.new.length,
     0,
   )
   console.log(
-    `✓ OK — timeline: ${timeline.events.length} events, ${timeline.companies.length} companies; frontier: ${frontier.months.length} months, ${workflowCount} workflows`,
+    `✓ OK — timeline: ${timeline.events.length} events, ${timeline.companies.length} companies; frontier: ${frontier.months.length} months, ${scenarioCount} scenarios`,
   )
 }
 
@@ -207,11 +207,11 @@ function validateFrontier(
     return
   }
 
-  const workflowIds = new Set<string>()
+  const scenarioIds = new Set<string>()
   let prevMonth = ''
 
   for (const m of data.months) {
-    validateMonth(m, data.meta.scopeStart, eventIds, workflowIds, push)
+    validateMonth(m, data.meta.scopeStart, eventIds, scenarioIds, push)
     if (prevMonth && m.month <= prevMonth) {
       push(`frontier months must be sorted ascending; ${m.month} after ${prevMonth}`)
     }
@@ -223,7 +223,7 @@ function validateMonth(
   m: CapabilityMonth,
   scopeStart: string,
   eventIds: Set<string>,
-  workflowIds: Set<string>,
+  scenarioIds: Set<string>,
   push: (m: string) => void,
 ) {
   if (!MONTH_RE.test(m.month ?? '')) {
@@ -237,28 +237,28 @@ function validateMonth(
     push(`frontier ${m.month}: before ChatGPT month 2022-11`)
   }
   if (!m.summary?.trim()) push(`frontier ${m.month}: empty summary`)
-  if (!Array.isArray(m.workflows) || m.workflows.length === 0) {
-    push(`frontier ${m.month}: need >=1 workflow (omit empty months instead)`)
+  if (!Array.isArray(m.new) || m.new.length === 0) {
+    push(`frontier ${m.month}: need >=1 item in new[] (omit empty months instead)`)
     return
   }
-  for (const w of m.workflows) {
-    validateWorkflow(w, m.month, eventIds, workflowIds, push)
+  for (const s of m.new) {
+    validateScenario(s, m.month, eventIds, scenarioIds, push)
   }
 }
 
-function validateWorkflow(
-  w: CapabilityWorkflow,
+function validateScenario(
+  s: CapabilityScenario,
   month: string,
   eventIds: Set<string>,
-  workflowIds: Set<string>,
+  scenarioIds: Set<string>,
   push: (m: string) => void,
 ) {
-  const label = `frontier ${month}/${w.id}`
-  if (!w.id || !KEBAB_RE.test(w.id)) push(`${label}: bad workflow id`)
-  if (workflowIds.has(w.id)) push(`${label}: duplicate workflow id (global)`)
-  workflowIds.add(w.id)
-  if (!w.title?.trim()) push(`${label}: empty title`)
-  for (const eid of w.enabledBy ?? []) {
+  const label = `frontier ${month}/${s.id}`
+  if (!s.id || !KEBAB_RE.test(s.id)) push(`${label}: bad scenario id`)
+  if (scenarioIds.has(s.id)) push(`${label}: duplicate scenario id (global)`)
+  scenarioIds.add(s.id)
+  if (!s.title?.trim()) push(`${label}: empty title`)
+  for (const eid of s.enabledBy ?? []) {
     if (!eventIds.has(eid)) {
       push(`${label}: enabledBy missing timeline event ${eid}`)
     }

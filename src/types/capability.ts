@@ -1,32 +1,34 @@
-/** Capability frontier — month-end snapshots of newly practical human+AI workflows. */
+/** Capability frontier — month-end snapshots of what ordinary people + AI can already do. */
 
-export interface CapabilityWorkflow {
-  /** Stable kebab id, unique across all months. */
+export interface CapabilityScenario {
+  /** Stable kebab id, unique across all months (first appears in that month's `new`). */
   id: string
-  /** Imperative / scene title, e.g. "用对话助手问知识问题并得到可用回答" */
+  /** Optional leading emoji for scannability */
+  emoji?: string
+  /** Concrete work scenario, e.g. "能跟 ChatGPT 闲聊，顺便让它一步步教我量子力学" */
   title: string
-  /** Brief how-to. */
-  how?: string
-  /** Optional timeline event ids that enabled this workflow. */
+  /** Optional one-line how / caveat */
+  detail?: string
+  /** Optional timeline event ids that unlocked this scenario */
   enabledBy?: string[]
   tags?: string[]
 }
 
 export interface CapabilityMonth {
-  /** YYYY-MM end-of-month snapshot label. */
+  /** YYYY-MM end-of-month snapshot */
   month: string
-  /** 1–2 sentences overall frontier that month. */
+  /** Friendly one-liner: as of this month-end, what's newly practical */
   summary: string
-  /** ONLY workflows newly available this month (do not repeat prior months). */
-  workflows: CapabilityWorkflow[]
+  /** Scenarios that became practical this month (expanded by default in UI) */
+  new: CapabilityScenario[]
 }
 
 export interface CapabilityFrontierMeta {
   name: string
   version: string
-  /** Inclusive lower bound month, e.g. "2022-11". */
+  /** Inclusive lower bound month, e.g. "2022-11" */
   scopeStart: string
-  /** Dataset last-updated date, YYYY-MM-DD. */
+  /** Dataset last-updated date, YYYY-MM-DD */
   updatedAt: string
   locale: string
 }
@@ -44,3 +46,6 @@ export const FRONTIER_THEME = {
 } as const
 
 export const FRONTIER_LABEL_ZH = '能力边界'
+
+/** @deprecated use CapabilityScenario */
+export type CapabilityWorkflow = CapabilityScenario
