@@ -635,7 +635,8 @@ a {
   left: 0;
   top: 0;
   pointer-events: none;
-  z-index: 2;
+  /* Behind cards: H only reads in mid-gaps / gutters, never paints over faces */
+  z-index: 0;
   overflow: visible;
 }
 

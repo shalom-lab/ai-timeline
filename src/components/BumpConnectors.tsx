@@ -47,6 +47,8 @@ const SAME_COL_X = 24
 const SIDE_OUT = 4
 /** Inset from category left/right edges for the span caps. */
 const EDGE_PAD = 2
+/** Inset from company column edges for peer H ticks. */
+const COL_INSET = 2
 
 function pointsToPath(pts: Pt[]): string {
   if (pts.length === 0) return ''
@@ -90,9 +92,9 @@ function pickGutterX(
   if (gaps.length === 0) {
     return lo + Math.min(8, (hi - lo) / 2)
   }
-  return gaps.reduce((best, g) =>
-    Math.abs(g - mid) < Math.abs(best - mid) ? g : best,
-  )
+  // Prefer the gutter nearest the LEFT peer (stair early) — short H at a.y
+  // then V, then long travel at b.y stays behind cards / in gaps.
+  return gaps.reduce((best, g) => (g < best ? g : best))
 }
 
 /** Vertical only in the seam beside this column (prefer right, else left). */
@@ -118,11 +120,15 @@ function sideGutter(a: Anchor, cols: ColBox[], containerW: number): number {
   return Math.min(containerW - 2, a.colRight + SIDE_OUT)
 }
 
-function gutterBetween(a: Anchor, b: Anchor, cols: ColBox[]): number {
+/**
+ * Gutter immediately after the left peer toward the right peer
+ * (not the midpoint of the whole span — that caused long H through neighbors).
+ */
+function gutterAfterLeft(a: Anchor, b: Anchor, cols: ColBox[]): number {
   if (a.x <= b.x) {
-    return pickGutterX(a.colRight, b.colLeft, cols)
+    return pickGutterX(a.colRight, Math.max(a.colRight + 1, b.colLeft), cols)
   }
-  return pickGutterX(b.colRight, a.colLeft, cols)
+  return pickGutterX(b.colRight, Math.max(b.colRight + 1, a.colLeft), cols)
 }
 
 /**
@@ -151,12 +157,13 @@ function midGapY(card: Anchor, columnPeers: Anchor[]): number {
   return card.bottom + gap / 2
 }
 
+
+
 /**
- * Same-moment slice: primarily horizontal line across the category,
- * with short micro-staircase only among exact same-date peers (L→R).
- * Vertical risers live only in company gutters — meaning 「同一时刻」,
- * never a chrono succession through all history.
- * Y is mid-gap below each peer card, not the card bottom border.
+ * Same-moment slice: H under each same-date peer in that company's mid-gap;
+ * short V only in the gutter immediately after the left peer (stair early).
+ * No full-bleed H at a single peer Y (that clipped through neighbor cards).
+ * Connector overlay sits behind cards so residual cross-column H is hidden.
  */
 function momentSliceVertices(
   peers: Anchor[],
@@ -180,39 +187,48 @@ function momentSliceVertices(
     out.push({ x, y })
   }
 
-  const first = sorted[0]
-  const last = sorted[sorted.length - 1]
   const leftX = EDGE_PAD
   const rightX = Math.max(EDGE_PAD + 1, containerW - EDGE_PAD)
 
-  push(leftX, first.y)
-  push(first.x, first.y)
+  const first = sorted[0]
+
+  // Single peer: H only under that company column (+ tiny gutter stubs).
+  // Do NOT full-bleed at this Y — that sliced through every other column's cards.
+  if (sorted.length === 1) {
+    const p = first
+    const x0 = Math.max(leftX, p.colLeft - SIDE_OUT)
+    const x1 = Math.min(rightX, p.colRight + SIDE_OUT)
+    push(x0, p.y)
+    push(x1, p.y)
+    return out
+  }
+
+  // Multi peer: H under each peer at its mid-gap; V only in the gutter
+  // immediately after the left peer (stair early — never mid-span leap).
+  // Long H at the right peer's Y sits behind cards (z-index 0).
+  push(Math.max(leftX, first.colLeft + COL_INSET), first.y)
+  push(first.colRight - COL_INSET, first.y)
 
   for (let i = 1; i < sorted.length; i++) {
     const a = sorted[i - 1]
     const b = sorted[i]
-    const sameY = Math.abs(a.y - b.y) < 0.5
-
-    if (sameY) {
-      push(b.x, b.y)
-      continue
-    }
 
     if (sameColumn(a, b)) {
       const gx = sideGutter(a, cols, containerW)
       push(gx, a.y)
       push(gx, b.y)
-      push(b.x, b.y)
+      push(b.colLeft + COL_INSET, b.y)
+      push(b.colRight - COL_INSET, b.y)
       continue
     }
 
-    const gx = gutterBetween(a, b, cols)
+    const gx = gutterAfterLeft(a, b, cols)
     push(gx, a.y)
     push(gx, b.y)
-    push(b.x, b.y)
+    push(b.colLeft + COL_INSET, b.y)
+    push(b.colRight - COL_INSET, b.y)
   }
 
-  push(rightX, last.y)
   return out
 }
 

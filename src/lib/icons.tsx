@@ -5,28 +5,32 @@ import { resolveCompany } from './company'
 import type { Company } from '../types/timeline'
 
 /**
- * Company ids with a real brand asset under public/logos/{id}.svg.
+ * Company ids with a real brand asset under public/logos/{id}.{png|svg}.
  * Sources: see public/logos/SOURCES.md (Simple Icons / Lobe Icons / official CDN — not invented).
  * cognition: no verified public SVG yet → letter avatar.
+ *
+ * Prefer PNG when present (e.g. Doubao character avatar), else SVG.
  */
-export const COMPANY_LOGO_IDS = new Set([
-  'openai',
-  'anthropic',
-  'google',
-  'meta',
-  'microsoft',
-  'github',
-  'xai',
-  'deepseek',
-  'alibaba',
-  'tencent',
-  'bytedance',
-  'moonshot',
-  'minimax',
-  'deepmind', // Google mark fallback — see SOURCES.md
-  'cursor',
-  'zhipu',
-])
+export const COMPANY_LOGO_EXT: Record<string, 'png' | 'svg'> = {
+  openai: 'svg',
+  anthropic: 'svg',
+  google: 'svg',
+  meta: 'svg',
+  microsoft: 'svg',
+  github: 'svg',
+  xai: 'svg',
+  deepseek: 'svg',
+  alibaba: 'svg',
+  tencent: 'svg',
+  bytedance: 'png', // Doubao official character avatar
+  moonshot: 'svg',
+  minimax: 'svg',
+  deepmind: 'svg',
+  cursor: 'svg',
+  zhipu: 'svg', // 清言 Qingyan double-ring
+}
+
+export const COMPANY_LOGO_IDS = new Set(Object.keys(COMPANY_LOGO_EXT))
 
 /** @deprecated use COMPANY_LOGO_IDS / hasCompanyLogo */
 export const COMPANY_MARK_IDS = COMPANY_LOGO_IDS
@@ -43,7 +47,8 @@ export function hasCompanyMark(companyId?: string): boolean {
 function logoUrl(companyId: string): string {
   const base = import.meta.env.BASE_URL || '/'
   const root = base.endsWith('/') ? base : `${base}/`
-  return `${root}logos/${companyId}.svg`
+  const ext = COMPANY_LOGO_EXT[companyId] ?? 'svg'
+  return `${root}logos/${companyId}.${ext}`
 }
 
 export function CompanyLogoImg({

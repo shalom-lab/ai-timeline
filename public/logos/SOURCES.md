@@ -15,14 +15,18 @@ All marks are third-party brand assets (not invented geometry).
 | deepseek.svg | Simple Icons v16 (`deepseek`) |
 | alibaba.svg | **Qwen** mark (通义千问) — Simple Icons (`qwen`), brand fill `#6950EF`. Not Alibaba.com shopping logo. CDN: https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/qwen.svg · https://cdn.simpleicons.org/qwen |
 | tencent.svg | Simple Icons v13 (`tencentqq`) |
-| bytedance.svg | **Doubao** mark (豆包大模型) — Lobe Icons `doubao-color.svg` (paths/colors match Volcengine Doubao ribbons `#A569FF` / `#1E37FC` / `#37E1BE`). Not ByteDance corporate bars. https://github.com/lobehub/lobe-icons/blob/master/packages/static-svg/icons/doubao-color.svg · product: https://www.volcengine.com/product/doubao |
+| bytedance.png | **Doubao** official character avatar (卡通圆形头像) — ByteDance Doubao CDN `doubao-icon.1c7a2027.png` (360×360). NOT the geometric ribbon / Lobe `doubao-color` mark. https://lf-flow-web-cdn.doubao.com/obj/flow-doubao/doubao/desktop_online_web/static/image/doubao-icon.1c7a2027.png · also favicon https://lf-flow-web-cdn.doubao.com/obj/flow-doubao/doubao/chat/favicon-doubao.png |
 | moonshot.svg | Simple Icons v16 (`moonshotai`) |
 | minimax.svg | Simple Icons v16 (`minimax`) |
 | cursor.svg | Simple Icons v16 (`cursor`), tinted `#7C3AED` |
-| zhipu.svg | **Z.ai / Zhipu AI** official app mark — cleaned from https://z-cdn.chatglm.cn/z-ai/static/logo.svg (dark plate `#2D2D2D` + white Z). Also mirrored on Wikimedia Commons `Z.ai_(company_logo).svg`. |
+| zhipu.svg | **清言 (Qingyan)** brand mark — blue linked/overlapping double-ring (∞-like), Lobe Icons `qingyan-color.svg` fills `#3762FF` / `#1041F3`. Not Z.ai black plate. https://cdn.jsdelivr.net/npm/@lobehub/icons-static-svg@latest/icons/qingyan-color.svg · product https://chatglm.cn |
 | cognition / openclaw / qoder | *missing* — letter avatar fallback in UI |
 
 
 ## Brand tint
 
-Simple Icons ships monochrome paths. For single-color marks we set `fill` to the **product** brand hex so card icons keep original brand color (not black, not a parent-corp substitute). **Google / DeepMind / Microsoft / Doubao / Z.ai** keep true multi-color or plate+glyph marks.
+Simple Icons ships monochrome paths. For single-color marks we set `fill` to the **product** brand hex so card icons keep original brand color (not black, not a parent-corp substitute). **Google / DeepMind / Microsoft / Doubao (PNG avatar) / 清言** keep true multi-color or photographic marks.
+
+## File types
+
+`CompanyLogoImg` resolves `public/logos/{id}.{png|svg}` via `COMPANY_LOGO_EXT` in `src/lib/icons.tsx` (PNG preferred when the official asset is raster, e.g. Doubao).
