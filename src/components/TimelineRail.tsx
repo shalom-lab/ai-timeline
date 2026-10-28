@@ -5,7 +5,7 @@ type Props = {
   events: TimelineEvent[]
   companies: Company[]
   selectedId: string | null
-  onSelect: (id: string) => void
+  onSelect: (id: string | null) => void
 }
 
 type YearBlock = {

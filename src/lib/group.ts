@@ -37,15 +37,12 @@ export function groupKeyForEvent(
       label: PRODUCT_SUBCATEGORY_LABEL_ZH[sub] ?? sub,
     }
   }
-  if (category === 'model') {
+  if (category === 'model' || category === 'science') {
     const s = e.series?.trim() || '其他'
     return { key: `series:${s}`, label: seriesChipLabel(s) }
   }
   // concept / other — theme by tags
   const tags = e.tags ?? []
-  if (tags.some((t) => ['ai-for-science', 'science', 'alphafold', 'biology'].includes(t))) {
-    return { key: 'theme:science', label: 'AI for Science' }
-  }
   if (tags.some((t) => t.includes('agent'))) {
     return { key: 'theme:agent', label: 'Agent' }
   }

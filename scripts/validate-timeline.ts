@@ -14,7 +14,7 @@ const dataPath = resolve(root, 'data/timeline.json')
 const DATE_RE = /^\d{4}-\d{2}-\d{2}$/
 const HEX_RE = /^#[0-9A-Fa-f]{6}$/
 
-const CATEGORIES = new Set(['concept', 'model', 'product', 'other'])
+const CATEGORIES = new Set(['model', 'product', 'concept', 'science', 'other'])
 const SUBCATS = new Set([
   'ide',
   'cli',

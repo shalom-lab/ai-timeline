@@ -1,13 +1,15 @@
-import type { CSSProperties } from 'react'
+import { useRef, type CSSProperties } from 'react'
 import type { Company, TimelineEvent } from '../types/timeline'
-import { EVENT_TYPE_COLOR, EVENT_TYPE_LABEL_ZH } from '../lib/labels'
+import { EVENT_TYPE_COLOR, EVENT_TYPE_LABEL_ZH, CATEGORY_THEME } from '../lib/labels'
 import { companyColor } from '../lib/company'
+import { CompanyAvatar, CardMainIcon } from '../lib/icons'
+import DetailPopover from './DetailPopover'
 
 type Props = {
   event: TimelineEvent
   companies: Company[]
   selected: boolean
-  onSelect: (id: string) => void
+  onSelect: (id: string | null) => void
 }
 
 export default function EventCard({
@@ -16,12 +18,15 @@ export default function EventCard({
   selected,
   onSelect,
 }: Props) {
+  const cardRef = useRef<HTMLElement>(null)
   const { color, soft } = companyColor(companies, event.company)
   const et = EVENT_TYPE_COLOR[event.eventType]
   const sourceUrl = event.sources[0]?.url
+  const accent = CATEGORY_THEME[event.category].accent
 
   return (
     <article
+      ref={cardRef}
       className={`event-card${selected ? ' is-selected' : ''}`}
       style={
         {
@@ -29,26 +34,32 @@ export default function EventCard({
           ['--co-soft' as string]: soft,
         } as CSSProperties
       }
-      onClick={() => onSelect(event.id)}
+      onClick={() => onSelect(selected ? null : event.id)}
       role="button"
       tabIndex={0}
       onKeyDown={(e) => {
         if (e.key === 'Enter' || e.key === ' ') {
           e.preventDefault()
-          onSelect(event.id)
+          onSelect(selected ? null : event.id)
         }
       }}
+      aria-expanded={selected}
     >
       <div className="event-card__tint" aria-hidden />
       <header className="event-card__meta">
         <time dateTime={event.date}>{event.date}</time>
         <span className="event-card__company" title={event.company}>
-          <i style={{ background: color }} />
+          <CompanyAvatar companies={companies} companyName={event.company} size={14} />
           {event.company}
         </span>
       </header>
-      <h3 className="event-card__title">{event.title}</h3>
-      <p className="event-card__summary">{event.summary}</p>
+      <div className="event-card__main">
+        <CardMainIcon event={event} companies={companies} accent={accent} />
+        <div className="event-card__copy">
+          <h3 className="event-card__title">{event.title}</h3>
+          <p className="event-card__summary">{event.summary}</p>
+        </div>
+      </div>
       <footer className="event-card__footer">
         <span
           className="event-type-pill"
@@ -74,6 +85,15 @@ export default function EventCard({
           </a>
         ) : null}
       </footer>
+
+      {selected ? (
+        <DetailPopover
+          event={event}
+          companies={companies}
+          anchorRef={cardRef}
+          onClose={() => onSelect(null)}
+        />
+      ) : null}
     </article>
   )
 }

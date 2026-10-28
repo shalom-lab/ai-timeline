@@ -10,7 +10,6 @@ import { BOARD_CATEGORY_ORDER } from './lib/labels'
 import Header, { type Filters } from './components/Header'
 import TimelineRail from './components/TimelineRail'
 import CategoryColumn from './components/CategoryColumn'
-import DetailDrawer from './components/DetailDrawer'
 
 const DEFAULT_FILTERS: Filters = {
   query: '',
@@ -41,16 +40,12 @@ export default function App() {
   const { meta, companies, events } = timelineData
   const [filters, setFilters] = useState<Filters>(DEFAULT_FILTERS)
   const [selectedId, setSelectedId] = useState<string | null>(null)
-  const [collapsed, setCollapsed] = useState<Record<Category, boolean>>({
-    model: false,
-    product: false,
-    concept: false,
-    other: false,
-  })
+  const [soloCategory, setSoloCategory] = useState<Category | null>(null)
   const [subFilters, setSubFilters] = useState<Record<Category, string>>({
     model: 'all',
     product: 'all',
     concept: 'all',
+    science: 'all',
     other: 'all',
   })
 
@@ -106,6 +101,7 @@ export default function App() {
       model: [],
       product: [],
       concept: [],
+      science: [],
       other: [],
     }
     for (const e of filtered) {
@@ -114,12 +110,6 @@ export default function App() {
     return map
   }, [filtered])
 
-  const selected = useMemo(
-    () => filtered.find((e) => e.id === selectedId) ?? null,
-    [filtered, selectedId],
-  )
-
-  // Drop selection if filtered out
   useEffect(() => {
     if (selectedId && !filtered.some((e) => e.id === selectedId)) {
       setSelectedId(null)
@@ -130,30 +120,12 @@ export default function App() {
     setFilters((f) => ({ ...f, ...patch }))
   }, [])
 
-  const toggleCollapse = useCallback((cat: Category) => {
-    setCollapsed((c) => {
-      const next = { ...c, [cat]: !c[cat] }
-      // Never collapse all four — keep at least one open for flex focus UX
-      if (BOARD_CATEGORY_ORDER.every((k) => next[k])) {
-        return c
-      }
-      return next
-    })
-  }, [])
-
-  const focusOnly = useCallback((cat: Category) => {
-    setCollapsed({
-      model: cat !== 'model',
-      product: cat !== 'product',
-      concept: cat !== 'concept',
-      other: cat !== 'other',
-    })
-  }, [])
-
-  const expandedCount = BOARD_CATEGORY_ORDER.filter((c) => !collapsed[c]).length
+  const visibleCategories = soloCategory
+    ? BOARD_CATEGORY_ORDER.filter((c) => c === soloCategory)
+    : BOARD_CATEGORY_ORDER
 
   return (
-    <div className={`app-shell${selected ? ' has-drawer' : ''}`}>
+    <div className="app-shell">
       <Header
         meta={meta}
         years={years}
@@ -174,26 +146,20 @@ export default function App() {
         />
 
         <div
-          className="board__columns"
-          style={{ ['--expanded' as string]: String(Math.max(expandedCount, 1)) }}
+          className={`board__columns${soloCategory ? ' is-solo-mode' : ''}`}
         >
-          {BOARD_CATEGORY_ORDER.map((cat) => (
-            <div
-              key={cat}
-              className={`board__col-slot${collapsed[cat] ? ' is-collapsed' : ''}`}
-              onDoubleClick={() => focusOnly(cat)}
-              title={
-                collapsed[cat]
-                  ? `点击展开「${cat}」；双击仅看本列`
-                  : '点击标题折叠；双击仅看本列'
-              }
-            >
+          {visibleCategories.map((cat) => (
+            <div key={cat} className="board__col-slot">
               <CategoryColumn
                 category={cat}
                 events={byCategory[cat]}
                 companies={companies}
-                collapsed={collapsed[cat]}
-                onToggleCollapse={() => toggleCollapse(cat)}
+                isSolo={soloCategory === cat}
+                onSolo={() => {
+                  setSoloCategory(cat)
+                  setSelectedId(null)
+                }}
+                onExitSolo={() => setSoloCategory(null)}
                 subFilter={subFilters[cat]}
                 onSubFilter={(key) =>
                   setSubFilters((s) => ({ ...s, [cat]: key }))
@@ -204,16 +170,6 @@ export default function App() {
             </div>
           ))}
         </div>
-
-        {selected ? (
-          <DetailDrawer
-            event={selected}
-            companies={companies}
-            list={filtered}
-            onClose={() => setSelectedId(null)}
-            onSelect={setSelectedId}
-          />
-        ) : null}
       </div>
     </div>
   )

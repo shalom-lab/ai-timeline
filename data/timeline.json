@@ -1,7 +1,7 @@
 {
   "meta": {
     "name": "AI Timeline",
-    "version": "0.2.0",
+    "version": "0.3.0",
     "scopeStart": "2022-11-30",
     "updatedAt": "2026-10-28",
     "locale": "zh-CN",
@@ -768,7 +768,7 @@
       "dateStatus": "exact",
       "title": "Google DeepMind 与 Isomorphic Labs 发布 AlphaFold 3",
       "summary": "Google DeepMind 与 Isomorphic Labs 发布 AlphaFold 3，可预测蛋白质、DNA、RNA、配体等生命分子结构及其相互作用；同步推出面向科研的 AlphaFold Server。属 AI 求解科学问题的里程碑（非消费级聊天产品）。",
-      "category": "concept",
+      "category": "science",
       "company": "Google",
       "series": "AlphaFold",
       "product": "AlphaFold 3",

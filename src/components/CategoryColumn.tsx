@@ -8,13 +8,14 @@ type Props = {
   category: Category
   events: TimelineEvent[]
   companies: Company[]
-  collapsed: boolean
-  onToggleCollapse: () => void
-  /** Active sub-group chip within this column; 'all' = show every subgroup */
+  /** Whether this column is currently in 独占 mode */
+  isSolo: boolean
+  onSolo: () => void
+  onExitSolo: () => void
   subFilter: string
   onSubFilter: (key: string) => void
   selectedId: string | null
-  onSelect: (id: string) => void
+  onSelect: (id: string | null) => void
 }
 
 const ICONS: Record<Category, ReactNode> = {
@@ -38,6 +39,12 @@ const ICONS: Record<Category, ReactNode> = {
       <path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M5 19l2-2M17 7l2-2" strokeLinecap="round" />
     </svg>
   ),
+  science: (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+      <path d="M9 3h6M10 3v4.5L5.5 18a3 3 0 0 0 2.7 4.5h7.6A3 3 0 0 0 18.5 18L14 7.5V3" strokeLinejoin="round" />
+      <path d="M8 14h8" strokeLinecap="round" />
+    </svg>
+  ),
   other: (
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
       <path d="M4 20V10l8-6 8 6v10" strokeLinejoin="round" />
@@ -50,8 +57,9 @@ export default function CategoryColumn({
   category,
   events,
   companies,
-  collapsed,
-  onToggleCollapse,
+  isSolo,
+  onSolo,
+  onExitSolo,
   subFilter,
   onSubFilter,
   selectedId,
@@ -64,52 +72,41 @@ export default function CategoryColumn({
       ? groups
       : groups.filter((g) => g.key === subFilter)
 
-  if (collapsed) {
-    return (
-      <section
-        className="cat-column is-collapsed"
-        style={{ ['--accent' as string]: theme.accent }}
-        aria-label={CATEGORY_LABEL_ZH[category]}
-      >
-        <button
-          type="button"
-          className="cat-column__collapse-tab"
-          style={{ background: theme.header }}
-          onClick={onToggleCollapse}
-          title={`展开 ${CATEGORY_LABEL_ZH[category]}`}
-        >
-          <span className="cat-column__collapse-icon">{ICONS[category]}</span>
-          <span className="cat-column__collapse-label">
-            {CATEGORY_LABEL_ZH[category]}
-          </span>
-          <span className="cat-column__collapse-count">{events.length}</span>
-        </button>
-      </section>
-    )
-  }
-
   return (
     <section
-      className="cat-column"
+      className={`cat-column${isSolo ? ' is-solo' : ''}`}
       style={{ ['--accent' as string]: theme.accent }}
       aria-label={CATEGORY_LABEL_ZH[category]}
     >
-      <button
-        type="button"
+      <div
         className="cat-column__header"
         style={{ background: theme.header }}
-        onClick={onToggleCollapse}
-        title="折叠本列（纵向收起为窄条，其他列可更宽）"
       >
         <span className="cat-column__header-icon">{ICONS[category]}</span>
         <span className="cat-column__header-title">
           {CATEGORY_LABEL_ZH[category]}
         </span>
         <span className="cat-column__header-count">{events.length}</span>
-        <span className="cat-column__header-chevron" aria-hidden>
-          ▾
-        </span>
-      </button>
+        {isSolo ? (
+          <button
+            type="button"
+            className="cat-column__solo-btn is-active"
+            onClick={onExitSolo}
+            title="退出独占，恢复显示全部列"
+          >
+            退出独占
+          </button>
+        ) : (
+          <button
+            type="button"
+            className="cat-column__solo-btn"
+            onClick={onSolo}
+            title="独占本列：隐藏其他列，本列全宽"
+          >
+            独占
+          </button>
+        )}
+      </div>
 
       <div className="cat-column__chips">
         <button

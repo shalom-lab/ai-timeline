@@ -6,6 +6,7 @@ import type {
   TimelineMeta,
 } from '../types/timeline'
 import {
+  BOARD_CATEGORY_ORDER,
   CATEGORY_LABEL_ZH,
   EVENT_TYPE_LABEL_ZH,
   EVENT_TYPE_LEGEND,
@@ -153,7 +154,7 @@ export default function Header({
               }
             >
               <option value="all">全部</option>
-              {(Object.keys(CATEGORY_LABEL_ZH) as Category[]).map((c) => (
+              {BOARD_CATEGORY_ORDER.map((c) => (
                 <option key={c} value={c}>
                   {CATEGORY_LABEL_ZH[c]}
                 </option>

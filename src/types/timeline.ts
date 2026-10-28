@@ -1,7 +1,7 @@
 /** AI Timeline — core data types. Keep in sync with docs/DATA.md and data/timeline.json. */
 
-/** Docs narrative order: 概念 → 大模型 → 产品 → 其他. Board UI uses BOARD_CATEGORY_ORDER in lib/labels.ts. */
-export type Category = 'concept' | 'model' | 'product' | 'other'
+/** Five primary categories. Board UI order: 大模型 → 产品 → 概念 → 科学 → 其他 (see BOARD_CATEGORY_ORDER). */
+export type Category = 'model' | 'product' | 'concept' | 'science' | 'other'
 
 export type ProductSubcategory =
   | 'ide'
@@ -98,17 +98,19 @@ export interface TimelineData {
   events: TimelineEvent[]
 }
 
-/** Canonical primary-category display order (zh labels in docs). */
+/** Canonical primary-category display order (zh labels in docs / board). */
 export const CATEGORY_DISPLAY_ORDER: readonly Category[] = [
-  'concept',
   'model',
   'product',
+  'concept',
+  'science',
   'other',
 ] as const
 
 export const CATEGORY_LABEL_ZH: Record<Category, string> = {
-  concept: '概念',
   model: '大模型',
   product: '产品',
+  concept: '概念',
+  science: '科学',
   other: '其他',
 }

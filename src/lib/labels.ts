@@ -4,11 +4,12 @@ import type {
   ProductSubcategory,
 } from '../types/timeline'
 
-/** Board column order (screenshot): 大模型 → 产品 → 概念 → 其他 */
+/** Board column order: 大模型 → 产品 → 概念 → 科学 → 其他 */
 export const BOARD_CATEGORY_ORDER: readonly Category[] = [
   'model',
   'product',
   'concept',
+  'science',
   'other',
 ] as const
 
@@ -16,6 +17,7 @@ export const CATEGORY_LABEL_ZH: Record<Category, string> = {
   model: '大模型',
   product: '产品',
   concept: '概念',
+  science: '科学',
   other: '其他',
 }
 
@@ -37,6 +39,11 @@ export const CATEGORY_THEME: Record<
     header: 'linear-gradient(135deg, #EA580C 0%, #C2410C 100%)',
     headerSoft: '#FFEDD5',
     accent: '#EA580C',
+  },
+  science: {
+    header: 'linear-gradient(135deg, #0891B2 0%, #0E7490 100%)',
+    headerSoft: '#CFFAFE',
+    accent: '#0891B2',
   },
   other: {
     header: 'linear-gradient(135deg, #7C3AED 0%, #6D28D9 100%)',
@@ -122,15 +129,17 @@ export const EVENT_TYPE_LEGEND: {
   { label: '其他', color: '#94A3B8', types: ['other'] },
 ]
 
-/** Theme chips for concept / other (match tags or fallback) */
+/** Theme chips for concept / other (match tags or fallback). Science lives in its own column. */
 export const CONCEPT_THEME_CHIPS = [
-  { id: 'ai-for-science', label: 'AI for Science', match: (tags?: string[]) =>
-    (tags ?? []).some((t) =>
-      ['ai-for-science', 'science', 'alphafold', 'biology'].includes(t),
-    ) },
-  { id: 'agent', label: 'Agent', match: (tags?: string[]) =>
-    (tags ?? []).some((t) => t.includes('agent')) },
-  { id: 'multimodal', label: '多模态', match: (tags?: string[]) =>
-    (tags ?? []).includes('multimodal') },
+  {
+    id: 'agent',
+    label: 'Agent',
+    match: (tags?: string[]) => (tags ?? []).some((t) => t.includes('agent')),
+  },
+  {
+    id: 'multimodal',
+    label: '多模态',
+    match: (tags?: string[]) => (tags ?? []).includes('multimodal'),
+  },
   { id: 'other', label: '其他', match: () => true },
 ] as const
