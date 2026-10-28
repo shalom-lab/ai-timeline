@@ -11,7 +11,7 @@ type Props = {
   /** Rail hover event id — dashed same-moment line (no mute). */
   hoverId: string | null
   onHover: (id: string | null) => void
-  /** Click-pinned event id — solid line + 灰白. Rail only; never selects cards. */
+  /** Click-pinned event id — solid line + 灰白 (cards + rail below). Rail only; never selects cards. */
   pinId?: string | null
   /** Toggle bump pin (solid+mute). Does not select / outline cards. */
   onTogglePin?: (id: string) => void
@@ -95,6 +95,11 @@ export default function TimelineRail({
     [layout.items],
   )
 
+  /** Pinned focus date — mute rail nodes/segments strictly after (match card 灰白). */
+  const pinDate = pinId ? byId.get(pinId)?.date ?? null : null
+  const pinCenterY = pinId != null ? (layout.centerY[pinId] ?? null) : null
+  const muteRailFuture = pinDate != null
+
   const [collapsed, setCollapsed] = useState<Record<string, boolean>>({})
 
   const toggleYear = useCallback((year: string) => {
@@ -118,11 +123,15 @@ export default function TimelineRail({
       >
         {layout.years.map((y) => {
           const isCollapsed = hiddenYears.has(y.year)
+          const yearMuted =
+            muteRailFuture &&
+            pinCenterY != null &&
+            y.top > pinCenterY
           return (
             <button
               key={y.year}
               type="button"
-              className={`timeline-rail__year-marker${isCollapsed ? ' is-collapsed' : ''}`}
+              className={`timeline-rail__year-marker${isCollapsed ? ' is-collapsed' : ''}${yearMuted ? ' is-future' : ''}`}
               style={{ top: y.top, height: YEAR_MARKER_H }}
               aria-expanded={!isCollapsed}
               title={
@@ -143,10 +152,14 @@ export default function TimelineRail({
 
         {monthBands.map((band) => {
           if (hiddenYears.has(band.ym.slice(0, 4))) return null
+          const bandMuted =
+            muteRailFuture &&
+            pinCenterY != null &&
+            band.top >= pinCenterY
           return (
             <div
               key={band.ym}
-              className={`timeline-rail__month-bg timeline-rail__month-bg--${band.tone}`}
+              className={`timeline-rail__month-bg timeline-rail__month-bg--${band.tone}${bandMuted ? ' is-future' : ''}`}
               style={{ top: band.top, height: band.height }}
               data-month={band.ym}
               aria-hidden
@@ -154,7 +167,26 @@ export default function TimelineRail({
           )
         })}
 
-        <div className="timeline-rail__line" aria-hidden />
+        {muteRailFuture && pinCenterY != null ? (
+          <>
+            <div
+              className="timeline-rail__line"
+              style={{ top: 2, height: Math.max(0, pinCenterY - 2) }}
+              aria-hidden
+            />
+            <div
+              className="timeline-rail__line is-muted-tail"
+              style={{
+                top: pinCenterY,
+                bottom: 6,
+                height: 'auto',
+              }}
+              aria-hidden
+            />
+          </>
+        ) : (
+          <div className="timeline-rail__line" aria-hidden />
+        )}
 
         {layout.items.map((item) => {
           const year = item.date.slice(0, 4)
@@ -186,11 +218,13 @@ export default function TimelineRail({
           const { color } = companyColor(companies, event.company)
           const hovered = event.id === hoverId
           const pinned = event.id === pinId
+          const mutedFuture =
+            muteRailFuture && pinDate != null && event.date > pinDate
           return (
             <button
               key={event.id}
               type="button"
-              className={`timeline-rail__item${hovered ? ' is-hover' : ''}${pinned ? ' is-pinned' : ''}`}
+              className={`timeline-rail__item${hovered ? ' is-hover' : ''}${pinned ? ' is-pinned' : ''}${mutedFuture ? ' is-future' : ''}`}
               style={{ top: item.centerY }}
               title={`${event.date} · ${event.title}（悬停虚线；点击实线+灰白）`}
               aria-label={`${event.date} ${event.title}`}

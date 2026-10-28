@@ -428,6 +428,12 @@ a {
   z-index: 1;
 }
 
+/* Click-pin: vertical connector below focus — 灰白 (hover never sets this). */
+.timeline-rail__line.is-muted-tail {
+  background: #e8edf5;
+  opacity: 0.55;
+}
+
 .timeline-rail__item {
   position: absolute;
   left: 1.05rem;
@@ -479,6 +485,45 @@ a {
   letter-spacing: 0.01em;
   white-space: nowrap;
   line-height: 1;
+}
+
+/* Click-pin only: rail nodes after focus date — same 灰白 idea as .event-card.is-future */
+.timeline-rail__item.is-future {
+  opacity: 0.45;
+  filter: grayscale(0.92) brightness(1.04);
+  pointer-events: auto;
+}
+
+.timeline-rail__item.is-future .timeline-rail__md {
+  color: #94a3b8;
+  font-weight: 500;
+}
+
+.timeline-rail__item.is-future .timeline-rail__dot {
+  filter: grayscale(1);
+  box-shadow: 0 0 0 1px rgba(148, 163, 184, 0.35);
+}
+
+.timeline-rail__item.is-future:hover .timeline-rail__md,
+.timeline-rail__item.is-future.is-hover .timeline-rail__md {
+  color: #64748b;
+  font-weight: 600;
+}
+
+.timeline-rail__item.is-future:hover .timeline-rail__dot,
+.timeline-rail__item.is-future.is-hover .timeline-rail__dot {
+  transform: scale(1.15);
+  box-shadow: 0 0 0 3px rgba(148, 163, 184, 0.2);
+}
+
+.timeline-rail__year-marker.is-future {
+  opacity: 0.4;
+  filter: grayscale(0.85);
+}
+
+.timeline-rail__month-bg.is-future {
+  opacity: 0.35;
+  filter: grayscale(0.9);
 }
 
 /* ─── Category column ─── */

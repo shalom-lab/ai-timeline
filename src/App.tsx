@@ -117,7 +117,7 @@ export default function App() {
   const [subFilters, setSubFilters] = useState<Record<Category, string[]>>(EMPTY_SUB)
   /** Rail hover — dashed same-moment line (no 灰白). */
   const [hoverRailId, setHoverRailId] = useState<string | null>(null)
-  /** Rail click-pin — solid same-moment line + 灰白 for later cards. */
+  /** Rail click-pin — solid same-moment line + 灰白 for later cards and rail below. */
   const [bumpPinId, setBumpPinId] = useState<string | null>(null)
 
   const filtered = useMemo(() => {
@@ -226,6 +226,40 @@ export default function App() {
   const handleRailTogglePin = useCallback((id: string) => {
     setBumpPinId((prev) => (prev === id ? null : id))
   }, [])
+
+  /** Clear rail pin → restore full-color rail (and card 灰白). */
+  const clearBumpPin = useCallback(() => {
+    setBumpPinId(null)
+    setHoverRailId(null)
+  }, [])
+
+  // Esc clears rail pin (DetailPopover Esc still closes detail independently).
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key !== 'Escape') return
+      clearBumpPin()
+    }
+    document.addEventListener('keydown', onKey)
+    return () => document.removeEventListener('keydown', onKey)
+  }, [clearBumpPin])
+
+  // Click outside the rail clears rail pin (hover is ephemeral; pin is sticky).
+  useEffect(() => {
+    if (!bumpPinId) return
+    const onDown = (e: MouseEvent) => {
+      const t = e.target
+      if (!(t instanceof Element)) return
+      if (t.closest('.timeline-rail')) return
+      clearBumpPin()
+    }
+    const tid = window.setTimeout(() => {
+      document.addEventListener('mousedown', onDown)
+    }, 0)
+    return () => {
+      window.clearTimeout(tid)
+      document.removeEventListener('mousedown', onDown)
+    }
+  }, [bumpPinId, clearBumpPin])
 
   /**
    * Card click:
