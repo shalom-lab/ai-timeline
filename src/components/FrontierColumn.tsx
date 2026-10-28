@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useMemo, useState, type ReactNode } from 'react'
 import type { CapabilityMonth, CapabilityScenario } from '../types/capability'
 import { FRONTIER_LABEL_ZH, FRONTIER_THEME } from '../types/capability'
 
@@ -87,17 +87,19 @@ function MonthCard({
   month,
   carried,
   onSelectEvent,
+  sortControl,
 }: {
   month: CapabilityMonth
   carried: CapabilityScenario[]
   onSelectEvent?: (id: string) => void
+  sortControl?: ReactNode
 }) {
-
   return (
     <article className="frontier-month" data-frontier-month={month.month}>
       <header className="frontier-month__head">
         <time dateTime={month.month}>{formatMonthLabel(month.month)}</time>
         <span className="frontier-month__new">+{month.new.length} 项新能力</span>
+        {sortControl}
       </header>
       <p className="frontier-month__summary">{month.summary}</p>
 
@@ -160,20 +162,30 @@ export default function FrontierColumn({ months, allMonths = months, onSelectEve
         </div>
       ) : null}
 
-      <div className="frontier-intro">
-        <div><span className="page-intro__eyebrow">HUMAN + AI</span><h2>从「做不到」到「做得到」</h2><p>左侧看当月新增，右侧对照此前已具备的能力。两侧均呈现原来与现在的变化。</p></div>
-        <label className="frontier-sort">时间顺序<select aria-label="能力边界时间顺序" value={newestFirst ? 'newest' : 'oldest'} onChange={e => setNewestFirst(e.target.value === 'newest')}><option value="newest">最新在前</option><option value="oldest">从起点开始</option></select></label>
-      </div>
       <div className="cat-column__body frontier-column__body">
         {months.length === 0 ? (
           <p className="cat-column__empty">暂无匹配场景</p>
         ) : (
-          displayedMonths.map((m) => (
+          displayedMonths.map((m, i) => (
             <MonthCard
               key={m.month}
               month={m}
               carried={carriedByMonth.get(m.month) ?? []}
               onSelectEvent={onSelectEvent}
+              sortControl={
+                i === 0 ? (
+                  <label className="frontier-sort">
+                    <select
+                      aria-label="能力边界时间顺序"
+                      value={newestFirst ? 'newest' : 'oldest'}
+                      onChange={(e) => setNewestFirst(e.target.value === 'newest')}
+                    >
+                      <option value="newest">最新在前</option>
+                      <option value="oldest">从起点开始</option>
+                    </select>
+                  </label>
+                ) : undefined
+              }
             />
           ))
         )}
