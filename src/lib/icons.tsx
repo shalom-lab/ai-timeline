@@ -3,7 +3,32 @@ import type { TimelineEvent } from '../types/timeline'
 import { resolveCompany } from './company'
 import type { Company } from '../types/timeline'
 
-/** Geometric / Simple-Icons-style marks — not scraped trademark bitmaps. */
+/** Company ids that have a dedicated SVG mark in CompanyMark. */
+export const COMPANY_MARK_IDS = new Set([
+  'openai',
+  'anthropic',
+  'google',
+  'meta',
+  'microsoft',
+  'github',
+  'xai',
+  'cognition',
+  'deepseek',
+  'alibaba',
+  'tencent',
+  'moonshot',
+  'minimax',
+  'deepmind',
+])
+
+export function hasCompanyMark(companyId?: string): boolean {
+  return Boolean(companyId && COMPANY_MARK_IDS.has(companyId))
+}
+
+/**
+ * Geometric / Simple-Icons-style marks keyed ONLY by companies[].id.
+ * Callers must resolve event.company → Company via resolveCompany first.
+ */
 export function CompanyMark({
   companyId,
   color,
@@ -13,6 +38,8 @@ export function CompanyMark({
   color: string
   size?: number
 }): ReactNode {
+  if (!companyId || !COMPANY_MARK_IDS.has(companyId)) return null
+
   const s = size
   const common = {
     width: s,
@@ -24,19 +51,21 @@ export function CompanyMark({
 
   switch (companyId) {
     case 'openai':
-      // Blossom approximation (6 petals)
+      // Stylized 6-petal blossom (Simple Icons–style)
       return (
         <svg {...common}>
-          <path d="M22.28 8.72a5.98 5.98 0 0 0-2.54-4.05 6.05 6.05 0 0 0-6.5-.5 5.98 5.98 0 0 0-4.48-2.01A6.05 6.05 0 0 0 3.1 7.5a5.98 5.98 0 0 0-2.01 4.48 6.05 6.05 0 0 0 3.72 5.48 5.98 5.98 0 0 0 2.54 4.05 6.05 6.05 0 0 0 6.5.5 5.98 5.98 0 0 0 4.48 2.01 6.05 6.05 0 0 0 5.66-5.34 5.98 5.98 0 0 0 2.01-4.48 6.05 6.05 0 0 0-3.72-5.48zM12 16.5a4.5 4.5 0 1 1 0-9 4.5 4.5 0 0 1 0 9z" />
+          <path d="M22.282 9.821a5.985 5.985 0 0 0-.516-4.911 6.046 6.046 0 0 0-6.51-2.9A6.065 6.065 0 0 0 4.981 4.182a5.985 5.985 0 0 0-3.998 2.9 6.046 6.046 0 0 0 .743 7.097 5.98 5.98 0 0 0 .516 4.911 6.051 6.051 0 0 0 6.515 2.9A5.985 5.985 0 0 0 13.26 24a6.056 6.056 0 0 0 5.772-4.206 5.99 5.99 0 0 0 3.997-2.9 6.056 6.056 0 0 0-.747-7.073zM13.26 22.43a4.476 4.476 0 0 1-2.876-1.04l.142-.081 4.778-2.758a.795.795 0 0 0 .393-.681v-6.737l2.02 1.168a.071.071 0 0 1 .038.052v5.583a4.504 4.504 0 0 1-4.495 4.494zM3.6 18.304a4.47 4.47 0 0 1-.535-3.014l.142.085 4.783 2.758a.771.771 0 0 0 .78 0l5.843-3.369v2.332a.08.08 0 0 1-.033.062L9.74 19.95a4.499 4.499 0 0 1-6.14-1.646zM2.34 7.896a4.485 4.485 0 0 1 2.383-1.98L4.923 6.03l4.778 2.758a.795.795 0 0 0 .785 0l5.843-3.369-2.02-1.169a.08.08 0 0 1-.027-.01L9.74 2.05a4.5 4.5 0 0 1-7.4 5.846zm16.697 2.99-5.843 3.368v-4.664a.08.08 0 0 1 .033-.062l4.744-2.757a4.5 4.5 0 0 1 .666 7.115zm1.97-3.138-.141-.085-4.778-2.758a.794.794 0 0 0-.78 0l-5.843 3.369 2.02 1.168a.074.074 0 0 1 .027.012l4.745 2.737a4.5 4.5 0 0 1 4.75-4.443z" />
         </svg>
       )
     case 'anthropic':
+      // Stylized A
       return (
         <svg {...common}>
-          <path d="M13.6 3L7 21h3.2l1.2-3.4h5.3L18 21h3.2L14.6 3h-1zm.2 5.2l1.9 5.4h-3.8l1.9-5.4z" />
+          <path d="M13.55 2.5L5.8 21.5h3.45l1.35-3.55h6.05L18 21.5h3.5L13.95 2.5h-.4zm.2 5.55l2.15 5.95h-4.3l2.15-5.95z" />
         </svg>
       )
     case 'google':
+    case 'deepmind':
       return (
         <svg {...common} fill="none">
           <path
@@ -58,9 +87,10 @@ export function CompanyMark({
         </svg>
       )
     case 'meta':
+      // Infinity / Meta mark
       return (
         <svg {...common}>
-          <path d="M12 4c-2.8 0-4.6 1.9-5.4 3.6C5.7 5.9 3.9 4 1.1 4v2.2c1.7 0 2.9 1.1 3.6 2.4.3.6.5 1.3.5 2.1V20h2.3v-9.2c0-1.5.9-2.8 2.2-3.3.4-.1.8-.2 1.2-.2.9 0 1.6.3 2.1.9.5.6.8 1.4.8 2.4V20h2.3v-9.3c0-2.4-1.3-4.7-3.7-5.8C12.8 4.3 12.4 4 12 4z" />
+          <path d="M12.001 6.5c-2.55 0-4.3 1.72-5.05 3.3C6.2 8.22 4.55 6.5 2.15 6.5.9 6.5 0 7.55 0 9.15 0 13.4 4.3 17.5 8.1 17.5c1.7 0 3.05-.7 4-1.85.95 1.15 2.3 1.85 4 1.85 3.8 0 8.1-4.1 8.1-8.35 0-1.6-.9-2.65-2.15-2.65-2.4 0-4.05 1.72-4.8 3.3-.75-1.58-2.5-3.3-5.05-3.3zm-3.7 7.55c-1.9 0-4.05-2.35-4.55-4.95.55-.05 1.05-.2 1.45-.45.95 1.55 2.25 2.65 3.35 2.65.55 0 .95-.25 1.15-.7.15 1.1.55 2.25 1.5 3.05-.7.3-1.55.4-2.9.4zm7.4 0c-1.35 0-2.2-.1-2.9-.4.95-.8 1.35-1.95 1.5-3.05.2.45.6.7 1.15.7 1.1 0 2.4-1.1 3.35-2.65.4.25.9.4 1.45.45-.5 2.6-2.65 4.95-4.55 4.95z" />
         </svg>
       )
     case 'microsoft':
@@ -134,6 +164,10 @@ export function CompanyMark({
   }
 }
 
+/**
+ * Resolve event.company → companies[] (name / id / aliases), then show that
+ * company's mark. Letter avatar ONLY when no mark is defined for the id.
+ */
 export function CompanyAvatar({
   companies,
   companyName,
@@ -145,20 +179,21 @@ export function CompanyAvatar({
 }): ReactNode {
   const co = resolveCompany(companies, companyName)
   const color = co?.color ?? '#94A3B8'
-  const mark = (
-    <CompanyMark companyId={co?.id} color={color} size={Math.round(size * 0.85)} />
-  )
-  if (mark) {
+  const id = co?.id
+
+  if (hasCompanyMark(id)) {
     return (
       <span
         className="co-avatar"
         style={{ width: size, height: size, color }}
-        title={companyName}
+        title={co?.name ?? companyName}
+        data-company-id={id}
       >
-        {mark}
+        <CompanyMark companyId={id} color={color} size={Math.round(size * 0.85)} />
       </span>
     )
   }
+
   const letter = (co?.name ?? companyName).trim().slice(0, 1).toUpperCase() || '?'
   return (
     <span
@@ -169,7 +204,8 @@ export function CompanyAvatar({
         background: color,
         fontSize: Math.max(9, size * 0.55),
       }}
-      title={companyName}
+      title={co?.name ?? companyName}
+      data-company-id={id ?? 'unknown'}
       aria-hidden
     >
       {letter}
@@ -254,20 +290,26 @@ export function CardMainIcon({
   if (event.category === 'science') {
     inner = <IconScience color={color} />
   } else if (event.category === 'concept') {
-    if (tags.some((t) => t.includes('agent'))) inner = <IconAgent color={color} />
-    else if (tags.includes('multimodal')) inner = <IconMultimodal color={color} />
-    else inner = <IconConcept color={color} />
-  } else if (event.category === 'product') {
-    const mark = <CompanyMark companyId={co?.id} color={color} size={22} />
-    inner = mark ?? <IconProduct color={color} />
+    if (tags.some((t) => t.includes('agent') || t.includes('harness') || t.includes('skill'))) {
+      inner = <IconAgent color={color} />
+    } else if (tags.includes('multimodal')) {
+      inner = <IconMultimodal color={color} />
+    } else {
+      inner = <IconConcept color={color} />
+    }
+  } else if (hasCompanyMark(co?.id)) {
+    inner = <CompanyMark companyId={co!.id} color={color} size={22} />
   } else {
-    // model / other — prefer company mark
-    const mark = <CompanyMark companyId={co?.id} color={color} size={22} />
-    inner = mark ?? <IconProduct color={color} />
+    inner = <IconProduct color={color} />
   }
 
   return (
-    <span className="event-card__icon-tile" style={{ background: soft, color }} aria-hidden>
+    <span
+      className="event-card__icon-tile"
+      style={{ background: soft, color }}
+      data-company-id={co?.id ?? 'none'}
+      aria-hidden
+    >
       {inner}
     </span>
   )

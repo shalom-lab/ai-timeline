@@ -1,7 +1,7 @@
 {
   "meta": {
     "name": "AI Timeline",
-    "version": "0.3.0",
+    "version": "0.4.0",
     "scopeStart": "2022-11-30",
     "updatedAt": "2026-10-28",
     "locale": "zh-CN",
@@ -924,6 +924,32 @@
       ]
     },
     {
+      "id": "anthropic-mcp-open-source-2024-11-25",
+      "date": "2024-11-25",
+      "dateStatus": "exact",
+      "title": "Anthropic 开源 Model Context Protocol（MCP）",
+      "summary": "Anthropic 发布并开源 Model Context Protocol（MCP），提出连接 AI 助手与数据源/工具的开放标准：含规范与 SDK、Claude Desktop 本地 MCP server 支持，以及开源 MCP server 仓库。",
+      "category": "concept",
+      "company": "Anthropic",
+      "series": "MCP",
+      "product": "Model Context Protocol",
+      "eventType": "open_source",
+      "sources": [
+        {
+          "title": "Introducing the Model Context Protocol",
+          "url": "https://www.anthropic.com/news/model-context-protocol",
+          "publisher": "Anthropic",
+          "publishedAt": "2024-11-25"
+        }
+      ],
+      "tags": [
+        "mcp",
+        "protocol",
+        "tooling",
+        "concept"
+      ]
+    },
+    {
       "id": "deepseek-r1-open-source-2025-01-20",
       "date": "2025-01-20",
       "dateStatus": "exact",
@@ -1034,6 +1060,58 @@
         "agentic-coding",
         "open-source",
         "mcp"
+      ]
+    },
+    {
+      "id": "anthropic-agent-skills-first-announce-2025-10-16",
+      "date": "2025-10-16",
+      "dateStatus": "exact",
+      "title": "Anthropic 发布 Agent Skills",
+      "summary": "Anthropic 推出 Agent Skills：以文件夹形式打包指令、脚本与资源，供 Claude 按需加载以完成专项任务；覆盖 Claude.ai、API 与 Claude Code，并提供文档类预置 Skills 与自定义 Skills API。",
+      "category": "concept",
+      "company": "Anthropic",
+      "series": "Agent Skills",
+      "product": "Agent Skills",
+      "eventType": "first_announce",
+      "sources": [
+        {
+          "title": "Introducing Agent Skills",
+          "url": "https://www.anthropic.com/news/skills",
+          "publisher": "Anthropic",
+          "publishedAt": "2025-10-16"
+        }
+      ],
+      "tags": [
+        "skill",
+        "agent-skills",
+        "agent",
+        "concept"
+      ]
+    },
+    {
+      "id": "anthropic-agent-harness-engineering-2025-11-26",
+      "date": "2025-11-26",
+      "dateStatus": "exact",
+      "title": "Anthropic 提出长程 Agent Harness 实践",
+      "summary": "Anthropic 工程博客发表 Effective harnesses for long-running agents，正式以 harness 描述跨多上下文窗口的长程 agent 运行骨架（initializer + coding agent 与持久交接产物），推动「agent harness」成为可复述的工程概念。",
+      "category": "concept",
+      "company": "Anthropic",
+      "series": "Agent Harness",
+      "product": "Long-running agent harness",
+      "eventType": "first_announce",
+      "sources": [
+        {
+          "title": "Effective harnesses for long-running agents",
+          "url": "https://www.anthropic.com/engineering/effective-harnesses-for-long-running-agents",
+          "publisher": "Anthropic",
+          "publishedAt": "2025-11-26"
+        }
+      ],
+      "tags": [
+        "harness",
+        "agent",
+        "agent-harness",
+        "concept"
       ]
     }
   ]

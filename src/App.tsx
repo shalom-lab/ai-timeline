@@ -1,11 +1,6 @@
 import { useMemo, useState, useCallback, useEffect } from 'react'
 import { timelineData } from './data'
-import type {
-  Category,
-  EventType,
-  ProductSubcategory,
-  TimelineEvent,
-} from './types/timeline'
+import type { Category, TimelineEvent } from './types/timeline'
 import { BOARD_CATEGORY_ORDER } from './lib/labels'
 import Header, { type Filters } from './components/Header'
 import TimelineRail from './components/TimelineRail'
@@ -14,10 +9,6 @@ import CategoryColumn from './components/CategoryColumn'
 const DEFAULT_FILTERS: Filters = {
   query: '',
   year: 'all',
-  company: 'all',
-  category: 'all',
-  productSubcategory: 'all',
-  eventType: 'all',
 }
 
 function matchesQuery(e: TimelineEvent, q: string): boolean {
@@ -54,40 +45,11 @@ export default function App() {
     return [...set].sort()
   }, [events])
 
-  const eventTypesPresent = useMemo(() => {
-    const set = new Set(events.map((e) => e.eventType))
-    return [...set] as EventType[]
-  }, [events])
-
-  const productSubsPresent = useMemo(() => {
-    const set = new Set(
-      events
-        .map((e) => e.productSubcategory)
-        .filter((x): x is ProductSubcategory => Boolean(x)),
-    )
-    return [...set]
-  }, [events])
-
   const filtered = useMemo(() => {
     const q = filters.query.trim().toLowerCase()
     return events
       .filter((e) => {
         if (filters.year !== 'all' && !e.date.startsWith(filters.year)) {
-          return false
-        }
-        if (filters.company !== 'all' && e.company !== filters.company) {
-          return false
-        }
-        if (filters.category !== 'all' && e.category !== filters.category) {
-          return false
-        }
-        if (
-          filters.productSubcategory !== 'all' &&
-          e.productSubcategory !== filters.productSubcategory
-        ) {
-          return false
-        }
-        if (filters.eventType !== 'all' && e.eventType !== filters.eventType) {
           return false
         }
         if (!matchesQuery(e, q)) return false
@@ -129,9 +91,6 @@ export default function App() {
       <Header
         meta={meta}
         years={years}
-        companies={companies}
-        eventTypesPresent={eventTypesPresent}
-        productSubsPresent={productSubsPresent}
         filters={filters}
         onChange={patchFilters}
         eventCount={filtered.length}

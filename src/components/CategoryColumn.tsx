@@ -53,6 +53,44 @@ const ICONS: Record<Category, ReactNode> = {
   ),
 }
 
+/** Expand / maximize — enter 独占 */
+function IconSoloEnter() {
+  return (
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden>
+      <path
+        d="M9 3H3v6M15 3h6v6M9 21H3v-6M21 15v6h-6"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  )
+}
+
+/** X-in-square / exit-focus — leave 独占 */
+function IconSoloExit() {
+  return (
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden>
+      <rect
+        x="3.5"
+        y="3.5"
+        width="17"
+        height="17"
+        rx="2.5"
+        stroke="currentColor"
+        strokeWidth="2"
+      />
+      <path
+        d="M9 9l6 6M15 9l-6 6"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+      />
+    </svg>
+  )
+}
+
 export default function CategoryColumn({
   category,
   events,
@@ -78,32 +116,41 @@ export default function CategoryColumn({
       style={{ ['--accent' as string]: theme.accent }}
       aria-label={CATEGORY_LABEL_ZH[category]}
     >
-      <div
-        className="cat-column__header"
-        style={{ background: theme.header }}
-      >
-        <span className="cat-column__header-icon">{ICONS[category]}</span>
+      <div className="cat-column__header">
+        <span
+          className="cat-column__header-icon"
+          style={{ color: theme.accent, background: theme.headerSoft }}
+        >
+          {ICONS[category]}
+        </span>
         <span className="cat-column__header-title">
           {CATEGORY_LABEL_ZH[category]}
         </span>
-        <span className="cat-column__header-count">{events.length}</span>
+        <span
+          className="cat-column__header-count"
+          style={{ color: theme.accent, background: theme.headerSoft }}
+        >
+          {events.length}
+        </span>
         {isSolo ? (
           <button
             type="button"
-            className="cat-column__solo-btn is-active"
+            className="cat-column__solo-btn is-icon is-active"
             onClick={onExitSolo}
-            title="退出独占，恢复显示全部列"
+            title="退出独占"
+            aria-label="退出独占"
           >
-            退出独占
+            <IconSoloExit />
           </button>
         ) : (
           <button
             type="button"
-            className="cat-column__solo-btn"
+            className="cat-column__solo-btn is-icon"
             onClick={onSolo}
-            title="独占本列：隐藏其他列，本列全宽"
+            title="独占"
+            aria-label="独占"
           >
-            独占
+            <IconSoloEnter />
           </button>
         )}
       </div>

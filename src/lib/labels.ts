@@ -26,28 +26,28 @@ export const CATEGORY_THEME: Record<
   { header: string; headerSoft: string; accent: string }
 > = {
   model: {
-    header: 'linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%)',
-    headerSoft: '#DBEAFE',
+    header: '#F8FAFC',
+    headerSoft: '#EFF6FF',
     accent: '#2563EB',
   },
   product: {
-    header: 'linear-gradient(135deg, #059669 0%, #047857 100%)',
-    headerSoft: '#D1FAE5',
+    header: '#F8FAFC',
+    headerSoft: '#ECFDF5',
     accent: '#059669',
   },
   concept: {
-    header: 'linear-gradient(135deg, #EA580C 0%, #C2410C 100%)',
-    headerSoft: '#FFEDD5',
+    header: '#F8FAFC',
+    headerSoft: '#FFF7ED',
     accent: '#EA580C',
   },
   science: {
-    header: 'linear-gradient(135deg, #0891B2 0%, #0E7490 100%)',
-    headerSoft: '#CFFAFE',
+    header: '#F8FAFC',
+    headerSoft: '#ECFEFF',
     accent: '#0891B2',
   },
   other: {
-    header: 'linear-gradient(135deg, #7C3AED 0%, #6D28D9 100%)',
-    headerSoft: '#EDE9FE',
+    header: '#F8FAFC',
+    headerSoft: '#F5F3FF',
     accent: '#7C3AED',
   },
 }

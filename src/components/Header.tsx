@@ -1,34 +1,14 @@
-import type {
-  Category,
-  Company,
-  EventType,
-  ProductSubcategory,
-  TimelineMeta,
-} from '../types/timeline'
-import {
-  BOARD_CATEGORY_ORDER,
-  CATEGORY_LABEL_ZH,
-  EVENT_TYPE_LABEL_ZH,
-  EVENT_TYPE_LEGEND,
-  PRODUCT_SUBCATEGORY_LABEL_ZH,
-  PRODUCT_SUBCATEGORY_CHIP_ORDER,
-} from '../lib/labels'
+import type { TimelineMeta } from '../types/timeline'
+import { EVENT_TYPE_LEGEND } from '../lib/labels'
 
 export type Filters = {
   query: string
   year: string | 'all'
-  company: string | 'all'
-  category: Category | 'all'
-  productSubcategory: ProductSubcategory | 'all'
-  eventType: EventType | 'all'
 }
 
 type Props = {
   meta: TimelineMeta
   years: string[]
-  companies: Company[]
-  eventTypesPresent: EventType[]
-  productSubsPresent: ProductSubcategory[]
   filters: Filters
   onChange: (patch: Partial<Filters>) => void
   eventCount: number
@@ -37,9 +17,6 @@ type Props = {
 export default function Header({
   meta,
   years,
-  companies,
-  eventTypesPresent,
-  productSubsPresent,
   filters,
   onChange,
   eventCount,
@@ -48,10 +25,6 @@ export default function Header({
     meta.ui?.openingBg ??
     'linear-gradient(145deg, #0B1220 0%, #1E1B4B 48%, #312E81 100%)'
   const openingFg = meta.ui?.openingFg ?? '#F8FAFC'
-
-  const orderedSubs = PRODUCT_SUBCATEGORY_CHIP_ORDER.filter((s) =>
-    productSubsPresent.includes(s),
-  )
 
   return (
     <header className="app-header">
@@ -125,90 +98,13 @@ export default function Header({
           ))}
         </div>
 
-        <div className="filter-row">
-          <label>
-            <span>公司</span>
-            <select
-              value={filters.company}
-              onChange={(e) =>
-                onChange({ company: e.target.value as Filters['company'] })
-              }
-            >
-              <option value="all">全部</option>
-              {companies.map((c) => (
-                <option key={c.id} value={c.name}>
-                  {c.name}
-                </option>
-              ))}
-            </select>
-          </label>
-
-          <label>
-            <span>一级分类</span>
-            <select
-              value={filters.category}
-              onChange={(e) =>
-                onChange({
-                  category: e.target.value as Filters['category'],
-                })
-              }
-            >
-              <option value="all">全部</option>
-              {BOARD_CATEGORY_ORDER.map((c) => (
-                <option key={c} value={c}>
-                  {CATEGORY_LABEL_ZH[c]}
-                </option>
-              ))}
-            </select>
-          </label>
-
-          <label>
-            <span>产品大类</span>
-            <select
-              value={filters.productSubcategory}
-              onChange={(e) =>
-                onChange({
-                  productSubcategory: e.target
-                    .value as Filters['productSubcategory'],
-                })
-              }
-            >
-              <option value="all">全部</option>
-              {orderedSubs.map((s) => (
-                <option key={s} value={s}>
-                  {PRODUCT_SUBCATEGORY_LABEL_ZH[s]}
-                </option>
-              ))}
-            </select>
-          </label>
-
-          <label>
-            <span>事件类型</span>
-            <select
-              value={filters.eventType}
-              onChange={(e) =>
-                onChange({
-                  eventType: e.target.value as Filters['eventType'],
-                })
-              }
-            >
-              <option value="all">全部</option>
-              {eventTypesPresent.map((t) => (
-                <option key={t} value={t}>
-                  {EVENT_TYPE_LABEL_ZH[t]}
-                </option>
-              ))}
-            </select>
-          </label>
-
-          <div className="event-legend" aria-label="事件类型图例">
-            {EVENT_TYPE_LEGEND.map((g) => (
-              <span key={g.label} className="event-legend__item">
-                <i style={{ background: g.color }} />
-                {g.label}
-              </span>
-            ))}
-          </div>
+        <div className="event-legend" aria-label="事件类型图例">
+          {EVENT_TYPE_LEGEND.map((g) => (
+            <span key={g.label} className="event-legend__item">
+              <i style={{ background: g.color }} />
+              {g.label}
+            </span>
+          ))}
         </div>
       </div>
     </header>

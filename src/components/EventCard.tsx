@@ -28,10 +28,12 @@ export default function EventCard({
     <article
       ref={cardRef}
       className={`event-card${selected ? ' is-selected' : ''}`}
+      data-event-id={event.id}
       style={
         {
           ['--co' as string]: color,
           ['--co-soft' as string]: soft,
+          background: soft,
         } as CSSProperties
       }
       onClick={() => onSelect(selected ? null : event.id)}
@@ -45,7 +47,6 @@ export default function EventCard({
       }}
       aria-expanded={selected}
     >
-      <div className="event-card__tint" aria-hidden />
       <header className="event-card__meta">
         <time dateTime={event.date}>{event.date}</time>
         <span className="event-card__company" title={event.company}>

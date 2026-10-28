@@ -43,6 +43,15 @@ export function groupKeyForEvent(
   }
   // concept / other — theme by tags
   const tags = e.tags ?? []
+  if (tags.some((t) => t === 'mcp' || t.includes('mcp'))) {
+    return { key: 'theme:mcp', label: 'MCP' }
+  }
+  if (tags.some((t) => t.includes('skill'))) {
+    return { key: 'theme:skill', label: 'Skill' }
+  }
+  if (tags.some((t) => t.includes('harness'))) {
+    return { key: 'theme:harness', label: 'Harness' }
+  }
   if (tags.some((t) => t.includes('agent'))) {
     return { key: 'theme:agent', label: 'Agent' }
   }
