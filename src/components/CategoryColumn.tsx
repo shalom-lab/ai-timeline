@@ -19,13 +19,13 @@ type Props = {
   selectedId: string | null
   onSelect: (id: string | null) => void
   /**
-   * Show the continuous bump staircase for this category (hover or pin).
+   * Show the same-moment dashed slice for this category (rail hover only).
    * Default hidden — only the active category gets the line.
    */
   bumpActive?: boolean
-  /** Focus date (YYYY-MM-DD): at/before color, after 灰白. */
+  /** Focus date (YYYY-MM-DD): same-moment peers; after → optional 灰白. */
   bumpFocusDate?: string | null
-  /** Focus event id — line originates from that card's bottom edge. */
+  /** Focus event id — preferred date source for the moment slice. */
   bumpFocusId?: string | null
 }
 
@@ -141,7 +141,7 @@ export default function CategoryColumn({
     return all
   }, [visibleGroups])
 
-  /** Chrono order across the category — for bump path only (cards stay dense per company). */
+  /** Visible events (ids/dates) for measuring same-moment peers; cards stay dense per company. */
   const orderedEvents = useMemo(
     () =>
       [...visibleEvents].sort(

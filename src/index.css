@@ -616,8 +616,9 @@ a {
   gap: 0.55rem;
 }
 
-/* ─── Intra-category bump connectors (H-dominant, card bottoms) ─── */
-/* Hidden by default — only stroked while rail hover or pin is active. */
+/* ─── Intra-category same-moment bump line (H-dominant, card bottoms) ─── */
+/* Hidden by default — only stroked while rail hover is active. */
+/* Short staircase among exact same-date peers; V only in company gutters. */
 .bump-connectors {
   position: absolute;
   left: 0;

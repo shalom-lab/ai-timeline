@@ -12,7 +12,7 @@ type Props = {
   selectedId: string | null
   /** Optional: select card when clicking a rail date (navigation only). */
   onSelect?: (id: string | null) => void
-  /** Rail hover event id — sole driver of bump staircase. */
+  /** Rail hover event id — sole driver of same-moment bump line. */
   hoverId: string | null
   onHover: (id: string | null) => void
   /** Compact equal-step rail layout (year left / dates indented). */

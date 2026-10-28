@@ -105,7 +105,7 @@ export default function App() {
   const [selectedId, setSelectedId] = useState<string | null>(null)
   const [solo, setSolo] = useState<SoloTarget | null>(null)
   const [subFilters, setSubFilters] = useState<Record<Category, string[]>>(EMPTY_SUB)
-  /** Rail hover — sole driver of bump staircase (event id). */
+  /** Rail hover — sole driver of same-moment bump line (event id). */
   const [hoverRailId, setHoverRailId] = useState<string | null>(null)
 
   const filtered = useMemo(() => {
@@ -225,13 +225,13 @@ export default function App() {
 
   /**
    * Bump connectors: hover-only (no click-to-pin — avoids fighting live hover).
-   * Same focus id/date drive staircase + past-color / future-gray.
+   * Focus id/date drive a same-moment slice (not chrono succession) + optional future-gray.
    */
   const bumpFocusId = hoverRailId
   const focusEvent = bumpFocusId ? byId.get(bumpFocusId) ?? null : null
   const bumpFocusDate = focusEvent?.date ?? null
   /**
-   * Which category shows the staircase:
+   * Which category shows the same-moment line:
    * prefer soloed category; else the category that owns the hovered rail event.
    * Never cross 大模型↔产品.
    */

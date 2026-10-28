@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState, type RefObject } from 'react'
+import { useCallback, useEffect, useMemo, useState, type RefObject } from 'react'
 
 /** Anchor at card bottom-center; column box for gutter routing. */
 type Anchor = {
@@ -19,26 +19,27 @@ type Pt = { x: number; y: number }
 type Props = {
   /** Category column body (positioned ancestor for overlay coords). */
   containerRef: RefObject<HTMLElement | null>
-  /** Visible event ids in chronological order (same top-level category only). */
+  /** Visible event ids (any order — same-moment peers are filtered by focusDate). */
   orderedIds: string[]
-  /** Parallel dates (YYYY-MM-DD) for orderedIds — used to chop past vs future. */
+  /** Parallel dates (YYYY-MM-DD) for orderedIds. */
   orderedDates: string[]
   /** When false, connectors stay hidden (default). */
   active: boolean
-  /** Focus date: at/before = color, after = muted. */
+  /** Focus date: same-moment slice; cards after this may mute. */
   focusDate: string | null
-  /** Focus event id — preferred chop point when set. */
+  /** Focus event id — preferred date source when set. */
   focusId?: string | null
 }
 
-const STROKE_PAST = 'rgba(234, 88, 12, 0.85)'
-const STROKE_FUTURE = 'rgba(148, 163, 184, 0.55)'
+const STROKE = 'rgba(234, 88, 12, 0.85)'
 const STROKE_WIDTH = 2
 const DASH = '7 5'
 /** Treat columns as same when centers are this close (px). */
 const SAME_COL_X = 24
 /** Push same-column vertical just outside the subcol edge into the seam. */
 const SIDE_OUT = 4
+/** Inset from category left/right edges for the span caps. */
+const EDGE_PAD = 2
 
 function pointsToPath(pts: Pt[]): string {
   if (pts.length === 0) return ''
@@ -51,7 +52,6 @@ function pointsToPath(pts: Pt[]): string {
 
 function sameColumn(a: Anchor, b: Anchor): boolean {
   if (Math.abs(a.x - b.x) < SAME_COL_X) return true
-  // Shared / heavily overlapping subcol bounds
   const overlap =
     Math.min(a.colRight, b.colRight) - Math.max(a.colLeft, b.colLeft)
   const minW = Math.min(a.colRight - a.colLeft, b.colRight - b.colLeft)
@@ -75,14 +75,12 @@ function pickGutterX(
     const gL = sorted[i].right
     const gR = sorted[i + 1].left
     if (gR - gL < 1) continue
-    // Gap overlaps the facing span
     if (gR < lo || gL > hi) continue
     const segL = Math.max(gL, lo)
     const segR = Math.min(gR, hi)
     if (segR - segL >= 1) gaps.push((segL + segR) / 2)
   }
   if (gaps.length === 0) {
-    // Fallback: just outside the left column's right edge (still a seam).
     return lo + Math.min(8, (hi - lo) / 2)
   }
   return gaps.reduce((best, g) =>
@@ -93,7 +91,6 @@ function pickGutterX(
 /** Vertical only in the seam beside this column (prefer right, else left). */
 function sideGutter(a: Anchor, cols: ColBox[], containerW: number): number {
   const sorted = [...cols].sort((c, d) => c.left - d.left)
-  // Prefer gap immediately to the right of this column
   for (let i = 0; i < sorted.length; i++) {
     const c = sorted[i]
     const overlap =
@@ -103,7 +100,6 @@ function sideGutter(a: Anchor, cols: ColBox[], containerW: number): number {
       const next = sorted[i + 1]
       if (next.left - c.right >= 1) return (c.right + next.left) / 2
     }
-    // No right neighbor — use left gap or pad past right edge
     if (i > 0) {
       const prev = sorted[i - 1]
       if (c.left - prev.right >= 1) return (prev.right + c.left) / 2
@@ -123,30 +119,49 @@ function gutterBetween(a: Anchor, b: Anchor, cols: ColBox[]): number {
 }
 
 /**
- * One continuous H/V staircase through card bottoms.
- * Verticals exist only at gutter X (inter-company seams or side gutter).
+ * Same-moment slice: primarily horizontal dashed line across the category,
+ * with short micro-staircase only among exact same-date peers (L→R).
+ * Vertical risers live only in company gutters — meaning 「同一时刻」,
+ * never a chrono succession through all history.
  */
-function stairVertices(
-  anchors: Anchor[],
+function momentSliceVertices(
+  peers: Anchor[],
   cols: ColBox[],
   containerW: number,
 ): Pt[] {
-  if (anchors.length === 0) return []
-  const out: Pt[] = [{ x: anchors[0].x, y: anchors[0].y }]
+  if (peers.length === 0) return []
 
+  // Left-to-right across company columns.
+  const sorted = [...peers].sort(
+    (a, b) => a.x - b.x || a.colLeft - b.colLeft || a.id.localeCompare(b.id),
+  )
+
+  const out: Pt[] = []
   const push = (x: number, y: number) => {
+    if (out.length === 0) {
+      out.push({ x, y })
+      return
+    }
     const last = out[out.length - 1]
     if (Math.abs(last.x - x) < 0.5 && Math.abs(last.y - y) < 0.5) return
     out.push({ x, y })
   }
 
-  for (let i = 1; i < anchors.length; i++) {
-    const a = anchors[i - 1]
-    const b = anchors[i]
+  const first = sorted[0]
+  const last = sorted[sorted.length - 1]
+  const leftX = EDGE_PAD
+  const rightX = Math.max(EDGE_PAD + 1, containerW - EDGE_PAD)
+
+  // Span from category left edge at the leftmost peer's bottom Y.
+  push(leftX, first.y)
+  push(first.x, first.y)
+
+  for (let i = 1; i < sorted.length; i++) {
+    const a = sorted[i - 1]
+    const b = sorted[i]
     const sameY = Math.abs(a.y - b.y) < 0.5
 
     if (sameY) {
-      // Pure horizontal along the bottom band
       push(b.x, b.y)
       continue
     }
@@ -159,19 +174,22 @@ function stairVertices(
       continue
     }
 
-    // Different companies: V only in the inter-column gutter
+    // Different companies: short V only in the inter-column gutter.
     const gx = gutterBetween(a, b, cols)
     push(gx, a.y)
     push(gx, b.y)
     push(b.x, b.y)
   }
+
+  // Cap at category right edge at the rightmost peer's bottom Y.
+  push(rightX, last.y)
   return out
 }
 
 /**
- * Intra-category bump staircase (SVG, pointer-events none).
- * One continuous orthogonal path through card bottoms; verticals only in
- * company gutters. Hidden unless rail hover/pin. Past color / future 灰白.
+ * Intra-category same-moment bump line (SVG, pointer-events none).
+ * Hover-only: one H-dominant dashed slice at the focus date, with short
+ * gutter risers only among exact same-date peers. Not a chrono path.
  */
 export default function BumpConnectors({
   containerRef,
@@ -292,39 +310,23 @@ export default function BumpConnectors({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [containerRef, idsKey, datesKey, measure])
 
-  if (!active || pts.length < 2 || size.w <= 0 || size.h <= 0) return null
-
-  // Chop index: prefer focusId, else last at/before focusDate.
-  let chop = pts.length - 1
-  if (focusId) {
-    const idx = pts.findIndex((p) => p.id === focusId)
-    if (idx >= 0) chop = idx
-    else if (focusDate) {
-      chop = -1
-      for (let i = 0; i < pts.length; i++) {
-        if (pts[i].date <= focusDate) chop = i
-        else break
-      }
+  const resolvedDate = useMemo(() => {
+    if (focusId) {
+      const hit = pts.find((p) => p.id === focusId)
+      if (hit?.date) return hit.date
     }
-  } else if (focusDate) {
-    chop = -1
-    for (let i = 0; i < pts.length; i++) {
-      if (pts[i].date <= focusDate) chop = i
-      else break
-    }
-  }
-  if (chop < 0) chop = 0
+    return focusDate
+  }, [pts, focusId, focusDate])
 
-  const pastAnchors = pts.slice(0, chop + 1)
-  const futureAnchors = pts.slice(chop)
-  const pastPath =
-    pastAnchors.length >= 2
-      ? pointsToPath(stairVertices(pastAnchors, cols, size.w))
-      : ''
-  const futurePath =
-    futureAnchors.length >= 2 && chop < pts.length - 1
-      ? pointsToPath(stairVertices(futureAnchors, cols, size.w))
-      : ''
+  const peers = useMemo(() => {
+    if (!resolvedDate) return []
+    return pts.filter((p) => p.date === resolvedDate)
+  }, [pts, resolvedDate])
+
+  if (!active || peers.length < 1 || size.w <= 0 || size.h <= 0) return null
+
+  const path = pointsToPath(momentSliceVertices(peers, cols, size.w))
+  if (!path) return null
 
   return (
     <svg
@@ -334,32 +336,17 @@ export default function BumpConnectors({
       viewBox={`0 0 ${size.w} ${size.h}`}
       aria-hidden
     >
-      {futurePath ? (
-        <path
-          className="bump-connectors__future"
-          d={futurePath}
-          fill="none"
-          stroke={STROKE_FUTURE}
-          strokeWidth={STROKE_WIDTH}
-          strokeDasharray={DASH}
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          vectorEffect="non-scaling-stroke"
-        />
-      ) : null}
-      {pastPath ? (
-        <path
-          className="bump-connectors__past"
-          d={pastPath}
-          fill="none"
-          stroke={STROKE_PAST}
-          strokeWidth={STROKE_WIDTH}
-          strokeDasharray={DASH}
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          vectorEffect="non-scaling-stroke"
-        />
-      ) : null}
+      <path
+        className="bump-connectors__moment"
+        d={path}
+        fill="none"
+        stroke={STROKE}
+        strokeWidth={STROKE_WIDTH}
+        strokeDasharray={DASH}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        vectorEffect="non-scaling-stroke"
+      />
     </svg>
   )
 }
