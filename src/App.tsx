@@ -5,13 +5,15 @@ import type { CapabilityMonth } from './types/capability'
 import { CATEGORY_LABEL_ZH } from './lib/labels'
 import { groupKeyForEvent } from './lib/group'
 import {
-  isCurrentCalendarMonth,
   inDateWindow,
   localMonth,
   earliestMonth,
   clampDateWindow,
+  calendarWindow,
+  recentDateWindow,
   type DateWindow,
 } from './lib/calendar'
+import type { RecentPreset } from './components/RecentRange'
 import Header, { type Filters } from './components/Header'
 import TimelineRail from './components/TimelineRail'
 import CategoryColumn from './components/CategoryColumn'
@@ -146,8 +148,8 @@ export default function App() {
   const [hoverRailId, setHoverRailId] = useState<string | null>(null)
   /** Rail click-pin — solid same-moment line + 灰白 for later cards and rail below. */
   const [bumpPinId, setBumpPinId] = useState<string | null>(null)
-  /** 既往 = full history rail/board; 本月 = same calendar month across all years. */
-  const [railMode, setRailMode] = useState<'history' | 'month'>('history')
+  /** 既往 = history slider window; 最近 = rolling N months from today (or custom). */
+  const [railMode, setRailMode] = useState<'history' | 'recent'>('history')
   const monthBounds = useMemo(() => {
     const end = localMonth()
     const min = earliestMonth(
@@ -165,21 +167,31 @@ export default function App() {
       capabilityFrontierData.months.map((m) => m.month),
     ),
   )
+  /** 「最近」preset — default 1个月; session state only (no prior UI persistence). */
+  const [recentPreset, setRecentPreset] = useState<RecentPreset>('1m')
+  const [recentCustom, setRecentCustom] = useState<DateWindow>(() => calendarWindow(1))
+
+  const activeWindow = useMemo(() => {
+    if (railMode === 'recent') {
+      const raw = recentDateWindow(recentPreset, recentCustom)
+      return clampDateWindow(raw, monthBounds.min, monthBounds.max)
+    }
+    return dateWindow
+  }, [railMode, recentPreset, recentCustom, dateWindow, monthBounds])
 
   const filtered = useMemo(() => {
     const q = filters.query.trim().toLowerCase()
     return events
       .filter((e) => matchesQuery(e, q))
-      .filter((e) => (railMode === 'month' ? isCurrentCalendarMonth(e.date) : inDateWindow(e.date, dateWindow)))
+      .filter((e) => inDateWindow(e.date, activeWindow))
       .sort((a, b) => a.date.localeCompare(b.date))
-  }, [events, filters, railMode, dateWindow])
+  }, [events, filters, activeWindow])
 
   const frontierMonths = useMemo(() => {
     const q = filters.query.trim().toLowerCase()
     const months = filterFrontierMonths(capabilityFrontierData.months, q)
-    if (railMode !== 'month') return months.filter(m => inDateWindow(m.month, dateWindow))
-    return months.filter((m) => isCurrentCalendarMonth(m.month))
-  }, [filters, railMode, dateWindow])
+    return months.filter((m) => inDateWindow(m.month, activeWindow))
+  }, [filters, activeWindow])
 
   const byCategory = useMemo(() => {
     const map: Record<Category, TimelineEvent[]> = {
@@ -265,11 +277,26 @@ export default function App() {
   useEffect(() => {
     setHoverRailId(null)
     setBumpPinId(null)
-  }, [activeTab, railMode, dateWindow])
+  }, [activeTab, railMode, activeWindow])
 
-  const handleRailModeChange = useCallback((mode: 'history' | 'month') => {
+  const handleRailModeChange = useCallback((mode: 'history' | 'recent') => {
     setRailMode(mode)
   }, [])
+
+  /** Switch 「最近」preset; entering 自定义 seeds from the active rolling window. */
+  const handleRecentPresetChange = useCallback(
+    (preset: RecentPreset) => {
+      if (preset === 'custom') {
+        const seed =
+          recentPreset === 'custom'
+            ? recentCustom
+            : recentDateWindow(recentPreset, recentCustom)
+        setRecentCustom(clampDateWindow(seed, monthBounds.min, monthBounds.max))
+      }
+      setRecentPreset(preset)
+    },
+    [recentPreset, recentCustom, monthBounds],
+  )
 
   /** Rail only: toggle solid same-moment line + 灰白. Never touches card outline/detail. */
   const handleRailTogglePin = useCallback((id: string) => {
@@ -427,7 +454,7 @@ export default function App() {
   const boardScrollRef = useRef<HTMLDivElement>(null)
   useEffect(() => {
     boardScrollRef.current?.scrollTo({ top: 0, left: 0 })
-  }, [activeTab, railMode, dateWindow])
+  }, [activeTab, railMode, activeWindow])
 
   const boardHasChipHead = activeTab !== 'frontier'
 
@@ -468,6 +495,10 @@ export default function App() {
             onDateWindowChange={setDateWindow}
             minMonth={monthBounds.min}
             maxMonth={monthBounds.max}
+            recentPreset={recentPreset}
+            onRecentPresetChange={handleRecentPresetChange}
+            recentCustom={recentCustom}
+            onRecentCustomChange={setRecentCustom}
           />
 
           <div className="board__main">

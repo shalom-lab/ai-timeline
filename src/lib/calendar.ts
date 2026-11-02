@@ -120,3 +120,22 @@ export function earliestMonth(
   }
   return min
 }
+
+/** Preset rolling windows for 「最近」mode (1 / 3 / 6 calendar months ending this month). */
+export type RecentPresetId = '1m' | '3m' | '6m' | 'custom'
+
+export function monthsForRecentPreset(preset: Exclude<RecentPresetId, 'custom'>): number {
+  if (preset === '1m') return 1
+  if (preset === '3m') return 3
+  return 6
+}
+
+/** Resolve the active DateWindow for 「最近」. Custom uses the provided window. */
+export function recentDateWindow(
+  preset: RecentPresetId,
+  custom: DateWindow,
+  now = new Date(),
+): DateWindow {
+  if (preset === 'custom') return custom
+  return calendarWindow(monthsForRecentPreset(preset), now)
+}

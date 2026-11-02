@@ -14,8 +14,9 @@ import {
   monthToIndex,
 } from '../lib/calendar'
 import TimeWindow from './TimeWindow'
+import RecentRange, { type RecentPreset } from './RecentRange'
 
-type RailMode = 'history' | 'month'
+type RailMode = 'history' | 'recent'
 
 type Props = {
   events: TimelineEvent[]
@@ -31,15 +32,20 @@ type Props = {
   layout: TimelineLayout
   /** When true, layout items are frontier month proxies (no TimelineEvent). */
   frontierMode?: boolean
-  /** 既往 = full history; 本月 = same calendar month across all years. */
+  /** 既往 = history slider; 最近 = rolling recent window. */
   mode?: RailMode
   onModeChange?: (mode: RailMode) => void
-  /** History month window — rendered under 既往|当月 when mode is history. */
+  /** History month window — rendered under 既往|最近 when mode is history. */
   dateWindow?: DateWindow | null
   onDateWindowChange?: (value: DateWindow) => void
-  /** Inclusive slider bounds YYYY-MM. */
+  /** Inclusive slider / custom bounds YYYY-MM. */
   minMonth?: string
   maxMonth?: string
+  /** 「最近」preset chips (1个月 / 3个月 / 半年 / 自定义). */
+  recentPreset?: RecentPreset
+  onRecentPresetChange?: (preset: RecentPreset) => void
+  recentCustom?: DateWindow | null
+  onRecentCustomChange?: (value: DateWindow) => void
 }
 
 type MonthBand = {
@@ -112,6 +118,10 @@ export default function TimelineRail({
   onDateWindowChange,
   minMonth,
   maxMonth,
+  recentPreset = '1m',
+  onRecentPresetChange,
+  recentCustom = null,
+  onRecentCustomChange,
 }: Props) {
   const byId = useMemo(() => {
     const m = new Map<string, TimelineEvent>()
@@ -279,18 +289,32 @@ export default function TimelineRail({
           </button>
           <button
             type="button"
-            className={`timeline-rail__mode-btn${mode === 'month' ? ' is-active' : ''}`}
-            aria-pressed={mode === 'month'}
-            title="当月：查看所有年份中与当前月份相同的记录"
-            onClick={() => onModeChange?.('month')}
+            className={`timeline-rail__mode-btn${mode === 'recent' ? ' is-active' : ''}`}
+            aria-pressed={mode === 'recent'}
+            title="最近：从今天往回的滚动时间窗（1个月 / 3个月 / 半年 / 自定义）"
+            onClick={() => onModeChange?.('recent')}
           >
-            当月
+            最近
           </button>
         </div>
         {showSlider ? (
           <TimeWindow
             value={dateWindow}
             onChange={onDateWindowChange}
+            minMonth={minMonth}
+            maxMonth={maxMonth}
+          />
+        ) : mode === 'recent' &&
+          minMonth != null &&
+          maxMonth != null &&
+          onRecentPresetChange != null &&
+          recentCustom != null &&
+          onRecentCustomChange != null ? (
+          <RecentRange
+            preset={recentPreset}
+            onPresetChange={onRecentPresetChange}
+            customWindow={recentCustom}
+            onCustomWindowChange={onRecentCustomChange}
             minMonth={minMonth}
             maxMonth={maxMonth}
           />

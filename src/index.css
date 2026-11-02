@@ -452,13 +452,13 @@ a {
   gap: 0.15rem;
 }
 
-/* Fills chip-head band when 当月 (no TimeWindow) so year list stays aligned */
+/* Fills chip-head band when 最近 has no control yet so year list stays aligned */
 .timeline-rail__head-fill {
   flex: 1 1 auto;
   min-height: var(--timeline-head-h, 2.55rem);
 }
 
-/* Compact 既往 | 本月 — sits in the tabs-height band of the rail head */
+/* Compact 既往 | 最近 — sits in the tabs-height band of the rail head */
 .timeline-rail__mode {
   display: inline-flex;
   align-items: stretch;
