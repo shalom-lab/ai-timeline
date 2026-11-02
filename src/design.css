@@ -13,10 +13,12 @@ button:focus-visible, a:focus-visible, select:focus-visible { outline:2px solid 
 .app-header__nav-btn { border:0; background:transparent; color:#687583; padding:5px 14px; border-radius:6px; font-size:.8rem; line-height:1.2; }
 .app-header__nav-btn:hover { background:#e8efec; color:#136c60; }
 .app-header__nav-btn.is-active { background:#fff; color:#17796b; box-shadow:0 2px 5px #233c3410; }
-.app-header__search-wrap { flex:0 1 330px; }
+.app-header__search-wrap { flex:0 1 280px; max-width:300px; }
 .app-header__search { border:1px solid var(--border); background:#fafbfc; border-radius:8px; box-shadow:none; padding:5px 11px; }
 .app-header__search:focus-within { border-color:#459d8f; box-shadow:0 0 0 3px #dceee8; }
 .app-header__search input { font-size:.78rem; min-width:0; line-height:1.25; }
+.app-header__github { color:#687583; border-color:transparent; }
+.app-header__github:hover { color:#202b38; background:#f3f5f6; border-color:#e3e8eb; }
 .board { padding:20px 24px 20px 14px; gap:18px; }
 .board__main { border:1px solid var(--border); border-radius:14px; background:#fff; }
 .board-tabs { padding:0 12px; gap:12px; align-items:stretch; flex-wrap:nowrap; overflow-x:auto; min-height:var(--board-tabs-h); }
@@ -65,8 +67,9 @@ button:focus-visible, a:focus-visible, select:focus-visible { outline:2px solid 
 @media (max-width:1100px) {
   .app-header__banner { flex-wrap:wrap; gap:10px; padding:8px 18px; }
   .app-header__brand { flex:1 1 auto; max-width:none; }
-  .app-header__nav { margin-left:auto; }
-  .app-header__search-wrap { flex:0 1 280px; }
+  .app-header__nav { margin-left:0; }
+  .app-header__search-wrap { flex:0 1 240px; max-width:260px; }
+  .app-header__github { margin-left:auto; }
   .board { grid-template-columns:148px minmax(0,1fr); padding:14px; gap:12px; }
   .board__columns { min-height:0; }
   .board__col-slot { min-width:0; }
@@ -78,6 +81,7 @@ button:focus-visible, a:focus-visible, select:focus-visible { outline:2px solid 
   .app-header__banner { padding:8px 12px; gap:8px; }
   .app-header__en { display:none; }
   .app-header__nav-btn { padding:5px 10px; font-size:.74rem; }
+  .app-header__github-label { display:none; }
   .app-header__search-wrap { flex:1 1 100%; max-width:none; }
   .app-header__search { max-width:none; }
   .board { display:flex; flex-direction:column; overflow:visible; padding:12px; gap:10px; }

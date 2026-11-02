@@ -96,7 +96,7 @@ a {
   align-items: center;
   gap: 0.5rem 0.85rem;
   padding: 0.4rem 1rem;
-  /* brand | spacer (via nav ml:auto) | page-nav | search */
+  /* brand | page-nav | search | spacer | github */
 }
 
 .app-header__brand {
@@ -105,7 +105,7 @@ a {
   gap: 0.7rem;
   flex: 0 1 auto;
   min-width: 0;
-  /* Content-sized; page-nav is ml:auto so meta is not covered. */
+  /* Content-sized; nav sits next to brand. */
 }
 
 .app-header__logo-img {
@@ -156,8 +156,8 @@ a {
   align-items: stretch;
   gap: 0.35rem;
   flex-shrink: 0;
-  /* Push 纪年 | AI工具 toward the search (right), clear of brand meta. */
-  margin-left: auto;
+  /* Sit next to brand; GitHub link owns the far-right spacer. */
+  margin-left: 0.15rem;
 }
 
 .app-header__nav-btn {
@@ -192,10 +192,10 @@ a {
 
 .app-header__search-wrap {
   display: flex;
-  justify-content: flex-end;
-  flex: 1 1 220px;
+  justify-content: flex-start;
+  flex: 0 1 280px;
   min-width: 0;
-  max-width: 520px;
+  max-width: 320px;
 }
 
 .app-header__search {
@@ -224,6 +224,38 @@ a {
   width: 100%;
   font-size: 0.8rem;
   line-height: 1.25;
+}
+
+.app-header__github {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-left: auto;
+  flex-shrink: 0;
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  padding: 0.28rem 0.55rem;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  transition: color 0.15s ease, background 0.15s ease, border-color 0.15s ease;
+}
+
+.app-header__github:hover {
+  color: var(--text);
+  background: rgba(15, 23, 42, 0.04);
+  border-color: var(--border);
+}
+
+.app-header__github-icon {
+  display: block;
+  flex-shrink: 0;
+}
+
+.app-header__github-label {
+  white-space: nowrap;
 }
 
 /* Theme toggle removed until real light/dark exists. */
@@ -1399,9 +1431,13 @@ a {
   }
 
   .app-header__search-wrap {
-    flex: 1 1 100%;
+    flex: 1 1 180px;
     max-width: none;
     justify-content: stretch;
+  }
+
+  .app-header__github {
+    margin-left: auto;
   }
 
   .board {
