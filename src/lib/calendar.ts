@@ -121,21 +121,77 @@ export function earliestMonth(
   return min
 }
 
-/** Preset rolling windows for 「最近」mode (1 / 3 / 6 calendar months ending this month). */
+/** 「最近」presets. One month = 30 days from today (not calendar months). */
 export type RecentPresetId = '1m' | '3m' | '6m' | 'custom'
 
-export function monthsForRecentPreset(preset: Exclude<RecentPresetId, 'custom'>): number {
+/** Fixed day length used for 「个月」in recent mode. */
+export const DAYS_PER_RECENT_MONTH = 30
+
+/** Inclusive day window. `start` / `end` are YYYY-MM-DD. */
+export type DayWindow = { start: string; end: string }
+
+export function monthsForRecentPreset(
+  preset: Exclude<RecentPresetId, 'custom'>,
+): number {
   if (preset === '1m') return 1
   if (preset === '3m') return 3
   return 6
 }
 
-/** Resolve the active DateWindow for 「最近」. Custom uses the provided window. */
-export function recentDateWindow(
+export function daysForRecentMonths(months: number): number {
+  const n = Math.max(1, Math.floor(Number.isFinite(months) ? months : 1))
+  return n * DAYS_PER_RECENT_MONTH
+}
+
+function formatLocalYmd(d: Date): string {
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
+}
+
+/**
+ * Rolling day window ending today: [today - N×30 days, today], inclusive.
+ * Example: N=1 on 2026-11-02 → 2026-10-03 … 2026-11-02.
+ */
+export function recentDayWindow(months: number, now = new Date()): DayWindow {
+  const days = daysForRecentMonths(months)
+  const end = new Date(now.getFullYear(), now.getMonth(), now.getDate())
+  const start = new Date(end)
+  start.setDate(start.getDate() - days)
+  return { start: formatLocalYmd(start), end: formatLocalYmd(end) }
+}
+
+/** Resolve months count for a 「最近」preset (custom uses `customMonths`). */
+export function recentMonthsCount(
   preset: RecentPresetId,
-  custom: DateWindow,
-  now = new Date(),
-): DateWindow {
-  if (preset === 'custom') return custom
-  return calendarWindow(monthsForRecentPreset(preset), now)
+  customMonths: number,
+): number {
+  if (preset === 'custom') {
+    return Math.max(1, Math.min(120, Math.floor(customMonths) || 1))
+  }
+  return monthsForRecentPreset(preset)
+}
+
+/** Event/day string (YYYY-MM-DD or longer) inside inclusive DayWindow. */
+export function inDayWindow(date: string, window: DayWindow | null): boolean {
+  if (!window) return true
+  const day = date.slice(0, 10)
+  return day >= window.start && day <= window.end
+}
+
+/**
+ * YYYY-MM frontier month overlaps a day window if any day of that month
+ * falls inside [start, end].
+ */
+export function monthOverlapsDayWindow(
+  monthYm: string,
+  window: DayWindow | null,
+): boolean {
+  if (!window) return true
+  const ym = toMonthKey(monthYm)
+  const y = Number(ym.slice(0, 4))
+  const m = Number(ym.slice(5, 7))
+  if (!y || !m) return false
+  const monthStart = `${ym}-01`
+  const lastDay = new Date(y, m, 0).getDate()
+  const monthEnd = `${ym}-${String(lastDay).padStart(2, '0')}`
+  return monthStart <= window.end && monthEnd >= window.start
 }

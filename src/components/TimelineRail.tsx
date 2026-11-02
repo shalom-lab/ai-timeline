@@ -41,11 +41,11 @@ type Props = {
   /** Inclusive slider / custom bounds YYYY-MM. */
   minMonth?: string
   maxMonth?: string
-  /** 「最近」preset chips (1个月 / 3个月 / 半年 / 自定义). */
+  /** 「最近」preset chips (1个月 / 3个月 / 半年 / 自定义近 N 个月). */
   recentPreset?: RecentPreset
   onRecentPresetChange?: (preset: RecentPreset) => void
-  recentCustom?: DateWindow | null
-  onRecentCustomChange?: (value: DateWindow) => void
+  recentCustomMonths?: number
+  onRecentCustomMonthsChange?: (months: number) => void
 }
 
 type MonthBand = {
@@ -120,8 +120,8 @@ export default function TimelineRail({
   maxMonth,
   recentPreset = '1m',
   onRecentPresetChange,
-  recentCustom = null,
-  onRecentCustomChange,
+  recentCustomMonths = 12,
+  onRecentCustomMonthsChange,
 }: Props) {
   const byId = useMemo(() => {
     const m = new Map<string, TimelineEvent>()
@@ -291,7 +291,7 @@ export default function TimelineRail({
             type="button"
             className={`timeline-rail__mode-btn${mode === 'recent' ? ' is-active' : ''}`}
             aria-pressed={mode === 'recent'}
-            title="最近：从今天往回的滚动时间窗（1个月 / 3个月 / 半年 / 自定义）"
+            title="最近：从今天往回按月滚动（1个月=30天；自定义近 N 个月）"
             onClick={() => onModeChange?.('recent')}
           >
             最近
@@ -305,18 +305,13 @@ export default function TimelineRail({
             maxMonth={maxMonth}
           />
         ) : mode === 'recent' &&
-          minMonth != null &&
-          maxMonth != null &&
           onRecentPresetChange != null &&
-          recentCustom != null &&
-          onRecentCustomChange != null ? (
+          onRecentCustomMonthsChange != null ? (
           <RecentRange
             preset={recentPreset}
             onPresetChange={onRecentPresetChange}
-            customWindow={recentCustom}
-            onCustomWindowChange={onRecentCustomChange}
-            minMonth={minMonth}
-            maxMonth={maxMonth}
+            customMonths={recentCustomMonths}
+            onCustomMonthsChange={onRecentCustomMonthsChange}
           />
         ) : (
           <div className="timeline-rail__head-fill" aria-hidden />

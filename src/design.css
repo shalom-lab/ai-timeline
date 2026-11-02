@@ -161,11 +161,11 @@ button:focus-visible, a:focus-visible, select:focus-visible { outline:2px solid 
 .recent-range__chip { appearance:none; border:1px solid #d7e5df; background:#f3f7f5; color:#577368; border-radius:999px; padding:3px 7px; font-size:.58rem; font-weight:700; letter-spacing:.01em; line-height:1.2; cursor:pointer; white-space:nowrap; transition:background .12s ease,color .12s ease,border-color .12s ease; }
 .recent-range__chip:hover { color:#196c54; background:#e9f3ee; border-color:#cde3d8; }
 .recent-range__chip.is-active { color:#0f766e; background:#e6f4ef; border-color:#7bbfa8; box-shadow:inset 0 0 0 1px #7bbfa8; }
-.recent-range__custom { display:flex; flex-direction:column; gap:3px; }
+.recent-range__custom { display:flex; flex-direction:row; flex-wrap:wrap; align-items:center; gap:4px 6px; }
 .recent-range__field { display:flex; align-items:center; gap:4px; font-size:.55rem; color:#577368; }
-.recent-range__field > span { flex:0 0 auto; font-weight:700; color:#196c54; min-width:1.6rem; }
-.recent-range__field > input[type=month] { flex:1 1 auto; min-width:0; border:1px solid #d7e5df; border-radius:4px; background:#fff; color:#334155; font-size:.58rem; padding:1px 2px; font-variant-numeric:tabular-nums; }
-.recent-range__field > input[type=month]:focus { outline:2px solid #198577; outline-offset:1px; }
+.recent-range__field > span { flex:0 0 auto; font-weight:700; color:#196c54; min-width:0; }
+.recent-range__field > input[type=number] { width:3.2rem; min-width:0; border:1px solid #d7e5df; border-radius:4px; background:#fff; color:#334155; font-size:.58rem; padding:1px 4px; font-variant-numeric:tabular-nums; }
+.recent-range__field > input[type=number]:focus { outline:2px solid #198577; outline-offset:1px; }
 .recent-range__hint { margin:0; font-size:.55rem; color:#577368; font-variant-numeric:tabular-nums; line-height:1.2; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
 
 .timeline-rail__range-window { position:absolute; left:0; right:2px; z-index:2; border-radius:8px; background:rgba(250, 204, 21, 0.18); border:1.5px solid rgba(202, 138, 4, 0.7); box-shadow:inset 0 0 0 1px rgba(255,255,255,0.35); cursor:grab; touch-action:none; pointer-events:auto; }
