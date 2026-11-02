@@ -103,9 +103,10 @@ a {
   display: flex;
   align-items: center;
   gap: 0.7rem;
-  flex: 0 1 auto;
+  flex: 0 0 auto;
   min-width: 0;
-  /* Content-sized; nav sits next to brand. */
+  max-width: 15.5rem;
+  /* Stable width so subtitle page-switch doesn't jitter into nav. */
 }
 
 .app-header__logo-img {
@@ -156,8 +157,8 @@ a {
   align-items: stretch;
   gap: 0.35rem;
   flex-shrink: 0;
-  /* Sit next to brand; GitHub link owns the far-right spacer. */
-  margin-left: 0.15rem;
+  /* Modest gap from brand — breathing room, not far-right. */
+  margin-left: 1.1rem;
 }
 
 .app-header__nav-btn {
@@ -229,15 +230,12 @@ a {
 .app-header__github {
   display: inline-flex;
   align-items: center;
-  gap: 0.35rem;
+  justify-content: center;
   margin-left: auto;
   flex-shrink: 0;
   color: var(--muted);
   text-decoration: none;
-  font-size: 0.78rem;
-  font-weight: 600;
-  letter-spacing: 0.01em;
-  padding: 0.28rem 0.55rem;
+  padding: 0.35rem;
   border-radius: 8px;
   border: 1px solid transparent;
   transition: color 0.15s ease, background 0.15s ease, border-color 0.15s ease;
@@ -254,9 +252,6 @@ a {
   flex-shrink: 0;
 }
 
-.app-header__github-label {
-  white-space: nowrap;
-}
 
 /* Theme toggle removed until real light/dark exists. */
 
