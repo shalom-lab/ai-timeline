@@ -1,9 +1,9 @@
 {
   "meta": {
     "name": "AI纪年",
-    "version": "0.15.1",
+    "version": "0.15.2",
     "scopeStart": "2022-11-30",
-    "updatedAt": "2026-10-28",
+    "updatedAt": "2026-11-02",
     "locale": "zh-CN",
     "ui": {
       "openingBg": "linear-gradient(145deg, #0B1220 0%, #1E1B4B 48%, #312E81 100%)",
@@ -1449,7 +1449,8 @@
         }
       ],
       "relatedIds": [
-        "openai-gpt-4-2023-03-14"
+        "openai-gpt-4-2023-03-14",
+        "openai-gpt-4o-mini-2024-07-18"
       ],
       "tags": [
         "gpt-4o",
@@ -1459,6 +1460,39 @@
         "chat",
         "vision",
         "audio"
+      ]
+    },
+    {
+      "id": "google-gemini-1-5-flash-io-2024-05-14",
+      "date": "2024-05-14",
+      "dateStatus": "exact",
+      "title": "在 Google I/O 发布 Gemini 1.5 Flash",
+      "summary": "Google DeepMind 在 I/O 引入 Gemini 1.5 Flash：更轻量、低延迟的多模态模型，面向高吞吐场景，并与 1.5 Pro 一同以百万 token 上下文进入公开预览。",
+      "category": "model",
+      "company": "Google",
+      "series": "Gemini",
+      "product": "Gemini 1.5 Flash",
+      "eventType": "public_beta",
+      "sources": [
+        {
+          "title": "Google Gemini updates: Flash 1.5, Gemma 2 and Project Astra",
+          "url": "https://blog.google/innovation-and-ai/products/google-gemini-update-flash-ai-assistant-io-2024/",
+          "publisher": "Google",
+          "publishedAt": "2024-05-14"
+        }
+      ],
+      "relatedIds": [
+        "google-gemini-1-5-ga-2024-05-23",
+        "google-gemini-1-5-pro-2024-02-15"
+      ],
+      "tags": [
+        "gemini-1.5",
+        "flash",
+        "google-io"
+      ],
+      "capabilities": [
+        "chat",
+        "vision"
       ]
     },
     {
@@ -1517,7 +1551,8 @@
         }
       ],
       "relatedIds": [
-        "google-gemini-1-5-pro-2024-02-15"
+        "google-gemini-1-5-pro-2024-02-15",
+        "google-gemini-1-5-flash-io-2024-05-14"
       ],
       "tags": [
         "gemini-1.5",
@@ -1559,8 +1594,8 @@
       ]
     },
     {
-      "id": "anthropic-claude-3-5-sonnet-2024-06-21",
-      "date": "2024-06-21",
+      "id": "anthropic-claude-3-5-sonnet-2024-06-20",
+      "date": "2024-06-20",
       "dateStatus": "exact",
       "title": "发布 Claude 3.5 Sonnet",
       "summary": "Anthropic 发布 Claude 3.5 家族首款模型 Claude 3.5 Sonnet，在多项评测上超过 Claude 3 Opus，并通过 Claude.ai 与 API 开放。",
@@ -1574,12 +1609,12 @@
           "title": "Claude 3.5 Sonnet",
           "url": "https://www.anthropic.com/news/claude-3-5-sonnet",
           "publisher": "Anthropic",
-          "publishedAt": "2024-06-21"
+          "publishedAt": "2024-06-20"
         }
       ],
       "relatedIds": [
         "anthropic-claude-3-family-2024-03-04",
-        "anthropic-claude-3-5-sonnet-artifacts-2024-06-21"
+        "anthropic-claude-3-5-sonnet-artifacts-2024-06-20"
       ],
       "tags": [
         "claude-3.5",
@@ -1591,8 +1626,8 @@
       ]
     },
     {
-      "id": "anthropic-claude-3-5-sonnet-artifacts-2024-06-21",
-      "date": "2024-06-21",
+      "id": "anthropic-claude-3-5-sonnet-artifacts-2024-06-20",
+      "date": "2024-06-20",
       "dateStatus": "exact",
       "title": "发布 Claude 3.5 Sonnet 与 Artifacts",
       "summary": "Anthropic 发布 Claude 3.5 Sonnet，并在 claude.ai 引入 Artifacts 预览：在对话旁侧窗口实时查看与编辑代码、文档与设计稿。",
@@ -1607,17 +1642,48 @@
           "title": "Introducing Claude 3.5 Sonnet",
           "url": "https://www.anthropic.com/news/claude-3-5-sonnet",
           "publisher": "Anthropic",
-          "publishedAt": "2024-06-21"
+          "publishedAt": "2024-06-20"
         }
       ],
       "relatedIds": [
         "anthropic-claude-3-family-2024-03-04",
-        "anthropic-claude-3-5-sonnet-2024-06-21"
+        "anthropic-claude-3-5-sonnet-2024-06-20"
       ],
       "tags": [
         "claude-3.5",
         "artifacts",
         "coding"
+      ]
+    },
+    {
+      "id": "openai-gpt-4o-mini-2024-07-18",
+      "date": "2024-07-18",
+      "dateStatus": "exact",
+      "title": "发布 GPT-4o mini",
+      "summary": "OpenAI 发布高性价比小模型 GPT-4o mini：API 支持文本与视觉，128K 上下文；定价约 $0.15/$0.60 每百万输入/输出 token，并开始在 ChatGPT 中替代 GPT-3.5。",
+      "category": "model",
+      "company": "OpenAI",
+      "series": "GPT",
+      "product": "GPT-4o mini",
+      "eventType": "ga",
+      "sources": [
+        {
+          "title": "GPT-4o mini: advancing cost-efficient intelligence",
+          "url": "https://openai.com/index/gpt-4o-mini-advancing-cost-efficient-intelligence/",
+          "publisher": "OpenAI",
+          "publishedAt": "2024-07-18"
+        }
+      ],
+      "relatedIds": [
+        "openai-gpt-4o-2024-05-13"
+      ],
+      "tags": [
+        "gpt-4o-mini",
+        "cost-efficient"
+      ],
+      "capabilities": [
+        "chat",
+        "vision"
       ]
     },
     {
@@ -1772,12 +1838,12 @@
       "id": "openai-o1-preview-2024-09-12",
       "date": "2024-09-12",
       "dateStatus": "exact",
-      "title": "发布 o1-preview 推理模型系列",
-      "summary": "OpenAI 发布专注复杂推理的 o1-preview 与 o1-mini，面向 ChatGPT Plus/Team 与高阶 API 用户，以更长「思考」时间提升科学、数学与编程表现。",
+      "title": "发布 o1-preview 与 o1-mini",
+      "summary": "OpenAI 发布专注复杂推理的 o1-preview，并同步推出更便宜、偏 STEM 的 o1-mini；面向 ChatGPT Plus/Team/Enterprise/Edu 与高阶 API 用户，以更长「思考」时间提升科学、数学与编程表现。",
       "category": "model",
       "company": "OpenAI",
       "series": "o1",
-      "product": "o1-preview",
+      "product": "o1-preview / o1-mini",
       "eventType": "research_preview",
       "sources": [
         {
@@ -1785,11 +1851,18 @@
           "url": "https://openai.com/index/introducing-openai-o1-preview/",
           "publisher": "OpenAI",
           "publishedAt": "2024-09-12"
+        },
+        {
+          "title": "OpenAI o1-mini",
+          "url": "https://openai.com/index/openai-o1-mini-advancing-cost-efficient-reasoning/",
+          "publisher": "OpenAI",
+          "publishedAt": "2024-09-12"
         }
       ],
       "tags": [
         "reasoning",
-        "o1"
+        "o1",
+        "o1-mini"
       ],
       "capabilities": [
         "chat",
@@ -1891,8 +1964,8 @@
       "id": "anthropic-claude-3-5-sonnet-upgrade-2024-10-22",
       "date": "2024-10-22",
       "dateStatus": "exact",
-      "title": "升级 Claude 3.5 Sonnet 并发布 3.5 Haiku",
-      "summary": "Anthropic 发布升级版 Claude 3.5 Sonnet（编码等能力显著提升），并宣布 Claude 3.5 Haiku；同日公布 computer use 公测。",
+      "title": "升级 Claude 3.5 Sonnet，发布 3.5 Haiku 与 computer use 公测",
+      "summary": "Anthropic 发布升级版 Claude 3.5 Sonnet（编码等能力显著提升），宣布 Claude 3.5 Haiku，并同日推出 computer use（让 Claude 通过截图与键鼠操作电脑）公测。",
       "category": "model",
       "company": "Anthropic",
       "series": "Claude",
@@ -1907,7 +1980,7 @@
         }
       ],
       "relatedIds": [
-        "anthropic-claude-3-5-sonnet-2024-06-21"
+        "anthropic-claude-3-5-sonnet-2024-06-20"
       ],
       "tags": [
         "claude-3.5",
@@ -1974,6 +2047,36 @@
         "chat",
         "reasoning",
         "vision"
+      ]
+    },
+    {
+      "id": "openai-sora-chatgpt-plus-2024-12-09",
+      "date": "2024-12-09",
+      "dateStatus": "exact",
+      "title": "向 ChatGPT Plus / Pro 开放 Sora",
+      "summary": "OpenAI 将文生视频模型 Sora（Sora Turbo）迁出研究预览，在 sora.com 向 ChatGPT Plus 与 Pro 用户开放；Plus 含每月额度，Pro 提供更高分辨率与用量。",
+      "category": "product",
+      "productSubcategory": "video",
+      "company": "OpenAI",
+      "series": "Sora",
+      "product": "Sora",
+      "eventType": "public_beta",
+      "sources": [
+        {
+          "title": "Sora is here",
+          "url": "https://openai.com/index/sora-is-here/",
+          "publisher": "OpenAI",
+          "publishedAt": "2024-12-09"
+        }
+      ],
+      "relatedIds": [
+        "openai-sora-first-announce-2024-02-15",
+        "openai-sora-discontinued-2026-04-26"
+      ],
+      "tags": [
+        "sora",
+        "video-generation",
+        "chatgpt-plus"
       ]
     },
     {
@@ -2157,6 +2260,45 @@
       ]
     },
     {
+      "id": "deepseek-janus-pro-2025-01-27",
+      "date": "2025-01-27",
+      "dateStatus": "exact",
+      "title": "发布并开源 Janus-Pro 多模态模型",
+      "summary": "DeepSeek 发布 Janus-Pro（1B/7B）：统一多模态理解与文生图能力，相对 Janus 改进训练、数据与规模，并开源权重与技术报告。",
+      "category": "model",
+      "company": "DeepSeek",
+      "series": "Janus",
+      "product": "Janus-Pro",
+      "eventType": "open_source",
+      "sources": [
+        {
+          "title": "deepseek-ai/Janus",
+          "url": "https://github.com/deepseek-ai/Janus",
+          "publisher": "DeepSeek",
+          "publishedAt": "2025-01-27"
+        },
+        {
+          "title": "Janus-Pro: Unified Multimodal Understanding and Generation with Data and Model Scaling",
+          "url": "https://arxiv.org/abs/2501.17811",
+          "publisher": "arXiv",
+          "publishedAt": "2025-01-29"
+        }
+      ],
+      "relatedIds": [
+        "deepseek-v3-open-source-2024-12-26"
+      ],
+      "tags": [
+        "janus",
+        "multimodal",
+        "image-generation"
+      ],
+      "capabilities": [
+        "chat",
+        "vision",
+        "image"
+      ]
+    },
+    {
       "id": "openai-o3-mini-2025-01-31",
       "date": "2025-01-31",
       "dateStatus": "exact",
@@ -2336,7 +2478,7 @@
         }
       ],
       "relatedIds": [
-        "anthropic-claude-3-5-sonnet-artifacts-2024-06-21",
+        "anthropic-claude-3-5-sonnet-artifacts-2024-06-20",
         "anthropic-claude-3-7-sonnet-2025-02-24"
       ],
       "tags": [
@@ -3292,8 +3434,8 @@
       ]
     },
     {
-      "id": "openai-gpt-5-1-2025-11-13",
-      "date": "2025-11-13",
+      "id": "openai-gpt-5-1-2025-11-12",
+      "date": "2025-11-12",
       "dateStatus": "exact",
       "title": "发布 GPT-5.1",
       "summary": "OpenAI 发布 GPT-5.1：面向开发者与 ChatGPT 的 GPT-5 系列迭代，强化自适应推理、提示缓存与编程相关能力。",
@@ -3307,7 +3449,7 @@
           "title": "GPT-5.1: A smarter, more conversational ChatGPT",
           "url": "https://openai.com/index/gpt-5-1/",
           "publisher": "OpenAI",
-          "publishedAt": "2025-11-13"
+          "publishedAt": "2025-11-12"
         }
       ],
       "relatedIds": [
@@ -3466,7 +3608,7 @@
         }
       ],
       "relatedIds": [
-        "openai-gpt-5-1-2025-11-13",
+        "openai-gpt-5-1-2025-11-12",
         "openai-gpt-5-2025-08-07"
       ],
       "tags": [
@@ -4140,7 +4282,8 @@
       "product": "Sora",
       "eventType": "discontinued",
       "relatedIds": [
-        "openai-sora-first-announce-2024-02-15"
+        "openai-sora-first-announce-2024-02-15",
+        "openai-sora-chatgpt-plus-2024-12-09"
       ],
       "sources": [
         {
