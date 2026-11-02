@@ -169,7 +169,7 @@ export default function App() {
       capabilityFrontierData.months.map((m) => m.month),
     ),
   )
-  /** 「最近」preset — default 1个月; 自定义近 N 个月 default 12; session state. */
+  /** 「最近」preset — default 1个月; 12个月 chip editable N (default 12); session state. */
   const [recentPreset, setRecentPreset] = useState<RecentPreset>('1m')
   const [recentCustomMonths, setRecentCustomMonths] = useState(12)
 
@@ -296,10 +296,16 @@ export default function App() {
     setRailMode(mode)
   }, [])
 
-  /** Switch 「最近」preset. 自定义 uses its own N (default 12); presets have no numeric input. */
-  const handleRecentPresetChange = useCallback((preset: RecentPreset) => {
-    setRecentPreset(preset)
-  }, [])
+  /** Selecting 12个月 from another preset resets N to 12; editing N keeps custom months. */
+  const handleRecentPresetChange = useCallback(
+    (preset: RecentPreset) => {
+      if (preset === '12m' && recentPreset !== '12m') {
+        setRecentCustomMonths(12)
+      }
+      setRecentPreset(preset)
+    },
+    [recentPreset],
+  )
 
   /** Rail only: toggle solid same-moment line + 灰白. Never touches card outline/detail. */
   const handleRailTogglePin = useCallback((id: string) => {

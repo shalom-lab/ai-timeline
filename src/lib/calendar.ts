@@ -122,7 +122,7 @@ export function earliestMonth(
 }
 
 /** 「最近」presets. One month = 30 days from today (not calendar months). */
-export type RecentPresetId = '1m' | '3m' | '6m' | 'custom'
+export type RecentPresetId = '1m' | '3m' | '6m' | '12m'
 
 /** Fixed day length used for 「个月」in recent mode. */
 export const DAYS_PER_RECENT_MONTH = 30
@@ -131,7 +131,7 @@ export const DAYS_PER_RECENT_MONTH = 30
 export type DayWindow = { start: string; end: string }
 
 export function monthsForRecentPreset(
-  preset: Exclude<RecentPresetId, 'custom'>,
+  preset: Exclude<RecentPresetId, '12m'>,
 ): number {
   if (preset === '1m') return 1
   if (preset === '3m') return 3
@@ -159,13 +159,13 @@ export function recentDayWindow(months: number, now = new Date()): DayWindow {
   return { start: formatLocalYmd(start), end: formatLocalYmd(end) }
 }
 
-/** Resolve months count for a 「最近」preset (custom uses `customMonths`). */
+/** Resolve months count for a 「最近」preset (12m chip uses editable `customMonths`, default 12). */
 export function recentMonthsCount(
   preset: RecentPresetId,
   customMonths: number,
 ): number {
-  if (preset === 'custom') {
-    return Math.max(1, Math.min(120, Math.floor(customMonths) || 1))
+  if (preset === '12m') {
+    return Math.max(1, Math.min(120, Math.floor(customMonths) || 12))
   }
   return monthsForRecentPreset(preset)
 }
