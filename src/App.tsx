@@ -358,10 +358,8 @@ export default function App() {
         meta={meta}
         filters={filters}
         onChange={patchFilters}
-        eventCount={filtered.length}
         page={page}
         onNavigate={onNavigate}
-        toolsCount={aiToolsData.rows.length}
       />
 
       {page === 'tools' ? (

@@ -9,37 +9,36 @@ type Props = {
   meta: TimelineMeta
   filters: Filters
   onChange: (patch: Partial<Filters>) => void
-  eventCount: number
   page: AppPage
   onNavigate: (page: AppPage) => void
-  toolsCount?: number
 }
 
 const brandMarkSrc = `${import.meta.env.BASE_URL || '/'}brand/mark.svg`
+
+/** Trim ISO datetime to YYYY-MM-DD when needed. */
+function formatUpdatedAt(raw: string): string {
+  const m = raw.trim().match(/^(\d{4}-\d{2}-\d{2})/)
+  return m ? m[1] : raw.trim()
+}
 
 export default function Header({
   meta,
   filters,
   onChange,
-  eventCount,
   page,
   onNavigate,
-  toolsCount,
 }: Props) {
   const searchPlaceholder =
     page === 'tools'
       ? '搜索公司、产品、形态、费用…'
       : '搜索模型、产品、公司、关键词…'
-  const subtitle =
-    page === 'tools'
-      ? `当前可用产品 · ${toolsCount ?? '—'} 家`
-      : `始于 ${meta.scopeStart} · ${eventCount} 条里程碑`
+  // Same short line on both tabs so brand–nav width does not jitter.
+  const subtitle = `更新于 ${formatUpdatedAt(meta.updatedAt)}`
 
   return (
     <header className="app-header">
       <div
         className="app-header__banner"
-
       >
         <div className="app-header__brand">
           <img
