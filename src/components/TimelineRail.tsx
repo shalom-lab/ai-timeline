@@ -3,7 +3,7 @@ import type { Company, TimelineEvent } from '../types/timeline'
 import { FRONTIER_THEME } from '../types/capability'
 import { companyColor } from '../lib/company'
 import type { TimelineLayout } from '../lib/timelineLayout'
-import { YEAR_MARKER_H } from '../lib/timelineLayout'
+import { YEAR_MARKER_H, compactTimelineLayout } from '../lib/timelineLayout'
 import {
   type DateWindow,
   clampDateWindow,
@@ -129,14 +129,8 @@ export default function TimelineRail({
     return m
   }, [events])
 
-  const monthBands = useMemo(
-    () => buildMonthBands(layout.items),
-    [layout.items],
-  )
-
   /** Pinned focus date — mute rail nodes/segments strictly after (match card 灰白). */
   const pinDate = pinId ? byId.get(pinId)?.date ?? null : null
-  const pinCenterY = pinId != null ? (layout.centerY[pinId] ?? null) : null
   const muteRailFuture = pinDate != null
 
   const [collapsed, setCollapsed] = useState<Record<string, boolean>>({})
@@ -153,13 +147,25 @@ export default function TimelineRail({
     return s
   }, [collapsed])
 
+  /** Re-pack so collapsed years leave no empty event gap; pills sit almost flush. */
+  const viewLayout = useMemo(
+    () => compactTimelineLayout(layout, hiddenYears),
+    [layout, hiddenYears],
+  )
+
+  const pinCenterY = pinId != null ? (viewLayout.centerY[pinId] ?? null) : null
+
+  const monthBands = useMemo(
+    () => buildMonthBands(viewLayout.items),
+    [viewLayout.items],
+  )
+
   /** Yellow sliding-window geometry over visible in-range rail rows. */
   const rangeOverlay = useMemo(() => {
     if (mode !== 'history' || !dateWindow) return null
     const start = toMonthKey(dateWindow.start)
     const end = toMonthKey(dateWindow.end)
-    const visible = layout.items.filter((item) => {
-      if (hiddenYears.has(item.date.slice(0, 4))) return false
+    const visible = viewLayout.items.filter((item) => {
       const ym = item.ym
       return ym >= start && ym <= end
     })
@@ -168,7 +174,7 @@ export default function TimelineRail({
     const bottom =
       visible[visible.length - 1].centerY + ITEM_HALF + BAND_PAD
     return { top, height: Math.max(20, bottom - top) }
-  }, [mode, dateWindow, layout.items, hiddenYears])
+  }, [mode, dateWindow, viewLayout.items])
 
   const dragRef = useRef<{
     kind: DragKind
@@ -319,9 +325,9 @@ export default function TimelineRail({
       </div>
       <div
         className="timeline-rail__canvas"
-        style={{ height: layout.height }}
+        style={{ height: viewLayout.height }}
       >
-        {layout.years.map((y) => {
+        {viewLayout.years.map((y) => {
           const isCollapsed = hiddenYears.has(y.year)
           const yearMuted =
             muteRailFuture &&
@@ -351,7 +357,6 @@ export default function TimelineRail({
         })}
 
         {monthBands.map((band) => {
-          if (hiddenYears.has(band.ym.slice(0, 4))) return null
           const bandMuted =
             muteRailFuture &&
             pinCenterY != null &&
@@ -450,10 +455,7 @@ export default function TimelineRail({
           </div>
         ) : null}
 
-        {layout.items.map((item) => {
-          const year = item.date.slice(0, 4)
-          if (hiddenYears.has(year)) return null
-
+        {viewLayout.items.map((item) => {
           if (frontierMode || item.id.startsWith('frontier:')) {
             const month = item.ym
             return (
