@@ -10,7 +10,14 @@ import type {
 } from '../types/tools'
 import { TOOL_COLUMN_GROUPS } from '../types/tools'
 import { resolveCompany } from '../lib/company'
-import { CompanyLogoImg, hasCompanyLogo, ToolColumnIcon } from '../lib/icons'
+import {
+  CompanyLogoImg,
+  hasCompanyLogo,
+  ToolColumnIcon,
+  ToolTabIcon,
+  ToolsChevronIcon,
+  ToolsCompanyColIcon,
+} from '../lib/icons'
 import {
   navigateToolsTab,
   toolsTabFromHash,
@@ -23,6 +30,8 @@ type Props = {
   companies: Company[]
   query: string
 }
+
+type PricingTone = 'green' | 'blue' | 'purple' | 'orange' | 'neutral'
 
 function asList(v: ToolProduct | ToolProduct[] | undefined): ToolProduct[] {
   if (!v) return []
@@ -38,6 +47,7 @@ function rowMatches(row: ToolRow, co: Company | undefined, q: string): boolean {
   const hay = [
     row.companyId,
     row.displayName ?? '',
+    row.blurb ?? '',
     co?.name ?? '',
     ...(co?.aliases ?? []),
     ...Object.values(row.cells).flatMap((c) => asList(c).map(productHay)),
@@ -49,6 +59,35 @@ function rowMatches(row: ToolRow, co: Company | undefined, q: string): boolean {
 
 function rowHasCellsInCols(row: ToolRow, colIds: readonly ToolColumnId[]): boolean {
   return colIds.some((id) => asList(row.cells[id]).length > 0)
+}
+
+function pricingTone(text: string): PricingTone {
+  const t = text.toLowerCase()
+  if (/免费|开源|高效|低成本|热门|试用/.test(text)) return 'green'
+  if (/api|按量|按 token|按token|按张|按分钟|cloud|云端|托管|vertex|azure|火山|千帆|平台按量/.test(t + text))
+    return 'blue'
+  if (/订阅|chatgpt|限额|对话|会员|plus|pro|premium|积分/.test(t + text)) return 'purple'
+  if (/企业|enterprise|详情|定价页|席位|商务|商业|workspace/.test(t + text)) return 'orange'
+  return 'neutral'
+}
+
+/** Split a pricing hint into short colorful pills (max 3). */
+function pricingPills(pricing: string): { text: string; tone: PricingTone }[] {
+  const raw = pricing.trim()
+  if (!raw) return []
+  let parts = raw
+    .split(/[；;]/)
+    .map((s) => s.trim())
+    .filter(Boolean)
+  if (parts.length === 1 && /[·|]/.test(parts[0])) {
+    const dotted = parts[0]
+      .split(/[·|]/)
+      .map((s) => s.trim())
+      .filter(Boolean)
+    // Keep compact: free/entry + one more when long
+    if (dotted.length >= 2) parts = dotted.slice(0, 3)
+  }
+  return parts.slice(0, 3).map((text) => ({ text, tone: pricingTone(text) }))
 }
 
 function LetterAvatar({ name, color }: { name: string; color: string }) {
@@ -66,28 +105,24 @@ function LetterAvatar({ name, color }: { name: string; color: string }) {
 
 function ProductLogo({
   logoKey,
-  fallbackName,
-  fallbackColor,
+  title,
+  columnId,
 }: {
   logoKey?: string
-  fallbackName: string
-  fallbackColor: string
+  title: string
+  columnId: ToolColumnId
 }) {
   if (logoKey && hasCompanyLogo(logoKey)) {
     return (
       <span className="tools-cell__logo" aria-hidden>
-        <CompanyLogoImg companyId={logoKey} size={13} title={fallbackName} />
+        <CompanyLogoImg companyId={logoKey} size={14} title={title} />
       </span>
     )
   }
-  const letter = (fallbackName.trim()[0] || '?').toUpperCase()
+  // Category-tint glyph when no brand asset
   return (
-    <span
-      className="tools-cell__logo tools-cell__logo--letter"
-      style={{ background: fallbackColor }}
-      aria-hidden
-    >
-      {letter}
+    <span className={`tools-cell__logo tools-cell__logo--glyph tools-cell__logo--${columnId}`} aria-hidden>
+      <ToolColumnIcon columnId={columnId} size={12} />
     </span>
   )
 }
@@ -96,15 +131,15 @@ function ProductBlock({
   p,
   companyId,
   companyName,
-  companyColor,
+  columnId,
 }: {
   p: ToolProduct
   companyId: string
   companyName: string
-  companyColor: string
+  columnId: ToolColumnId
 }) {
   const tip = p.note?.trim() || undefined
-  const nameTitle = tip ? `${p.name} — ${tip}` : undefined
+  const nameTitle = tip ? `${p.name} — ${tip}` : p.name
   const priceTitle = tip ? `${p.pricing} · ${tip}` : p.pricing
   const logoKey =
     p.logo && hasCompanyLogo(p.logo)
@@ -112,37 +147,56 @@ function ProductBlock({
       : hasCompanyLogo(companyId)
         ? companyId
         : undefined
+  const pills = pricingPills(p.pricing)
 
-  return (
-    <div className="tools-cell__item">
-      <a
-        className="tools-cell__name"
-        href={p.url}
-        target="_blank"
-        rel="noopener noreferrer"
-        title={nameTitle}
-      >
+  const body = (
+    <>
+      <div className="tools-card__main">
         <ProductLogo
           logoKey={logoKey}
-          fallbackName={companyName}
-          fallbackColor={companyColor}
+          title={companyName}
+          columnId={columnId}
         />
         <span className="tools-cell__name-text">{p.name}</span>
-      </a>
-      <div className="tools-cell__pricing" title={priceTitle}>
-        {p.pricingUrl ? (
-          <a
-            href={p.pricingUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            {p.pricing}
-          </a>
-        ) : (
-          <span>{p.pricing}</span>
-        )}
       </div>
-    </div>
+      {pills.length > 0 ? (
+        <div className="tools-card__pills" title={priceTitle}>
+          {pills.map((pill) =>
+            p.pricingUrl ? (
+              <a
+                key={pill.text}
+                className={`tools-pill tools-pill--${pill.tone}`}
+                href={p.pricingUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={(e) => e.stopPropagation()}
+              >
+                {pill.text}
+              </a>
+            ) : (
+              <span key={pill.text} className={`tools-pill tools-pill--${pill.tone}`}>
+                {pill.text}
+              </span>
+            ),
+          )}
+        </div>
+      ) : null}
+      <span className="tools-card__chevron" aria-hidden>
+        <ToolsChevronIcon size={13} />
+      </span>
+    </>
+  )
+
+  return (
+    <a
+      className="tools-card tools-card--product"
+      href={p.url}
+      target="_blank"
+      rel="noopener noreferrer"
+      title={nameTitle}
+    >
+      {body}
+    </a>
   )
 }
 
@@ -279,15 +333,18 @@ export default function ToolsMatrix({ data, companies, query }: Props) {
 
   return (
     <div className="tools-page">
-      <nav className="tools-tabs board-tabs" aria-label="形态切换">
+      <nav className="tools-tabs" aria-label="形态切换">
         {TOOL_COLUMN_GROUPS.map((g) => (
           <button
             key={g.id}
             type="button"
-            className={`tools-tabs__btn board-tabs__btn${tab === g.id ? ' is-active' : ''}`}
+            className={`tools-tabs__btn${tab === g.id ? ' is-active' : ''}`}
             aria-current={tab === g.id ? 'page' : undefined}
             onClick={() => onSelectTab(g.id)}
           >
+            <span className="tools-tabs__icon" aria-hidden>
+              <ToolTabIcon tabId={g.id} />
+            </span>
             <span>{g.label}</span>
           </button>
         ))}
@@ -303,7 +360,12 @@ export default function ToolsMatrix({ data, companies, query }: Props) {
           <thead>
             <tr className="tools-table__sub-row">
               <th className="tools-table__co-h" scope="col">
-                公司
+                <span className="tools-table__sub-h-inner">
+                  <span className="tools-table__col-icon">
+                    <ToolsCompanyColIcon />
+                  </span>
+                  <span>公司</span>
+                </span>
               </th>
               {activeCols.map((c) => (
                 <th key={c.id} className="tools-table__sub-h" scope="col">
@@ -335,22 +397,33 @@ export default function ToolsMatrix({ data, companies, query }: Props) {
                     colorSoft: '#EEF1F6',
                   } satisfies Company)
                 const name = row.displayName ?? co.name
+                const blurb = row.blurb?.trim()
                 return (
                   <tr key={row.companyId}>
                     <th scope="row" className="tools-table__co">
-                      <div className="tools-row__co">
-                        {hasCompanyLogo(co.id) ? (
-                          <span className="tools-row__avatar">
-                            <CompanyLogoImg
-                              companyId={co.id}
-                              size={18}
-                              title={name}
-                            />
+                      <div className="tools-card tools-card--company">
+                        <div className="tools-row__co">
+                          {hasCompanyLogo(co.id) ? (
+                            <span className="tools-row__avatar">
+                              <CompanyLogoImg
+                                companyId={co.id}
+                                size={20}
+                                title={name}
+                              />
+                            </span>
+                          ) : (
+                            <LetterAvatar name={name} color={co.color} />
+                          )}
+                          <div className="tools-row__meta">
+                            <span className="tools-row__name">{name}</span>
+                            {blurb ? (
+                              <span className="tools-row__blurb">{blurb}</span>
+                            ) : null}
+                          </div>
+                          <span className="tools-card__chevron" aria-hidden>
+                            <ToolsChevronIcon size={13} />
                           </span>
-                        ) : (
-                          <LetterAvatar name={name} color={co.color} />
-                        )}
-                        <span className="tools-row__name">{name}</span>
+                        </div>
                       </div>
                     </th>
                     {activeCols.map((col) => {
@@ -358,10 +431,9 @@ export default function ToolsMatrix({ data, companies, query }: Props) {
                       return (
                         <td key={col.id} className="tools-table__cell">
                           {products.length === 0 ? (
-                            <span
-                              className="tools-cell__empty"
-                              aria-hidden
-                            />
+                            <span className="tools-cell__empty" aria-hidden>
+                              —
+                            </span>
                           ) : (
                             <div
                               className={
@@ -376,7 +448,7 @@ export default function ToolsMatrix({ data, companies, query }: Props) {
                                   p={p}
                                   companyId={co.id}
                                   companyName={name}
-                                  companyColor={co.color}
+                                  columnId={col.id}
                                 />
                               ))}
                             </div>

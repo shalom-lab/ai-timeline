@@ -52,15 +52,15 @@ button:focus-visible, a:focus-visible, select:focus-visible { outline:2px solid 
 .timeline-rail__month-bg--0 { background:#eaf0ef; }
 .timeline-rail__month-bg--1 { background:#f3f5f5; }
 .cat-column__empty { margin:70px 20px; font-size:.95rem; }
-.tools-page { padding:20px 32px; gap:12px; }
-.tools-tabs { gap:10px; padding:0 0 10px; }
-.tools-tabs__btn,.tools-tabs__btn.is-active { padding:10px 20px; border-radius:8px; background:#fff; color:#475569; border:1px solid var(--border); }
-.tools-tabs__btn.is-active { color:#17796b; background:#e9f3ee; border-color:#cde3d8; }
-.tools-table-wrap { border-radius:12px; max-height:none; }
-.tools-table { font-size:.88rem; }
-.tools-table thead th,.tools-table thead .tools-table__co-h { background:#eef3f1; color:#52635e; }
-.tools-table tbody th,.tools-table tbody td { padding:17px 16px; }
-.tools-cell__pricing { font-size:.76rem; margin-top:5px; }
+.tools-page { padding:18px 28px 22px; gap:14px; }
+.tools-tabs { gap:10px; padding:0; }
+.tools-tabs__btn { padding:8px 16px; font-size:.8rem; }
+.tools-table-wrap { border-radius:16px; max-height:none; padding:8px 10px 12px; }
+.tools-table { font-size:.86rem; border-spacing:10px 10px; }
+.tools-table thead th,.tools-table thead .tools-table__co-h { background:#eef3f1; color:#17796b; }
+.tools-card { border-radius:12px; }
+.tools-row__name { font-size:.9rem; }
+.tools-row__blurb { font-size:.68rem; }
 .tools-page__foot { font-size:.76rem; }
 @media (max-width:1100px) {
   .app-header__banner { flex-wrap:wrap; gap:10px; padding:8px 18px; }
@@ -90,8 +90,11 @@ button:focus-visible, a:focus-visible, select:focus-visible { outline:2px solid 
   .board__columns { overflow:visible; flex-direction:column; }
   .board__col-slot { min-width:0; }
   .has-subcols > .cat-subcol { flex-basis:220px; }
-  .tools-page { padding:16px 12px; overflow:visible; }
+  .tools-page { padding:14px 12px; overflow:visible; background:color-mix(in srgb,#e9f3ee 28%,var(--bg)); }
+  .tools-table { min-width:560px; border-spacing:8px 8px; }
+  .tools-table__co-h,.tools-table__co { min-width:156px; }
 }
+
 @media (prefers-reduced-motion:reduce) {
   *,*::before,*::after { scroll-behavior:auto !important; transition:none !important; }
 }
@@ -139,10 +142,7 @@ button:focus-visible, a:focus-visible, select:focus-visible { outline:2px solid 
 .timeline-rail__range-edge--start { top:0; }
 .timeline-rail__range-edge--end { bottom:0; }
 
-.tools-tabs.board-tabs { min-height:var(--board-tabs-h); padding:0 12px; gap:12px; margin:0; background:white; border:1px solid var(--border); border-radius:10px 10px 0 0; }
-.tools-tabs .tools-tabs__btn { border:0; border-bottom:2px solid transparent; border-radius:0; background:transparent; padding:0 6px; color:#64748b; font-size:.8rem; margin:0; line-height:1.15; }
-.tools-tabs .tools-tabs__btn.is-active { background:transparent; border-bottom-color:#17796b; color:#17796b; box-shadow:none; }
-.tools-tabs .tools-tabs__btn:hover { background:#f5f9f7; color:#17796b; }
+/* Tools tabs are independent pills (not board underline tabs). */
 
 /* Keep both navigation bars on one shared top and baseline. */
 .timeline-rail__head-spacer { padding-top:0; }

@@ -3,7 +3,7 @@ import type { ModelCapability } from '../types/timeline'
 import { MODEL_CAPABILITY_LABEL_ZH, MODEL_CAPABILITY_ORDER } from '../types/timeline'
 import { resolveCompany } from './company'
 import type { Company } from '../types/timeline'
-import type { ToolColumnId } from '../types/tools'
+import type { ToolColumnGroupId, ToolColumnId } from '../types/tools'
 
 /**
  * Company ids with a real brand asset under public/logos/{id}.{png|svg}.
@@ -333,12 +333,13 @@ export function ToolColumnIcon({
         </svg>
       )
     case 'other':
-      // spark / misc
+      // 2×2 grid / misc forms
       return (
         <svg {...s}>
-          <path d="M12 3.5v3.2M12 17.3v3.2M3.5 12h3.2M17.3 12h3.2" />
-          <path d="M6.6 6.6l2.2 2.2M15.2 15.2l2.2 2.2M17.4 6.6l-2.2 2.2M8.8 15.2l-2.2 2.2" />
-          <circle cx="12" cy="12" r="2.2" />
+          <rect x="4" y="4" width="6.5" height="6.5" rx="1.4" />
+          <rect x="13.5" y="4" width="6.5" height="6.5" rx="1.4" />
+          <rect x="4" y="13.5" width="6.5" height="6.5" rx="1.4" />
+          <rect x="13.5" y="13.5" width="6.5" height="6.5" rx="1.4" />
         </svg>
       )
     case 'chat':
@@ -367,3 +368,81 @@ export function ToolColumnIcon({
       )
   }
 }
+
+/** Tab glyphs for 模型 | 产品 switcher. */
+export function ToolTabIcon({
+  tabId,
+  size = 14,
+}: {
+  tabId: ToolColumnGroupId
+  size?: number
+}): ReactNode {
+  const s = {
+    width: size,
+    height: size,
+    viewBox: '0 0 24 24',
+    fill: 'none' as const,
+    stroke: 'currentColor',
+    strokeWidth: 1.7,
+    strokeLinecap: 'round' as const,
+    strokeLinejoin: 'round' as const,
+    'aria-hidden': true as const,
+  }
+  if (tabId === 'models') {
+    // stacked layers
+    return (
+      <svg {...s}>
+        <path d="M12 3.8L4.8 7.6 12 11.4l7.2-3.8z" />
+        <path d="M4.8 12l7.2 3.8L19.2 12" />
+        <path d="M4.8 16.4L12 20.2l7.2-3.8" />
+      </svg>
+    )
+  }
+  // cube / product
+  return (
+    <svg {...s}>
+      <path d="M12 3.6L4.8 7.5v9l7.2 3.9 7.2-3.9v-9z" />
+      <path d="M12 12v8.4M4.8 7.5L12 12l7.2-4.5" />
+    </svg>
+  )
+}
+
+/** Small chevron used on matrix cards. */
+export function ToolsChevronIcon({ size = 14 }: { size?: number }): ReactNode {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={1.8}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden
+    >
+      <path d="M9 6l6 6-6 6" />
+    </svg>
+  )
+}
+
+/** Info-circle glyph for the 公司 column header. */
+export function ToolsCompanyColIcon({ size = 13 }: { size?: number }): ReactNode {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={1.6}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden
+    >
+      <circle cx="12" cy="12" r="8.2" />
+      <path d="M12 11v5.2M12 8.2h.01" />
+    </svg>
+  )
+}
+

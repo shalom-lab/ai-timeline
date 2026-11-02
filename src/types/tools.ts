@@ -53,6 +53,8 @@ export interface ToolRow {
   companyId: string
   /** Optional display override (defaults to timeline company name). Single brand — no "A / B". */
   displayName?: string
+  /** Optional one-line Chinese tagline under the company name (matrix UI). */
+  blurb?: string
   /**
    * Products keyed by column id. Array when multiple products share a form
    * (e.g. Codex + Cursor under coding). Empty/missing → empty cell.

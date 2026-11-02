@@ -336,6 +336,8 @@ interface ToolRow {
   companyId: string // = timeline companies[].id
   /** Single brand label — no "A / B" slashes */
   displayName?: string
+  /** Optional one-line Chinese tagline under company name */
+  blurb?: string
   cells: Partial<Record<ToolColumnId, ToolProduct | ToolProduct[]>>
 }
 ```

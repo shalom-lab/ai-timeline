@@ -1,8 +1,8 @@
 {
   "meta": {
     "name": "AI工具",
-    "version": "0.2.0",
-    "updatedAt": "2026-10-28",
+    "version": "0.2.1",
+    "updatedAt": "2026-11-02",
     "locale": "zh-CN",
     "disclaimer": "费用以官方定价页为准；本表仅作高层摘要。"
   },
@@ -39,6 +39,7 @@
   "rows": [
     {
       "companyId": "openai",
+      "blurb": "领先的通用 AI 研究与产品公司",
       "cells": {
         "llm": {
           "name": "GPT",
@@ -105,6 +106,7 @@
     },
     {
       "companyId": "anthropic",
+      "blurb": "安全对齐导向的大模型公司",
       "cells": {
         "llm": {
           "name": "Claude",
@@ -141,6 +143,7 @@
     },
     {
       "companyId": "google",
+      "blurb": "搜索与云计算巨头的 AI 平台",
       "cells": {
         "llm": {
           "name": "Gemini",
@@ -190,6 +193,7 @@
     },
     {
       "companyId": "meta",
+      "blurb": "开源权重与消费端 AI",
       "cells": {
         "llm": {
           "name": "Llama",
@@ -220,6 +224,7 @@
     },
     {
       "companyId": "microsoft",
+      "blurb": "云与办公套件中的 AI",
       "cells": {
         "llm": {
           "name": "Azure OpenAI",
@@ -259,6 +264,8 @@
     },
     {
       "companyId": "xai",
+      "displayName": "Grok",
+      "blurb": "追求最大真相探索的 AI 实验室",
       "cells": {
         "llm": {
           "name": "Grok",
@@ -316,11 +323,11 @@
           "pricing": "订阅含档位 API 访问；超额按量",
           "pricingUrl": "https://x.ai/pricing"
         }
-      },
-      "displayName": "Grok"
+      }
     },
     {
       "companyId": "deepseek",
+      "blurb": "高效低成本开源大模型",
       "cells": {
         "llm": {
           "name": "DeepSeek-V4.1-Flash",
@@ -344,6 +351,8 @@
     },
     {
       "companyId": "alibaba",
+      "displayName": "Qwen",
+      "blurb": "通义大模型与阿里云 AI",
       "cells": {
         "llm": {
           "name": "Qwen（通义千问）",
@@ -392,11 +401,12 @@
           "pricingUrl": "https://www.alibabacloud.com/product/model-studio",
           "note": "含 Model Studio"
         }
-      },
-      "displayName": "Qwen"
+      }
     },
     {
       "companyId": "bytedance",
+      "displayName": "豆包",
+      "blurb": "豆包与火山引擎 AI",
       "cells": {
         "llm": {
           "name": "Doubao",
@@ -466,11 +476,12 @@
           "pricing": "免费 · 进阶 ¥39.9/月 起",
           "pricingUrl": "https://docs.coze.cn/coze_pro_premium_package"
         }
-      },
-      "displayName": "豆包"
+      }
     },
     {
       "companyId": "zhipu",
+      "displayName": "智谱",
+      "blurb": "智谱 GLM 系列大模型",
       "cells": {
         "llm": {
           "name": "GLM",
@@ -521,11 +532,12 @@
           "pricing": "按 token 计费",
           "pricingUrl": "https://open.bigmodel.cn/pricing"
         }
-      },
-      "displayName": "智谱"
+      }
     },
     {
       "companyId": "moonshot",
+      "displayName": "Kimi",
+      "blurb": "Kimi 长上下文对话",
       "cells": {
         "llm": {
           "name": "Kimi",
@@ -562,11 +574,11 @@
           "pricing": "按 token 计费",
           "pricingUrl": "https://platform.moonshot.cn/docs/pricing/chat"
         }
-      },
-      "displayName": "Kimi"
+      }
     },
     {
       "companyId": "minimax",
+      "blurb": "多模态与海螺视频",
       "cells": {
         "llm": {
           "name": "MiniMax",
@@ -611,6 +623,7 @@
     },
     {
       "companyId": "github",
+      "blurb": "开发者平台与 Copilot",
       "cells": {
         "coding": [
           {
@@ -630,6 +643,7 @@
     },
     {
       "companyId": "tencent",
+      "blurb": "混元大模型与腾讯云",
       "cells": {
         "llm": {
           "name": "混元",
@@ -661,6 +675,8 @@
     },
     {
       "companyId": "cognition",
+      "displayName": "Devin",
+      "blurb": "自主编程 Agent 实验室",
       "cells": {
         "coding": [
           {
@@ -677,11 +693,12 @@
             "note": "Cloud 与 Local"
           }
         ]
-      },
-      "displayName": "Devin"
+      }
     },
     {
       "companyId": "baidu",
+      "displayName": "文心",
+      "blurb": "文心大模型与千帆平台",
       "cells": {
         "llm": {
           "name": "文心",
@@ -702,11 +719,11 @@
           "pricing": "按 token 计费",
           "pricingUrl": "https://cloud.baidu.com/doc/qianfan/s/wmh4sv6ya"
         }
-      },
-      "displayName": "文心"
+      }
     },
     {
       "companyId": "midjourney",
+      "blurb": "图像生成社区与产品",
       "cells": {
         "image": {
           "name": "Midjourney",
@@ -718,6 +735,7 @@
     },
     {
       "companyId": "perplexity",
+      "blurb": "AI 问答与搜索引擎",
       "cells": {
         "chat": [
           {
