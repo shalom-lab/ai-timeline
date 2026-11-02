@@ -1,6 +1,5 @@
 import { useMemo, useState, useCallback, useRef } from 'react'
 import type { Company, TimelineEvent } from '../types/timeline'
-import { FRONTIER_THEME } from '../types/capability'
 import { companyColor } from '../lib/company'
 import type { TimelineLayout } from '../lib/timelineLayout'
 import { YEAR_MARKER_H, compactTimelineLayout } from '../lib/timelineLayout'
@@ -30,8 +29,6 @@ type Props = {
   onTogglePin?: (id: string) => void
   /** Compact equal-step rail layout (year left / dates indented). */
   layout: TimelineLayout
-  /** When true, layout items are frontier month proxies (no TimelineEvent). */
-  frontierMode?: boolean
   /** 既往 = history slider; 最近 = rolling recent window. */
   mode?: RailMode
   onModeChange?: (mode: RailMode) => void
@@ -93,14 +90,6 @@ function focusCard(id: string) {
   el.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'nearest' })
 }
 
-function focusFrontierMonth(month: string) {
-  const el = document.querySelector<HTMLElement>(
-    `[data-frontier-month="${CSS.escape(month)}"]`,
-  )
-  if (!el) return
-  el.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'nearest' })
-}
-
 type DragKind = 'move' | 'start' | 'end'
 
 export default function TimelineRail({
@@ -111,7 +100,6 @@ export default function TimelineRail({
   pinId = null,
   onTogglePin,
   layout,
-  frontierMode = false,
   mode = 'history',
   onModeChange,
   dateWindow = null,
@@ -456,27 +444,6 @@ export default function TimelineRail({
         ) : null}
 
         {viewLayout.items.map((item) => {
-          if (frontierMode || item.id.startsWith('frontier:')) {
-            const month = item.ym
-            return (
-              <button
-                key={item.id}
-                type="button"
-                className="timeline-rail__item is-frontier"
-                style={{ top: item.centerY }}
-                title={`${month} · 能力边界`}
-                aria-label={`${month} 能力边界`}
-                onClick={() => focusFrontierMonth(month)}
-              >
-                <span
-                  className="timeline-rail__dot"
-                  style={{ background: FRONTIER_THEME.accent }}
-                />
-                <span className="timeline-rail__md">{item.date.slice(5)}</span>
-              </button>
-            )
-          }
-
           const event = byId.get(item.id)
           if (!event) return null
           const { color } = companyColor(companies, event.company)

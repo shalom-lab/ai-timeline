@@ -1,26 +1,19 @@
 /**
- * Invariant checks for data/timeline.json + data/capability-frontier.json
- * + data/ai-tools.json (see docs/DATA.md). Run: npm run validate
+ * Invariant checks for data/timeline.json + data/ai-tools.json
+ * (see docs/DATA.md). Run: npm run validate
  */
 import { readFileSync } from 'node:fs'
 import { resolve, dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import type { TimelineData, TimelineEvent, Company } from '../src/types/timeline'
-import type {
-  CapabilityFrontierData,
-  CapabilityMonth,
-  CapabilityScenario,
-} from '../src/types/capability'
 import type { AiToolsData, ToolColumnId, ToolProduct } from '../src/types/tools'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const root = resolve(__dirname, '..')
 const timelinePath = resolve(root, 'data/timeline.json')
-const frontierPath = resolve(root, 'data/capability-frontier.json')
 const toolsPath = resolve(root, 'data/ai-tools.json')
 
 const DATE_RE = /^\d{4}-\d{2}-\d{2}$/
-const MONTH_RE = /^\d{4}-\d{2}$/
 const HEX_RE = /^#[0-9A-Fa-f]{6}$/
 const KEBAB_RE = /^[a-z0-9]+(?:-[a-z0-9]+)*$/
 
@@ -82,13 +75,8 @@ function main() {
   const push = (m: string) => errors.push(m)
 
   const timeline = JSON.parse(readFileSync(timelinePath, 'utf8')) as TimelineData
-  const eventIds = validateTimeline(timeline, push)
+  validateTimeline(timeline, push)
   const companyIds = new Set(timeline.companies.map((c) => c.id))
-
-  const frontier = JSON.parse(
-    readFileSync(frontierPath, 'utf8'),
-  ) as CapabilityFrontierData
-  validateFrontier(frontier, eventIds, push)
 
   const tools = JSON.parse(readFileSync(toolsPath, 'utf8')) as AiToolsData
   validateTools(tools, companyIds, push)
@@ -99,12 +87,8 @@ function main() {
     process.exit(1)
   }
 
-  const scenarioCount = frontier.months.reduce(
-    (n, m) => n + m.new.length,
-    0,
-  )
   console.log(
-    `✓ OK — timeline: ${timeline.events.length} events, ${timeline.companies.length} companies; frontier: ${frontier.months.length} months, ${scenarioCount} scenarios; tools: ${tools.rows.length} rows × ${tools.columns.length} cols`,
+    `✓ OK — timeline: ${timeline.events.length} events, ${timeline.companies.length} companies; tools: ${tools.rows.length} rows × ${tools.columns.length} cols`,
   )
 }
 
@@ -229,91 +213,6 @@ function validateEvent(
       if (s.publishedAt && !DATE_RE.test(s.publishedAt)) {
         push(`${e.id}: bad source publishedAt`)
       }
-    }
-  }
-}
-
-function validateFrontier(
-  data: CapabilityFrontierData,
-  eventIds: Set<string>,
-  push: (m: string) => void,
-) {
-  if (!data.meta) {
-    push('frontier: missing meta')
-    return
-  }
-  if (!data.meta.name?.trim()) push('frontier meta.name empty')
-  if (!data.meta.version?.trim()) push('frontier meta.version empty')
-  if (!MONTH_RE.test(data.meta.scopeStart ?? '')) {
-    push(`frontier meta.scopeStart must be YYYY-MM, got ${data.meta.scopeStart}`)
-  } else if (data.meta.scopeStart < '2022-11') {
-    push(`frontier meta.scopeStart must be >= 2022-11`)
-  }
-  if (!DATE_RE.test(data.meta.updatedAt ?? '')) {
-    push(`frontier meta.updatedAt bad date`)
-  }
-  if (!data.meta.locale?.trim()) push('frontier meta.locale empty')
-
-  if (!Array.isArray(data.months)) {
-    push('frontier months must be an array')
-    return
-  }
-
-  const scenarioIds = new Set<string>()
-  let prevMonth = ''
-
-  for (const m of data.months) {
-    validateMonth(m, data.meta.scopeStart, eventIds, scenarioIds, push)
-    if (prevMonth && m.month <= prevMonth) {
-      push(`frontier months must be sorted ascending; ${m.month} after ${prevMonth}`)
-    }
-    prevMonth = m.month
-  }
-}
-
-function validateMonth(
-  m: CapabilityMonth,
-  scopeStart: string,
-  eventIds: Set<string>,
-  scenarioIds: Set<string>,
-  push: (m: string) => void,
-) {
-  if (!MONTH_RE.test(m.month ?? '')) {
-    push(`frontier month bad label: ${m.month}`)
-    return
-  }
-  if (m.month < scopeStart) {
-    push(`frontier ${m.month}: before scopeStart ${scopeStart}`)
-  }
-  if (m.month < '2022-11') {
-    push(`frontier ${m.month}: before ChatGPT month 2022-11`)
-  }
-  if (!m.summary?.trim()) push(`frontier ${m.month}: empty summary`)
-  if (!Array.isArray(m.new) || m.new.length === 0) {
-    push(`frontier ${m.month}: need >=1 item in new[] (omit empty months instead)`)
-    return
-  }
-  for (const s of m.new) {
-    validateScenario(s, m.month, eventIds, scenarioIds, push)
-  }
-}
-
-function validateScenario(
-  s: CapabilityScenario,
-  month: string,
-  eventIds: Set<string>,
-  scenarioIds: Set<string>,
-  push: (m: string) => void,
-) {
-  const label = `frontier ${month}/${s.id}`
-  if (!s.id || !KEBAB_RE.test(s.id)) push(`${label}: bad scenario id`)
-  if (scenarioIds.has(s.id)) push(`${label}: duplicate scenario id (global)`)
-  scenarioIds.add(s.id)
-  if (!s.before?.trim()) push(`${label}: empty before`)
-  if (!s.after?.trim()) push(`${label}: empty after`)
-  for (const eid of s.enabledBy ?? []) {
-    if (!eventIds.has(eid)) {
-      push(`${label}: enabledBy missing timeline event ${eid}`)
     }
   }
 }

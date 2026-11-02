@@ -1,6 +1,6 @@
 # AI纪年（AI Timeline）数据规范
 
-本文定义 **AI Timeline** 的权威数据结构与字段语义。字段名使用英文（与 TypeScript / JSON 一致）；说明使用中文。实现以 `src/types/timeline.ts`、`data/timeline.json`，以及独立的 `src/types/capability.ts` / `data/capability-frontier.json`（能力边界）为准。
+本文定义 **AI Timeline** 的权威数据结构与字段语义。字段名使用英文（与 TypeScript / JSON 一致）；说明使用中文。实现以 `src/types/timeline.ts`、`data/timeline.json`，以及独立的 `src/types/tools.ts` / `data/ai-tools.json`（AI工具矩阵）为准。
 
 **原则：先规范与数据，后 UI。** 任何界面层只能消费本规范下的数据，不得在前端硬编码「另一套」分类或日期规则。
 
@@ -225,8 +225,6 @@ interface Source {
 | 本规范 | `docs/DATA.md` |
 | TypeScript 类型 | `src/types/timeline.ts` |
 | 种子数据 | `data/timeline.json` |
-| 能力边界类型 | `src/types/capability.ts` |
-| 能力边界种子 | `data/capability-frontier.json` |
 | 贡献与审核流程 | `docs/DEVELOPMENT.md` |
 
 变更枚举或必填字段时：**先改本文与 `timeline.ts`，再改 JSON，并在 `DEVELOPMENT.md` 记录迁移说明。** 本仓库 v0.1 未对上游 schema 做偏离；若未来有偏离，须在本节显式列出。
@@ -288,68 +286,12 @@ interface Source {
 
 对照：Google Gemini CLI（2025-06-25）同为终端编码向工具，但主事实是 **Apache 2.0 开源发布**，故 `eventType` 为 `open_source`，而非 `research_preview`。细节见 `docs/DEVELOPMENT.md`。
 
----
 
-## 8. 能力边界（Capability Frontier）— 独立数据集
-
-**与事件时间线分离。** 能力边界不是 `events[]` 的一种 category，也不混入 `timeline.json`。
-
-| 对比 | 时间线事件 (`timeline.json`) | 能力边界 (`capability-frontier.json`) |
-| --- | --- | --- |
-| 粒度 | 可核验的发布/开源/更名等节点 | **月末快照**：截止该月末普通人+AI 已能做的**工作场景**（当月新增 + 既往累积） |
-| 重复 | 历史节点保留 | **new[] 只记当月新增**；既往场景由 UI 累积展示 |
-| 用途 | 编年史 / 看板四列 | 判断自己是否「落后于前沿」 |
-| UI | 大模型/产品/科学/其他 | 独立轨道「能力边界」（品红强调色，可独占） |
-
-根对象：
-
-```ts
-interface CapabilityFrontierData {
-  meta: {
-    name: string // "能力边界"
-    version: string
-    scopeStart: string // "2022-11"
-    updatedAt: string // YYYY-MM-DD
-    locale: string
-  }
-  months: CapabilityMonth[]
-}
-
-interface CapabilityMonth {
-  month: string // YYYY-MM
-  summary: string // 截止该月末，普通人+AI 已能做的事（口语）
-  new: CapabilityScenario[] // 当月新增工作场景
-}
-
-interface CapabilityScenario {
-  id: string // global unique kebab（首次出现月登记）
-  emoji?: string
-  before: string // 之前：没有这项能力时怎么干（短句）
-  after: string // 之后：有了 AI 后已能做的具体工作场景
-  detail?: string // 可选 how / 注意点
-  enabledBy?: string[] // timeline event ids
-  tags?: string[]
-}
-// UI：每张卡「之前 → 之后」对比；既往已具备 = 本月之前所有 new 的累积（默认折叠）
-```
-
-不变式（`npm run validate` 一并校验）：
-
-1. `workflow.id` **全局唯一**（跨月）。
-2. `months` 按 `month` **升序**。
-3. `month >= meta.scopeStart` 且 `>= 2022-11`。
-4. 每条 `enabledBy` 若存在，须指向 `timeline.json` 已有 `id`。
-5. 无新增则 **省略该月**，不要写空 `workflows`。
-
-贡献规则：**只追加**新月或新 scenario 到 `new[]`；不要把旧场景再写进后续月的 `new[]`（既往由 UI 折叠展示）。文案用「之前/之后」对比短句 + emoji，避免产品发布腔；`after` 写具体工作场景。
-
-路径：`docs/DATA.md`（本节）· `src/types/capability.ts` · `data/capability-frontier.json`。
-
-相对 v0.3：场景改为 `before` / `after` 对比字段（原 `title` 迁入 `after`）；UI 用前后对比卡展示能力跃迁。frontier `meta.version` `0.4.0`。
+相对此前版本：**已移除**独立数据集「能力边界」（原 `capability-frontier.json` / `src/types/capability.ts` / 看板 Tab）；UI、校验与文档同步删除。
 
 ---
 
-## 9. AI工具矩阵（`ai-tools.json`）— 独立数据集
+## 8. AI工具矩阵（`ai-tools.json`）— 独立数据集
 
 **不是历史时间线。** 只记录**当前仍可用**的产品形态一览；公司行复用 `timeline.json` 的 `companies[].id`（色与 logo 同源）。
 

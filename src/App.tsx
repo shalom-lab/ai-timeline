@@ -1,13 +1,11 @@
 import { useMemo, useState, useCallback, useEffect, useRef } from 'react'
-import { timelineData, capabilityFrontierData, aiToolsData } from './data'
+import { timelineData, aiToolsData } from './data'
 import type { Category, TimelineEvent } from './types/timeline'
-import type { CapabilityMonth } from './types/capability'
 import { CATEGORY_LABEL_ZH } from './lib/labels'
 import { groupKeyForEvent } from './lib/group'
 import {
   inDateWindow,
   inDayWindow,
-  monthOverlapsDayWindow,
   localMonth,
   earliestMonth,
   clampDateWindow,
@@ -19,13 +17,8 @@ import type { RecentPreset } from './components/RecentRange'
 import Header, { type Filters } from './components/Header'
 import TimelineRail from './components/TimelineRail'
 import CategoryColumn from './components/CategoryColumn'
-import FrontierColumn from './components/FrontierColumn'
 import ToolsMatrix from './components/ToolsMatrix'
-import {
-  buildTimelineLayout,
-  frontierMonthsToLayoutSources,
-  type LayoutSource,
-} from './lib/timelineLayout'
+import { buildTimelineLayout, type LayoutSource } from './lib/timelineLayout'
 import {
   type AppPage,
   pageFromHash,
@@ -43,14 +36,13 @@ const EMPTY_SUB: Record<Category, string[]> = {
   other: [],
 }
 
-/** 4 tabs: 大模型 / 产品 / 科学 / 能力边界 (frontier-only; no timeline event cards mixed in). */
-type BoardTab = 'model' | 'product' | 'science' | 'frontier'
+/** 3 tabs: 大模型 / 产品 / 科学 */
+type BoardTab = 'model' | 'product' | 'science'
 
 const BOARD_TABS: readonly { id: BoardTab; label: string }[] = [
   { id: 'model', label: CATEGORY_LABEL_ZH.model },
   { id: 'product', label: CATEGORY_LABEL_ZH.product },
   { id: 'science', label: CATEGORY_LABEL_ZH.science },
-  { id: 'frontier', label: '能力边界' },
 ] as const
 
 function matchesQuery(e: TimelineEvent, q: string): boolean {
@@ -69,48 +61,6 @@ function matchesQuery(e: TimelineEvent, q: string): boolean {
   return hay.includes(q)
 }
 
-function filterFrontierMonths(
-  months: CapabilityMonth[],
-  q: string,
-): CapabilityMonth[] {
-  if (!q) return months
-  const out: CapabilityMonth[] = []
-  for (const m of months) {
-    const monthHit =
-      m.month.includes(q) ||
-      m.summary.toLowerCase().includes(q) ||
-      `能力边界`.includes(q) ||
-      `工作场景`.includes(q)
-    const neu = m.new.filter((w) => {
-      const hay = [
-        w.before,
-        w.after,
-        w.detail ?? '',
-        w.emoji ?? '',
-        ...(w.tags ?? []),
-        ...(w.enabledBy ?? []),
-      ]
-        .join(' ')
-        .toLowerCase()
-      return hay.includes(q)
-    })
-    if (monthHit) {
-      out.push(m)
-    } else if (neu.length > 0) {
-      out.push({ ...m, new: neu })
-    }
-  }
-  return out
-}
-
-function focusCard(id: string) {
-  const el = document.querySelector<HTMLElement>(
-    `[data-event-id="${CSS.escape(id)}"]`,
-  )
-  if (!el) return
-  el.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'nearest' })
-}
-
 /** Visible events in a category after series/sub chips (empty chips = all). */
 function visibleCategoryEvents(
   category: Category,
@@ -125,16 +75,9 @@ function visibleCategoryEvents(
   })
 }
 
-
-function buildDefaultDateWindow(
-  eventDates: Iterable<string>,
-  frontierMonths: Iterable<string>,
-): DateWindow {
+function buildDefaultDateWindow(eventDates: Iterable<string>): DateWindow {
   const end = localMonth()
-  const min = earliestMonth(
-    [...eventDates, ...frontierMonths],
-    end,
-  )
+  const min = earliestMonth([...eventDates], end)
   return clampDateWindow({ start: min, end }, min, end)
 }
 
@@ -155,19 +98,13 @@ export default function App() {
   const monthBounds = useMemo(() => {
     const end = localMonth()
     const min = earliestMonth(
-      [
-        ...events.map((e) => e.date),
-        ...capabilityFrontierData.months.map((m) => m.month),
-      ],
+      events.map((e) => e.date),
       end,
     )
     return { min, max: end }
   }, [events])
   const [dateWindow, setDateWindow] = useState<DateWindow>(() =>
-    buildDefaultDateWindow(
-      timelineData.events.map((e) => e.date),
-      capabilityFrontierData.months.map((m) => m.month),
-    ),
+    buildDefaultDateWindow(timelineData.events.map((e) => e.date)),
   )
   /** 「最近」preset — default 1个月; 12个月 chip editable N (default 12); session state. */
   const [recentPreset, setRecentPreset] = useState<RecentPreset>('1m')
@@ -196,16 +133,6 @@ export default function App() {
       .sort((a, b) => a.date.localeCompare(b.date))
   }, [events, filters, railMode, recentWindow, dateWindow])
 
-  const frontierMonths = useMemo(() => {
-    const q = filters.query.trim().toLowerCase()
-    const months = filterFrontierMonths(capabilityFrontierData.months, q)
-    return months.filter((m) =>
-      railMode === 'recent'
-        ? monthOverlapsDayWindow(m.month, recentWindow)
-        : inDateWindow(m.month, dateWindow),
-    )
-  }, [filters, railMode, recentWindow, dateWindow])
-
   const byCategory = useMemo(() => {
     const map: Record<Category, TimelineEvent[]> = {
       model: [],
@@ -225,16 +152,10 @@ export default function App() {
     return m
   }, [filtered])
 
-  const frontierScenarioCount = useMemo(
-    () => frontierMonths.reduce((n, m) => n + m.new.length, 0),
-    [frontierMonths],
-  )
-
   const tabCounts: Record<BoardTab, number> = {
     model: byCategory.model.length,
     product: byCategory.product.length,
     science: byCategory.science.length,
-    frontier: frontierScenarioCount,
   }
 
   /**
@@ -242,16 +163,13 @@ export default function App() {
    * Active tab contracts rail to that panel's visible dates.
    */
   const railSources = useMemo((): LayoutSource[] => {
-    if (activeTab === 'frontier') {
-      return frontierMonthsToLayoutSources(frontierMonths)
-    }
     return visibleCategoryEvents(
       activeTab,
       byCategory[activeTab],
       subFilters[activeTab],
       companies,
     )
-  }, [activeTab, byCategory, subFilters, companies, frontierMonths])
+  }, [activeTab, byCategory, subFilters, companies])
 
   const railLayout = useMemo(
     () => buildTimelineLayout(railSources),
@@ -259,10 +177,6 @@ export default function App() {
   )
 
   const railEvents = useMemo((): TimelineEvent[] => {
-    if (activeTab === 'frontier') {
-      // 能力边界 rail is month markers only (no timeline event cards).
-      return []
-    }
     return visibleCategoryEvents(
       activeTab,
       byCategory[activeTab],
@@ -416,41 +330,14 @@ export default function App() {
 
   /**
    * Bump connectors: hover → dashed (no mute); click-pin → solid + 灰白.
-   * Only for the active category tab (not 能力边界).
+   * Only for the active category tab.
    */
   const bumpPinned = bumpPinId != null
   const bumpFocusId = bumpPinId ?? hoverRailId
   const focusEvent = bumpFocusId ? byId.get(bumpFocusId) ?? null : null
   const bumpFocusDate = focusEvent?.date ?? null
-  const bumpCategory: Category | null =
-    activeTab === 'frontier' ? null : activeTab
+  const bumpCategory: Category | null = activeTab
   const bumpActive = bumpFocusId != null && bumpCategory != null
-
-  const selectEventFromFrontier = useCallback(
-    (id: string) => {
-      const ev = events.find((e) => e.id === id)
-      if (
-        ev &&
-        (ev.category === 'model' ||
-          ev.category === 'product' ||
-          ev.category === 'science')
-      ) {
-        setActiveTab(ev.category)
-      }
-      setFilters(DEFAULT_FILTERS)
-      setRailMode('history')
-      setDateWindow(
-        buildDefaultDateWindow(
-          events.map((e) => e.date),
-          capabilityFrontierData.months.map((m) => m.month),
-        ),
-      )
-      setSubFilters(EMPTY_SUB)
-      setDetailId(id)
-      requestAnimationFrame(() => focusCard(id))
-    },
-    [events],
-  )
 
   const categoryColumnProps = {
     companies,
@@ -464,8 +351,6 @@ export default function App() {
   useEffect(() => {
     boardScrollRef.current?.scrollTo({ top: 0, left: 0 })
   }, [activeTab, railMode, filterKey])
-
-  const boardHasChipHead = activeTab !== 'frontier'
 
   return (
     <div className="app-shell">
@@ -486,9 +371,7 @@ export default function App() {
           query={filters.query}
         />
       ) : (
-        <div
-          className={`board${boardHasChipHead ? '' : ' board--no-col-head'}`}
-        >
+        <div className="board">
           <TimelineRail
             events={railEvents}
             companies={companies}
@@ -497,7 +380,6 @@ export default function App() {
             pinId={bumpPinId}
             onTogglePin={handleRailTogglePin}
             layout={railLayout}
-            frontierMode={activeTab === 'frontier'}
             mode={railMode}
             onModeChange={handleRailModeChange}
             dateWindow={dateWindow}
@@ -527,42 +409,31 @@ export default function App() {
             </nav>
 
             <div className="board__columns" ref={boardScrollRef}>
-              {activeTab === 'frontier' ? (
-                <div className="board__col-slot board__col-slot--stack">
-                  <FrontierColumn
-                    months={frontierMonths}
-                    allMonths={capabilityFrontierData.months}
-                    onSelectEvent={selectEventFromFrontier}
-                    omitTitle
-                  />
-                </div>
-              ) : (
-                <div className="board__col-slot">
-                  <CategoryColumn
-                    category={activeTab}
-                    events={byCategory[activeTab]}
-                    subFilter={subFilters[activeTab]}
-                    onSubFilter={(keys) =>
-                      setSubFilters((s) => ({ ...s, [activeTab]: keys }))
-                    }
-                    bumpActive={bumpActive && bumpCategory === activeTab}
-                    bumpFocusDate={
-                      bumpActive && bumpCategory === activeTab
-                        ? bumpFocusDate
-                        : null
-                    }
-                    bumpFocusId={
-                      bumpActive && bumpCategory === activeTab
-                        ? bumpFocusId
-                        : null
-                    }
-                    bumpSolid={bumpPinned && bumpCategory === activeTab}
-                    bumpMuteFuture={bumpPinned && bumpCategory === activeTab}
-                    omitTitle
-                    {...categoryColumnProps}
-                  />
-                </div>
-              )}
+              <div className="board__col-slot">
+                <CategoryColumn
+                  category={activeTab}
+                  events={byCategory[activeTab]}
+                  subFilter={subFilters[activeTab]}
+                  onSubFilter={(keys) =>
+                    setSubFilters((s) => ({ ...s, [activeTab]: keys }))
+                  }
+                  bumpActive={bumpActive && bumpCategory === activeTab}
+                  bumpFocusDate={
+                    bumpActive && bumpCategory === activeTab
+                      ? bumpFocusDate
+                      : null
+                  }
+                  bumpFocusId={
+                    bumpActive && bumpCategory === activeTab
+                      ? bumpFocusId
+                      : null
+                  }
+                  bumpSolid={bumpPinned && bumpCategory === activeTab}
+                  bumpMuteFuture={bumpPinned && bumpCategory === activeTab}
+                  omitTitle
+                  {...categoryColumnProps}
+                />
+              </div>
             </div>
           </div>
         </div>

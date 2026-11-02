@@ -108,7 +108,7 @@ export function shiftDateWindow(
   return { start: indexToMonth(nextStart), end: indexToMonth(nextEnd) }
 }
 
-/** Earliest YYYY-MM among event dates / frontier months, capped by `fallback`. */
+/** Earliest YYYY-MM among event dates, capped by `fallback`. */
 export function earliestMonth(
   dates: Iterable<string>,
   fallback = localMonth(),
@@ -177,21 +177,3 @@ export function inDayWindow(date: string, window: DayWindow | null): boolean {
   return day >= window.start && day <= window.end
 }
 
-/**
- * YYYY-MM frontier month overlaps a day window if any day of that month
- * falls inside [start, end].
- */
-export function monthOverlapsDayWindow(
-  monthYm: string,
-  window: DayWindow | null,
-): boolean {
-  if (!window) return true
-  const ym = toMonthKey(monthYm)
-  const y = Number(ym.slice(0, 4))
-  const m = Number(ym.slice(5, 7))
-  if (!y || !m) return false
-  const monthStart = `${ym}-01`
-  const lastDay = new Date(y, m, 0).getDate()
-  const monthEnd = `${ym}-${String(lastDay).padStart(2, '0')}`
-  return monthStart <= window.end && monthEnd >= window.start
-}

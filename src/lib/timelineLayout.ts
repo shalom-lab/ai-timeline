@@ -36,28 +36,6 @@ export type TimelineLayout = {
   years: LayoutYear[]
 }
 
-/** Last calendar day of YYYY-MM as YYYY-MM-DD (UTC month-end). */
-export function monthEndDate(ym: string): string {
-  const y = Number(ym.slice(0, 4))
-  const m = Number(ym.slice(5, 7))
-  const last = new Date(Date.UTC(y, m, 0)).getUTCDate()
-  return `${ym}-${String(last).padStart(2, '0')}`
-}
-
-/** Stable id for a frontier month rail marker. */
-export function frontierLayoutId(month: string): string {
-  return `frontier:${month}`
-}
-
-/** Build LayoutSource rows from frontier YYYY-MM keys (month-end dates). */
-export function frontierMonthsToLayoutSources(
-  months: ReadonlyArray<{ month: string }>,
-): LayoutSource[] {
-  return months.map((m) => ({
-    id: frontierLayoutId(m.month),
-    date: monthEndDate(m.month),
-  }))
-}
 
 /**
  * Compact equal-step rail layout: year flush-left markers, dates indented below.
