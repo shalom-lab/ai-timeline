@@ -2,8 +2,15 @@ import { useEffect, useRef, useState, useCallback, useMemo } from 'react'
 import * as THREE from 'three'
 import { PointerLockControls } from 'three/addons/controls/PointerLockControls.js'
 import type { Company, TimelineEvent, Category } from '../types/timeline'
-import { CATEGORY_LABEL_ZH, CATEGORY_THEME } from '../lib/labels'
-import { companyColor } from '../lib/company'
+import { MODEL_CAPABILITY_LABEL_ZH } from '../types/timeline'
+import {
+  CATEGORY_LABEL_ZH,
+  CATEGORY_THEME,
+  EVENT_TYPE_COLOR,
+  EVENT_TYPE_LABEL_ZH,
+} from '../lib/labels'
+import { companyColor, resolveCompany } from '../lib/company'
+import { COMPANY_LOGO_EXT } from '../lib/icons'
 import GalleryDetail from './GalleryDetail'
 
 type Props = {
@@ -23,9 +30,9 @@ const LANE_X: Record<Category, number> = {
   science: 9,
   other: 18,
 }
-const BOARD_SPACING = 3.2
-const BOARD_W = 1.55
-const BOARD_H = 2.35
+const BOARD_SPACING = 3.8
+const BOARD_W = 2.2
+const BOARD_H = 1.38
 const EYE_Y = 1.55
 const MOVE_SPEED = 8
 const TOUCH_LOOK_SENS = 0.0028
@@ -76,78 +83,183 @@ function wrapText(
   if (line) ctx.fillText(line, x, y + lineCount * lineHeight)
 }
 
+/** `#RRGGBB` → rgba() so canvas gradients can fade a brand tint to transparent. */
+function alphaColor(hex: string, alpha: number): string {
+  const h = hex.replace('#', '')
+  const r = parseInt(h.slice(0, 2), 16)
+  const g = parseInt(h.slice(2, 4), 16)
+  const b = parseInt(h.slice(4, 6), 16)
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`
+}
+
+function logoUrl(companyId: string, ext: string): string {
+  const base = import.meta.env.BASE_URL || '/'
+  const root = base.endsWith('/') ? base : `${base}/`
+  return `${root}logos/${companyId}.${ext}`
+}
+
+function loadLogoImage(
+  companyId: string,
+  ext: string,
+): Promise<HTMLImageElement | null> {
+  return new Promise((resolve) => {
+    const img = new Image()
+    img.onload = () => resolve(img)
+    img.onerror = () => resolve(null)
+    img.src = logoUrl(companyId, ext)
+  })
+}
+
 function makeBoardTexture(
   event: TimelineEvent,
   companies: Company[],
+  logoImages: Map<string, HTMLImageElement>,
+  scale = 1,
 ): THREE.CanvasTexture {
+  const W = 640
+  const H = 400
   const canvas = document.createElement('canvas')
-  canvas.width = 256
-  canvas.height = 384
+  canvas.width = Math.round(W * scale)
+  canvas.height = Math.round(H * scale)
   const ctx = canvas.getContext('2d')!
+  ctx.scale(scale, scale)
   const { color, soft } = companyColor(companies, event.company)
   const theme = CATEGORY_THEME[event.category]
+  const et = EVENT_TYPE_COLOR[event.eventType]
 
-  // blackboard body
-  ctx.fillStyle = '#1a1d24'
-  ctx.fillRect(0, 0, 256, 384)
+  // dark frame + light card body in the company's own soft tint
+  ctx.fillStyle = '#0a0f18'
+  ctx.fillRect(0, 0, W, H)
+  const paper = ctx.createLinearGradient(0, 8, 0, H - 8)
+  paper.addColorStop(0, '#ffffff')
+  paper.addColorStop(0.55, soft)
+  paper.addColorStop(1, soft)
+  ctx.fillStyle = paper
+  ctx.beginPath()
+  ctx.roundRect(8, 8, W - 16, H - 16, 8)
+  ctx.fill()
 
-  // top accent bar (company color)
+  // company-color wash at the header
+  ctx.save()
+  ctx.beginPath()
+  ctx.roundRect(8, 8, W - 16, H - 16, 8)
+  ctx.clip()
+  const headerTint = ctx.createLinearGradient(0, 8, 0, 170)
+  headerTint.addColorStop(0, alphaColor(color, 0.16))
+  headerTint.addColorStop(1, alphaColor(color, 0))
+  ctx.fillStyle = headerTint
+  ctx.fillRect(8, 8, W - 16, 170)
+  ctx.restore()
+
+  // accent bar
   ctx.fillStyle = color
-  ctx.fillRect(0, 0, 256, 10)
-
-  // soft header band
-  const grad = ctx.createLinearGradient(0, 10, 0, 90)
-  grad.addColorStop(0, soft)
-  grad.addColorStop(1, '#1a1d24')
-  ctx.fillStyle = grad
-  ctx.fillRect(0, 10, 256, 80)
+  ctx.fillRect(8, 8, W - 16, 7)
 
   // date
-  ctx.fillStyle = '#94A3B8'
-  ctx.font = '600 18px system-ui, sans-serif'
-  ctx.fillText(event.date, 18, 42)
+  ctx.fillStyle = '#6f6a5c'
+  ctx.font = '600 18px system-ui, "Noto Sans SC", sans-serif'
+  ctx.fillText(event.date, 28, 48)
 
   // category chip
+  ctx.font = '700 13px system-ui, "Noto Sans SC", sans-serif'
+  const catLabel = CATEGORY_LABEL_ZH[event.category]
+  const chipW = Math.max(62, ctx.measureText(catLabel).width + 24)
   ctx.fillStyle = theme.accent
   ctx.beginPath()
-  ctx.roundRect(18, 54, 72, 22, 6)
+  ctx.roundRect(W - 28 - chipW, 30, chipW, 24, 12)
   ctx.fill()
-  ctx.fillStyle = '#fff'
-  ctx.font = '600 13px system-ui, sans-serif'
-  ctx.fillText(CATEGORY_LABEL_ZH[event.category], 28, 70)
+  ctx.fillStyle = '#ffffff'
+  ctx.textAlign = 'center'
+  ctx.fillText(catLabel, W - 28 - chipW / 2, 47)
+  ctx.textAlign = 'left'
+
+  // company logo + name
+  const company = resolveCompany(companies, event.company)
+  const logo = company ? logoImages.get(company.id) : undefined
+  if (logo) {
+    try {
+      ctx.drawImage(logo, 28, 64, 22, 22)
+    } catch {
+      /* a malformed SVG should not break the whole board */
+    }
+  } else {
+    const initial = (company?.name ?? event.company).trim().slice(0, 1).toUpperCase()
+    ctx.fillStyle = color
+    ctx.beginPath()
+    ctx.arc(39, 75, 11, 0, Math.PI * 2)
+    ctx.fill()
+    ctx.fillStyle = '#ffffff'
+    ctx.font = '700 11px system-ui, "Noto Sans SC", sans-serif'
+    ctx.textAlign = 'center'
+    ctx.fillText(initial, 39, 79)
+    ctx.textAlign = 'left'
+  }
+  ctx.fillStyle = color
+  ctx.font = '700 16px system-ui, "Noto Sans SC", sans-serif'
+  ctx.fillText(event.company, 58, 82)
 
   // title
-  ctx.fillStyle = '#F8FAFC'
-  ctx.font = '700 22px system-ui, "Noto Sans SC", sans-serif'
-  wrapText(ctx, event.title, 18, 120, 220, 28, 4)
+  ctx.fillStyle = '#161d29'
+  ctx.font = '700 29px system-ui, "Noto Sans SC", sans-serif'
+  wrapText(ctx, event.title, 28, 136, W - 56, 36, 2)
 
-  // company
-  ctx.fillStyle = color
-  ctx.font = '600 16px system-ui, sans-serif'
-  ctx.fillText(event.company, 18, 250)
+  // summary
+  ctx.fillStyle = '#4f5868'
+  ctx.font = '14px system-ui, "Noto Sans SC", sans-serif'
+  wrapText(ctx, event.summary, 28, 226, W - 56, 20, 2)
 
-  // series / product
-  const sub = [event.series, event.product].filter(Boolean).join(' · ')
-  if (sub) {
-    ctx.fillStyle = '#CBD5E1'
-    ctx.font = '14px system-ui, sans-serif'
-    wrapText(ctx, sub, 18, 278, 220, 20, 2)
+  // capability line
+  const caps = event.capabilities
+    ?.map((c) => MODEL_CAPABILITY_LABEL_ZH[c])
+    .join(' · ')
+  if (caps) {
+    ctx.fillStyle = '#8a7f6a'
+    ctx.font = '600 12px system-ui, "Noto Sans SC", sans-serif'
+    ctx.fillText(caps, 28, 288)
   }
 
-  // chalk frame
-  ctx.strokeStyle = '#334155'
-  ctx.lineWidth = 4
-  ctx.strokeRect(6, 6, 244, 372)
+  // footer divider
+  ctx.strokeStyle = '#d9cdb8'
+  ctx.lineWidth = 1.5
+  ctx.beginPath()
+  ctx.moveTo(28, 306)
+  ctx.lineTo(W - 28, 306)
+  ctx.stroke()
+
+  // event type pill
+  ctx.font = '600 12px system-ui, "Noto Sans SC", sans-serif'
+  const typeLabel = EVENT_TYPE_LABEL_ZH[event.eventType]
+  const typeW = ctx.measureText(typeLabel).width + 24
+  ctx.fillStyle = et.bg
+  ctx.beginPath()
+  ctx.roundRect(28, 322, typeW, 22, 4)
+  ctx.fill()
+  ctx.fillStyle = et.fg
+  ctx.fillText(typeLabel, 40, 337)
+
+  // series / product, right aligned
+  const sub = [event.series, event.product].filter(Boolean).join(' · ')
+  if (sub) {
+    ctx.fillStyle = '#7d7464'
+    ctx.font = '12px system-ui, "Noto Sans SC", sans-serif'
+    ctx.textAlign = 'right'
+    ctx.fillText(sub, W - 28, 338, W - 220)
+    ctx.textAlign = 'left'
+  }
 
   // hint
-  ctx.fillStyle = '#64748B'
-  ctx.font = '12px system-ui, sans-serif'
-  ctx.fillText('点击查看详情', 18, 360)
+  ctx.fillStyle = '#9a917f'
+  ctx.font = '10px system-ui, "Noto Sans SC", sans-serif'
+  ctx.textAlign = 'right'
+  ctx.fillText('点击展板查看详情', W - 28, 372)
+  ctx.textAlign = 'left'
 
   const tex = new THREE.CanvasTexture(canvas)
   tex.colorSpace = THREE.SRGBColorSpace
-  tex.minFilter = THREE.LinearFilter
+  tex.generateMipmaps = true
+  tex.minFilter = THREE.LinearMipmapLinearFilter
   tex.magFilter = THREE.LinearFilter
+  tex.anisotropy = 8
   return tex
 }
 
@@ -157,16 +269,17 @@ function buildLaneBoards(
   companies: Company[],
   category: Category,
   hits: BoardHit[],
+  logoImages: Map<string, HTMLImageElement>,
 ) {
   const laneEvents = events
     .filter((e) => e.category === category)
     .slice()
-    .sort((a, b) => a.date.localeCompare(b.date))
+    .sort((a, b) => b.date.localeCompare(a.date) || b.id.localeCompare(a.id))
   const x = LANE_X[category]
   const theme = CATEGORY_THEME[category]
 
   // lane strip
-  const stripGeo = new THREE.PlaneGeometry(4.2, Math.max(20, laneEvents.length * BOARD_SPACING + 16))
+  const stripGeo = new THREE.PlaneGeometry(4.8, Math.max(20, laneEvents.length * BOARD_SPACING + 16))
   const stripMat = new THREE.MeshBasicMaterial({
     color: theme.accent,
     transparent: true,
@@ -178,48 +291,26 @@ function buildLaneBoards(
   strip.position.set(x, 0.02, (laneEvents.length * BOARD_SPACING) / 2 + 4)
   scene.add(strip)
 
-  // lane label post at start
-  const labelCanvas = document.createElement('canvas')
-  labelCanvas.width = 256
-  labelCanvas.height = 96
-  const lctx = labelCanvas.getContext('2d')!
-  lctx.fillStyle = theme.accent
-  lctx.fillRect(0, 0, 256, 96)
-  lctx.fillStyle = '#fff'
-  lctx.font = '700 36px system-ui, "Noto Sans SC", sans-serif'
-  lctx.textAlign = 'center'
-  lctx.fillText(CATEGORY_LABEL_ZH[category], 128, 58)
-  const labelTex = new THREE.CanvasTexture(labelCanvas)
-  labelTex.colorSpace = THREE.SRGBColorSpace
-  const labelMat = new THREE.MeshBasicMaterial({ map: labelTex, side: THREE.DoubleSide })
-  const labelMesh = new THREE.Mesh(new THREE.PlaneGeometry(3.2, 1.2), labelMat)
-  labelMesh.position.set(x, 2.2, 1.5)
-  scene.add(labelMesh)
-
+  // Lane names live in the HTML HUD; the 3D hall stays clean.
   laneEvents.forEach((event, i) => {
     const z = 6 + i * BOARD_SPACING
-    const tex = makeBoardTexture(event, companies)
+    const tex = makeBoardTexture(event, companies, logoImages, 0.75)
     const mat = new THREE.MeshBasicMaterial({
       map: tex,
       side: THREE.DoubleSide,
     })
     const mesh = new THREE.Mesh(new THREE.PlaneGeometry(BOARD_W, BOARD_H), mat)
     // stand beside the walk center, facing inward toward aisle center (x=0 path between lanes)
-    const side = i % 2 === 0 ? -1.15 : 1.15
-    mesh.position.set(x + side, BOARD_H / 2 + 0.05, z)
+    const side = i % 2 === 0 ? -1.3 : 1.3
+    mesh.position.set(x + side, BOARD_H / 2 + 0.95, z)
     // slight yaw so board faces roughly toward lane center + walk direction
-    mesh.rotation.y = side > 0 ? -0.35 : 0.35
+    mesh.rotation.y = Math.PI
     mesh.userData.eventId = event.id
+    mesh.userData.event = event
+    mesh.userData.lowTexture = tex
+    mesh.userData.hiTexture = null
     scene.add(mesh)
     hits.push({ eventId: event.id, mesh })
-
-    // thin post under board
-    const post = new THREE.Mesh(
-      new THREE.CylinderGeometry(0.05, 0.06, 0.4, 8),
-      new THREE.MeshBasicMaterial({ color: 0x475569 }),
-    )
-    post.position.set(x + side, 0.2, z)
-    scene.add(post)
   })
 
   return laneEvents.length
@@ -229,13 +320,20 @@ export default function Gallery3D({ events, companies }: Props) {
   const mountRef = useRef<HTMLDivElement>(null)
   const [locked, setLocked] = useState(false)
   const [detailId, setDetailId] = useState<string | null>(null)
-  const [hint, setHint] = useState('点击画面进入 · WASD 移动 · 鼠标看 · E/点击展板详情')
+  const [hint, setHint] = useState('点击画面进入 · W 向里 = 更早 · 鼠标看 · E/点击展板详情')
   const [touchUi, setTouchUi] = useState(false)
+  const [logoImages, setLogoImages] = useState<Map<string, HTMLImageElement> | null>(
+    null,
+  )
   const detailIdRef = useRef<string | null>(null)
   const keysRef = useRef<Record<string, boolean>>({})
   const touchMoveRef = useRef({ x: 0, y: 0 })
   const lookRef = useRef({ yaw: 0, pitch: 0 })
   const openDetailRef = useRef<(id: string) => void>(() => {})
+  const lockRef = useRef<() => void>(() => {})
+  const focusRelativeRef = useRef<(delta: number) => void>(() => {})
+  const focusLaneRef = useRef<(category: Category) => void>(() => {})
+  const focusEdgeRef = useRef<(edge: 'newest' | 'oldest') => void>(() => {})
 
   const byId = useMemo(() => {
     const m = new Map<string, TimelineEvent>()
@@ -264,12 +362,38 @@ export default function Gallery3D({ events, companies }: Props) {
   }, [])
 
   useEffect(() => {
+    let cancelled = false
+    const run = async () => {
+      const entries = await Promise.all(
+        companies.map(async (company) => {
+          const ext = COMPANY_LOGO_EXT[company.id]
+          if (!ext) return null
+          const img = await loadLogoImage(company.id, ext)
+          return img ? ([company.id, img] as const) : null
+        }),
+      )
+      if (cancelled) return
+      setLogoImages(
+        new Map(
+          entries.filter(
+            (entry): entry is readonly [string, HTMLImageElement] => entry !== null,
+          ),
+        ),
+      )
+    }
+    run()
+    return () => {
+      cancelled = true
+    }
+  }, [companies])
+
+  useEffect(() => {
     const el = mountRef.current
-    if (!el) return
+    if (!el || !logoImages) return
 
     const scene = new THREE.Scene()
-    scene.background = new THREE.Color(0x0b1020)
-    scene.fog = new THREE.Fog(0x0b1020, 28, 90)
+    scene.background = new THREE.Color(0x070b14)
+    scene.fog = new THREE.Fog(0x070b14, 24, 86)
 
     const camera = new THREE.PerspectiveCamera(
       70,
@@ -277,28 +401,55 @@ export default function Gallery3D({ events, companies }: Props) {
       0.1,
       200,
     )
-    camera.position.set(0, EYE_Y, 2)
+    camera.position.set(0, EYE_Y, 2.2)
+    camera.rotation.y = Math.PI
 
     const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance' })
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.75))
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
     renderer.setSize(el.clientWidth, el.clientHeight)
     renderer.outputColorSpace = THREE.SRGBColorSpace
+    renderer.toneMapping = THREE.ACESFilmicToneMapping
+    renderer.toneMappingExposure = 1.08
     el.appendChild(renderer.domElement)
 
     // ground
     const ground = new THREE.Mesh(
       new THREE.PlaneGeometry(48, 220),
-      new THREE.MeshBasicMaterial({ color: 0x121826 }),
+      new THREE.MeshBasicMaterial({ color: 0x0a101a }),
     )
     ground.rotation.x = -Math.PI / 2
     ground.position.z = 60
     scene.add(ground)
 
+    // ceiling + light strips make the hall read as a room, not a void
+    const ceiling = new THREE.Mesh(
+      new THREE.PlaneGeometry(48, 220),
+      new THREE.MeshBasicMaterial({ color: 0x060a11, side: THREE.DoubleSide }),
+    )
+    ceiling.rotation.x = Math.PI / 2
+    ceiling.position.set(0, 6.2, 60)
+    scene.add(ceiling)
+    for (const cat of LANE_ORDER) {
+      const accent = CATEGORY_THEME[cat].accent
+      const stripLight = new THREE.Mesh(
+        new THREE.PlaneGeometry(0.14, 200),
+        new THREE.MeshBasicMaterial({
+          color: accent,
+          transparent: true,
+          opacity: 0.18,
+          side: THREE.DoubleSide,
+        }),
+      )
+      stripLight.rotation.x = Math.PI / 2
+      stripLight.position.set(LANE_X[cat], 6.1, 70)
+      scene.add(stripLight)
+    }
+
     // track lane lines (hurdle-track feel)
-    const lineMat = new THREE.MeshBasicMaterial({ color: 0xf8fafc, transparent: true, opacity: 0.35 })
+    const lineMat = new THREE.MeshBasicMaterial({ color: 0xf8fafc, transparent: true, opacity: 0.22 })
     for (const cat of LANE_ORDER) {
       const x = LANE_X[cat]
-      for (const dx of [-2.1, 2.1]) {
+      for (const dx of [-2.4, 2.4]) {
         const line = new THREE.Mesh(new THREE.PlaneGeometry(0.08, 200), lineMat)
         line.rotation.x = -Math.PI / 2
         line.position.set(x + dx, 0.03, 70)
@@ -308,10 +459,10 @@ export default function Gallery3D({ events, companies }: Props) {
     // start line
     const start = new THREE.Mesh(
       new THREE.PlaneGeometry(28, 0.25),
-      new THREE.MeshBasicMaterial({ color: 0xfbbf24 }),
+      new THREE.MeshBasicMaterial({ color: 0xd8b25a, transparent: true, opacity: 0.55 }),
     )
     start.rotation.x = -Math.PI / 2
-    start.position.set(0, 0.04, 3.5)
+    start.position.set(0, 0.04, 4.2)
     scene.add(start)
 
     // ambient fill via unlit materials + subtle hemisphere feel: add a dim plane "sky"
@@ -324,51 +475,12 @@ export default function Gallery3D({ events, companies }: Props) {
     const hits: BoardHit[] = []
     let maxZ = 20
     for (const cat of LANE_ORDER) {
-      const n = buildLaneBoards(scene, events, companies, cat, hits)
+      const n = buildLaneBoards(scene, events, companies, cat, hits, logoImages)
       maxZ = Math.max(maxZ, 6 + n * BOARD_SPACING + 8)
     }
 
-    // year markers across all lanes
-    const years = [...new Set(events.map((e) => e.date.slice(0, 4)))].sort()
-    const minDate = events.reduce(
-      (m, e) => (e.date < m ? e.date : m),
-      events[0]?.date ?? '2022-11-30',
-    )
-    const maxDate = events.reduce(
-      (m, e) => (e.date > m ? e.date : m),
-      events[0]?.date ?? '2026-11-05',
-    )
-    const t0 = Date.parse(minDate)
-    const t1 = Date.parse(maxDate) || t0 + 1
-    for (const y of years) {
-      const mid = Date.parse(`${y}-07-01`)
-      const z = 6 + ((mid - t0) / (t1 - t0)) * (maxZ - 14)
-      const yc = document.createElement('canvas')
-      yc.width = 128
-      yc.height = 48
-      const yx = yc.getContext('2d')!
-      yx.fillStyle = 'rgba(248,250,252,0.9)'
-      yx.font = '700 28px system-ui, sans-serif'
-      yx.textAlign = 'center'
-      yx.fillText(y, 64, 34)
-      const yt = new THREE.CanvasTexture(yc)
-      yt.colorSpace = THREE.SRGBColorSpace
-      const ym = new THREE.Mesh(
-        new THREE.PlaneGeometry(2.2, 0.8),
-        new THREE.MeshBasicMaterial({ map: yt, transparent: true, side: THREE.DoubleSide }),
-      )
-      ym.position.set(0, 3.2, z)
-      scene.add(ym)
-      const bar = new THREE.Mesh(
-        new THREE.PlaneGeometry(26, 0.06),
-        new THREE.MeshBasicMaterial({ color: 0x64748b, transparent: true, opacity: 0.5 }),
-      )
-      bar.rotation.x = -Math.PI / 2
-      bar.position.set(0, 0.05, z)
-      scene.add(bar)
-    }
-
     const controls = new PointerLockControls(camera, renderer.domElement)
+    lockRef.current = () => controls.lock()
     const onLock = () => setLocked(true)
     const onUnlock = () => setLocked(false)
     controls.addEventListener('lock', onLock)
@@ -377,9 +489,88 @@ export default function Gallery3D({ events, companies }: Props) {
     const raycaster = new THREE.Raycaster()
     const pointer = new THREE.Vector2(0, 0)
     const boardMeshes = hits.map((h) => h.mesh)
+    const meshById = new Map(hits.map((h) => [h.eventId, h.mesh]))
+    const ordered = [...hits].sort(
+      (a, b) => a.mesh.position.z - b.mesh.position.z,
+    )
 
-    const tryPick = (clientX?: number, clientY?: number) => {
-      if (detailIdRef.current) return
+    let fly: {
+      fromPos: THREE.Vector3
+      toPos: THREE.Vector3
+      fromQuat: THREE.Quaternion
+      toQuat: THREE.Quaternion
+      start: number
+    } | null = null
+
+    const beginFly = (
+      toPos: THREE.Vector3,
+      lookAt: THREE.Vector3,
+    ) => {
+      const m = new THREE.Matrix4().lookAt(
+        toPos,
+        lookAt,
+        new THREE.Vector3(0, 1, 0),
+      )
+      fly = {
+        fromPos: camera.position.clone(),
+        toPos,
+        fromQuat: camera.quaternion.clone(),
+        toQuat: new THREE.Quaternion().setFromRotationMatrix(m),
+        start: performance.now(),
+      }
+    }
+
+    const focusById = (id: string) => {
+      const mesh = meshById.get(id)
+      if (!mesh) return
+      controls.unlock()
+      const normal = new THREE.Vector3(0, 0, 1).applyQuaternion(mesh.quaternion)
+      const toPos = mesh.position.clone().addScaledVector(normal, 2.6)
+      toPos.y = EYE_Y
+      beginFly(toPos, mesh.position.clone())
+      openDetailRef.current(id)
+    }
+
+    const focusRelative = (delta: number) => {
+      const current = detailIdRef.current
+      let index = current
+        ? ordered.findIndex((h) => h.eventId === current)
+        : -1
+      if (index < 0) {
+        index = 0
+        for (let i = 1; i < ordered.length; i++) {
+          if (
+            Math.abs(ordered[i].mesh.position.z - camera.position.z) <
+            Math.abs(ordered[index].mesh.position.z - camera.position.z)
+          ) {
+            index = i
+          }
+        }
+      }
+      const next = Math.max(0, Math.min(ordered.length - 1, index + delta))
+      const target = ordered[next]
+      if (target) focusById(target.eventId)
+    }
+
+    const focusLane = (category: Category) => {
+      controls.unlock()
+      const x = LANE_X[category]
+      const toPos = new THREE.Vector3(x, EYE_Y, camera.position.z)
+      const lookAt = new THREE.Vector3(x, EYE_Y, camera.position.z + 12)
+      beginFly(toPos, lookAt)
+    }
+
+    const focusEdge = (edge: 'newest' | 'oldest') => {
+      const target = edge === 'newest' ? ordered[0] : ordered[ordered.length - 1]
+      if (target) focusById(target.eventId)
+    }
+
+    focusRelativeRef.current = focusRelative
+    focusLaneRef.current = focusLane
+    focusEdgeRef.current = focusEdge
+
+    const tryPick = (clientX?: number, clientY?: number): boolean => {
+      if (detailIdRef.current) return false
       if (clientX != null && clientY != null) {
         const rect = renderer.domElement.getBoundingClientRect()
         pointer.x = ((clientX - rect.left) / rect.width) * 2 - 1
@@ -390,22 +581,22 @@ export default function Gallery3D({ events, companies }: Props) {
         raycaster.setFromCamera(new THREE.Vector2(0, 0), camera)
       }
       const found = raycaster.intersectObjects(boardMeshes, false)
-      if (found[0]) {
-        const id = found[0].object.userData.eventId as string | undefined
-        if (id) {
-          if (controls.isLocked) controls.unlock()
-          openDetailRef.current(id)
-        }
+      const id = found[0]?.object.userData.eventId as string | undefined
+      if (id) {
+        focusById(id)
+        return true
       }
+      return false
     }
 
     const onClick = (ev: MouseEvent) => {
       if (detailIdRef.current) return
-      if (!controls.isLocked && !isTouchPrimary()) {
-        controls.lock()
+      if (controls.isLocked) {
+        tryPick()
         return
       }
-      tryPick(ev.clientX, ev.clientY)
+      if (tryPick(ev.clientX, ev.clientY)) return
+      if (!isTouchPrimary()) controls.lock()
     }
     renderer.domElement.addEventListener('click', onClick)
 
@@ -451,8 +642,24 @@ export default function Gallery3D({ events, companies }: Props) {
       if (e.code === 'KeyE' && controls.isLocked) {
         tryPick()
       }
-      if (e.code === 'Escape' && detailIdRef.current) {
-        // let React overlay handle Esc via its own listener; don't unlock fight
+      if (e.code === 'BracketLeft') {
+        e.preventDefault()
+        focusRelative(1)
+      } else if (e.code === 'BracketRight') {
+        e.preventDefault()
+        focusRelative(-1)
+      } else if (e.code === 'Digit1') {
+        focusLane('model')
+      } else if (e.code === 'Digit2') {
+        focusLane('product')
+      } else if (e.code === 'Digit3') {
+        focusLane('science')
+      } else if (e.code === 'Home') {
+        e.preventDefault()
+        focusEdge('newest')
+      } else if (e.code === 'End') {
+        e.preventDefault()
+        focusEdge('oldest')
       }
     }
     const onKeyUp = (e: KeyboardEvent) => {
@@ -476,13 +683,44 @@ export default function Gallery3D({ events, companies }: Props) {
     const direction = new THREE.Vector3()
     let raf = 0
     let alive = true
+    let lodLast = 0
+
+    /** Near boards get a 2× texture lazily; far ones fall back to the low-res map. */
+    const updateLod = (now: number) => {
+      if (now - lodLast < 160) return
+      lodLast = now
+      let budget = 1
+      for (const hit of hits) {
+        const mesh = hit.mesh
+        const event = mesh.userData.event as TimelineEvent | undefined
+        const lowTexture = mesh.userData.lowTexture as THREE.Texture | undefined
+        if (!event || !lowTexture) continue
+        const hiTexture = mesh.userData.hiTexture as THREE.Texture | null
+        const distance = mesh.position.distanceTo(camera.position)
+        if (distance < 14 && !hiTexture && budget > 0) {
+          const hi = makeBoardTexture(event, companies, logoImages, 2)
+          const mat = mesh.material as THREE.MeshBasicMaterial
+          mat.map = hi
+          mat.needsUpdate = true
+          mesh.userData.hiTexture = hi
+          budget -= 1
+        } else if (distance > 24 && hiTexture) {
+          const mat = mesh.material as THREE.MeshBasicMaterial
+          mat.map = lowTexture
+          mat.needsUpdate = true
+          mesh.userData.hiTexture = null
+          hiTexture.dispose()
+        }
+      }
+    }
 
     const animate = () => {
       if (!alive) return
       raf = requestAnimationFrame(animate)
       const dt = Math.min(0.05, clock.getDelta())
+      const now = performance.now()
 
-      if (isTouchPrimary()) {
+      if (isTouchPrimary() && !fly) {
         camera.rotation.order = 'YXZ'
         camera.rotation.y = lookRef.current.yaw
         camera.rotation.x = lookRef.current.pitch
@@ -513,7 +751,13 @@ export default function Gallery3D({ events, companies }: Props) {
       velocity.addScaledVector(forward, -direction.z * MOVE_SPEED * dt)
       velocity.addScaledVector(right, direction.x * MOVE_SPEED * dt)
 
-      if (!detailIdRef.current) {
+      if (fly) {
+        const t = Math.min(1, (now - fly.start) / 850)
+        const ease = t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2
+        camera.position.lerpVectors(fly.fromPos, fly.toPos, ease)
+        camera.quaternion.slerpQuaternions(fly.fromQuat, fly.toQuat, ease)
+        if (t >= 1) fly = null
+      } else {
         camera.position.add(velocity)
         // bounds
         camera.position.x = THREE.MathUtils.clamp(camera.position.x, -16, 16)
@@ -524,6 +768,7 @@ export default function Gallery3D({ events, companies }: Props) {
       // void yaw unused warning in desktop path
       void yaw
 
+      updateLod(now)
       renderer.render(scene, camera)
     }
     animate()
@@ -562,7 +807,7 @@ export default function Gallery3D({ events, companies }: Props) {
         }
       })
     }
-  }, [events, companies])
+  }, [events, companies, logoImages])
 
   // Esc closes detail
   useEffect(() => {
@@ -594,15 +839,64 @@ export default function Gallery3D({ events, companies }: Props) {
             type="button"
             className="gallery-enter"
             onClick={() => {
-              // click on canvas also locks; this is a visible CTA
-              const canvas = mountRef.current?.querySelector('canvas')
-              canvas?.click()
+              // direct pointer lock; a synthetic canvas click at 0,0 can
+              // accidentally pick a board and open its drawer instead.
+              lockRef.current()
             }}
           >
             点击进入展厅
-            <small>WASD 移动 · 鼠标转向 · E / 点击展板看详情</small>
+            <small>点击展板会飞过去 · 鼠标转向 · W 向里 = 更早</small>
           </button>
         ) : null}
+      </div>
+
+      <div className="gallery-hud" aria-label="展厅控制">
+        <div className="gallery-hud__group" role="group" aria-label="切换跑道">
+          {LANE_ORDER.map((cat) => (
+            <button
+              key={cat}
+              type="button"
+              className="gallery-hud__btn"
+              onClick={() => focusLaneRef.current(cat)}
+            >
+              <i style={{ background: CATEGORY_THEME[cat].accent }} />
+              {CATEGORY_LABEL_ZH[cat]}
+            </button>
+          ))}
+        </div>
+        <div className="gallery-hud__group" role="group" aria-label="按时间前后">
+          <button
+            type="button"
+            className="gallery-hud__btn"
+            onClick={() => focusEdgeRef.current('newest')}
+          >
+            最新
+          </button>
+          <button
+            type="button"
+            className="gallery-hud__btn"
+            onClick={() => focusRelativeRef.current(-1)}
+          >
+            更新
+          </button>
+          <button
+            type="button"
+            className="gallery-hud__btn"
+            onClick={() => focusRelativeRef.current(1)}
+          >
+            更早
+          </button>
+          <button
+            type="button"
+            className="gallery-hud__btn"
+            onClick={() => focusEdgeRef.current('oldest')}
+          >
+            最早
+          </button>
+        </div>
+        <span className="gallery-hud__hint">
+          1/2/3 切道 · [ ] 前后 · 点击展板飞过去
+        </span>
       </div>
 
       {touchUi ? (

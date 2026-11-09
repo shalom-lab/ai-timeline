@@ -367,15 +367,7 @@ export default function App() {
       {page === 'gallery' ? (
         <Suspense
           fallback={
-            <div className="gallery-root">
-              <div className="gallery-topbar">
-                <div className="gallery-topbar__title">
-                  3D 展厅
-                  <span className="gallery-topbar__badge">原型</span>
-                </div>
-                <div className="gallery-topbar__hint">加载中…</div>
-              </div>
-            </div>
+            <div className="gallery-loading">3D 展厅 · 加载中…</div>
           }
         >
           <Gallery3D events={events} companies={companies} />
