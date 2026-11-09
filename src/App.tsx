@@ -354,37 +354,6 @@ export default function App() {
     boardScrollRef.current?.scrollTo({ top: 0, left: 0 })
   }, [activeTab, railMode, filterKey])
 
-  if (page === 'gallery') {
-    return (
-      <Suspense
-        fallback={
-          <div className="gallery-root">
-            <div className="gallery-topbar">
-              <button
-                type="button"
-                className="gallery-topbar__back"
-                onClick={() => onNavigate('timeline')}
-              >
-                ← 返回纪年
-              </button>
-              <div className="gallery-topbar__title">
-                3D 展厅
-                <span className="gallery-topbar__badge">原型</span>
-              </div>
-              <div className="gallery-topbar__hint">加载中…</div>
-            </div>
-          </div>
-        }
-      >
-        <Gallery3D
-          events={events}
-          companies={companies}
-          onExit={() => onNavigate('timeline')}
-        />
-      </Suspense>
-    )
-  }
-
   return (
     <div className="app-shell">
       <Header
@@ -395,7 +364,23 @@ export default function App() {
         onNavigate={onNavigate}
       />
 
-      {page === 'tools' ? (
+      {page === 'gallery' ? (
+        <Suspense
+          fallback={
+            <div className="gallery-root">
+              <div className="gallery-topbar">
+                <div className="gallery-topbar__title">
+                  3D 展厅
+                  <span className="gallery-topbar__badge">原型</span>
+                </div>
+                <div className="gallery-topbar__hint">加载中…</div>
+              </div>
+            </div>
+          }
+        >
+          <Gallery3D events={events} companies={companies} />
+        </Suspense>
+      ) : page === 'tools' ? (
         <ToolsMatrix
           data={aiToolsData}
           companies={companies}

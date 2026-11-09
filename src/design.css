@@ -162,13 +162,24 @@ button:focus-visible, a:focus-visible, select:focus-visible { outline:2px solid 
 
 /* ——— 3D gallery prototype (#/gallery) ——— */
 .gallery-root {
-  position: fixed;
-  inset: 0;
-  z-index: 40;
+  position: relative;
+  flex: 1;
+  min-height: 0;
   display: flex;
   flex-direction: column;
   background: #0b1020;
   color: #f8fafc;
+  z-index: 1;
+}
+
+.app-header__gallery-note {
+  display: inline-flex;
+  align-items: center;
+  height: 100%;
+  font: 600 12px/1.2 system-ui, "Noto Sans SC", sans-serif;
+  color: #687583;
+  padding: 0 4px;
+  white-space: nowrap;
 }
 
 .gallery-topbar {

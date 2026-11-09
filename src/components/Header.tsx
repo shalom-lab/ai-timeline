@@ -32,6 +32,7 @@ export default function Header({
     page === 'tools'
       ? '搜索公司、产品、形态、费用…'
       : '搜索模型、产品、公司、关键词…'
+  const showSearch = page !== 'gallery'
   // Same short line on both tabs so brand–nav width does not jitter.
   const subtitle = `更新于 ${formatUpdatedAt(meta.updatedAt)}`
 
@@ -80,38 +81,46 @@ export default function Header({
             className={`app-header__nav-btn${page === 'gallery' ? ' is-active' : ''}`}
             aria-current={page === 'gallery' ? 'page' : undefined}
             onClick={() => onNavigate('gallery')}
-            title="Three.js 第一人称展厅原型"
+            title="Three.js 第一人称跑道展厅（同一份 timeline 数据）"
           >
             3D 展厅
           </button>
         </nav>
 
-        <div className="app-header__search-wrap">
-          <label className="sr-only" htmlFor="site-search">
-            搜索
-          </label>
-          <div className="app-header__search">
-            <svg
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              aria-hidden
-            >
-              <circle cx="11" cy="11" r="7" />
-              <path d="M20 20l-3.5-3.5" strokeLinecap="round" />
-            </svg>
-            <input
-              id="site-search"
-              type="search"
-              placeholder={searchPlaceholder}
-              value={filters.query}
-              onChange={(e) => onChange({ query: e.target.value })}
-            />
+        {showSearch ? (
+          <div className="app-header__search-wrap">
+            <label className="sr-only" htmlFor="site-search">
+              搜索
+            </label>
+            <div className="app-header__search">
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                aria-hidden
+              >
+                <circle cx="11" cy="11" r="7" />
+                <path d="M20 20l-3.5-3.5" strokeLinecap="round" />
+              </svg>
+              <input
+                id="site-search"
+                type="search"
+                placeholder={searchPlaceholder}
+                value={filters.query}
+                onChange={(e) => onChange({ query: e.target.value })}
+              />
+            </div>
           </div>
-        </div>
+        ) : (
+          <div className="app-header__search-wrap app-header__search-wrap--gallery">
+            <span className="app-header__gallery-note">
+              同一份 timeline 数据 · 原型
+            </span>
+          </div>
+        )}
 
         <a
           className="app-header__github"

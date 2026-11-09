@@ -9,7 +9,6 @@ import GalleryDetail from './GalleryDetail'
 type Props = {
   events: TimelineEvent[]
   companies: Company[]
-  onExit: () => void
 }
 
 type BoardHit = {
@@ -226,7 +225,7 @@ function buildLaneBoards(
   return laneEvents.length
 }
 
-export default function Gallery3D({ events, companies, onExit }: Props) {
+export default function Gallery3D({ events, companies }: Props) {
   const mountRef = useRef<HTMLDivElement>(null)
   const [locked, setLocked] = useState(false)
   const [detailId, setDetailId] = useState<string | null>(null)
@@ -582,11 +581,9 @@ export default function Gallery3D({ events, companies, onExit }: Props) {
   return (
     <div className="gallery-root">
       <div className="gallery-topbar">
-        <button type="button" className="gallery-topbar__back" onClick={onExit}>
-          ← 返回纪年
-        </button>
         <div className="gallery-topbar__title">
-          3D 展厅<span className="gallery-topbar__badge">原型</span>
+          跑道展板
+          <span className="gallery-topbar__badge">原型</span>
         </div>
         <div className="gallery-topbar__hint">{hint}</div>
       </div>
