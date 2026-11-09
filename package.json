@@ -1,7 +1,7 @@
 {
   "name": "ai-timeline",
   "private": true,
-  "version": "0.16.4",
+  "version": "0.17.0",
   "type": "module",
   "description": "AI纪年 (AI Timeline) — landmark events since ChatGPT public launch (2022-11-30). Data-first.",
   "scripts": {
@@ -13,12 +13,14 @@
   },
   "dependencies": {
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "three": "^0.187.0"
   },
   "devDependencies": {
     "@types/node": "^26.6.5",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
+    "@types/three": "^0.187.0",
     "@vitejs/plugin-react": "^4.3.4",
     "tsx": "^4.19.2",
     "typescript": "~5.7.2",
