@@ -3,7 +3,7 @@
     "name": "AI纪年",
     "version": "0.15.2",
     "scopeStart": "2022-11-30",
-    "updatedAt": "2026-11-02",
+    "updatedAt": "2026-11-09",
     "locale": "zh-CN",
     "ui": {
       "openingBg": "linear-gradient(145deg, #0B1220 0%, #1E1B4B 48%, #312E81 100%)",
@@ -5230,6 +5230,69 @@
         "chat",
         "reasoning",
         "vision"
+      ]
+    },
+    {
+      "id": "tencent-hy4-2026-11-04",
+      "date": "2026-11-04",
+      "dateStatus": "exact",
+      "title": "发布 Hy4",
+      "summary": "腾讯发布新一代大模型 Hy4：相对 Hy4 Preview 提升了指令跟随、长上下文理解与长程任务表现，并加入视觉理解与计算机使用（命令行与图形界面）能力；已在腾讯云 TokenHub、WorkBuddy、CodeBuddy、元宝及 OpenRouter 等提供。公告称将于随后几天开源权重与系统卡。",
+      "category": "model",
+      "company": "Tencent",
+      "series": "Hy",
+      "product": "Hy4",
+      "eventType": "ga",
+      "sources": [
+        {
+          "title": "Tencent Launches Hy4, Joining the Ranks of the World's Leading Open-Source AI Models",
+          "url": "https://www.tencent.com/tencent-launches-hy4-joining-the-ranks-of-the-worlds-leading-open-source-ai-models/",
+          "publisher": "Tencent",
+          "publishedAt": "2026-11-04"
+        }
+      ],
+      "relatedIds": [
+        "tencent-hunyuan-enterprise-2023-09-07"
+      ],
+      "tags": [
+        "hy4",
+        "hunyuan",
+        "computer-use",
+        "vision"
+      ],
+      "capabilities": [
+        "chat",
+        "reasoning",
+        "vision"
+      ]
+    },
+    {
+      "id": "openai-gpt-6-cyber-2026-11-05",
+      "date": "2026-11-05",
+      "dateStatus": "exact",
+      "title": "发布 GPT-6 Cyber",
+      "summary": "OpenAI 发布面向授权网络安全研究的模型 GPT-6 Cyber，用于在研究者设定的范围内发现并验证可利用漏洞并协助修复；初步通过 API 与 Codex 向部分已获批的 Daybreak Red 客户提供，并计划逐步扩大至全部 Daybreak Red 客户。",
+      "category": "model",
+      "company": "OpenAI",
+      "series": "GPT",
+      "product": "GPT-6 Cyber",
+      "eventType": "ga",
+      "sources": [
+        {
+          "title": "GPT-6 Cyber: Advancing the frontier of aligned cybersecurity agents",
+          "url": "https://openai.com/index/introducing-gpt-6-cyber",
+          "publisher": "OpenAI",
+          "publishedAt": "2026-11-05"
+        }
+      ],
+      "tags": [
+        "gpt-6",
+        "cyber",
+        "daybreak"
+      ],
+      "capabilities": [
+        "chat",
+        "reasoning"
       ]
     }
   ]
