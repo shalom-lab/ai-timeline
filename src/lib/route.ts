@@ -1,6 +1,6 @@
-/** Hash routes for GH Pages (no server router): `#/` timeline, `#/tools` AI工具. */
+/** Hash routes for GH Pages (no server router): `#/` timeline, `#/tools` AI工具, `#/gallery` 3D展厅. */
 
-export type AppPage = 'timeline' | 'tools'
+export type AppPage = 'timeline' | 'tools' | 'gallery'
 
 /** AI工具 page: 模型 | 产品 tabs. */
 export type ToolsTabId = 'models' | 'products'
@@ -12,6 +12,14 @@ function hashPath(hash = window.location.hash): string {
 
 export function pageFromHash(hash = window.location.hash): AppPage {
   const path = hashPath(hash)
+  if (
+    path === '/gallery' ||
+    path === 'gallery' ||
+    path.startsWith('/gallery/') ||
+    path.startsWith('gallery/')
+  ) {
+    return 'gallery'
+  }
   if (
     path === '/tools' ||
     path === 'tools' ||
@@ -31,7 +39,9 @@ export function toolsTabFromHash(hash = window.location.hash): ToolsTabId {
 }
 
 export function hashForPage(page: AppPage): string {
-  return page === 'tools' ? '#/tools' : '#/'
+  if (page === 'tools') return '#/tools'
+  if (page === 'gallery') return '#/gallery'
+  return '#/'
 }
 
 export function hashForToolsTab(tab: ToolsTabId): string {

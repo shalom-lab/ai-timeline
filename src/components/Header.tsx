@@ -75,6 +75,15 @@ export default function Header({
           >
             AI 工具库
           </button>
+          <button
+            type="button"
+            className={`app-header__nav-btn${page === 'gallery' ? ' is-active' : ''}`}
+            aria-current={page === 'gallery' ? 'page' : undefined}
+            onClick={() => onNavigate('gallery')}
+            title="Three.js 第一人称展厅原型"
+          >
+            3D 展厅
+          </button>
         </nav>
 
         <div className="app-header__search-wrap">

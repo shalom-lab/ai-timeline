@@ -1,4 +1,4 @@
-import { useMemo, useState, useCallback, useEffect, useRef } from 'react'
+import { useMemo, useState, useCallback, useEffect, useRef, lazy, Suspense } from 'react'
 import { timelineData, aiToolsData } from './data'
 import type { Category, TimelineEvent } from './types/timeline'
 import { CATEGORY_LABEL_ZH } from './lib/labels'
@@ -24,6 +24,8 @@ import {
   pageFromHash,
   navigate as navigateHash,
 } from './lib/route'
+
+const Gallery3D = lazy(() => import('./components/Gallery3D'))
 
 const DEFAULT_FILTERS: Filters = {
   query: '',
@@ -351,6 +353,37 @@ export default function App() {
   useEffect(() => {
     boardScrollRef.current?.scrollTo({ top: 0, left: 0 })
   }, [activeTab, railMode, filterKey])
+
+  if (page === 'gallery') {
+    return (
+      <Suspense
+        fallback={
+          <div className="gallery-root">
+            <div className="gallery-topbar">
+              <button
+                type="button"
+                className="gallery-topbar__back"
+                onClick={() => onNavigate('timeline')}
+              >
+                ← 返回纪年
+              </button>
+              <div className="gallery-topbar__title">
+                3D 展厅
+                <span className="gallery-topbar__badge">原型</span>
+              </div>
+              <div className="gallery-topbar__hint">加载中…</div>
+            </div>
+          </div>
+        }
+      >
+        <Gallery3D
+          events={events}
+          companies={companies}
+          onExit={() => onNavigate('timeline')}
+        />
+      </Suspense>
+    )
+  }
 
   return (
     <div className="app-shell">
