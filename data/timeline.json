@@ -3,7 +3,7 @@
     "name": "AI纪年",
     "version": "0.15.2",
     "scopeStart": "2022-11-30",
-    "updatedAt": "2026-11-09",
+    "updatedAt": "2026-11-16",
     "locale": "zh-CN",
     "ui": {
       "openingBg": "linear-gradient(145deg, #0B1220 0%, #1E1B4B 48%, #312E81 100%)",
@@ -5293,6 +5293,137 @@
       "capabilities": [
         "chat",
         "reasoning"
+      ]
+    },
+    {
+      "id": "anthropic-claude-fable-mythos-5-2-2026-11-09",
+      "date": "2026-11-09",
+      "dateStatus": "exact",
+      "title": "发布 Claude Fable 5.2 与 Mythos 5.2",
+      "summary": "Anthropic 发布 Fable/Mythos 5.2：同一底座、不同防护强度；相对 5.1 在编码、推理与视觉上有提升，生成速度最高约快 30%，并下调定价。Fable 5.2 已在各平台以 claude-fable-5-2 全面提供，Mythos 5.2 仍面向通过生命科学与网络安全核验计划的组织；二者可选 fast mode。",
+      "category": "model",
+      "company": "Anthropic",
+      "series": "Claude",
+      "product": "Claude Fable 5.2 / Mythos 5.2",
+      "eventType": "ga",
+      "sources": [
+        {
+          "title": "Introducing Claude Fable 5.2 and Claude Mythos 5.2",
+          "url": "https://www.anthropic.com/claude-fable-and-mythos-5-2",
+          "publisher": "Anthropic",
+          "publishedAt": "2026-11-09"
+        }
+      ],
+      "relatedIds": [
+        "anthropic-claude-fable-mythos-5-1-2026-09-01"
+      ],
+      "tags": [
+        "claude-5.2",
+        "fable",
+        "mythos"
+      ],
+      "capabilities": [
+        "chat",
+        "reasoning",
+        "vision"
+      ]
+    },
+    {
+      "id": "meta-muse-ember-2026-11-09",
+      "date": "2026-11-09",
+      "dateStatus": "exact",
+      "title": "发布 Muse Ember",
+      "summary": "Meta 发布小模型 Muse Ember：面向代理日常重复执行的工具调用、编码子任务、路由、抽取与长文档解析，支持文本、图像、音频与视频输入；即日起经 Meta Model API 以 muse-ember-1.0 提供，亦可在 Muse Code 中使用。",
+      "category": "model",
+      "company": "Meta",
+      "series": "Muse",
+      "product": "Muse Ember",
+      "eventType": "ga",
+      "sources": [
+        {
+          "title": "Introducing Our Smallest, Most Efficient Model: Muse Ember",
+          "url": "https://research.meta.ai/blog/muse-ember",
+          "publisher": "Meta",
+          "publishedAt": "2026-11-09"
+        }
+      ],
+      "relatedIds": [
+        "meta-muse-wonder-2026-10-12"
+      ],
+      "tags": [
+        "muse",
+        "muse-ember",
+        "agents"
+      ],
+      "capabilities": [
+        "chat",
+        "reasoning",
+        "vision"
+      ]
+    },
+    {
+      "id": "google-gemini-4-carbon-2026-11-10",
+      "date": "2026-11-10",
+      "dateStatus": "exact",
+      "title": "正式开放 Gemini 4 Carbon",
+      "summary": "Google 面向开发者、企业、科研与消费者开放 Gemini 4 Carbon：定位处理长程智能体工作流与网络安全等更难任务，经 Gemini API（付费档）、Gemini for business，以及 Google AI Ultra 订阅的 Antigravity、Gemini 应用和 Search AI Mode 等提供。此前约两周已通过 Fairwind 计划向部分网络安全防御方提供。",
+      "category": "model",
+      "company": "Google",
+      "series": "Gemini",
+      "product": "Gemini 4 Carbon",
+      "eventType": "ga",
+      "sources": [
+        {
+          "title": "Gemini 4 Carbon is now available",
+          "url": "https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-4-carbon-now-available/",
+          "publisher": "Google",
+          "publishedAt": "2026-11-10"
+        }
+      ],
+      "relatedIds": [
+        "google-gemini-4-argon-2026-10-13"
+      ],
+      "tags": [
+        "gemini-4",
+        "carbon"
+      ],
+      "capabilities": [
+        "chat",
+        "reasoning",
+        "vision"
+      ]
+    },
+    {
+      "id": "google-gemini-4-hydrogen-2026-11-12",
+      "date": "2026-11-12",
+      "dateStatus": "exact",
+      "title": "发布 Gemini 4 Hydrogen",
+      "summary": "Google 发布 Gemini 4 Hydrogen：面向日常编码与智能体工作流的 Gemini 4 型号，1M 上下文统一计价；即日起在 Google AI Studio、Gemini API、Gemini for business、Gemini 应用、Google Search 以及付费 Pro/Ultra 的 Antigravity 等上线，Gemini 应用免费用户可经自动选型使用。",
+      "category": "model",
+      "company": "Google",
+      "series": "Gemini",
+      "product": "Gemini 4 Hydrogen",
+      "eventType": "ga",
+      "sources": [
+        {
+          "title": "Introducing Gemini 4 Hydrogen",
+          "url": "https://blog.google/innovation-and-ai/models-and-research/gemini-models/introducing-gemini-4-hydrogen/",
+          "publisher": "Google",
+          "publishedAt": "2026-11-12"
+        }
+      ],
+      "relatedIds": [
+        "google-gemini-4-carbon-2026-11-10",
+        "google-gemini-4-argon-2026-10-13"
+      ],
+      "tags": [
+        "gemini-4",
+        "hydrogen"
+      ],
+      "capabilities": [
+        "chat",
+        "reasoning",
+        "vision"
       ]
     }
   ]
