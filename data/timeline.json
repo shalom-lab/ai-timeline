@@ -3,7 +3,7 @@
     "name": "AI纪年",
     "version": "0.15.2",
     "scopeStart": "2022-11-30",
-    "updatedAt": "2026-11-16",
+    "updatedAt": "2026-11-23",
     "locale": "zh-CN",
     "ui": {
       "openingBg": "linear-gradient(145deg, #0B1220 0%, #1E1B4B 48%, #312E81 100%)",
@@ -5419,6 +5419,198 @@
       "tags": [
         "gemini-4",
         "hydrogen"
+      ],
+      "capabilities": [
+        "chat",
+        "reasoning",
+        "vision"
+      ]
+    },
+    {
+      "id": "tencent-hy4-flash-2026-11-16",
+      "date": "2026-11-16",
+      "dateStatus": "exact",
+      "title": "发布 Hy4 flash",
+      "summary": "腾讯发布 Hy4 家族新成员 Hy4 flash：总参 224B（含 64B Engram 参数）、激活 12B，支持多模态输入与最长 1M 上下文；官方称其在内部 WorkIndex 上整体效果略优于更大的 Hy4 Preview，且单价显著低于 Hy4。已在腾讯云 TokenHub、WorkBuddy、元宝、企微、QQ、ima 与 Marvis 上线，OpenRouter 接入即将推出。",
+      "category": "model",
+      "company": "Tencent",
+      "series": "Hy",
+      "product": "Hy4 flash",
+      "eventType": "ga",
+      "sources": [
+        {
+          "title": "Tencent Launches Hy4 flash to Power High-Speed, Cost-Efficient AI Deployment for Everyday Workflows",
+          "url": "https://www.tencent.com/tencent-launches-hy4-flash-to-power-high-speed-cost-efficient-ai-deployment-for-everyday-workflows/",
+          "publisher": "Tencent",
+          "publishedAt": "2026-11-16"
+        }
+      ],
+      "relatedIds": [
+        "tencent-hy4-2026-11-04"
+      ],
+      "tags": [
+        "hy4",
+        "flash",
+        "hunyuan"
+      ],
+      "capabilities": [
+        "chat",
+        "reasoning",
+        "vision"
+      ]
+    },
+    {
+      "id": "alibaba-qwen4-max-2026-11-16",
+      "date": "2026-11-16",
+      "dateStatus": "exact",
+      "title": "发布 Qwen4-Max",
+      "summary": "阿里发布 Qwen 家族新一代旗舰 Qwen4-Max：稀疏 MoE、总参 2.4T、每 token 激活 71B，原生视觉与 1M 上下文；官方称其在编码、智能体与视觉推理等评测上强于前代 Qwen3.8-Max，且同推理强度下 token 与单任务成本更低。即日起经 QwenCloud（Token Plan 与 API）以及 QwenWork、QwenStudio 提供；官方同时表示 Qwen4 系列更小规格开源权重将随后发布。",
+      "category": "model",
+      "company": "Alibaba",
+      "series": "Qwen",
+      "product": "Qwen4-Max",
+      "eventType": "ga",
+      "sources": [
+        {
+          "title": "Alibaba Unveils Qwen4-Max: New AI Teammate for Work, Creativity, and Discovery",
+          "url": "https://www.alibabagroup.com/en-US/document-2060139246777270272",
+          "publisher": "Alibaba",
+          "publishedAt": "2026-11-16"
+        }
+      ],
+      "relatedIds": [
+        "alibaba-qwen3-8-max-2026-08-03"
+      ],
+      "tags": [
+        "qwen4",
+        "max",
+        "moe"
+      ],
+      "capabilities": [
+        "chat",
+        "reasoning",
+        "vision"
+      ]
+    },
+    {
+      "id": "openai-gpt-6-2-astra-sol-2026-11-17",
+      "date": "2026-11-17",
+      "dateStatus": "exact",
+      "title": "发布 GPT-6.2 Astra 与 Sol",
+      "summary": "OpenAI 发布 GPT-6.2 Astra（面向高难度专业工作的旗舰）与 GPT-6.2 Sol（日常工作的高效型号）：官方称二者在专业交付、编码与计算机使用等任务上相对前代有提升，且输出 token 更少；API 中 Astra 标准输入/输出价较 GPT-6 Astra 下调 20%。即日起向 ChatGPT Work 与 Codex 的 Plus、Pro、Enterprise、Edu 用户以及 API（gpt-6.2-astra / gpt-6.2-sol）开放，并支持 Ultrafast。",
+      "category": "model",
+      "company": "OpenAI",
+      "series": "GPT",
+      "product": "GPT-6.2 Astra / Sol",
+      "eventType": "ga",
+      "sources": [
+        {
+          "title": "Introducing GPT-6.2 Astra and Sol",
+          "url": "https://openai.com/index/introducing-gpt-6-2-astra-sol/",
+          "publisher": "OpenAI",
+          "publishedAt": "2026-11-17"
+        }
+      ],
+      "relatedIds": [
+        "openai-gpt-6-astra-2026-09-03",
+        "openai-gpt-6-1-sol-2026-09-29"
+      ],
+      "tags": [
+        "gpt-6.2",
+        "astra",
+        "sol"
+      ],
+      "capabilities": [
+        "chat",
+        "reasoning",
+        "vision"
+      ]
+    },
+    {
+      "id": "microsoft-mai-code-2-2026-11-17",
+      "date": "2026-11-17",
+      "dateStatus": "exact",
+      "title": "发布 MAI Code 2 与 Code 2 Flash",
+      "summary": "Microsoft AI 发布面向日常企业编码的 MAI Code 2 与更轻量的 MAI Code 2 Flash：官方称其针对仓库级修改、调试与高频改写等场景，而非基础科研或超长程智能体任务。Code 2 已在 GitHub Copilot 提供；Code 2 Flash 同时进入 Microsoft Foundry 有限预览。",
+      "category": "model",
+      "company": "Microsoft",
+      "series": "MAI",
+      "product": "MAI Code 2 / Code 2 Flash",
+      "eventType": "ga",
+      "sources": [
+        {
+          "title": "MAI Code 2 and Code 2 Flash: Everyday coding at scalable prices",
+          "url": "https://microsoft.ai/news/introducing-mai-code-2-and-mai-code-2-flash/",
+          "publisher": "Microsoft AI",
+          "publishedAt": "2026-11-17"
+        }
+      ],
+      "tags": [
+        "mai",
+        "code-2",
+        "coding"
+      ],
+      "capabilities": [
+        "chat",
+        "reasoning"
+      ]
+    },
+    {
+      "id": "anthropic-claude-black-hole-physics-2026-11-17",
+      "date": "2026-11-17",
+      "dateStatus": "exact",
+      "title": "Claude 完成两项黑洞物理未决问题的计算",
+      "summary": "Anthropic 发布研究称，Claude Fable 5.2 完成两项与黑洞及量子引力相关的未决计算并附预印本：其一补全 2003 年提出、此前未完成的计算，表明该相变在时空不再具有确定形状的区间仍为突变；其二给出一种检验候选量子引力理论之简化方法的精确极限。",
+      "category": "science",
+      "scienceDiscipline": "other",
+      "company": "Anthropic",
+      "series": "Claude",
+      "product": "Claude Fable 5.2",
+      "eventType": "first_announce",
+      "sources": [
+        {
+          "title": "Claude Fable 5.2 solves two open problems in the physics of black holes",
+          "url": "https://www.anthropic.com/research/claude-black-hole-physics",
+          "publisher": "Anthropic",
+          "publishedAt": "2026-11-17"
+        }
+      ],
+      "relatedIds": [
+        "anthropic-claude-fable-mythos-5-2-2026-11-09"
+      ],
+      "tags": [
+        "ai-for-science",
+        "physics",
+        "fable"
+      ]
+    },
+    {
+      "id": "google-gemini-4-neon-2026-11-18",
+      "date": "2026-11-18",
+      "dateStatus": "exact",
+      "title": "发布 Gemini 4 Neon",
+      "summary": "Google 发布 Gemini 4 Neon：面向复杂软件工程、知识工作与科学工作流、强调更快端到端完成的 Gemini 4 型号，上下文 1M token。即日起在 Google AI Studio 的 Gemini API、Gemini for business，以及付费 Pro/Ultra 订阅的 Antigravity 与 Gemini 应用中滚动上线。",
+      "category": "model",
+      "company": "Google",
+      "series": "Gemini",
+      "product": "Gemini 4 Neon",
+      "eventType": "ga",
+      "sources": [
+        {
+          "title": "Introducing Gemini 4 Neon",
+          "url": "https://blog.google/innovation-and-ai/models-and-research/gemini-models/introducing-gemini-4-neon/",
+          "publisher": "Google",
+          "publishedAt": "2026-11-18"
+        }
+      ],
+      "relatedIds": [
+        "google-gemini-4-hydrogen-2026-11-12",
+        "google-gemini-4-carbon-2026-11-10",
+        "google-gemini-4-argon-2026-10-13"
+      ],
+      "tags": [
+        "gemini-4",
+        "neon"
       ],
       "capabilities": [
         "chat",
