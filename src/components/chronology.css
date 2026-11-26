@@ -62,6 +62,15 @@
 .chronology__sources a { color:var(--forest); font-weight:650; text-underline-offset:3px; text-decoration:underline; }
 .chronology__sources .chronology__permalink { order:2; }
 .chronology__sources > span { background:#eef2ea; color:var(--forest); padding:3px 8px; border-radius:5px; }
+/* The reading route only appears inside expanded, curated event cards. */
+.chronology__reading { margin-top:16px; padding-top:10px; border-top:1px solid var(--line); }
+.chronology__reading-head { display:flex; flex-wrap:wrap; justify-content:space-between; gap:6px 12px; color:var(--dim); font-size:12px; font-weight:650; }
+.chronology__reading-head > span:last-child { font:11px var(--type-mono); }
+.chronology__reading-links { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,180px),1fr)); gap:6px; margin-top:7px; }
+.chronology__reading-links a { display:grid; gap:2px; padding:8px 10px; min-width:0; border:1px solid var(--line); border-radius:3px; background:var(--white); color:var(--ink); text-decoration:none; }
+.chronology__reading-links a:is(:hover,:focus-visible) { border-color:var(--signal); }
+.chronology__reading-links a small { color:var(--signal); font-size:11px; }
+.chronology__reading-links a strong { font-size:13px; overflow-wrap:anywhere; }
 .chronology__empty { padding:24px 0; }
 .chronology__empty button { background:#e8ede5; color:var(--forest); }
 .chronology__return { margin-left:auto; color:#164a3b; }
