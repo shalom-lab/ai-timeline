@@ -1,4 +1,4 @@
-import { useMemo, useState, useCallback, useEffect } from 'react'
+import { useMemo, useState, useCallback, useEffect, useRef } from 'react'
 import { timelineData, aiToolsData } from './data'
 import type { TimelineEvent } from './types/timeline'
 import Chronology from './components/Chronology'
@@ -6,10 +6,10 @@ import Exhibition from './components/Exhibition'
 import Header, { type Filters } from './components/Header'
 import ToolDirectory from './components/ToolDirectory'
 import CompareBoard from './components/CompareBoard'
-import { type AppPage, pageFromHash, navigate as navigateHash } from './lib/route'
+import { type AppPage, pageFromHash } from './lib/route'
 
 const DEFAULT_FILTERS: Filters = { query: '' }
-const isComparison = () => /^#\/compare\/?$/.test(window.location.hash)
+const isEventView = (page: AppPage) => page === 'timeline' || page === 'compare'
 
 function matchesQuery(e: TimelineEvent, q: string): boolean {
   return !q || [e.title,e.summary,e.company,e.series??'',e.product??'',...(e.tags??[]),...e.sources.map(s=>s.title)]
@@ -19,7 +19,7 @@ function matchesQuery(e: TimelineEvent, q: string): boolean {
 export default function App() {
   const { meta, companies, events } = timelineData
   const [page,setPage] = useState<AppPage>(()=>pageFromHash())
-  const [compare,setCompare] = useState(isComparison)
+  const currentPage = useRef(page)
   const [filters,setFilters] = useState(DEFAULT_FILTERS)
   const searched = useMemo(()=>{
     const q=filters.query.trim().toLowerCase()
@@ -29,23 +29,27 @@ export default function App() {
   const clearSearch = useCallback(()=>patchFilters({query:''}),[patchFilters])
 
   useEffect(()=>{
-    const sync = () => {setPage(pageFromHash());setCompare(isComparison())}
+    const sync = () => {
+      const hash = window.location.hash
+      const next = pageFromHash(hash)
+      const previous = currentPage.current
+      const eventLink = hash.startsWith('#/event/')
+      if (eventLink || (next !== previous && !(isEventView(next) && isEventView(previous)))) {
+        setFilters(DEFAULT_FILTERS)
+      }
+      if (next !== previous && !eventLink) window.scrollTo(0, 0)
+      currentPage.current = next
+      setPage(next)
+    }
     window.addEventListener('hashchange',sync)
     return ()=>window.removeEventListener('hashchange',sync)
   },[])
-  const onNavigate = useCallback((next:AppPage)=>{
-    setFilters(DEFAULT_FILTERS)
-    navigateHash(next)
-    setPage(next)
-    setCompare(false)
-  },[])
-  return <div className={`app-shell archive-app archive-app--${page}${compare?' archive-app--compare':''}`}>
-    <Header meta={meta} filters={filters} onChange={patchFilters} page={page} onNavigate={onNavigate}/>
+  return <div className={`app-shell archive-app archive-app--${page}`}>
+    <Header meta={meta} filters={filters} onChange={patchFilters} page={page}/>
     {page==='gallery' ? <Exhibition events={events}/> :
       page==='tools' ? <ToolDirectory data={aiToolsData} companies={companies} query={filters.query}/> :
-      compare ? <CompareBoard events={events} searched={searched} companies={companies} onReturn={()=>onNavigate('timeline')} onClearSearch={clearSearch}/> :
+      page==='compare' ? <CompareBoard events={events} searched={searched} companies={companies} onClearSearch={clearSearch}/> :
       <Chronology events={searched} companies={companies}
-        onCompare={()=>{window.location.hash='#/compare';setCompare(true)}}
         onClearSearch={clearSearch} hasQuery={!!filters.query.trim()}/>}
   </div>
 }

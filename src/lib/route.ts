@@ -1,6 +1,6 @@
-/** Hash routes for GH Pages (no server router): `#/` timeline, `#/tools` AI工具, `#/gallery` 里程碑展. */
+/** Hash routes for GH Pages (no server router): `#/` timeline, `#/compare` 分栏对照, `#/tools` AI工具, `#/gallery` 里程碑展. */
 
-export type AppPage = 'timeline' | 'tools' | 'gallery'
+export type AppPage = 'timeline' | 'compare' | 'tools' | 'gallery'
 
 function hashPath(hash = window.location.hash): string {
   const raw = (hash || '#/').replace(/^#/, '')
@@ -9,6 +9,7 @@ function hashPath(hash = window.location.hash): string {
 
 export function pageFromHash(hash = window.location.hash): AppPage {
   const path = hashPath(hash)
+  if (path === '/compare' || path === 'compare') return 'compare'
   if (
     path === '/gallery' ||
     path === 'gallery' ||
@@ -29,17 +30,8 @@ export function pageFromHash(hash = window.location.hash): AppPage {
 }
 
 export function hashForPage(page: AppPage): string {
+  if (page === 'compare') return '#/compare'
   if (page === 'tools') return '#/tools'
   if (page === 'gallery') return '#/gallery'
   return '#/'
-}
-
-export function navigate(page: AppPage) {
-  const next = hashForPage(page)
-  if (window.location.hash !== next) {
-    window.location.hash = next
-  } else {
-    // force listeners when already on target
-    window.dispatchEvent(new HashChangeEvent('hashchange'))
-  }
 }

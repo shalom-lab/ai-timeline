@@ -1,5 +1,5 @@
 import type { TimelineMeta } from '../types/timeline'
-import type { AppPage } from '../lib/route'
+import { hashForPage, type AppPage } from '../lib/route'
 
 export type Filters = {
   query: string
@@ -10,8 +10,14 @@ type Props = {
   filters: Filters
   onChange: (patch: Partial<Filters>) => void
   page: AppPage
-  onNavigate: (page: AppPage) => void
 }
+
+const tabs: ReadonlyArray<{ page: AppPage; label: string }> = [
+  { page: 'timeline', label: '时间线' },
+  { page: 'compare', label: '分栏对照' },
+  { page: 'tools', label: 'AI 工具库' },
+  { page: 'gallery', label: '里程碑展' },
+]
 
 const brandMarkSrc = `${import.meta.env.BASE_URL || '/'}brand/mark.svg`
 
@@ -26,7 +32,6 @@ export default function Header({
   filters,
   onChange,
   page,
-  onNavigate,
 }: Props) {
   const searchPlaceholder =
     page === 'tools'
@@ -59,32 +64,13 @@ export default function Header({
           </div>
         </div>
 
-        <nav className="app-header__nav" aria-label="页面切换">
-          <button
-            type="button"
-            className={`app-header__nav-btn${page === 'timeline' ? ' is-active' : ''}`}
-            aria-current={page === 'timeline' ? 'page' : undefined}
-            onClick={() => onNavigate('timeline')}
-          >
-            时间线
-          </button>
-          <button
-            type="button"
-            className={`app-header__nav-btn${page === 'tools' ? ' is-active' : ''}`}
-            aria-current={page === 'tools' ? 'page' : undefined}
-            onClick={() => onNavigate('tools')}
-          >
-            AI 工具库
-          </button>
-          <button
-            type="button"
-            className={`app-header__nav-btn${page === 'gallery' ? ' is-active' : ''}`}
-            aria-current={page === 'gallery' ? 'page' : undefined}
-            onClick={() => onNavigate('gallery')}
-            title="里程碑专题展"
-          >
-            里程碑展
-          </button>
+        <nav className="app-header__nav" aria-label="主导航">
+          {tabs.map(tab => <a key={tab.page}
+            className={`app-header__nav-btn${page === tab.page ? ' is-active' : ''}`}
+            href={hashForPage(tab.page)}
+            aria-current={page === tab.page ? 'page' : undefined}>
+            {tab.label}
+          </a>)}
         </nav>
 
         {showSearch ? (

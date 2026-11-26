@@ -19,8 +19,7 @@
 .chronology__categories button[aria-pressed=true] { background:var(--forest); color:white; }
 .chronology__categories button:not([aria-pressed=true]):hover { background:#e8ede5; }
 .chronology__controls select { border-color:var(--rule); max-width:145px; background:#fffefa; }
-.chronology__controls .chronology__switch { color:var(--forest); margin-left:5px; }
-.chronology__switch:hover,.chronology__clear:hover { background:#e8ede5; }
+.chronology__clear:hover { background:#e8ede5; }
 .chronology :focus-visible,.chronology__return:focus-visible { outline:2px solid #1c7157; outline-offset:3px; }
 .chronology__body { padding-block:30px 66px; }
 .chronology__year + .chronology__year { margin-top:44px; }

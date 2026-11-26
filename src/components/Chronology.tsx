@@ -3,11 +3,11 @@ import { CATEGORY_LABEL_ZH, type Category, type Company, type TimelineEvent } fr
 import { EVENT_TYPE_LABEL_ZH } from '../lib/labels'
 import './chronology.css'
 
-type Props = { events: TimelineEvent[]; companies: Company[]; onCompare: () => void; onClearSearch: () => void; hasQuery: boolean }
+type Props = { events: TimelineEvent[]; companies: Company[]; onClearSearch: () => void; hasQuery: boolean }
 const categories: ('all' | Category)[] = ['all', 'model', 'product', 'science']
 const linkedEvent = () => /^#\/event\/([a-z0-9-]+)$/.exec(window.location.hash)?.[1] ?? null
 
-export default function Chronology({ events, companies, onCompare, onClearSearch, hasQuery }: Props) {
+export default function Chronology({ events, companies, onClearSearch, hasQuery }: Props) {
   const [category, setCategory] = useState<'all' | Category>('all')
   const [year, setYear] = useState('')
   const [selectedYear, setSelectedYear] = useState('')
@@ -92,7 +92,6 @@ export default function Chronology({ events, companies, onCompare, onClearSearch
               {company && !orgs.includes(company) && <option value={company}>{company}</option>}
               {orgs.map(o => <option key={o} value={o}>{o}</option>)}
             </select>
-            <button className="chronology__switch" type="button" onClick={onCompare}>分栏对照 <span aria-hidden="true">↗</span></button>
           </div>
         </div>
       </div>

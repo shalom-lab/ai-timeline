@@ -27,8 +27,8 @@ function CompareEvent({e, group}: {e:TimelineEvent; group?:string}) {
   </article>
 }
 
-export default function CompareBoard({events, searched, companies, onReturn, onClearSearch}: {
-  events:TimelineEvent[]; searched:TimelineEvent[]; companies:Company[]; onReturn:()=>void; onClearSearch:()=>void;
+export default function CompareBoard({events, searched, companies, onClearSearch}: {
+  events:TimelineEvent[]; searched:TimelineEvent[]; companies:Company[]; onClearSearch:()=>void;
 }) {
   const [tab,setTab] = useState<Tab>('model')
   const [picked,setPicked] = useState(defaults)
@@ -162,7 +162,7 @@ export default function CompareBoard({events, searched, companies, onReturn, onC
 
   return <main className="comparison" ref={page}>
     <div className="comparison__mast">
-      <a href="#/" className="comparison__back" onClick={e=>{if(!e.ctrlKey&&!e.metaKey&&!e.shiftKey&&!e.altKey){e.preventDefault();onReturn()}}}>← 返回时间线</a>
+      <span className="edition-label">PARALLEL CHRONOLOGY</span>
       <h2>分栏对照</h2>
       <p>把不同发布放在同一条时间轴上。<span>每行是一个实际发生事件的日期，行距不代表相隔天数。</span></p>
     </div>

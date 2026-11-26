@@ -18,7 +18,7 @@
 .archive-app .app-header__en { font-size: 10px; letter-spacing: .1em; }
 .archive-app .app-header__logo-img { width: 34px; height: 34px; filter: grayscale(1) brightness(1.25); border-radius: 4px; }
 .archive-app .app-header__nav { gap: 8px; background: none; padding: 0; border: 0; box-shadow: none; }
-.archive-app .app-header__nav-btn { color: #dfd8cb; padding: 13px 12px 11px; border-radius: 0; border-bottom: 2px solid transparent; }
+.archive-app .app-header__nav-btn { display:grid; place-items:center; text-decoration:none; color: #dfd8cb; padding: 13px 12px 11px; border-radius: 0; border-bottom: 2px solid transparent; }
 .archive-app .app-header__nav-btn:hover { color: white; background:#ffffff13; }
 .archive-app .app-header__nav-btn.is-active { background: none; color: #fff1df; border-bottom-color: var(--metal); box-shadow: none; }
 .archive-app .app-header__search-wrap { margin-left: auto; }
@@ -41,9 +41,7 @@
 .archive-app .chronology__controls button,
 .archive-app .chronology__controls select { border-radius: 3px; font-size: 13px; }
 .archive-app .chronology__categories button[aria-pressed=true] { background: var(--signal); }
-.archive-app .chronology__categories button:not([aria-pressed=true]):hover,
-.archive-app .chronology__switch:hover { background: #ebe4d8; }
-.archive-app .chronology__controls .chronology__switch { border: 1px solid var(--line); color: var(--ink); }
+.archive-app .chronology__categories button:not([aria-pressed=true]):hover { background: #ebe4d8; }
 .chronology__layout { max-width: 1240px; margin: 0 auto; display: grid; grid-template-columns: 190px minmax(0,1fr); gap: 46px; padding: 28px 28px 60px; align-items: start; }
 .archive-index { position: sticky; top: 89px; background: var(--night); color: #fff4e7; border-radius: 3px; overflow: hidden; }
 .archive-index__label { min-height: 106px; padding: 14px 15px 16px; display: flex; flex-direction: column; justify-content:center; background: repeating-linear-gradient(110deg,#fff0 0px,#fff0 11px,#f6d7a416 12px,#fff0 13px),linear-gradient(140deg,#754532,#35302a 86%); color: #f5c394; font: 800 26px/.98 var(--type-mono); letter-spacing: .04em; }
@@ -109,16 +107,16 @@
   .archive-app .app-header__banner { gap:8px 16px; padding:7px 20px; }
 }
 @media (max-width: 720px) {
-  .archive-app .app-header__banner { padding:7px 13px; gap:6px 8px; min-height:0; }
-  .archive-app .app-header__brand { flex: 1 1 auto; }
+  .archive-app .app-header__banner { display:grid; grid-template-columns:auto minmax(0,1fr) auto; grid-template-areas:"brand search github" "nav nav nav"; padding:7px 13px 0; gap:4px 9px; min-height:0; }
+  .archive-app .app-header__brand { grid-area:brand; }
   .archive-app .app-header__titles h1 { font-size:16px; }
   .archive-app .app-header__subtitle { font-size:9px; }
-  .archive-app .app-header__search-wrap { order:3; flex:1 1 calc(100% - 48px); max-width:none; }
-  .archive-app .app-header__github { order:4; }
-  .archive-app--gallery .app-header__github { display:none; }
+  .archive-app .app-header__search-wrap { grid-area:search; width:100%; max-width:none; }
+  .archive-app .app-header__github { grid-area:github; }
   .archive-app .app-header__logo-img { width:30px;height:30px; }
-  .archive-app .app-header__nav { gap:0; }
-  .archive-app .app-header__nav-btn { padding:8px 7px; font-size:12px; }
+  .archive-app .app-header__nav { grid-area:nav; display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:0; }
+  .archive-app .app-header__nav-btn { padding:6px 2px; min-height:42px; font-size:12px; }
+  .archive-app .app-header__nav-btn:focus-visible { outline-offset:-3px; }
   .archive-app .chronology__bar { padding:8px 13px; gap:5px; }
   .archive-app .chronology__categories button,.archive-app .chronology__controls button,.archive-app .chronology__controls select { min-height:34px; }
   .chronology__layout { display:block; padding:16px 12px 40px; }
