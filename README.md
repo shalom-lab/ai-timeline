@@ -21,7 +21,7 @@
 | [`docs/DATA-AUDIT.md`](docs/DATA-AUDIT.md) | 已核查的内容与仍待复核的范围 |
 | [`docs/DEVELOPMENT.md`](docs/DEVELOPMENT.md) | 贡献清单与审核规则 |
 | [`data/timeline.json`](data/timeline.json) | 纪年事件 |
-| [`data/ai-tools.json`](data/ai-tools.json) | AI工具矩阵 |
+| [`data/ai-tools.json`](data/ai-tools.json) | AI 工具清单 |
 
 技术栈：TypeScript + React + Vite。类型见 `src/types/`。
 

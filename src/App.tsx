@@ -1,5 +1,5 @@
 import { useMemo, useState, useCallback, useEffect, useRef } from 'react'
-import { timelineData, aiToolsData } from './data'
+import { timelineData, aiToolsData, companiesById } from './data'
 import type { TimelineEvent } from './types/timeline'
 import Chronology from './components/Chronology'
 import Exhibition from './components/Exhibition'
@@ -12,7 +12,7 @@ const DEFAULT_FILTERS: Filters = { query: '' }
 const isEventView = (page: AppPage) => page === 'timeline' || page === 'compare'
 
 function matchesQuery(e: TimelineEvent, q: string): boolean {
-  return !q || [e.title,e.summary,e.company,e.series??'',e.product??'',...(e.tags??[]),...e.sources.map(s=>s.title)]
+  return !q || [e.title,e.summary,e.company,e.companyId,...(companiesById.get(e.companyId)?.aliases ?? []),e.series??'',e.product??'',...(e.tags??[]),...e.sources.map(s=>s.title)]
     .join(' ').toLowerCase().includes(q)
 }
 

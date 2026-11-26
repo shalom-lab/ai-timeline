@@ -31,7 +31,7 @@ v1（当前 `meta.version` 以 `0.x` / 首个 `1.0` 为目标）明确 **不做*
 3. **不猜日期**：来源未写清公历日 → **整条省略**（不要用 `unverified` 塞进主数据）。
 4. **阶段正确**：阅读原文用词（research preview / beta / GA / open source / announcing）映射到 `eventType`（见 §3）。
 5. **分类**：一级四类，看板序为 **大模型 → 产品 → 科学 → 其他**（`model` → `product` → `science` → `other`）。模型发权重/API 型号 → `model`；用户可感知产品 → `product` + 合适的 `productSubcategory`；**AI 科学发现/突破**（蛋白质结构、材料、药物发现、气候模型、AI 数学证明等，非普通产品上线）→ `science`（可打 `ai-for-science` 等 tags，例 AlphaFold 3）；协议/工程实践等难归入前三类时 → `other`。**不要给 category 加颜色**——色在 `companies[].color`。
-5b. **公司色**：事件 `company` 宜对齐词典；新组织须在 `companies[]` 增加 `color`（`#RRGGBB`）与可选 `colorSoft`。
+5b. **公司色**：事件 `companyId` 必须引用机构词典；新组织须在 `companies[]` 增加 `color`（`#RRGGBB`）与可选 `colorSoft`。
 6. **`id` 稳定**：kebab-case，含组织、对象、阶段语义与日期；合并后不随意改名（改名须加迁移说明）。
 7. **去重**：检索 `data/timeline.json` 是否已有同日同产品同阶段条目（见 §5）。
 8. **文案**：`title` / `summary` 陈述事实；不写未证实的「首个」「颠覆」。
@@ -108,7 +108,7 @@ v1（当前 `meta.version` 以 `0.x` / 首个 `1.0` 为目标）明确 **不做*
 在添加前用以下键做冲突检测（逻辑键，非物理唯一索引）：
 
 ```
-(company 规范化, series|product, eventType, date)
+(companyId, series|product, eventType, date)
 ```
 
 | 情况 | 处理 |
@@ -153,6 +153,6 @@ npm run dev        # 看板 UI
 | 一级分类展示序 | 文档/UI：大模型 → 产品 → 科学 → 其他 |
 | `meta.version` | `0.2.0` |
 
-校验：`npm run validate` 会强制 `company.color` 与 `meta.ui.openingBg`。
+校验：`npm run validate` 会强制 `companies[].color` 与 `meta.ui.openingBg`。
 
 

@@ -5,8 +5,8 @@
 import { readFileSync } from 'node:fs'
 import { resolve, dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
-import type { TimelineData, TimelineEvent, Company } from '../src/types/timeline'
-import type { AiToolsData, ToolColumnId, ToolProduct } from '../src/types/tools'
+import type { TimelineData, TimelineEventRecord, Company } from '../src/types/timeline'
+import type { AiToolsData, ToolColumnId } from '../src/types/tools'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const root = resolve(__dirname, '..')
@@ -14,6 +14,25 @@ const timelinePath = resolve(root, 'data/timeline.json')
 const toolsPath = resolve(root, 'data/ai-tools.json')
 
 const DATE_RE = /^\d{4}-\d{2}-\d{2}$/
+const normalized = (s: string) => s.normalize('NFKC').trim().toLowerCase().replace(/\s+/g, ' ')
+function isDate(value: unknown): value is string {
+  if (typeof value !== 'string' || !DATE_RE.test(value)) return false
+  const parsed = new Date(value + 'T00:00:00Z')
+  return Number.isFinite(parsed.getTime()) && parsed.toISOString().slice(0, 10) === value
+}
+function isWebUrl(s: unknown): s is string {
+  if (typeof s !== 'string' || !/^https?:\/\//i.test(s)) return false
+  try {
+    const u = new URL(s)
+    return !!u.hostname && !u.username && !u.password
+  } catch { return false }
+}
+function canonicalUrl(s: string): string {
+  const u = new URL(s)
+  u.hash = ''
+  u.pathname = u.pathname.replace(/\/+$/, '') || '/'
+  return u.href
+}
 const HEX_RE = /^#[0-9A-Fa-f]{6}$/
 const KEBAB_RE = /^[a-z0-9]+(?:-[a-z0-9]+)*$/
 
@@ -70,26 +89,24 @@ const TOOL_COLS = new Set<ToolColumnId>([
   'api',
 ])
 
-function main() {
+export function validateData(timeline: TimelineData, tools: AiToolsData): string[] {
   const errors: string[] = []
   const push = (m: string) => errors.push(m)
-
-  const timeline = JSON.parse(readFileSync(timelinePath, 'utf8')) as TimelineData
-  validateTimeline(timeline, push)
-  const companyIds = new Set(timeline.companies.map((c) => c.id))
-
-  const tools = JSON.parse(readFileSync(toolsPath, 'utf8')) as AiToolsData
+  const companyIds = validateTimeline(timeline, push)
   validateTools(tools, companyIds, push)
+  return errors
+}
 
+function main() {
+  const timeline = JSON.parse(readFileSync(timelinePath, 'utf8')) as TimelineData
+  const tools = JSON.parse(readFileSync(toolsPath, 'utf8')) as AiToolsData
+  const errors = validateData(timeline, tools)
   if (errors.length) {
-    console.error(`Validation failed (${errors.length}):`)
-    for (const e of errors) console.error(`  - ${e}`)
-    process.exit(1)
+    for (const error of errors) console.error(`  - ${error}`)
+    process.exitCode = 1
+  } else {
+    console.log(`✓ OK — ${timeline.events.length} events, ${timeline.companies.length} organizations, ${tools.tools.length} tools`)
   }
-
-  console.log(
-    `✓ OK — timeline: ${timeline.events.length} events, ${timeline.companies.length} companies; tools: ${tools.rows.length} rows × ${tools.columns.length} cols`,
-  )
 }
 
 function validateTimeline(
@@ -97,6 +114,9 @@ function validateTimeline(
   push: (m: string) => void,
 ): Set<string> {
   const ids = new Set<string>()
+  const companyIds = new Set<string>()
+  const labels = new Map<string, string>()
+  const eventKeys = new Set<string>()
 
   if (!data.meta) push('timeline: missing meta')
   else {
@@ -104,7 +124,7 @@ function validateTimeline(
       push(`meta.scopeStart must be 2022-11-30, got ${data.meta.scopeStart}`)
     }
     for (const k of ['updatedAt', 'scopeStart'] as const) {
-      if (!DATE_RE.test(data.meta[k])) push(`meta.${k} bad date`)
+      if (!isDate(data.meta[k])) push(`meta.${k} bad date`)
     }
     if (!data.meta.ui?.openingBg?.trim()) {
       push('meta.ui.openingBg is required (CSS gradient or image URL)')
@@ -117,23 +137,35 @@ function validateTimeline(
   if (!Array.isArray(data.companies) || data.companies.length === 0) {
     push('companies must be a non-empty array')
   } else {
-    const companyIds = new Set<string>()
     for (const c of data.companies) {
       validateCompany(c, push)
       if (companyIds.has(c.id)) push(`duplicate company id: ${c.id}`)
       companyIds.add(c.id)
+      for (const alias of [c.id, c.name, ...(Array.isArray(c.aliases) ? c.aliases : [])]) {
+        if (typeof alias !== 'string' || !alias.trim()) { push(`company ${c.id}: invalid alias or name`); continue }
+        const key = normalized(alias)
+        const previous = labels.get(key)
+        if (previous && previous !== c.id) push(`company alias collision: ${alias} (${previous}, ${c.id})`)
+        labels.set(key, c.id)
+      }
     }
   }
 
   if (!Array.isArray(data.events)) push('events must be an array')
   else {
     for (const e of data.events) {
-      validateEvent(e, data.meta.scopeStart, push)
+      validateEvent(e, data.meta?.scopeStart ?? '2022-11-30', push)
+      if (!companyIds.has(e.companyId)) push(`${e.id}: unknown companyId ${e.companyId}`)
+      if ('company' in e) push(`${e.id}: use companyId only; display names are derived`)
+      const key = JSON.stringify([e.companyId, e.date, e.category, e.eventType, normalized(e.title ?? '')])
+      if (eventKeys.has(key)) push(`${e.id}: duplicate event identity`)
+      eventKeys.add(key)
       if (ids.has(e.id)) push(`duplicate id: ${e.id}`)
       ids.add(e.id)
     }
     for (const e of data.events) {
       for (const rid of e.relatedIds ?? []) {
+        if (rid === e.id) push(`${e.id}: relatedIds cannot link to itself`)
         if (!ids.has(rid)) push(`${e.id}: relatedIds missing target ${rid}`)
       }
     }
@@ -142,7 +174,7 @@ function validateTimeline(
     }
   }
 
-  return ids
+  return companyIds
 }
 
 function validateCompany(c: Company, push: (m: string) => void) {
@@ -159,14 +191,14 @@ function validateCompany(c: Company, push: (m: string) => void) {
 }
 
 function validateEvent(
-  e: TimelineEvent,
+  e: TimelineEventRecord,
   scopeStart: string,
   push: (m: string) => void,
 ) {
   if (!e.id || !KEBAB_RE.test(e.id)) {
     push(`bad id: ${e.id}`)
   }
-  if (!DATE_RE.test(e.date)) push(`${e.id}: bad date`)
+  if (!isDate(e.date)) push(`${e.id}: bad date`)
   if (e.date < scopeStart) push(`${e.id}: date before scopeStart`)
   if (!DATE_STATUS.has(e.dateStatus)) push(`${e.id}: bad dateStatus`)
   if (e.dateStatus === 'unverified') {
@@ -187,7 +219,6 @@ function validateEvent(
   if (e.scienceDiscipline && !SCIENCE_DISCS.has(e.scienceDiscipline)) {
     push(`${e.id}: bad scienceDiscipline`)
   }
-  if (!e.company?.trim()) push(`${e.id}: empty company`)
   if (!EVENT_TYPES.has(e.eventType)) push(`${e.id}: bad eventType`)
   if (e.capabilities != null) {
     if (!Array.isArray(e.capabilities)) {
@@ -209,107 +240,48 @@ function validateEvent(
   } else {
     for (const s of e.sources) {
       if (!s.title?.trim()) push(`${e.id}: source missing title`)
-      if (!/^https?:\/\//.test(s.url ?? '')) push(`${e.id}: bad source url`)
-      if (s.publishedAt && !DATE_RE.test(s.publishedAt)) {
+      if (!isWebUrl(s.url)) push(`${e.id}: bad source url`)
+      if (s.publishedAt && !isDate(s.publishedAt)) {
         push(`${e.id}: bad source publishedAt`)
       }
     }
   }
 }
 
-function asProducts(v: ToolProduct | ToolProduct[] | undefined): ToolProduct[] {
-  if (!v) return []
-  return Array.isArray(v) ? v : [v]
-}
-
-function validateTools(
-  data: AiToolsData,
-  companyIds: Set<string>,
-  push: (m: string) => void,
-) {
-  if (!data.meta) {
-    push('tools: missing meta')
-    return
+function validateTools(data: AiToolsData, companyIds: Set<string>, push: (m: string) => void) {
+  if (!data.meta || !data.meta.name?.trim() || !data.meta.version?.trim() || !data.meta.locale?.trim()) push('tools: missing metadata')
+  if (!isDate(data.meta?.updatedAt)) push('tools: invalid updatedAt')
+  if (!Array.isArray(data.categories) || !data.categories.length) { push('tools: missing categories'); return }
+  const categories = new Set<ToolColumnId>()
+  for (const category of data.categories) {
+    if (!TOOL_COLS.has(category.id) || categories.has(category.id) || !category.label?.trim()) {
+      push(`tools: invalid or duplicate category ${category.id}`)
+    }
+    categories.add(category.id)
   }
-  if (!data.meta.name?.trim()) push('tools meta.name empty')
-  if (!data.meta.version?.trim()) push('tools meta.version empty')
-  if (!DATE_RE.test(data.meta.updatedAt ?? '')) {
-    push('tools meta.updatedAt bad date')
-  }
-  if (!data.meta.locale?.trim()) push('tools meta.locale empty')
-
-  if (!Array.isArray(data.columns) || data.columns.length === 0) {
-    push('tools columns must be non-empty')
-    return
-  }
-  const colIds = new Set<string>()
-  for (const c of data.columns) {
-    if (!TOOL_COLS.has(c.id)) push(`tools: unknown column id ${c.id}`)
-    if (colIds.has(c.id)) push(`tools: duplicate column ${c.id}`)
-    colIds.add(c.id)
-    if (!c.label?.trim()) push(`tools column ${c.id}: empty label`)
-  }
-
-  if (!Array.isArray(data.rows) || data.rows.length < 5) {
-    push(`tools rows expected >=5 major companies, got ${data.rows?.length}`)
-    return
-  }
-  const rowIds = new Set<string>()
-  for (const row of data.rows) {
-    if (!row.companyId || !KEBAB_RE.test(row.companyId)) {
-      push(`tools: bad companyId ${row.companyId}`)
-      continue
+  if (!Array.isArray(data.tools) || !data.tools.length) { push('tools: empty catalog'); return }
+  const ids = new Set<string>()
+  const identities = new Set<string>()
+  for (const tool of data.tools) {
+    const label = `tool ${tool.id}`
+    if (!KEBAB_RE.test(tool.id ?? '') || ids.has(tool.id)) push(`${label}: invalid or duplicate id`)
+    ids.add(tool.id)
+    if (!companyIds.has(tool.companyId)) push(`${label}: unknown companyId ${tool.companyId}`)
+    if (!categories.has(tool.categoryId)) push(`${label}: unknown categoryId ${tool.categoryId}`)
+    if (!tool.name?.trim()) push(`${label}: empty name`)
+    const description = typeof tool.description === 'string' ? tool.description.trim() : ''
+    if (!description || description.length > 70 || /[\r\n]/.test(description)) push(`${label}: invalid short description (1–70 chars)`)
+    if (!tool.pricing?.trim()) push(`${label}: empty pricing hint`)
+    if (tool.pricingUrl !== undefined && !isWebUrl(tool.pricingUrl)) push(`${label}: bad pricingUrl`)
+    if (tool.pricingVerifiedAt !== undefined && (!isDate(tool.pricingVerifiedAt) || !isWebUrl(tool.pricingUrl))) {
+      push(`${label}: pricing verification requires a valid date and source URL`)
     }
-    if (rowIds.has(row.companyId)) {
-      push(`tools: duplicate row companyId ${row.companyId}`)
-    }
-    rowIds.add(row.companyId)
-    if (!companyIds.has(row.companyId)) {
-      push(
-        `tools row ${row.companyId}: companyId not in timeline companies[] (reuse ids)`,
-      )
-    }
-    if (row.displayName?.includes('/')) {
-      push(
-        `tools row ${row.companyId}: displayName must be a single brand (no slash): ${row.displayName}`,
-      )
-    }
-    if (!row.cells || typeof row.cells !== 'object') {
-      push(`tools row ${row.companyId}: missing cells`)
-      continue
-    }
-    let productCount = 0
-    for (const [cid, raw] of Object.entries(row.cells)) {
-      if (!TOOL_COLS.has(cid as ToolColumnId)) {
-        push(`tools row ${row.companyId}: unknown cell column ${cid}`)
-      }
-      for (const p of asProducts(raw as ToolProduct | ToolProduct[])) {
-        productCount++
-        const label = `tools ${row.companyId}/${cid}/${p.name}`
-        if (!p.name?.trim()) push(`${label}: empty name`)
-        if (!/^https?:\/\//.test(p.url ?? '')) push(`${label}: bad url`)
-        const description = typeof p.description === 'string' ? p.description.trim() : ''
-        if (!description || description.length > 70 || /[\r\n]/.test(description)) {
-          push(`${label}: description must be a short, single-line plain-language summary (1–70 chars)`)
-        }
-        if (!p.pricing?.trim()) push(`${label}: empty pricing hint`)
-        if (p.pricingUrl && !/^https?:\/\//.test(p.pricingUrl)) {
-          push(`${label}: bad pricingUrl`)
-        }
-        if (p.logo !== undefined) {
-          if (typeof p.logo !== 'string' || !p.logo.trim()) {
-            push(`${label}: logo must be non-empty string when set`)
-          } else if (!KEBAB_RE.test(p.logo)) {
-            push(`${label}: logo key must be kebab-case id (${p.logo})`)
-          }
-        }
-      }
-    }
-    if (productCount === 0) {
-      push(`tools row ${row.companyId}: need >=1 product cell`)
-    }
+    if (tool.logo !== undefined && !KEBAB_RE.test(tool.logo)) push(`${label}: bad logo key`)
+    if (!isWebUrl(tool.url)) { push(`${label}: bad product URL`); continue }
+    const key = JSON.stringify([tool.categoryId, normalized(tool.name ?? ''), canonicalUrl(tool.url)])
+    if (identities.has(key)) push(`${label}: duplicate tool identity`)
+    identities.add(key)
   }
 }
 
-
-main()
+if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) main()

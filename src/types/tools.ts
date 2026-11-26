@@ -1,104 +1,31 @@
-/** AI工具矩阵 — keep in sync with docs/DATA.md §9 and data/ai-tools.json. */
+/** Current-tool catalog; independent from the historical event archive. */
+export type ToolColumnId = 'llm' | 'image' | 'video' | 'other' | 'chat' | 'coding' | 'api'
 
-/** Stable column ids for product forms (hide empty cols in UI if needed). */
-export type ToolColumnId =
-  | 'llm'
-  | 'image'
-  | 'video'
-  | 'other' // embedding / 语音 / 新形态等
-  | 'chat'
-  | 'coding'
-  | 'api'
-
-/** Tab / column group: 模型 | 产品. */
-export type ToolColumnGroupId = 'models' | 'products'
-
-export interface ToolColumnDef {
+export interface ToolCategory {
   id: ToolColumnId
-  /** Chinese header label */
   label: string
 }
 
-export interface ToolColumnGroupDef {
-  id: ToolColumnGroupId
-  /** Chinese group / tab label */
-  label: string
-  columns: readonly ToolColumnId[]
-}
-
-/** One product in a matrix cell. */
 export interface ToolProduct {
-  /** Short product name shown in the cell */
+  /** Stable entry identity; don't change it when the display name changes. */
+  id: string
+  companyId: string
+  categoryId: ToolColumnId
+  brandLabel?: string
+  aliases?: string[]
   name: string
-  /** Short, plain-language sentence naming a concrete use and a distinguishing feature. */
   description: string
-  /** Official product homepage */
   url: string
-  /**
-   * High-level fee hint only (free tier / Plus price / API pay-as-you-go).
-   * Prefer linking pricingUrl for full detail — do not invent exact SKUs.
-   */
   pricing: string
-  /** Official pricing page when known */
   pricingUrl?: string
-  /** Optional one-line note */
+  /** Set only after the displayed fee hint has been verified at pricingUrl. */
+  pricingVerifiedAt?: string
   note?: string
-  /**
-   * Optional logo key under public/logos/{key}.{ext} (see COMPANY_LOGO_EXT).
-   * When omitted, cells fall back to the row company logo / letter.
-   */
   logo?: string
 }
 
-export interface ToolRow {
-  /** Must match timeline companies[].id when possible */
-  companyId: string
-  /** Optional display override (defaults to timeline company name). Single brand — no "A / B". */
-  displayName?: string
-  /** Optional one-line Chinese tagline under the company name (matrix UI). */
-  blurb?: string
-  /**
-   * Products keyed by column id. Array when multiple products share a form
-   * (e.g. Codex + Cursor under coding). Empty/missing → empty cell.
-   */
-  cells: Partial<Record<ToolColumnId, ToolProduct | ToolProduct[]>>
-}
-
-export interface AiToolsMeta {
-  name: string
-  version: string
-  updatedAt: string
-  locale: string
-  /** Conservative disclaimer shown in UI */
-  disclaimer?: string
-}
-
 export interface AiToolsData {
-  meta: AiToolsMeta
-  columns: ToolColumnDef[]
-  rows: ToolRow[]
+  meta: { name: string; version: string; updatedAt: string; locale: string; disclaimer?: string }
+  categories: ToolCategory[]
+  tools: ToolProduct[]
 }
-
-/** Tab groups: 模型 then 产品 (UI switches one group at a time). */
-export const TOOL_COLUMN_GROUPS: readonly ToolColumnGroupDef[] = [
-  {
-    id: 'models',
-    label: '模型',
-    columns: ['llm', 'image', 'video', 'other'],
-  },
-  {
-    id: 'products',
-    label: '产品',
-    columns: ['chat', 'coding', 'api'],
-  },
-] as const
-
-export const TOOL_COLUMN_ORDER: readonly ToolColumnId[] =
-  TOOL_COLUMN_GROUPS.flatMap((g) => g.columns)
-
-/** @deprecated logos now show on all columns; kept for callers that still check. */
-export const TOOL_PRODUCT_COLUMN_IDS: ReadonlySet<ToolColumnId> = new Set([
-  'chat',
-  'coding',
-  'api',
-])

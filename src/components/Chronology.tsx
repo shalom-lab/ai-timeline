@@ -49,10 +49,10 @@ export default function Chronology({ events, companies, onClearSearch, hasQuery 
     card.scrollIntoView({ block: 'center' })
   }, [eventLink, events, category, year, company])
   const years = useMemo(() => [...new Set(events.map(e => e.date.slice(0, 4)))].sort().reverse(), [events])
-  const orgs = useMemo(() => [...new Set(events.map(e => e.company))].sort((a, b) => a.localeCompare(b, 'zh-CN')), [events])
+  const orgs = useMemo(() => [...new Map(events.map(e => [e.companyId, e.company])).entries()].sort((a, b) => a[1].localeCompare(b[1], 'zh-CN')), [events])
   const groups = useMemo(() => {
     const list = events.filter(e => (category === 'all' || e.category === category) &&
-      (!year || e.date.startsWith(year)) && (!company || e.company === company))
+      (!year || e.date.startsWith(year)) && (!company || e.companyId === company))
       .sort((a, b) => b.date.localeCompare(a.date) || a.title.localeCompare(b.title, 'zh-CN'))
     const byYear = new Map<string, TimelineEvent[]>()
     for (const event of list) {
@@ -89,8 +89,8 @@ export default function Chronology({ events, companies, onClearSearch, hasQuery 
             </select>
             <select aria-label="按机构筛选" value={company} onChange={e => setCompany(e.target.value)}>
               <option value="">全部机构</option>
-              {company && !orgs.includes(company) && <option value={company}>{company}</option>}
-              {orgs.map(o => <option key={o} value={o}>{o}</option>)}
+              {company && !orgs.some(([id]) => id === company) && <option value={company}>{companies.find(c => c.id === company)?.name ?? company}</option>}
+              {orgs.map(([id, name]) => <option key={id} value={id}>{name}</option>)}
             </select>
           </div>
         </div>
@@ -123,7 +123,7 @@ export default function Chronology({ events, companies, onClearSearch, hasQuery 
             </div>
             <ol className="chronology__stream">
               {entries.map((event, i) => {
-                const brand = companies.find(c => c.name === event.company || c.aliases?.includes(event.company))
+                const brand = companies.find(c => c.id === event.companyId)
                 const startsMonth = i === 0 || entries[i - 1].date.slice(0,7) !== event.date.slice(0,7)
                 const startsDay = i === 0 || entries[i - 1].date !== event.date
                 return <li className={`chronology__item${startsDay ? " chronology__item--newday" : ""}${startsMonth ? " chronology__item--newmonth" : ""}`} key={event.id} style={{ '--event-tone': brand?.color ?? '#447463' } as CSSProperties}>

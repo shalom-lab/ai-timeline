@@ -1,6 +1,6 @@
 # AI纪年（AI Timeline）数据规范
 
-本文定义 **AI Timeline** 的权威数据结构与字段语义。字段名使用英文（与 TypeScript / JSON 一致）；说明使用中文。实现以 `src/types/timeline.ts`、`data/timeline.json`，以及独立的 `src/types/tools.ts` / `data/ai-tools.json`（AI工具矩阵）为准。
+本文定义 **AI Timeline** 的权威数据结构与字段语义。字段名使用英文（与 TypeScript / JSON 一致）；说明使用中文。实现以 `src/types/timeline.ts`、`data/timeline.json`，以及独立的 `src/types/tools.ts` / `data/ai-tools.json`（AI 工具库）为准。
 
 **原则：先规范与数据，后 UI。** 任何界面层只能消费本规范下的数据，不得在前端硬编码「另一套」分类或日期规则。
 
@@ -21,7 +21,7 @@
 interface TimelineData {
   meta: TimelineMeta
   companies: Company[]
-  events: TimelineEvent[]
+  events: TimelineEventRecord[]
 }
 ```
 
@@ -49,9 +49,9 @@ interface TimelineData {
 
 ## 3. `companies`（公司/组织词典）
 
-用于规范化展示名、别名检索与 **品牌色**；**不是**事件必填外键（事件里写可读的 `company` 字符串，宜与本表 `name` 对齐）。
+用于规范化展示名、别名检索与 **品牌色**；事件和工具的 `companyId` 都必须引用这里的 ID。
 
-**颜色映射属于公司，不属于一级分类**——`category` 无 `color` 字段；UI 应按 `companies[]` 的 `name`/`id`/`aliases` 解析事件的 `company` 字符串后取色。
+**颜色映射属于公司，不属于一级分类**——`category` 无 `color` 字段；UI 按 `companyId` 取品牌色，名称与别名只用于展示和搜索。
 
 | 字段 | 类型 | 必填 | 说明 |
 | --- | --- | --- | --- |
@@ -124,7 +124,7 @@ interface TimelineData {
 
 #### `scienceDiscipline`（科学二级，`category === 'science'` 时宜填写）
 
-看板「科学」列按 **学科** 分 chips/子列，**不按** `series`（GraphCast系列等）。卡片 header 仍展示 `company`（如 Google DeepMind）。
+看板「科学」列按 **学科** 分 chips/子列，**不按** `series`（GraphCast系列等）。卡片展示 `companyId` 对应的机构名（如 Google DeepMind）。
 
 | 枚举值 | 中文标签 | 覆盖 |
 | --- | --- | --- |
@@ -156,7 +156,7 @@ interface TimelineData {
 
 | 字段 | 类型 | 必填 | 说明 |
 | --- | --- | --- | --- |
-| `company` | `string` | 是 | 主责任组织显示名 |
+| `companyId` | `string` | 是 | 主责任组织 ID，引用 `companies[].id` |
 | `series` | `string` | 否 | 产品线/系列，如 `ChatGPT`、`Claude`、`Gemini` |
 | `product` | `string` | 否 | 更细的产品或型号名 |
 | `relatedIds` | `string[]` | 否 | 相关事件 `id`（前序版本、同日捆绑发布中的另一条等） |
@@ -269,7 +269,7 @@ interface Source {
   "summary": "……有限研究预览……终端智能体编码工具……",
   "category": "product",
   "productSubcategory": "cli",
-  "company": "Anthropic",
+  "companyId": "anthropic",
   "series": "Claude Code",
   "product": "Claude Code",
   "eventType": "research_preview",
@@ -291,70 +291,17 @@ interface Source {
 
 ---
 
-## 8. AI工具矩阵（`ai-tools.json`）— 独立数据集
+## 8. AI 工具库（`data/ai-tools.json`）
 
-**不是历史时间线。** 只记录**当前仍可用**的产品形态一览；公司行复用 `timeline.json` 的 `companies[].id`（色与 logo 同源）。
+与历史事件分开维护。现有静态站直接读取 Git 里的 JSON，不需要运行数据库。
 
-路由：客户端 hash `#/tools`（默认模型 Tab；亦可 `#/tools/models` / `#/tools/products`；纪年看板为 `#/`），适配 GitHub Pages，无服务端路由。
+- 根对象为 `meta`、`categories[]`、`tools[]`。每条工具记录独立，不再嵌套在机构行和矩阵单元格里。
+- `id` 是稳定身份，不随着名称、官网或分类调整而改变。`companyId` 引用时间线的机构词典，`categoryId` 引用本文件的用途分类；`brandLabel` 和 `aliases` 可选，仅用于展示与检索。
+- 每条记录包括 `name`、`description`、`url` 和 `pricing`。介绍用一句白话说明用途与特色，最多 70 字。可选 `note`、`logo`、`pricingUrl`。
+- `pricingVerifiedAt` 只在查过官方定价并确认当前文案后填写，须同时提供 `pricingUrl`。未核验的老条目不要补一个估计日期。全库 `meta.updatedAt` 不代表所有费用都已检查。
+- 同名、同用途、同官网的工具不能重复。真正不同的模式可单独收录，用清楚的名字和相应官方入口区分，不把相同 URL 当作唯一产品身份。
+- UI 是 `#/tools` 的卡片目录；历史工具页链接仍能打开目录。
 
-根对象：
+## 9. 发布校验
 
-```ts
-interface AiToolsData {
-  meta: {
-    name: string // "AI工具"
-    version: string
-    updatedAt: string // YYYY-MM-DD
-    locale: string
-    disclaimer?: string
-  }
-  columns: { id: ToolColumnId; label: string }[]
-  rows: ToolRow[]
-}
-
-/** UI tabs (single-group matrix each): 模型 | 产品 */
-type ToolColumnId =
-  | 'llm'      // 语言模型（大模型）
-  | 'image'    // 图像（大模型）
-  | 'video'    // 视频（大模型）
-  | 'other'    // 其他：embedding / 语音 / 新形态等（大模型）
-  | 'chat'     // 对话（产品）
-  | 'coding'   // 编程办公（产品）
-  | 'api'      // API（产品）
-
-interface ToolProduct {
-  name: string
-  url: string          // 产品主页
-  description: string  // 说清能做什么、特色在哪；一行，最多 70 字
-  pricing: string      // 高层费用提示（免费档 / Plus 价 / API 按量）
-  pricingUrl?: string  // 官方定价页
-  note?: string
-  /** Optional public/logos/{key} id; UI shows logos in both 模型/产品 cells */
-  logo?: string
-}
-
-interface ToolRow {
-  companyId: string // = timeline companies[].id
-  /** Single brand label — no "A / B" slashes */
-  displayName?: string
-  /** Optional one-line Chinese tagline under company name */
-  blurb?: string
-  cells: Partial<Record<ToolColumnId, ToolProduct | ToolProduct[]>>
-}
-```
-
-不变式（`npm run validate`）：
-
-1. `rows[].companyId` 必须存在于 `timeline.json` `companies[]`。
-2. `columns[].id` 为上述枚举；无重复。顺序建议：大模型四列 → 产品三列。
-3. 每个 cell 产品须有非空 `name` / `description` / `pricing`，且 `url`（及可选 `pricingUrl`）为 http(s)；可选 `logo` 为 kebab-case 键。
-4. `displayName` 若存在，不得含 `/`（公司列只用单一品牌名）。
-5. 每行至少 1 个产品；种子不少于约 5 家主要公司。
-6. UI 以 Tab 切换 `TOOL_COLUMN_GROUPS`（模型 | 产品），每次只展示一组子列；无两级 group thead。隐藏当前 Tab 下无单元格的公司行；可隐藏整列为空的形态列。模型与产品单元格均在名称旁显示小 logo（`logo` 键或行公司标）；列头旁配简洁形态 icon。
-
-路径：`docs/DATA.md`（本节）· `src/types/tools.ts` · `data/ai-tools.json`。
-
-相对 v0.13：工具矩阵去掉扁平 `agent` 列，迁入 coding/chat/other；新增 `other`；Cursor 行并入 xAI/Grok；产品列显示产品 logo。
-
-相对 v0.15：AI工具页改为 **模型 / 产品** 两个 Tab（不再用大模型|产品双层表头）；模型单元格也显示 logo；列头配形态 icon；hash 可记 Tab。
-
+`npm run validate` 检查真实日历日期、机构与分类引用、重复 ID 和重复记录、相关事件链接、来源 URL、费用核验日期与链接，并运行反例测试。检查通过只代表结构符合规则，不代替编辑核实事实。已有事件 ID 不应随数据结构迁移或显示名修改而改变。

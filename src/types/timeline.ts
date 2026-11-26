@@ -75,7 +75,7 @@ export const MODEL_CAPABILITY_LABEL_ZH: Record<ModelCapability, string> = {
   audio: '语音',
 }
 
-export interface TimelineEvent {
+export interface TimelineEventRecord {
   /** Stable kebab-case id, e.g. openai-chatgpt-research-preview-2022-11-30 */
   id: string
   /** Event date, YYYY-MM-DD. Must be >= meta.scopeStart. */
@@ -91,8 +91,8 @@ export interface TimelineEvent {
    * (生命科学 / 数学 / 材料 / 地球科学), not by series.
    */
   scienceDiscipline?: ScienceDiscipline
-  /** Display name of the company / org (match companies[].name when possible). */
-  company: string
+  /** Canonical reference to companies[].id. */
+  companyId: string
   /** Product line / model family, e.g. "ChatGPT", "Claude", "Gemini". */
   series?: string
   /** Specific product or model name when finer than series. */
@@ -109,6 +109,11 @@ export interface TimelineEvent {
   capabilities?: ModelCapability[]
 }
 
+
+/** View-only event enriched with the canonical company label. */
+export interface TimelineEvent extends TimelineEventRecord {
+  company: string
+}
 
 export interface Company {
   id: string
@@ -138,10 +143,10 @@ export interface TimelineMeta {
   ui?: TimelineUiMeta
 }
 
-export interface TimelineData {
+export interface TimelineData<T = TimelineEventRecord> {
   meta: TimelineMeta
   companies: Company[]
-  events: TimelineEvent[]
+  events: T[]
 }
 
 /** Canonical primary-category display order (zh labels in docs / board). */

@@ -11,7 +11,6 @@ import {
   SCIENCE_DISCIPLINE_CHIP_ORDER,
   SCIENCE_DISCIPLINE_LABEL_ZH,
 } from './labels'
-import { resolveCompany } from './company'
 
 export type SubGroup = {
   key: string
@@ -86,12 +85,8 @@ export function groupKeyForEvent(
     }
   }
   if (category === 'model') {
-    const co = resolveCompany(companies, e.company)
-    if (co) {
-      return { key: `company:${co.id}`, label: co.name }
-    }
-    const name = e.company?.trim() || '其他'
-    return { key: `company:${name}`, label: name }
+    const co = companies.find(c => c.id === e.companyId)
+    return { key: `company:${e.companyId}`, label: co?.name ?? e.company }
   }
   if (category === 'science') {
     const disc = resolveScienceDiscipline(e)
