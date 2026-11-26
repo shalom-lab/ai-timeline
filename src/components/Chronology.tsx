@@ -10,9 +10,20 @@ const linkedEvent = () => /^#\/event\/([a-z0-9-]+)$/.exec(window.location.hash)?
 export default function Chronology({ events, companies, onCompare, onClearSearch, hasQuery }: Props) {
   const [category, setCategory] = useState<'all' | Category>('all')
   const [year, setYear] = useState('')
+  const [selectedYear, setSelectedYear] = useState('')
   const [company, setCompany] = useState('')
   const [eventLink, setEventLink] = useState(linkedEvent)
   const lastOpened = useRef<string | null>(null)
+  const scroller = useRef<HTMLElement>(null)
+  const updateIndex = () => {
+    const el = scroller.current
+    if (!el) return
+    const top = (el.querySelector('.chronology__toolbar')?.getBoundingClientRect().bottom ?? 0) + 46
+    const headings = Array.from(el.querySelectorAll<HTMLElement>('.chronology__yearhead h2'))
+    const reachedEnd = el.scrollHeight > el.clientHeight && el.scrollTop + el.clientHeight >= el.scrollHeight - 3
+    const visible = reachedEnd ? headings.at(-1) : headings.filter(h => h.getBoundingClientRect().top <= top).at(-1) ?? headings[0]
+    if (visible) setSelectedYear(visible.id.slice('chronology-year-'.length))
+  }
   useEffect(() => {
     const sync = () => {
       const next = linkedEvent()
@@ -54,11 +65,16 @@ export default function Chronology({ events, companies, onCompare, onClearSearch
   }, [events, category, year, company])
   const count = groups.reduce((sum, [, entries]) => sum + entries.length, 0)
   const hasFilters = category !== 'all' || !!year || !!company || hasQuery
+  const shownYears = groups.map(([label, entries]) => ({label, count:entries.length}))
+  function jump(label: string) {
+    setSelectedYear(label)
+    document.getElementById('chronology-year-' + label)?.scrollIntoView({block:'start'})
+  }
   function clear() {
-    setCategory('all'); setYear(''); setCompany(''); onClearSearch()
+    setCategory('all'); setYear(''); setSelectedYear(''); setCompany(''); onClearSearch()
   }
   return (
-    <main className="chronology">
+    <main className="chronology" ref={scroller} onScroll={updateIndex}>
       <div className="chronology__toolbar">
         <div className="chronology__bar">
           <div className="chronology__categories" role="group" aria-label="事件分类">
@@ -81,7 +97,19 @@ export default function Chronology({ events, companies, onCompare, onClearSearch
         </div>
       </div>
 
-      <div className="chronology__body">
+      <div className="chronology__layout">
+        <aside className="archive-index" aria-label="年份索引">
+          <div className="archive-index__label"><span>TIME</span><span>INDEX</span></div>
+          <div className="archive-index__inner">
+            <div className="edition-label">年份索引 / YEAR</div>
+            {shownYears.map(({label,count})=><button type="button" key={label}
+              aria-label={`跳到 ${label} 年，${count} 条事件`}
+              aria-current={(shownYears.some(y=>y.label===selectedYear)?selectedYear:shownYears[0]?.label)===label?'location':undefined}
+              onClick={()=>jump(label)}><strong>{label}</strong><span>{String(count).padStart(2,'0')}</span></button>)}
+            <div className="archive-index__tail"><span>{count} 条事件</span><span>↓</span></div>
+          </div>
+        </aside>
+        <div className="chronology__body">
         {groups.length === 0 ? (
           <div className="chronology__empty">
             <h2>没有符合条件的事件</h2>
@@ -90,16 +118,17 @@ export default function Chronology({ events, companies, onCompare, onClearSearch
         ) : groups.map(([y, entries], index) => (
           <section className="chronology__year" key={y} aria-labelledby={'chronology-year-' + y}>
             <div className="chronology__yearhead">
-              <h2 id={'chronology-year-' + y}>{y}</h2>
+              <div className="chronology__year-title"><span className="edition-label">年度档案 / YEAR</span><h2 id={'chronology-year-' + y}>{y}</h2></div>
               <span className="chronology__count" aria-live={index === 0 ? 'polite' : undefined}>{index === 0 && hasFilters ? `${count} 条符合条件` : `${entries.length} 条记录`}</span>
               {index === 0 && hasFilters && <button type="button" className="chronology__clear" onClick={clear}>清除筛选</button>}
             </div>
             <ol className="chronology__stream">
               {entries.map((event, i) => {
                 const brand = companies.find(c => c.name === event.company || c.aliases?.includes(event.company))
+                const startsMonth = i === 0 || entries[i - 1].date.slice(0,7) !== event.date.slice(0,7)
                 const startsDay = i === 0 || entries[i - 1].date !== event.date
-                return <li className={`chronology__item${startsDay ? " chronology__item--newday" : ""}`} key={event.id} style={{ '--event-tone': brand?.color ?? '#447463' } as CSSProperties}>
-                  <time className={startsDay ? undefined : "sr-only"} dateTime={event.date}>{event.date.slice(5).replace('-', ' / ')}</time>
+                return <li className={`chronology__item${startsDay ? " chronology__item--newday" : ""}${startsMonth ? " chronology__item--newmonth" : ""}`} key={event.id} style={{ '--event-tone': brand?.color ?? '#447463' } as CSSProperties}>
+                  <time className={startsDay ? undefined : "sr-only"} dateTime={event.date}><span>{event.date.slice(5,7)}</span><span className="chronology__date-slash">/</span><strong>{event.date.slice(8)}</strong></time>
                   <details className="chronology__card" id={'event-' + event.id} data-linked={eventLink === event.id ? '' : undefined}>
                     <summary>
                       <span className="chronology__eyebrow"><span>{event.company}</span><span>{CATEGORY_LABEL_ZH[event.category]}</span></span>
@@ -121,6 +150,7 @@ export default function Chronology({ events, companies, onCompare, onClearSearch
             </ol>
           </section>
         ))}
+        </div>
       </div>
     </main>
   )

@@ -1,0 +1,167 @@
+/* The archive edition: ink, uncoated paper and a red editorial mark. */
+.archive-app {
+  --paper: #f5f2ea; --white: #fffcf6; --ink: #242522; --dim: #6b675e;
+  --line: #d9d1c2; --signal: #a63624; --night: #252623; --metal: #edb981;
+  --type-display: Georgia, "Noto Serif CJK SC", "Songti SC", "SimSun", serif;
+  --type-mono: ui-monospace, SFMono-Regular, Consolas, monospace;
+  background: var(--paper); color: var(--ink);
+}
+.archive-app :focus-visible { outline: 2px solid var(--signal); outline-offset: 3px; }
+.archive-app .app-header__banner {
+  padding: 0 clamp(18px,5vw,80px); background: var(--night); color: #f9f3e7;
+  min-height: 68px; gap: clamp(12px,3vw,50px); border-bottom: 1px solid #3c3a34;
+}
+.archive-app .app-header__brand { gap: 10px; flex: 0 0 auto; }
+.archive-app .app-header__title, .archive-app .app-header__titles h1 { color: #fff8e9; }
+.archive-app .app-header__titles h1 { font-size: 19px; letter-spacing: .045em; }
+.archive-app .app-header__en, .archive-app .app-header__subtitle { color: #c8beaf; }
+.archive-app .app-header__en { font-size: 10px; letter-spacing: .1em; }
+.archive-app .app-header__logo-img { width: 34px; height: 34px; filter: grayscale(1) brightness(1.25); border-radius: 4px; }
+.archive-app .app-header__nav { gap: 8px; background: none; padding: 0; border: 0; box-shadow: none; }
+.archive-app .app-header__nav-btn { color: #dfd8cb; padding: 13px 12px 11px; border-radius: 0; border-bottom: 2px solid transparent; }
+.archive-app .app-header__nav-btn:hover { color: white; background:#ffffff13; }
+.archive-app .app-header__nav-btn.is-active { background: none; color: #fff1df; border-bottom-color: var(--metal); box-shadow: none; }
+.archive-app .app-header__search-wrap { margin-left: auto; }
+.archive-app .app-header__search { background: #363733; border: 1px solid #5b574e; color: #f9f3e7; border-radius: 5px; min-height: 36px; }
+.archive-app .app-header__search input { color: #fff8e9; }
+.archive-app .app-header__search input::placeholder { color: #c8beaf; }
+.archive-app .app-header__github { color: #dfd8cb; margin-left: 0; }
+.archive-app--gallery .app-header__github { margin-left: auto; }
+.archive-app .app-header :focus-visible { outline-color: var(--metal); }
+.edition-label { color: var(--dim); font: 650 11px/1.4 var(--type-mono); letter-spacing: .1em; }
+.edition-control { background: transparent; border: 1px solid var(--line); border-radius: 3px; color: var(--ink); min-height: 38px; padding: 7px 12px; font-weight: 700; cursor: pointer; }
+.edition-control:hover { border-color: var(--signal); color: var(--signal); }
+.edition-heading { display: grid; gap: 6px; align-content: start; padding: 10px 0 22px; border-bottom: 1px solid var(--line); }
+.edition-heading h2 { color: var(--ink); font-size: clamp(32px, 4.8vw, 62px); margin: 0; line-height: 1.15; letter-spacing: -.025em; font-family: var(--type-display); }
+.edition-heading p { margin: 4px 0 0; color: var(--dim); font-size: 15px; }
+.archive-app .chronology { background: var(--paper); color: var(--ink); --forest: var(--signal); --rule: var(--line); --muted: var(--dim); }
+.archive-app .chronology__toolbar { background: #f5f2eaf7; box-shadow: 0 1px #fdfaf4; }
+.archive-app .chronology__bar { max-width: 1240px; min-height: 60px; padding-inline: 28px; }
+.archive-app .chronology__categories button,
+.archive-app .chronology__controls button,
+.archive-app .chronology__controls select { border-radius: 3px; font-size: 13px; }
+.archive-app .chronology__categories button[aria-pressed=true] { background: var(--signal); }
+.archive-app .chronology__categories button:not([aria-pressed=true]):hover,
+.archive-app .chronology__switch:hover { background: #ebe4d8; }
+.archive-app .chronology__controls .chronology__switch { border: 1px solid var(--line); color: var(--ink); }
+.chronology__layout { max-width: 1240px; margin: 0 auto; display: grid; grid-template-columns: 190px minmax(0,1fr); gap: 46px; padding: 28px 28px 60px; align-items: start; }
+.archive-index { position: sticky; top: 89px; background: var(--night); color: #fff4e7; border-radius: 3px; overflow: hidden; }
+.archive-index__label { min-height: 106px; padding: 14px 15px 16px; display: flex; flex-direction: column; justify-content:center; background: repeating-linear-gradient(110deg,#fff0 0px,#fff0 11px,#f6d7a416 12px,#fff0 13px),linear-gradient(140deg,#754532,#35302a 86%); color: #f5c394; font: 800 26px/.98 var(--type-mono); letter-spacing: .04em; }
+.archive-index__inner { padding: 15px 13px 5px; }
+.archive-index__inner .edition-label { color: #c9bcad; padding: 0 4px 8px; font-size: 10px; }
+.archive-index button { width: 100%; border: 0; border-top: 1px solid #534b42; cursor:pointer; background: transparent; color: #f4e9d9; display:flex; align-items: baseline; justify-content: space-between; padding: 8px 5px; }
+.archive-index button strong { font: 500 23px/1.05 var(--type-display); }
+.archive-index button span,.archive-index__tail { font: 11px var(--type-mono); color: #d2c4b2; }
+.archive-index button[aria-current],.archive-index button:hover { color:#ffd6a8; background:#ffffff0f; }
+.archive-index button:focus-visible { outline-color: var(--metal); outline-offset: 0; }
+.archive-index__tail { padding: 12px 5px 8px; border-top:1px solid #534b42; display:flex; justify-content: space-between; }
+.archive-app .chronology__body { width:100%; min-width:0; padding:0; }
+.archive-app .chronology__yearhead { border-bottom: 1px solid var(--ink); gap: 15px; margin-bottom: 0; padding:0 0 11px; }
+.chronology__year-title { display: flex; flex-direction: column; align-items:flex-start; gap:4px; }
+.archive-app .chronology__yearhead h2 { color: var(--ink); font-size: clamp(61px, 8vw, 112px); letter-spacing: -.085em; padding-right: .08em; scroll-margin-top: 84px; }
+.archive-app .chronology__count { font: 12px var(--type-mono); color: var(--signal); }
+.archive-app .chronology__year + .chronology__year { margin-top: 70px; }
+.archive-app .chronology__stream { gap: 0; }
+.archive-app .chronology__stream::before { left: 85px; }
+.archive-app .chronology__item { grid-template-columns: 86px minmax(0,1fr); column-gap: 21px; }
+.archive-app .chronology__item--newday:not(:first-child) { margin-top: 0; }
+.archive-app .chronology__item--newmonth:not(:first-child) { margin-top: 12px; border-top:1px dashed var(--line); }
+.archive-app .chronology__item::before { left: 82px; top: 27px; width:7px; height:7px; box-shadow: 0 0 0 4px var(--paper); background: var(--event-tone); }
+.archive-app .chronology__item time:not(.sr-only) { padding-top: 21px; font: 600 11px var(--type-mono); white-space: nowrap; }
+.chronology__item time strong { font-size: 19px; color: var(--ink); font-weight: 600; }
+.chronology__date-slash { padding: 0 4px; color: var(--signal); }
+.archive-app .chronology__card { border:0; border-radius:0; border-bottom: 1px solid var(--line); background:transparent; }
+.archive-app .chronology__card[open],.archive-app .chronology__card:hover { background:var(--white); }
+.archive-app .chronology__card[data-linked][open] { box-shadow: inset 3px 0 var(--signal); }
+.archive-app .chronology__card summary { border-radius:0; padding:16px 54px 16px 13px; gap:5px; }
+.archive-app .chronology__title { color:var(--ink); letter-spacing:-.012em; font-size:clamp(17px,2.1vw,24px); }
+.archive-app .chronology__eyebrow { color:var(--signal); font-size:11px; letter-spacing:.025em; }
+.archive-app .chronology__chevron { background: none; color: var(--ink); border:1px solid var(--line); border-radius: 2px; top:22px; }
+.archive-app .chronology__detail { padding: 0 14px 17px; }
+.archive-app .chronology__sources > span { background:#f0e5d7; }
+.archive-app .chronology__return { color: var(--signal); }
+.archive-app--compare .board { background: var(--paper); }
+.archive-app--compare .board__main, .archive-app--compare .timeline-rail { border-color: var(--line); }
+.archive-app--compare .board-tabs__btn.is-active { color: var(--signal); border-bottom-color: var(--signal); }
+.exhibit,.directory { flex:1; min-height:0; overflow:auto; padding: 28px max(24px,calc((100% - 1184px)/2)) 60px; }
+.exhibit__tabs,.directory__categories { display:flex; flex-wrap:wrap; gap:7px; padding:14px 0; }
+.exhibit__tabs button,.directory__categories button { cursor:pointer; min-height:40px; border:1px solid var(--line); border-radius:3px; background:none; padding:7px 12px; font-size:13px; font-weight:650; }
+.exhibit__tabs button span { margin-right:8px; font-family:var(--type-mono); }
+.exhibit__tabs button[aria-pressed=true],.directory__categories button[aria-pressed=true] { color: white; background:var(--signal); border-color:var(--signal); }
+.exhibit__tabs button:not([aria-pressed=true]):hover,.directory__categories button:not([aria-pressed=true]):hover { border-color:var(--signal); color:var(--signal); }
+.exhibit__feature { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1.05fr); background:var(--white); border:1px solid var(--line); }
+.exhibit__visual { display:grid; place-items:center; min-width:0; padding:16px; background:#2a2521; color:#efbc8b; }
+.exhibit__feature--blue .exhibit__visual{ background:#232b33; color:#b5cee5; }
+.exhibit__feature--moss .exhibit__visual{ background:#26302b; color:#baceaa; }
+.exhibit__feature--ink .exhibit__visual{ background:#312a31; color:#e7bfdc; }
+.exhibit__plate { width:100%; max-width:630px; height:auto; }
+.exhibit__plate text { fill:currentColor; font: 8px var(--type-mono); letter-spacing:1px; }
+.exhibit__description { min-width:0; padding:clamp(18px,3.7vw,48px); }
+.exhibit__description h3 { font-size:clamp(25px,3.3vw,43px); margin:4px 0 8px; line-height:1.25; font-family:var(--type-display); }
+.exhibit__description p { margin:0 0 24px; color:var(--dim); font-size:15px; line-height:1.65; }
+.exhibit__description ol { list-style:none; padding:0; margin:0; }
+.exhibit__description a { display:grid; grid-template-columns: max-content minmax(0,1fr) auto; align-items:baseline; gap:12px; border-top:1px solid var(--line); padding:11px 0; color:var(--ink); text-decoration:none; }
+.exhibit__description a:hover strong { color:var(--signal); text-decoration:underline; text-underline-offset:3px; }
+.exhibit__description a time { color:var(--signal); font:11px var(--type-mono); }
+.exhibit__description a small { display:block; margin-top:3px; color:var(--dim); font-size:12px; }
+.directory__bar { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px; }
+.directory--matrix .directory__bar { padding-block:12px; }
+.directory__status { display:flex; justify-content:space-between; flex-wrap:wrap; gap:6px 12px; margin:0 0 13px; color:var(--dim); font-size:12px; }
+.directory__grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); border-left:1px solid var(--line); border-top:1px solid var(--line); }
+.directory__card { background:var(--white); border-right:1px solid var(--line); border-bottom:1px solid var(--line); padding:18px; display:flex; flex-direction:column; min-width:0; }
+.directory__card:hover { background:#fff; }
+.directory__meta { display:flex; gap:8px; align-items:center; flex-wrap:wrap; color:var(--dim); font-size:12px; }
+.directory__meta > span:last-child { margin-left:auto; color:var(--signal); }
+.directory__letter { font-weight:750; font-size:16px; }
+.directory__card h3 { margin:10px 0 4px; font-size:20px; line-height:1.24; overflow-wrap:anywhere; }
+.directory__card p { color:var(--ink); margin: 4px 0; font-size:14px; }
+.directory__card small { color:var(--dim); font-size:12px; }
+.directory__links { display:flex; flex-wrap:wrap; gap:6px 15px; margin-top:auto; padding-top:14px; }
+.directory__links a { color:var(--signal); font-weight:650; font-size:12px; text-decoration:underline; text-underline-offset:3px; }
+.directory .tools-page { padding:0; background:none; }
+
+@media (max-width: 950px) {
+  .chronology__layout { gap:26px; grid-template-columns:148px minmax(0,1fr); }
+  .directory__grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+  .archive-app .app-header__banner { gap:8px 16px; padding:7px 20px; }
+}
+@media (max-width: 720px) {
+  .archive-app .app-header__banner { padding:7px 13px; gap:6px 8px; min-height:0; }
+  .archive-app .app-header__brand { flex: 1 1 auto; }
+  .archive-app .app-header__titles h1 { font-size:16px; }
+  .archive-app .app-header__subtitle { font-size:9px; }
+  .archive-app .app-header__search-wrap { order:3; flex:1 1 calc(100% - 48px); max-width:none; }
+  .archive-app .app-header__github { order:4; }
+  .archive-app--gallery .app-header__github { display:none; }
+  .archive-app .app-header__logo-img { width:30px;height:30px; }
+  .archive-app .app-header__nav { gap:0; }
+  .archive-app .app-header__nav-btn { padding:8px 7px; font-size:12px; }
+  .archive-app .chronology__bar { padding:8px 13px; gap:5px; }
+  .archive-app .chronology__categories button,.archive-app .chronology__controls button,.archive-app .chronology__controls select { min-height:34px; }
+  .chronology__layout { display:block; padding:16px 12px 40px; }
+  .archive-index { display:none; }
+  .archive-app .chronology__yearhead h2 { font-size:67px; }
+  .archive-app .chronology__item { grid-template-columns:51px minmax(0,1fr); column-gap:7px; }
+  .archive-app .chronology__stream::before { left:50px; }
+  .archive-app .chronology__item::before { left:47px; top:24px; }
+  .archive-app .chronology__item time:not(.sr-only) { padding-top:19px; }
+  .chronology__item time strong { font-size:15px; }
+  .chronology__date-slash { padding:0 2px; }
+  .archive-app .chronology__card summary { padding: 13px 33px 13px 9px; }
+  .archive-app .chronology__chevron { top:15px; right:6px; }
+  .exhibit,.directory { padding:14px 12px 46px; }
+  .exhibit__feature { grid-template-columns:1fr; }
+  .exhibit__visual { padding:4px; }
+  .exhibit__plate { max-height: 230px; }
+  .exhibit__description a { gap:6px; }
+  .directory__bar { gap:0; padding-bottom:10px; }
+}
+@media (max-width: 480px) {
+  .directory__grid { grid-template-columns:minmax(0,1fr); }
+  .edition-heading { padding-bottom:14px; }
+}
+.archive-app .chronology__yearhead { align-items:flex-end; }
+.archive-app .chronology__yearhead .chronology__count { padding-bottom:6px; }
+.directory__meta .co-logo { flex:0 0 18px; width:18px; height:18px; object-fit:contain; }
+.directory__meta { min-height:22px; }
+.archive-app .app-header__github:hover { color:white; background:#ffffff13; border-color:#5b574e; }

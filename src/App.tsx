@@ -1,4 +1,4 @@
-import { useMemo, useState, useCallback, useEffect, useRef, lazy, Suspense } from 'react'
+import { useMemo, useState, useCallback, useEffect, useRef } from 'react'
 import { timelineData, aiToolsData } from './data'
 import type { Category, TimelineEvent } from './types/timeline'
 import { CATEGORY_LABEL_ZH } from './lib/labels'
@@ -15,19 +15,17 @@ import {
 } from './lib/calendar'
 import type { RecentPreset } from './components/RecentRange'
 import Chronology from './components/Chronology'
-import GalleryBoundary from './components/GalleryBoundary'
+import Exhibition from './components/Exhibition'
 import Header, { type Filters } from './components/Header'
 import TimelineRail from './components/TimelineRail'
 import CategoryColumn from './components/CategoryColumn'
-import ToolsMatrix from './components/ToolsMatrix'
+import ToolDirectory from './components/ToolDirectory'
 import { buildTimelineLayout, type LayoutSource } from './lib/timelineLayout'
 import {
   type AppPage,
   pageFromHash,
   navigate as navigateHash,
 } from './lib/route'
-
-const Gallery3D = lazy(() => import('./components/Gallery3D'))
 
 const DEFAULT_FILTERS: Filters = {
   query: '',
@@ -365,7 +363,7 @@ export default function App() {
   }, [activeTab, railMode, filterKey])
 
   return (
-    <div className="app-shell">
+    <div className={`app-shell archive-app archive-app--${page}${compare ? " archive-app--compare" : ""}`}>
       <Header
         meta={meta}
         filters={filters}
@@ -375,13 +373,9 @@ export default function App() {
       />
 
       {page === 'gallery' ? (
-        <GalleryBoundary onReturn={() => onNavigate('timeline')}>
-          <Suspense fallback={<div className="gallery-loading">3D 展厅 · 加载中…</div>}>
-            <Gallery3D events={events} companies={companies} />
-          </Suspense>
-        </GalleryBoundary>
+        <Exhibition events={events} />
       ) : page === 'tools' ? (
-        <ToolsMatrix
+        <ToolDirectory
           data={aiToolsData}
           companies={companies}
           query={filters.query}

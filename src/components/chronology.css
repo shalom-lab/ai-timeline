@@ -76,7 +76,3 @@
 @media (prefers-reduced-motion:reduce) {
   .chronology__card,.chronology__chevron { transition:none; }
 }
-
-.gallery-fallback { flex:1; padding:40px 24px; background:#f7f7f2; color:#192c25; text-align:center; }
-.gallery-fallback h2 { color:#164a3b; }
-.gallery-fallback button { margin-top:10px; border:0; padding:10px 18px; border-radius:8px; font-weight:650; background:#164a3b; color:white; cursor:pointer; }

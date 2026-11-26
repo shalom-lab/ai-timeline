@@ -34,7 +34,7 @@ export default function Header({
       : '搜索模型、产品、公司、关键词…'
   const showSearch = page !== 'gallery'
   // Same short line on both tabs so brand–nav width does not jitter.
-  const subtitle = `更新于 ${formatUpdatedAt(meta.updatedAt)}`
+  const subtitle = `档案更新 ${formatUpdatedAt(meta.updatedAt)}`
 
   return (
     <header className="app-header">
@@ -81,9 +81,9 @@ export default function Header({
             className={`app-header__nav-btn${page === 'gallery' ? ' is-active' : ''}`}
             aria-current={page === 'gallery' ? 'page' : undefined}
             onClick={() => onNavigate('gallery')}
-            title="在 3D 展厅浏览 AI 里程碑"
+            title="里程碑专题展"
           >
-            3D 展厅
+            里程碑展
           </button>
         </nav>
 
@@ -114,13 +114,7 @@ export default function Header({
               />
             </div>
           </div>
-        ) : (
-          <div className="app-header__search-wrap app-header__search-wrap--gallery">
-            <span className="app-header__gallery-note">
-              在 3D 展厅浏览 AI 里程碑
-            </span>
-          </div>
-        )}
+        ) : null}
 
         <a
           className="app-header__github"
