@@ -71,10 +71,9 @@
 .archive-app .chronology__card { border:0; border-radius:0; border-bottom: 1px solid var(--line); background:transparent; }
 .archive-app .chronology__card[open],.archive-app .chronology__card:hover { background:var(--white); }
 .archive-app .chronology__card[data-linked][open] { box-shadow: inset 3px 0 var(--signal); }
-.archive-app .chronology__card summary { border-radius:0; padding:16px 54px 16px 13px; gap:5px; }
+.archive-app .chronology__card summary { border-radius:0; padding:16px 74px 16px 13px; gap:5px; }
 .archive-app .chronology__title { color:var(--ink); letter-spacing:-.012em; font-size:clamp(17px,2.1vw,24px); }
 .archive-app .chronology__eyebrow { color:var(--signal); font-size:11px; letter-spacing:.025em; }
-.archive-app .chronology__chevron { background: none; color: var(--ink); border:1px solid var(--line); border-radius: 2px; top:22px; }
 .archive-app .chronology__detail { padding: 0 14px 17px; }
 .archive-app .chronology__sources > span { background:#f0e5d7; }
 .archive-app .chronology__return { color: var(--signal); }
@@ -129,7 +128,6 @@
   .chronology__item time strong { font-size:15px; }
   .chronology__date-slash { padding:0 2px; }
   .archive-app .chronology__card summary { padding: 13px 33px 13px 9px; }
-  .archive-app .chronology__chevron { top:15px; right:6px; }
   .exhibit { padding:14px 12px 46px; }
   .exhibit__feature { grid-template-columns:1fr; }
   .exhibit__visual { padding:4px; }

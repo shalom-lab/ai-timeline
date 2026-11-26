@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState, type CSSProperties } from 'react'
 import { CATEGORY_LABEL_ZH, type Category, type Company, type TimelineEvent } from '../types/timeline'
 import { EVENT_TYPE_LABEL_ZH } from '../lib/labels'
+import { groupKeyForEvent } from '../lib/group'
 import './chronology.css'
 
 type Props = { events: TimelineEvent[]; companies: Company[]; onClearSearch: () => void; hasQuery: boolean }
@@ -124,16 +125,38 @@ export default function Chronology({ events, companies, onClearSearch, hasQuery 
             <ol className="chronology__stream">
               {entries.map((event, i) => {
                 const brand = companies.find(c => c.id === event.companyId)
+                const categoryLabel = CATEGORY_LABEL_ZH[event.category]
+                const subcategoryLabel = event.category === 'model'
+                  ? event.series?.trim()
+                  : event.category === 'science' || event.category === 'product'
+                    ? groupKeyForEvent(event.category, event).label
+                    : undefined
                 const startsMonth = i === 0 || entries[i - 1].date.slice(0,7) !== event.date.slice(0,7)
                 const startsDay = i === 0 || entries[i - 1].date !== event.date
                 return <li className={`chronology__item${startsDay ? " chronology__item--newday" : ""}${startsMonth ? " chronology__item--newmonth" : ""}`} key={event.id} style={{ '--event-tone': brand?.color ?? '#447463' } as CSSProperties}>
                   <time className={startsDay ? undefined : "sr-only"} dateTime={event.date}><span>{event.date.slice(5,7)}</span><span className="chronology__date-slash">/</span><strong>{event.date.slice(8)}</strong></time>
                   <details className="chronology__card" id={'event-' + event.id} data-linked={eventLink === event.id ? '' : undefined}>
                     <summary>
-                      <span className="chronology__eyebrow"><span>{event.company}</span><span>{CATEGORY_LABEL_ZH[event.category]}</span></span>
+                      <span className="chronology__eyebrow">
+                        <span className="chronology__org">{event.company}</span>
+                        <span className="chronology__taxonomy">
+                          <span>{categoryLabel}</span>
+                          {subcategoryLabel && subcategoryLabel !== categoryLabel && <>
+                            <span className="chronology__taxonomy-divider" aria-hidden="true">›</span>
+                            <span className="chronology__subtype">{subcategoryLabel}</span>
+                          </>}
+                        </span>
+                      </span>
                       <span className="chronology__title">{event.title}</span>
                       <span className="chronology__excerpt">{event.summary}</span>
-                      <span className="chronology__chevron" aria-hidden="true">+</span>
+                      <span className="chronology__disclosure" aria-hidden="true">
+                        <span className="chronology__disclosure-closed">详情</span>
+                        <span className="chronology__disclosure-open">收起</span>
+                        <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" focusable="false">
+                          <path className="chronology__disclosure-closed" d="m4 6.5 4 4 4-4" />
+                          <path className="chronology__disclosure-open" d="m4 10 4-4 4 4" />
+                        </svg>
+                      </span>
                     </summary>
                     <div className="chronology__detail">
                       <p>{event.summary}</p>

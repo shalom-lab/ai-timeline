@@ -37,16 +37,27 @@
 .chronology__card:hover,.chronology__card[open] { border-color:#9eb5a7; background:#fff; }
 .chronology__item:not(.chronology__item--newday)::before { opacity:.55; }
 .chronology__card[data-linked][open] { border-color:#6c9481; }
-.chronology__card summary { cursor:pointer; position:relative; display:grid; gap:6px; list-style:none; padding:16px 55px 16px 19px; border-radius:10px; }
+.chronology__card summary { cursor:pointer; position:relative; display:grid; gap:6px; list-style:none; padding:16px 78px 16px 19px; border-radius:10px; }
 .chronology__card summary::-webkit-details-marker { display:none; }
 .chronology__eyebrow { display:flex; flex-wrap:wrap; align-items:baseline; gap:8px; font-size:12px; font-weight:650; color:var(--forest); }
-.chronology__eyebrow span + span { color:var(--muted); font-weight:500; }
-.chronology__eyebrow span + span::before { content:"·"; margin-right:8px; }
+.chronology__taxonomy { display:inline-flex; align-items:baseline; gap:6px; min-width:0; color:var(--muted); font-weight:500; }
+.chronology__taxonomy::before { content:"·"; margin-right:2px; }
+.chronology__taxonomy-divider { opacity:.8; }
+.chronology__subtype { color:var(--ink); font-weight:650; overflow-wrap:anywhere; }
 .chronology__title { font-size:clamp(16px,2vw,22px); font-weight:750; line-height:1.35; overflow-wrap:anywhere; }
 .chronology__excerpt { font-size:14px; color:var(--muted); line-height:1.65; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 .chronology__card[open] .chronology__excerpt { display:none; }
-.chronology__chevron { display:grid; place-items:center; position:absolute; top:17px; right:16px; width:28px; height:28px; border-radius:50%; background:#eef2ea; color:var(--forest); font-size:20px; font-weight:400; transition:transform .16s; }
-.chronology__card[open] .chronology__chevron { transform:rotate(45deg); }
+/* The whole summary is the control; this affordance only reflects its native state. */
+.chronology__disclosure {
+  display:flex; align-items:center; justify-content:center; gap:5px; position:absolute;
+  top:14px; right:12px; padding:6px 7px; color:var(--muted); border-radius:4px;
+  font-size:12px; font-weight:600; line-height:1.2; white-space:nowrap;
+}
+.chronology__disclosure svg { flex:none; }
+.chronology__disclosure-open,.chronology__card[open] .chronology__disclosure-closed { display:none; }
+.chronology__card[open] .chronology__disclosure-open { display:inline; }
+.chronology__card[open] .chronology__disclosure,.chronology__card summary:is(:hover,:focus-visible) .chronology__disclosure { color:var(--ink); }
+
 .chronology__detail { padding:0 20px 17px; color:var(--muted); }
 .chronology__detail p { margin:0 0 14px; font-size:14px; line-height:1.8; overflow-wrap:anywhere; }
 .chronology__sources { display:flex; align-items:baseline; flex-wrap:wrap; gap:8px 16px; font-size:13px; }
@@ -68,10 +79,13 @@
   .chronology__item::before { left:48px; width:7px; height:7px; }
   .chronology__item time:not(.sr-only) { font-size:11px; }
   .chronology__card summary { padding:12px 38px 13px 12px; gap:5px; }
-  .chronology__chevron { right:9px; top:12px; width:23px; height:23px; font-size:17px; }
   .chronology__detail { padding:0 12px 13px; }
   .chronology__excerpt { font-size:13px; white-space:normal; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; }
 }
+@media (max-width:720px) {
+  .chronology__disclosure { right:5px; top:9px; padding:5px; }
+  .chronology__disclosure > span,.chronology__card[open] .chronology__disclosure > span { display:none; }
+}
 @media (prefers-reduced-motion:reduce) {
-  .chronology__card,.chronology__chevron { transition:none; }
+  .chronology__card { transition:none; }
 }
