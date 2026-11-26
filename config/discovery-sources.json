@@ -1,0 +1,39 @@
+{
+  "feeds": [
+    {"name": "OpenAI News", "kind": "official", "url": "https://openai.com/news/rss.xml", "excludePathPrefix": ["/business/customer-stories/", "/business/learn/"]},
+    {"name": "Google AI", "kind": "official", "url": "https://blog.google/innovation-and-ai/technology/ai/rss/"},
+    {"name": "Google DeepMind", "kind": "official", "url": "https://deepmind.google/blog/rss.xml"},
+    {"name": "Microsoft Research", "kind": "official", "url": "https://www.microsoft.com/en-us/research/feed/", "excludePathPrefix": ["/en-us/research/podcast/"]},
+    {"name": "Hugging Face Blog", "kind": "platform", "url": "https://huggingface.co/blog/feed.xml"},
+    {"name": "Claude Code Releases", "kind": "official", "url": "https://github.com/anthropics/claude-code/releases.atom"},
+    {"name": "Qwen3 Releases", "kind": "official", "url": "https://github.com/QwenLM/Qwen3/releases.atom"},
+    {"name": "DeepSeek-R1 Releases", "kind": "official", "url": "https://github.com/deepseek-ai/DeepSeek-R1/releases.atom"},
+    {"name": "Kimi K2.5 Releases", "kind": "official", "url": "https://github.com/MoonshotAI/Kimi-K2.5/releases.atom"},
+    {"name": "GLM-5 Releases", "kind": "official", "url": "https://github.com/zai-org/GLM-5/releases.atom"},
+    {"name": "TLDR AI", "kind": "newsletter", "url": "https://tldr.tech/api/rss/ai"},
+    {"name": "Latent Space / AI News", "kind": "newsletter", "url": "https://latent.space/feed"},
+    {"name": "36氪", "kind": "newsletter", "url": "https://www.36kr.com/feed", "titlePattern": "(?i)(?<![a-z])(?:ai|llm|gpt)(?![a-z])|大模型|人工智能|智能体|开源模型|具身智能|豆包|通义|深度求索|Claude|Gemini|DeepSeek|Qwen|OpenAI|Kimi|MiniMax"}
+  ],
+  "officialLinkHosts": [
+    "openai.com", "anthropic.com", "platform.claude.com", "docs.anthropic.com",
+    "blog.google", "deepmind.google", "research.google", "developers.googleblog.com",
+    "microsoft.com", "microsoft.ai", "blogs.microsoft.com",
+    "deepseek.com", "api-docs.deepseek.com", "qwen.ai", "qwenlm.github.io",
+    "alibabagroup.com", "alibabacloud.com", "kimi.ai", "kimi.com", "moonshotai.github.io",
+    "z.ai", "bigmodel.cn", "seed.bytedance.com", "tencent.com",
+    "ai.meta.com", "research.meta.ai", "about.fb.com", "x.ai", "mistral.ai",
+    "cursor.com", "cohere.com", "nvidia.com", "allenai.org"
+  ],
+  "officialGitHubOwners": [
+    "openai", "anthropics", "google-deepmind", "microsoft", "qwenlm",
+    "deepseek-ai", "moonshotai", "zai-org", "bytedance-seed", "meta-llama", "mistralai"
+  ],
+  "manualOfficialSources": [
+    {"name": "Anthropic News", "url": "https://www.anthropic.com/news"},
+    {"name": "DeepSeek API 更新", "url": "https://api-docs.deepseek.com/news"},
+    {"name": "Qwen Blog", "url": "https://qwen.ai/blog"},
+    {"name": "Kimi Blog", "url": "https://www.kimi.com/blog"},
+    {"name": "字节跳动 Seed", "url": "https://seed.bytedance.com/zh/blog"},
+    {"name": "xAI News", "url": "https://x.ai/news"}
+  ]
+}

@@ -1,10 +1,10 @@
 {
   "meta": {
     "name": "AI工具",
-    "version": "0.2.1",
-    "updatedAt": "2026-11-02",
+    "version": "0.2.2",
+    "updatedAt": "2026-11-26",
     "locale": "zh-CN",
-    "disclaimer": "费用以官方定价页为准；本表仅作高层摘要。"
+    "disclaimer": "可用性与费用以各产品官方页面为准；本表仅作参考。"
   },
   "columns": [
     {
@@ -49,17 +49,11 @@
           "note": "含 o 系列"
         },
         "image": {
-          "name": "DALL·E",
-          "url": "https://openai.com/index/dall-e-3/",
-          "pricing": "ChatGPT 限额内可用；API 按张计费",
+          "name": "GPT Image 2.6",
+          "url": "https://openai.com/index/introducing-images-2-6/",
+          "pricing": "ChatGPT / Codex 各档可用；API 按量计费",
           "pricingUrl": "https://openai.com/api/pricing/",
-          "note": "含 GPT Image"
-        },
-        "video": {
-          "name": "Sora",
-          "url": "https://openai.com/sora/",
-          "pricing": "ChatGPT Plus/Pro 额度；详情见定价页",
-          "pricingUrl": "https://chatgpt.com/pricing/"
+          "note": "API 提供 Flare 与 Sunburst"
         },
         "chat": [
           {
@@ -69,11 +63,11 @@
             "pricingUrl": "https://chatgpt.com/pricing/"
           },
           {
-            "name": "ChatGPT Agent",
-            "url": "https://openai.com/",
+            "name": "ChatGPT 智能体模式",
+            "url": "https://help.openai.com/en/articles/11752874-chatgpt-agent",
             "pricing": "高级订阅档开放（见 ChatGPT 定价）",
             "pricingUrl": "https://chatgpt.com/pricing/",
-            "note": "曾称 Dot"
+            "note": "整合了 Operator；区别于独立的 dot"
           }
         ],
         "coding": {

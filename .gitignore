@@ -35,3 +35,7 @@ pnpm-debug.log*
 
 # Local UI references
 refs/
+
+# Python discovery workflow
+__pycache__/
+candidate-review/

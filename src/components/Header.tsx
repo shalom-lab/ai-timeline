@@ -66,7 +66,7 @@ export default function Header({
             aria-current={page === 'timeline' ? 'page' : undefined}
             onClick={() => onNavigate('timeline')}
           >
-            探索纪年
+            时间线
           </button>
           <button
             type="button"
@@ -81,7 +81,7 @@ export default function Header({
             className={`app-header__nav-btn${page === 'gallery' ? ' is-active' : ''}`}
             aria-current={page === 'gallery' ? 'page' : undefined}
             onClick={() => onNavigate('gallery')}
-            title="Three.js 第一人称跑道展厅（同一份 timeline 数据）"
+            title="在 3D 展厅浏览 AI 里程碑"
           >
             3D 展厅
           </button>
@@ -117,7 +117,7 @@ export default function Header({
         ) : (
           <div className="app-header__search-wrap app-header__search-wrap--gallery">
             <span className="app-header__gallery-note">
-              第一人称 3D 展厅 · 同一份 timeline 数据
+              在 3D 展厅浏览 AI 里程碑
             </span>
           </div>
         )}

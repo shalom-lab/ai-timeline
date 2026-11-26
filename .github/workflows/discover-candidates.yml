@@ -1,0 +1,41 @@
+name: Discover AI timeline candidates
+
+on:
+  schedule:
+    - cron: '27 2 * * 1,4'
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/discover-candidates.yml'
+      - 'config/discovery-sources.json'
+      - 'scripts/discover-candidates.py'
+      - 'scripts/test_discover_candidates.py'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ai-timeline-discovery-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  shortlist:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Test feed handling
+        run: python3 -m unittest discover -s scripts -p 'test_discover_candidates.py'
+      - name: Fetch public feeds and produce review shortlist
+        run: python3 scripts/discover-candidates.py --days 14 --out candidate-review
+      - name: Upload review queue (does not publish timeline events)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ai-timeline-candidates
+          path: candidate-review/
+          if-no-files-found: warn
+          retention-days: 21

@@ -1,9 +1,9 @@
 {
   "meta": {
     "name": "AI纪年",
-    "version": "0.15.2",
+    "version": "0.15.4",
     "scopeStart": "2022-11-30",
-    "updatedAt": "2026-11-23",
+    "updatedAt": "2026-11-26",
     "locale": "zh-CN",
     "ui": {
       "openingBg": "linear-gradient(145deg, #0B1220 0%, #1E1B4B 48%, #312E81 100%)",
@@ -419,13 +419,13 @@
       "id": "anthropic-claude-1-2023-03-14",
       "date": "2023-03-14",
       "dateStatus": "exact",
-      "title": "发布 Claude（初代）",
-      "summary": "Anthropic 正式开放 Claude 与 Claude Instant：经合作伙伴封闭测试后，通过聊天界面与开发者 API 提供对话与文本处理能力。",
+      "title": "首次公布 Claude 与 Claude Instant",
+      "summary": "Anthropic 在合作伙伴封闭测试后公布 Claude 与 Claude Instant。企业可申请通过开发者控制台的聊天界面或 API 使用；已有合作伙伴也提供了有限体验。",
       "category": "model",
       "company": "Anthropic",
       "series": "Claude",
       "product": "Claude",
-      "eventType": "ga",
+      "eventType": "first_announce",
       "sources": [
         {
           "title": "Introducing Claude",
@@ -640,6 +640,41 @@
       ]
     },
     {
+      "id": "openai-gpt-4-api-ga-2023-07-06",
+      "date": "2023-07-06",
+      "dateStatus": "exact",
+      "title": "GPT-4 API 正式开放",
+      "summary": "OpenAI 向已有成功付款记录的 API 开发者开放 8K 上下文的 GPT-4 API，从 3 月的申请制扩展到已有付费开发者；新开发者的开放另行推进。",
+      "category": "model",
+      "company": "OpenAI",
+      "series": "GPT",
+      "product": "GPT-4",
+      "eventType": "ga",
+      "sources": [
+        {
+          "title": "GPT-4 API general availability and deprecation of older models in the Completions API",
+          "url": "https://openai.com/index/gpt-4-api-general-availability/",
+          "publisher": "OpenAI"
+        },
+        {
+          "title": "OpenAI Developer Community: GPT-4 API general availability",
+          "url": "https://community.openai.com/t/gpt-4-api-general-availability-and-deprecation-of-older-models-in-the-completions-api/289518",
+          "publisher": "OpenAI",
+          "publishedAt": "2023-07-06"
+        }
+      ],
+      "relatedIds": [
+        "openai-gpt-4-2023-03-14"
+      ],
+      "tags": [
+        "gpt-4",
+        "api"
+      ],
+      "capabilities": [
+        "chat"
+      ]
+    },
+    {
       "id": "anthropic-claude-2-public-beta-2023-07-11",
       "date": "2023-07-11",
       "dateStatus": "exact",
@@ -814,13 +849,13 @@
       "id": "openai-gpt-4-turbo-2023-11-06",
       "date": "2023-11-06",
       "dateStatus": "exact",
-      "title": "发布 GPT-4 Turbo",
-      "summary": "OpenAI 在首届 DevDay 发布 GPT-4 Turbo：支持最长约 128K 上下文、更低 API 定价，并同步推出 Assistants API 等开发者能力。",
+      "title": "开放 GPT-4 Turbo API 预览",
+      "summary": "OpenAI 在首届 DevDay 向付费 API 开发者开放 GPT-4 Turbo 文本预览，支持 128K 上下文；同次活动另提供视觉预览型号，稳定版当时尚未上线。",
       "category": "model",
       "company": "OpenAI",
       "series": "GPT",
       "product": "GPT-4 Turbo",
-      "eventType": "ga",
+      "eventType": "research_preview",
       "sources": [
         {
           "title": "New models and developer products announced at DevDay",
@@ -830,7 +865,8 @@
         }
       ],
       "relatedIds": [
-        "openai-gpt-4-2023-03-14"
+        "openai-gpt-4-2023-03-14",
+        "openai-gpt-4-turbo-ga-2024-04-09"
       ],
       "tags": [
         "gpt-4-turbo",
@@ -1276,6 +1312,41 @@
       ],
       "capabilities": [
         "chat"
+      ]
+    },
+    {
+      "id": "openai-gpt-4-turbo-ga-2024-04-09",
+      "date": "2024-04-09",
+      "dateStatus": "exact",
+      "title": "GPT-4 Turbo with Vision API 正式可用",
+      "summary": "OpenAI 将支持图像输入的 GPT-4 Turbo 在 API 中转为正式版，与 2023 年 11 月的预览阶段分开。",
+      "category": "model",
+      "company": "OpenAI",
+      "series": "GPT",
+      "product": "GPT-4 Turbo",
+      "eventType": "ga",
+      "sources": [
+        {
+          "title": "OpenAI API Changelog: April 9, 2024",
+          "url": "https://developers.openai.com/api/docs/changelog",
+          "publisher": "OpenAI"
+        },
+        {
+          "title": "GPT-4 Turbo Model",
+          "url": "https://developers.openai.com/api/docs/models/gpt-4-turbo",
+          "publisher": "OpenAI"
+        }
+      ],
+      "relatedIds": [
+        "openai-gpt-4-turbo-2023-11-06"
+      ],
+      "tags": [
+        "gpt-4-turbo",
+        "vision"
+      ],
+      "capabilities": [
+        "chat",
+        "vision"
       ]
     },
     {
@@ -4274,7 +4345,7 @@
       "date": "2026-04-26",
       "dateStatus": "exact",
       "title": "停用 Sora 网页与 App",
-      "summary": "OpenAI 于 2026-04-26 停用 Sora 网页与 App 体验；官方帮助中心同步说明 Sora API 将于 2026-09-24 关停，并提供内容导出指引。",
+      "summary": "OpenAI 于 2026 年 4 月 26 日停用 Sora 网页与 App 体验；API 服务当时未同步停用。",
       "category": "product",
       "productSubcategory": "video",
       "company": "OpenAI",
@@ -4283,14 +4354,14 @@
       "eventType": "discontinued",
       "relatedIds": [
         "openai-sora-first-announce-2024-02-15",
-        "openai-sora-chatgpt-plus-2024-12-09"
+        "openai-sora-chatgpt-plus-2024-12-09",
+        "openai-sora-api-discontinued-2026-09-24"
       ],
       "sources": [
         {
           "title": "What to know about the Sora discontinuation",
           "url": "https://help.openai.com/en/articles/20001152-what-to-know-about-the-sora-discontinuation",
-          "publisher": "OpenAI",
-          "publishedAt": "2026-04-26"
+          "publisher": "OpenAI"
         }
       ],
       "tags": [
@@ -5009,6 +5080,39 @@
       ]
     },
     {
+      "id": "openai-sora-api-discontinued-2026-09-24",
+      "date": "2026-09-24",
+      "dateStatus": "exact",
+      "title": "停用 Sora API",
+      "summary": "OpenAI 于 2026 年 9 月 24 日停用 Sora API，区别于同年 4 月 26 日停用的 Sora 网页与 App。",
+      "category": "product",
+      "company": "OpenAI",
+      "series": "Sora",
+      "product": "Sora API",
+      "eventType": "discontinued",
+      "sources": [
+        {
+          "title": "OpenAI API deprecations",
+          "url": "https://developers.openai.com/api/docs/deprecations",
+          "publisher": "OpenAI"
+        },
+        {
+          "title": "What to know about the Sora discontinuation",
+          "url": "https://help.openai.com/en/articles/20001152-what-to-know-about-the-sora-discontinuation",
+          "publisher": "OpenAI"
+        }
+      ],
+      "relatedIds": [
+        "openai-sora-discontinued-2026-04-26"
+      ],
+      "tags": [
+        "sora",
+        "discontinued",
+        "video"
+      ],
+      "productSubcategory": "video"
+    },
+    {
       "id": "anthropic-claude-sonnet-5-5-2026-09-28",
       "date": "2026-09-28",
       "dateStatus": "exact",
@@ -5264,6 +5368,37 @@
         "chat",
         "reasoning",
         "vision"
+      ]
+    },
+    {
+      "id": "openai-images-2-6-2026-11-04",
+      "date": "2026-11-04",
+      "dateStatus": "exact",
+      "title": "发布 Images 2.6",
+      "summary": "OpenAI 在 ChatGPT 和 Codex 推出 Images 2.6，支持生成 GIF，并改进图像编辑一致性；API 同日提供 Flare 和 Sunburst 两个型号。",
+      "category": "model",
+      "company": "OpenAI",
+      "series": "GPT Image",
+      "product": "GPT Image 2.6",
+      "eventType": "ga",
+      "sources": [
+        {
+          "title": "Introducing Images 2.6",
+          "url": "https://openai.com/index/introducing-images-2-6/",
+          "publisher": "OpenAI",
+          "publishedAt": "2026-11-04"
+        }
+      ],
+      "relatedIds": [
+        "openai-dalle-3-2023-09-20"
+      ],
+      "tags": [
+        "gpt-image",
+        "image-generation",
+        "gif"
+      ],
+      "capabilities": [
+        "image"
       ]
     },
     {
@@ -5616,6 +5751,97 @@
         "chat",
         "reasoning",
         "vision"
+      ]
+    },
+    {
+      "id": "google-gemini-tool-retrieval-preview-2026-11-19",
+      "date": "2026-11-19",
+      "dateStatus": "exact",
+      "title": "Gemini API 开放 Tool Retrieval 预览",
+      "summary": "Google 在 Gemini Interactions API 开放工具检索预览。智能体只在用到某个工具时才加载完整参数定义，不必在每轮请求都传输整套工具定义。",
+      "category": "product",
+      "company": "Google",
+      "series": "Gemini API",
+      "product": "Tool Retrieval",
+      "eventType": "research_preview",
+      "sources": [
+        {
+          "title": "Introducing Tool Retrieval in the Gemini API",
+          "url": "https://blog.google/innovation-and-ai/technology/developers-tools/gemini-api-tool-retrieval/",
+          "publisher": "Google",
+          "publishedAt": "2026-11-19"
+        }
+      ],
+      "tags": [
+        "gemini",
+        "tool-retrieval",
+        "tool-calling"
+      ],
+      "productSubcategory": "dev_platform"
+    },
+    {
+      "id": "openai-gpt-6-2-chat-2026-11-23",
+      "date": "2026-11-23",
+      "dateStatus": "exact",
+      "title": "GPT-6.2 开始上线 ChatGPT 聊天页",
+      "summary": "OpenAI 将针对日常对话调优的 GPT-6.2 Sol 版本开始推送至 ChatGPT 的 Plus、Pro、Business 和 Enterprise 聊天页。此次不改变 Work 与 Codex 所用模型，区别于 11 月 17 日的 API 和工作场景发布。",
+      "category": "product",
+      "productSubcategory": "chat",
+      "company": "OpenAI",
+      "series": "ChatGPT",
+      "product": "GPT-6.2 Sol",
+      "eventType": "major_upgrade",
+      "sources": [
+        {
+          "title": "ChatGPT release notes: GPT-6.2, now in the chat tab",
+          "url": "https://help.openai.com/en/articles/6825453-chatgpt-release-notes",
+          "publisher": "OpenAI",
+          "publishedAt": "2026-11-23"
+        }
+      ],
+      "relatedIds": [
+        "openai-gpt-6-2-astra-sol-2026-11-17"
+      ],
+      "tags": [
+        "chatgpt",
+        "gpt-6-2",
+        "sol"
+      ]
+    },
+    {
+      "id": "zhipu-glm-5-4-2026-11-23",
+      "date": "2026-11-23",
+      "dateStatus": "exact",
+      "title": "智谱发布 GLM-5.4",
+      "summary": "智谱发布首个采用 Loop Transformer 的旗舰模型 GLM-5.4，通过重复运行同一组网络层增加推理深度。发布时已可通过 Z.ai Chat 和 Coding Plan 体验，通用 API 与公开权重尚未发布。",
+      "category": "model",
+      "company": "Zhipu AI",
+      "series": "GLM",
+      "product": "GLM-5.4",
+      "eventType": "first_announce",
+      "sources": [
+        {
+          "title": "GLM-5.4: Toward Generalized Coding with Our First Loop Transformer",
+          "url": "https://z.ai/blog/glm-5.4",
+          "publisher": "Z.ai",
+          "publishedAt": "2026-11-23"
+        },
+        {
+          "title": "ZCode 4.0.0 Release Notes",
+          "url": "https://zcode.z.ai/en/changelog",
+          "publisher": "Z.ai",
+          "publishedAt": "2026-11-23"
+        }
+      ],
+      "tags": [
+        "glm",
+        "loop-transformer",
+        "coding"
+      ],
+      "capabilities": [
+        "chat",
+        "vision",
+        "reasoning"
       ]
     }
   ]

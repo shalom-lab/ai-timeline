@@ -14,6 +14,8 @@ import {
   type DateWindow,
 } from './lib/calendar'
 import type { RecentPreset } from './components/RecentRange'
+import Chronology from './components/Chronology'
+import GalleryBoundary from './components/GalleryBoundary'
 import Header, { type Filters } from './components/Header'
 import TimelineRail from './components/TimelineRail'
 import CategoryColumn from './components/CategoryColumn'
@@ -83,9 +85,12 @@ function buildDefaultDateWindow(eventDates: Iterable<string>): DateWindow {
   return clampDateWindow({ start: min, end }, min, end)
 }
 
+const isComparison = () => window.location.hash === '#/compare'
+
 export default function App() {
   const { meta, companies, events } = timelineData
   const [page, setPage] = useState<AppPage>(() => pageFromHash())
+  const [compare, setCompare] = useState(isComparison)
   const [filters, setFilters] = useState<Filters>(DEFAULT_FILTERS)
   /** Detail popover (card top-bar click). */
   const [detailId, setDetailId] = useState<string | null>(null)
@@ -123,17 +128,20 @@ export default function App() {
   /** History uses month DateWindow; recent uses day rolling window — keep separate keys for effects. */
   const filterKey = railMode === 'recent' ? recentWindow.start + recentWindow.end : `${dateWindow.start}:${dateWindow.end}`
 
-  const filtered = useMemo(() => {
+  const searched = useMemo(() => {
     const q = filters.query.trim().toLowerCase()
-    return events
-      .filter((e) => matchesQuery(e, q))
+    return events.filter(e => matchesQuery(e, q))
+  }, [events, filters.query])
+
+  const filtered = useMemo(() => {
+    return searched
       .filter((e) =>
         railMode === 'recent'
           ? inDayWindow(e.date, recentWindow)
           : inDateWindow(e.date, dateWindow),
       )
       .sort((a, b) => a.date.localeCompare(b.date))
-  }, [events, filters, railMode, recentWindow, dateWindow])
+  }, [searched, railMode, recentWindow, dateWindow])
 
   const byCategory = useMemo(() => {
     const map: Record<Category, TimelineEvent[]> = {
@@ -313,7 +321,7 @@ export default function App() {
   }, [])
 
   useEffect(() => {
-    const sync = () => setPage(pageFromHash())
+    const sync = () => { setPage(pageFromHash()); setCompare(isComparison()) }
     window.addEventListener('hashchange', sync)
     sync()
     return () => window.removeEventListener('hashchange', sync)
@@ -324,6 +332,8 @@ export default function App() {
     navigateHash(next)
     setPage(next)
   }, [])
+
+  const clearSearch = useCallback(() => patchFilters({ query: '' }), [patchFilters])
 
   const onSelectTab = useCallback((tab: string) => {
     setActiveTab(tab as BoardTab)
@@ -365,18 +375,24 @@ export default function App() {
       />
 
       {page === 'gallery' ? (
-        <Suspense
-          fallback={
-            <div className="gallery-loading">3D 展厅 · 加载中…</div>
-          }
-        >
-          <Gallery3D events={events} companies={companies} />
-        </Suspense>
+        <GalleryBoundary onReturn={() => onNavigate('timeline')}>
+          <Suspense fallback={<div className="gallery-loading">3D 展厅 · 加载中…</div>}>
+            <Gallery3D events={events} companies={companies} />
+          </Suspense>
+        </GalleryBoundary>
       ) : page === 'tools' ? (
         <ToolsMatrix
           data={aiToolsData}
           companies={companies}
           query={filters.query}
+        />
+      ) : !compare ? (
+        <Chronology
+          events={searched}
+          companies={companies}
+          onCompare={() => { window.location.hash = '#/compare'; setCompare(true) }}
+          onClearSearch={clearSearch}
+          hasQuery={!!filters.query.trim()}
         />
       ) : (
         <div className="board">
@@ -414,6 +430,8 @@ export default function App() {
                   <em className="board-tabs__count">{tabCounts[t.id]}</em>
                 </button>
               ))}
+              <button className="chronology__return" type="button"
+                onClick={() => { navigateHash('timeline'); setCompare(false) }}>← 返回时间线</button>
             </nav>
 
             <div className="board__columns" ref={boardScrollRef}>
