@@ -30,7 +30,7 @@ jobs:
       - name: Install
         run: npm ci
 
-      - name: Validate timeline data
+      - name: Validate timeline, tools, and reading threads
         run: npm run validate
 
       - name: Build

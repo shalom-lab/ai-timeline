@@ -1,0 +1,12 @@
+[
+  {
+    "id": "from-chat-to-api",
+    "title": "从对话框到 API",
+    "eventIds": [
+      "openai-chatgpt-research-preview-2022-11-30",
+      "openai-chatgpt-plus-2023-02-01",
+      "openai-gpt-4-2023-03-14",
+      "openai-gpt-4-api-ga-2023-07-06"
+    ]
+  }
+]

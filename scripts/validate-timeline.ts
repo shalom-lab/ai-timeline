@@ -1,5 +1,5 @@
 /**
- * Invariant checks for data/timeline.json + data/ai-tools.json
+ * Invariant checks for data/timeline.json + data/ai-tools.json + data/threads.json
  * (see docs/DATA.md). Run: npm run validate
  */
 import { readFileSync } from 'node:fs'
@@ -11,6 +11,7 @@ import type { AiToolsData, ToolColumnId } from '../src/types/tools'
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const root = resolve(__dirname, '..')
 const timelinePath = resolve(root, 'data/timeline.json')
+const threadsPath = resolve(root, 'data/threads.json')
 const toolsPath = resolve(root, 'data/ai-tools.json')
 
 const DATE_RE = /^\d{4}-\d{2}-\d{2}$/
@@ -90,23 +91,63 @@ const TOOL_COLS = new Set<ToolColumnId>([
   'api',
 ])
 
-export function validateData(timeline: TimelineData, tools: AiToolsData): string[] {
+export function validateData(timeline: TimelineData, tools: AiToolsData, threads: unknown): string[] {
   const errors: string[] = []
   const push = (m: string) => errors.push(m)
   const companyIds = validateTimeline(timeline, push)
   validateTools(tools, companyIds, push)
+  validateThreads(threads, timeline.events, push)
   return errors
 }
 
 function main() {
   const timeline = JSON.parse(readFileSync(timelinePath, 'utf8')) as TimelineData
   const tools = JSON.parse(readFileSync(toolsPath, 'utf8')) as AiToolsData
-  const errors = validateData(timeline, tools)
+  const threads: unknown = JSON.parse(readFileSync(threadsPath, 'utf8'))
+  const errors = validateData(timeline, tools, threads)
   if (errors.length) {
     for (const error of errors) console.error(`  - ${error}`)
     process.exitCode = 1
   } else {
-    console.log(`✓ OK — ${timeline.events.length} events, ${timeline.companies.length} organizations, ${tools.tools.length} tools`)
+    console.log(`✓ OK — ${timeline.events.length} events, ${timeline.companies.length} organizations, ${tools.tools.length} tools, ${Array.isArray(threads) ? threads.length : 0} reading threads`)
+  }
+}
+
+function validateThreads(data: unknown, events: TimelineEventRecord[], push: (m: string) => void) {
+  if (!Array.isArray(data)) { push('threads: expected an array'); return }
+  const dates = new Map((Array.isArray(events) ? events : []).map(event => [event.id, event.date]))
+  const ids = new Set<string>()
+  for (const [index, raw] of data.entries()) {
+    if (!raw || typeof raw !== 'object' || Array.isArray(raw)) {
+      push(`threads[${index}]: expected a thread object`)
+      continue
+    }
+    const { id, title, eventIds } = raw as Record<string, unknown>
+    const label = `threads[${index}]${typeof id === 'string' ? ' ' + id : ''}`
+    if (Object.keys(raw).some(key => !['id', 'title', 'eventIds'].includes(key))) push(`${label}: unexpected field`)
+    if (typeof id !== 'string' || !KEBAB_RE.test(id)) push(`${label}: invalid thread id`)
+    else if (ids.has(id)) push(`${label}: duplicate thread id`)
+    else ids.add(id)
+    if (typeof title !== 'string' || !title.trim()) push(`${label}: missing theme title`)
+    if (!Array.isArray(eventIds) || eventIds.length < 2) {
+      push(`${label}: expected at least two event IDs`)
+      continue
+    }
+    const seen = new Set<string>()
+    let previousDate: string | undefined
+    for (const eventId of eventIds) {
+      if (typeof eventId !== 'string' || !KEBAB_RE.test(eventId)) {
+        push(`${label}: invalid event ID`)
+        continue
+      }
+      if (seen.has(eventId)) push(`${label}: duplicate event ${eventId}`)
+      seen.add(eventId)
+      if (!dates.has(eventId)) { push(`${label}: missing event ${eventId}`); continue }
+      const date = dates.get(eventId)
+      if (!isDate(date)) continue // Reported by the event validator.
+      if (previousDate && date < previousDate) push(`${label}: date order reversed at ${eventId}`)
+      previousDate = date
+    }
   }
 }
 

@@ -40,6 +40,7 @@ jobs:
           {
             echo '### 待审候选，不自动入库'
             echo '先看优先复核队列；再回到原始公告、更新日志或论文，核对事件日期、开放对象和阶段。关键细节找第二条证据；证据冲突或不全就留在待审。'
+            echo '入库或修订时再人工判断是否影响主题脉络；脉络只引用既有事件 ID，不按厂商或日期自动连线。'
             echo "详见 [审校规则](${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/blob/${GITHUB_SHA}/docs/EDITORIAL-REVIEW.md)。"
           } >> "$GITHUB_STEP_SUMMARY"
       - name: Upload review queue (does not publish timeline events)

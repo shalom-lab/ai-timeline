@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { CATEGORY_LABEL_ZH, type Category, type Company, type TimelineEvent } from '../types/timeline'
 import { EVENT_TYPE_LABEL_ZH } from '../lib/labels'
 import { groupKeyForEvent } from '../lib/group'
+import { readingThreads } from '../data'
 import BrandMark, { brandStyle } from './BrandMark'
 import './chronology.css'
 
@@ -9,34 +10,28 @@ type Props = { events: TimelineEvent[]; companies: Company[]; scopeStart: string
 const categories: ('all' | Category)[] = ['all', 'model', 'product', 'science']
 const linkedEvent = () => /^#\/event\/([a-z0-9-]+)$/.exec(window.location.hash)?.[1] ?? null
 
-// Curated reading order, not an inference about causation from relatedIds.
-const openingRoute = [
-  { id: 'openai-chatgpt-research-preview-2022-11-30', title: 'ChatGPT 向公众开放' },
-  { id: 'openai-chatgpt-plus-2023-02-01', title: 'ChatGPT 推出付费订阅' },
-  { id: 'openai-gpt-4-2023-03-14', title: 'GPT-4 发布' },
-  { id: 'openai-gpt-4-api-ga-2023-07-06', title: 'GPT-4 API 扩大开放' },
-] as const
+function ReadingPaths({ eventId }: { eventId: string }) {
+  return readingThreads.map(({ id, title, events }) => {
+    const index = events.findIndex(event => event.id === eventId)
+    if (index < 0) return null
+    const previous = events[index - 1]
+    const next = events[index + 1]
 
-function OpeningReadingPath({ eventId }: { eventId: string }) {
-  const index = openingRoute.findIndex(step => step.id === eventId)
-  if (index < 0) return null
-  const previous = openingRoute[index - 1]
-  const next = openingRoute[index + 1]
-
-  return <nav className="chronology__reading" aria-label="前因后续：从对话框到 API">
-    <div className="chronology__reading-head">
-      <span>前因后续 <span aria-hidden="true">·</span> 从对话框到 API</span>
-      <span>{String(index + 1).padStart(2, '0')} / {String(openingRoute.length).padStart(2, '0')}</span>
-    </div>
-    <div className="chronology__reading-links">
-      {previous && <a href={'#/event/' + previous.id}>
-        <small>← 上一站</small><strong>{previous.title}</strong>
-      </a>}
-      {next && <a href={'#/event/' + next.id}>
-        <small>下一站 →</small><strong>{next.title}</strong>
-      </a>}
-    </div>
-  </nav>
+    return <nav key={id} className="chronology__reading" aria-label={'前因后续：' + title}>
+      <div className="chronology__reading-head">
+        <span>前因后续 <span aria-hidden="true">·</span> {title}</span>
+        <span>{String(index + 1).padStart(2, '0')} / {String(events.length).padStart(2, '0')}</span>
+      </div>
+      <div className="chronology__reading-links">
+        {previous && <a href={'#/event/' + previous.id}>
+          <small>← 上一站</small><strong>{previous.title}</strong>
+        </a>}
+        {next && <a href={'#/event/' + next.id}>
+          <small>下一站 →</small><strong>{next.title}</strong>
+        </a>}
+      </div>
+    </nav>
+  })
 }
 
 export default function Chronology({ events, companies, scopeStart, onClearSearch, hasQuery }: Props) {
@@ -198,7 +193,7 @@ export default function Chronology({ events, companies, scopeStart, onClearSearc
                         <a className="chronology__permalink" href={'#/event/' + event.id}>事件链接</a>
                         {event.sources.map(source => <a key={source.url} href={source.url} target="_blank" rel="noopener noreferrer">{source.publisher ?? source.title} · 原始来源 ↗<span className="sr-only">：{source.title}</span></a>)}
                       </div>
-                      <OpeningReadingPath eventId={event.id} />
+                      <ReadingPaths eventId={event.id} />
                     </div>
                   </details>
                 </li>
