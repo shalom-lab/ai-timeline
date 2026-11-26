@@ -64,6 +64,28 @@ class DiscoveryTest(unittest.TestCase):
         self.assertEqual(result[0]["title"], "First-party title")
         self.assertEqual({row["source"] for row in result[0]["observations"]}, {"Digest", "Lab"})
 
+    def test_cited_official_recheck_separate_from_new_and_newsletter_only(self):
+        original = "https://openai.com/index/original"
+        second = "https://openai.com/index/older"
+        reshare = "https://openai.com/index/reshared"
+        d_now = date(2026, 11, 25)
+        d_old = date(2026, 11, 22)
+        refs = {each: {"z-id", "a-id"} for each in (original, second, reshare)}
+        rows = [
+            (original + "/?utm_source=x", "Current", d_now, "official-feed", "Lab", original),
+            (original, "Current", d_now, "official-feed", "Lab duplicate", original),
+            (second, "Earlier", d_old, "official-feed", "Lab", second),
+            (reshare, "An old story", d_now, "official-link-from-newsletter", "Digest", reshare),
+        ]
+        new, excluded = discovery.merge(rows, set(refs))
+        self.assertEqual((new, excluded), ([], 3))
+        review, total = discovery.previously_cited_for_review(rows, refs, limit=1)
+        self.assertEqual(total, 2)
+        self.assertEqual(len(review), 1)
+        self.assertEqual(review[0]["title"], "Current")
+        self.assertEqual(review[0]["citedByEventIds"], ["a-id", "z-id"])
+        self.assertEqual(len(review[0]["observations"]), 2)
+
     def test_safety_limits(self):
         with self.assertRaisesRegex(ValueError, "DTD"):
             list(discovery.parse_feed(b'<!DOCTYPE rss [<!ENTITY x SYSTEM "file:///etc/passwd">]><rss/>', ""))

@@ -145,7 +145,8 @@ interface TimelineData {
 | `ga` | 正式开放 | Generally Available / 正式对某客群开放 |
 | `first_announce` | 首次公布 | 首次公开演示或宣布，未必可立即使用 |
 | `major_upgrade` | 重要升级 | 同产品线重大能力跃迁（新一代模型进产品、关键新交互等） |
-| `open_source` | 开源 | 权重、代码或完整工具以开源许可证发布 |
+| `open_source` | 开源 | 代码或完整工具以开源许可证发布 |
+| `open_weights` | 开放权重 | 可下载的模型权重；具体许可单列，不等同完整开源 |
 | `discontinued` | 停用 | 官方宣布下线或终止 |
 | `rename_rebrand` | 更名 | 产品或品牌更名（如 Bard → Gemini） |
 | `other` | 其他 | 无法归类时；须在 summary 说清性质 |

@@ -239,6 +239,21 @@ def merge(candidates, known):
     return sorted(by_recency, key=lambda item: KIND_RANK[item["kind"]]), len(skipped_known)
 
 
+def previously_cited_for_review(candidates, source_events, limit=12):
+    """Route resurfaced first-party feed URLs to a separate, bounded queue.
+
+    Matching means that a URL is already cited, not that a newer milestone is
+    confirmed or that the source changed. Recirculated newsletter links alone
+    are too noisy for this queue.
+    """
+    direct = [row for row in candidates
+              if row[3] == "official-feed" and normalize_url(row[0]) in source_events]
+    entries, _ = merge(direct, set())
+    for item in entries:
+        item["citedByEventIds"] = sorted(source_events[normalize_url(item["url"])])
+    return entries[:limit], len(entries)
+
+
 def main():
     parser = ArgumentParser(description=__doc__)
     parser.add_argument("--days", type=int, default=14, choices=range(1, 91), metavar="1..90")
@@ -247,7 +262,13 @@ def main():
     args = parser.parse_args()
     config = json.loads((ROOT / "config/discovery-sources.json").read_text())
     timeline = json.loads((ROOT / "data/timeline.json").read_text())
-    known = {normalize_url(source["url"]) for event in timeline["events"] for source in event["sources"]}
+    source_events = {}
+    for event in timeline["events"]:
+        for source in event["sources"]:
+            key = normalize_url(source["url"])
+            if key:
+                source_events.setdefault(key, set()).add(event["id"])
+    known = set(source_events)
     cutoff = args.as_of - timedelta(days=args.days - 1)
     gathered, health = [], []
     with ThreadPoolExecutor(max_workers=6) as pool:
@@ -262,6 +283,7 @@ def main():
                 audit.update(status="error", failure=compact(str(err), 140))
             health.append(audit)
     ranked, skipped_known = merge(gathered, known)
+    rechecks, total_rechecks = previously_cited_for_review(gathered, source_events)
     # Cap each source class independently so an official-feed spike does not hide newsletters.
     limits = dict(zip(KIND_RANK, (90, 40, 25, 25), strict=True))
     shown = []
@@ -271,7 +293,9 @@ def main():
             limits[item["kind"]] -= 1
     report = {"reviewState": "unverified", "windowStart": cutoff.isoformat(), "windowEnd": args.as_of.isoformat(),
               "alreadyCitedDistinctUrls": skipped_known, "newDistinctUrlsBeforeCap": len(ranked),
-              "feedHealth": health, "candidates": shown, "manualOfficialSources": config["manualOfficialSources"]}
+              "feedHealth": health, "candidates": shown, "previouslyCitedOfficialForReview": rechecks,
+              "previouslyCitedOfficialBeforeCap": total_rechecks,
+              "manualOfficialSources": config["manualOfficialSources"]}
     args.out.mkdir(parents=True, exist_ok=True)
     (args.out / "candidates.json").write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     lines = [f"AI 纪年待审候选：{cutoff} 至 {args.as_of}",
@@ -295,7 +319,12 @@ def main():
             lines += [f"{item['observedDate']}  {item['title']}", f"  {item['url']}",
                       "  线索来源：" + "、".join(dict.fromkeys(o["source"] for o in obs))]
         lines.append("")
-    lines += ["订阅源状态", "=" * 28]
+    lines += [f"已引用的官方链接（单列复核：{len(rechecks)}／{total_rechecks}）", "=" * 28,
+              "这些链接再次出现在官方订阅中，不表示页面已更新。可查是否有不同阶段或补充事实。"]
+    for item in rechecks:
+        lines += [f"{item['observedDate']}  {item['title']}", f"  {item['url']}",
+                  "  已引用事件：" + "、".join(item["citedByEventIds"])]
+    lines += ["", "订阅源状态", "=" * 28]
     lines += [f"{f['name']}: {f['status']} ({f.get('hits', f.get('failure'))})" for f in health]
     lines += ["", "补查入口（未参与本次 RSS 抓取）", "=" * 28]
     lines += [f"{s['name']}: {s['url']}" for s in config["manualOfficialSources"]]

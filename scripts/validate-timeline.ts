@@ -65,6 +65,7 @@ const EVENT_TYPES = new Set([
   'first_announce',
   'major_upgrade',
   'open_source',
+  'open_weights',
   'discontinued',
   'rename_rebrand',
   'other',

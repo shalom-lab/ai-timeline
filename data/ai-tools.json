@@ -388,11 +388,12 @@
       "categoryId": "coding",
       "name": "Cursor",
       "url": "https://cursor.com/",
-      "pricing": "Free · Plus $8/月 · Premium $30/月 · Super/Ultra 更高（X Subscription）",
+      "pricing": "免费档有限量；个人 Plus $8、Premium $30/月；第三方模型另计。",
       "pricingUrl": "https://cursor.com/pricing",
-      "note": "X Subscription；含 Cursor Agent、Cloud Agents；第三方模型按 API 标价从预付费扣（cursor.com/docs/models-and-pricing）",
+      "note": "含编辑器 Agent；云端 Agent 与自动化从 Premium 起。",
       "logo": "cursor",
-      "description": "把助手放进代码编辑器，可以边看项目、边改代码、边确认每次修改。"
+      "description": "把助手放进代码编辑器，可以边看项目、边改代码、边确认每次修改。",
+      "pricingVerifiedAt": "2026-11-26"
     },
     {
       "id": "cursor-coding-cursor-agent",
@@ -400,11 +401,12 @@
       "categoryId": "coding",
       "name": "Cursor Agent",
       "url": "https://cursor.com/",
-      "pricing": "Premium 及以上含 Cloud Agents",
+      "pricing": "免费档起含编辑器 Agent；云端 Agent 与自动化从 Premium 起。",
       "pricingUrl": "https://cursor.com/pricing",
       "logo": "cursor",
-      "note": "含 Cloud Agents",
-      "description": "给出目标后能跨文件改代码，适合把范围明确的修改交给它执行。"
+      "note": "编辑器内 Agent 与云端 Agent 的可用档位不同。",
+      "description": "给出目标后能跨文件改代码，适合把范围明确的修改交给它执行。",
+      "pricingVerifiedAt": "2026-11-26"
     },
     {
       "id": "xai-api-xai-api",
@@ -751,10 +753,11 @@
       "brandLabel": "Kimi",
       "name": "Kimi Agent 模式",
       "url": "https://www.kimi.com/help/agent/agent-overview",
-      "pricing": "会员功能",
-      "pricingUrl": "https://kimi.moonshot.cn/",
+      "pricing": "与深度研究和办公等会员功能共享额度，按实际用量扣除。",
+      "pricingUrl": "https://www.kimi.com/help/agent/agent-quota-and-billing",
       "note": "Kimi 内的 Agent 模式",
-      "description": "让 Kimi 分步骤查资料、整理内容或制作文件，适合需要交付成品的任务。"
+      "description": "让 Kimi 分步骤查资料、整理内容或制作文件，适合需要交付成品的任务。",
+      "pricingVerifiedAt": "2026-11-26"
     },
     {
       "id": "moonshot-coding-kimi-coding",
@@ -971,9 +974,10 @@
       "categoryId": "image",
       "name": "Midjourney",
       "url": "https://www.midjourney.com/",
-      "pricing": "Basic $10 · Standard $30 · Pro $60 · Mega $120/月",
+      "pricing": "Basic $10、Standard $30、Pro $60、Mega $120/月。",
       "pricingUrl": "https://docs.midjourney.com/hc/en-us/articles/27870484040333-Comparing-Midjourney-Plans",
-      "description": "擅长风格鲜明的画面，适合先确定海报、概念图或角色的视觉方向。"
+      "description": "擅长风格鲜明的画面，适合先确定海报、概念图或角色的视觉方向。",
+      "pricingVerifiedAt": "2026-11-26"
     },
     {
       "id": "perplexity-chat-perplexity",

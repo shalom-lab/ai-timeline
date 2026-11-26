@@ -298,6 +298,21 @@
       ],
       "color": "#B8860B",
       "colorSoft": "#F8F1D8"
+    },
+    {
+      "id": "prismml",
+      "name": "PrismML",
+      "color": "#4458A0"
+    },
+    {
+      "id": "sandai",
+      "name": "Sand.ai",
+      "color": "#9B5135"
+    },
+    {
+      "id": "thinking-machines",
+      "name": "Thinking Machines Lab",
+      "color": "#4C695C"
     }
   ],
   "events": [
@@ -475,7 +490,7 @@
       "date": "2023-03-14",
       "dateStatus": "exact",
       "title": "发布 GPT-4",
-      "summary": "OpenAI 发布多模态大模型 GPT-4；文本能力随即通过 ChatGPT Plus 与 API 开放，图像输入能力先以合作伙伴预览形式推出。",
+      "summary": "OpenAI 发布 GPT-4。文字功能限量向 ChatGPT Plus 用户开放；API 当日开放候补并分批邀请，图像输入先与一家合作方试点。",
       "category": "model",
       "companyId": "openai",
       "series": "GPT",
@@ -1024,10 +1039,10 @@
     },
     {
       "id": "github-copilot-chat-ga-2024-01-11",
-      "date": "2024-01-11",
+      "date": "2023-12-29",
       "dateStatus": "exact",
       "title": "Copilot Chat 对个人与组织正式可用",
-      "summary": "GitHub 宣布 Copilot Chat 在 Visual Studio Code 与 Visual Studio 中正式可用（GA），并随 Copilot 方案提供给个人与组织用户。",
+      "summary": "GitHub 向个人和组织正式开放 Copilot Chat，可在 Visual Studio Code 和 Visual Studio 内对话、理解和修改代码。",
       "category": "product",
       "productSubcategory": "ide",
       "companyId": "github",
@@ -1035,6 +1050,12 @@
       "product": "GitHub Copilot Chat",
       "eventType": "ga",
       "sources": [
+        {
+          "title": "GitHub Copilot Chat is now generally available",
+          "url": "https://github.blog/news-insights/product-news/github-copilot-chat-now-generally-available-for-organizations-and-individuals/",
+          "publisher": "GitHub",
+          "publishedAt": "2023-12-29"
+        },
         {
           "title": "GitHub Copilot Chat now generally available for organizations and individuals",
           "url": "https://github.blog/changelog/2024-01-11-github-copilot-chat-now-generally-available-for-organizations-and-individuals/",
@@ -1505,7 +1526,7 @@
       "date": "2024-05-13",
       "dateStatus": "exact",
       "title": "发布 GPT-4o",
-      "summary": "OpenAI 发布旗舰多模态模型 GPT-4o（omni），可实时跨文本、音频与视觉推理；文本与视觉能力随即通过 ChatGPT 与 API 提供。",
+      "summary": "OpenAI 发布 GPT-4o，首日开始开放文字和图片输入、文字输出。原生实时语音已演示，当天未向公众开放。",
       "category": "model",
       "companyId": "openai",
       "series": "GPT",
@@ -1529,8 +1550,7 @@
       ],
       "capabilities": [
         "chat",
-        "vision",
-        "audio"
+        "vision"
       ]
     },
     {
@@ -1700,8 +1720,8 @@
       "id": "anthropic-claude-3-5-sonnet-artifacts-2024-06-20",
       "date": "2024-06-20",
       "dateStatus": "exact",
-      "title": "发布 Claude 3.5 Sonnet 与 Artifacts",
-      "summary": "Anthropic 发布 Claude 3.5 Sonnet，并在 claude.ai 引入 Artifacts 预览：在对话旁侧窗口实时查看与编辑代码、文档与设计稿。",
+      "title": "Claude.ai 推出 Artifacts",
+      "summary": "Claude.ai 加入独立侧栏，可边对话边查看和编辑生成的代码、文档或网页设计。",
       "category": "product",
       "productSubcategory": "work_assistant",
       "companyId": "anthropic",
@@ -1910,7 +1930,7 @@
       "date": "2024-09-12",
       "dateStatus": "exact",
       "title": "发布 o1-preview 与 o1-mini",
-      "summary": "OpenAI 发布专注复杂推理的 o1-preview，并同步推出更便宜、偏 STEM 的 o1-mini；面向 ChatGPT Plus/Team/Enterprise/Edu 与高阶 API 用户，以更长「思考」时间提升科学、数学与编程表现。",
+      "summary": "OpenAI 发布推理模型 o1-preview 和轻量版 o1-mini，首日向 ChatGPT Plus、Team 和第五层 API 用户开放，Enterprise 和 Edu 计划次周加入。",
       "category": "model",
       "companyId": "openai",
       "series": "o1",
@@ -2592,7 +2612,7 @@
       "date": "2025-03-25",
       "dateStatus": "exact",
       "title": "发布 Gemini 2.5 Pro 实验版",
-      "summary": "Google DeepMind 发布 Gemini 2.5 Pro Experimental：首款强调「先思考再回答」的 Gemini 思考型模型，经 AI Studio 与 Gemini 应用向 Advanced 用户开放。",
+      "summary": "Google 发布 Gemini 2.5 Pro 实验版，延续 2.0 Flash Thinking 的推理方向，先在 Google AI Studio 和 Gemini Advanced 开放。",
       "category": "model",
       "companyId": "google",
       "series": "Gemini",
@@ -5431,6 +5451,36 @@
       ]
     },
     {
+      "id": "deepmind-verified-quantum-programs-2026-11-06",
+      "date": "2026-11-06",
+      "dateStatus": "exact",
+      "title": "DeepMind 公开 AI 改进量子算法的研究",
+      "summary": "研究团队用 Gemini 4 智能体改进量子电路，并用形式化验证检查其正确性。11 月 6 日发布预印本，23 日发布研究解读。",
+      "category": "science",
+      "companyId": "deepmind",
+      "eventType": "first_announce",
+      "sources": [
+        {
+          "title": "Discovering formally verified quantum programs with AI",
+          "url": "https://arxiv.org/abs/2611.09822",
+          "publisher": "arXiv",
+          "publishedAt": "2026-11-06"
+        },
+        {
+          "title": "Finding faster quantum algorithms with agents and formal verification",
+          "url": "https://deepmind.google/blog/finding-faster-quantum-algorithms-with-agents-and-formal-verification/",
+          "publisher": "Google DeepMind",
+          "publishedAt": "2026-11-23"
+        }
+      ],
+      "scienceDiscipline": "other",
+      "series": "Gemini 4",
+      "tags": [
+        "quantum-computing",
+        "formal-verification"
+      ]
+    },
+    {
       "id": "anthropic-claude-fable-mythos-5-2-2026-11-09",
       "date": "2026-11-09",
       "dateStatus": "exact",
@@ -5754,6 +5804,36 @@
       ]
     },
     {
+      "id": "deepmind-project-genie-4-rollout-2026-11-18",
+      "date": "2026-11-18",
+      "dateStatus": "exact",
+      "title": "Project Genie 开始向符合条件的 Ultra 用户推出 Genie 4",
+      "summary": "用户可用文字或图片生成并探索互动世界。11 月 19 日，开发者渠道扩展到 Gemini API 和 Google AI Studio。",
+      "category": "product",
+      "companyId": "deepmind",
+      "eventType": "major_upgrade",
+      "sources": [
+        {
+          "title": "Genie 4 is now available in Project Genie",
+          "url": "https://blog.google/innovation-and-ai/models-and-research/google-deepmind/genie-4-now-available-project-genie/",
+          "publisher": "Google",
+          "publishedAt": "2026-11-18"
+        },
+        {
+          "title": "Genie 4 in the Gemini API",
+          "url": "https://blog.google/innovation-and-ai/technology/developers-tools/genie-4-in-gemini-api/",
+          "publisher": "Google",
+          "publishedAt": "2026-11-19"
+        }
+      ],
+      "productSubcategory": "other_product",
+      "series": "Genie",
+      "product": "Project Genie",
+      "tags": [
+        "world-model"
+      ]
+    },
+    {
       "id": "google-gemini-tool-retrieval-preview-2026-11-19",
       "date": "2026-11-19",
       "dateStatus": "exact",
@@ -5778,6 +5858,64 @@
         "tool-calling"
       ],
       "productSubcategory": "dev_platform"
+    },
+    {
+      "id": "tencent-hy4-weights-2026-11-20",
+      "date": "2026-11-20",
+      "dateStatus": "exact",
+      "title": "腾讯混元开放 Hy4 正式版权重",
+      "summary": "腾讯公开 Hy4 指令版、FP8 指令版和预训练基础版权重，采用腾讯混元许可。有别于 11 月 4 日的服务上线。",
+      "category": "model",
+      "companyId": "tencent",
+      "eventType": "open_weights",
+      "sources": [
+        {
+          "title": "Hy4 official model links",
+          "url": "https://github.com/Tencent-Hunyuan/Hy4#model-links",
+          "publisher": "Tencent"
+        },
+        {
+          "title": "Hy4 weight repository history",
+          "url": "https://huggingface.co/tencent/Hy4/commits/main",
+          "publisher": "Tencent"
+        }
+      ],
+      "series": "Hy4",
+      "product": "Hy4",
+      "relatedIds": [
+        "tencent-hy4-2026-11-04"
+      ],
+      "tags": [
+        "open-weights"
+      ]
+    },
+    {
+      "id": "thinking-machines-inkling-2-mini-2026-11-20",
+      "date": "2026-11-20",
+      "dateStatus": "exact",
+      "title": "Thinking Machines Lab 开放 Inkling 2 Mini 权重",
+      "summary": "发布 264 亿参数的混合专家模型，单次激活 34 亿参数，可下载权重或通过 Tinker 使用。",
+      "category": "model",
+      "companyId": "thinking-machines",
+      "eventType": "open_weights",
+      "sources": [
+        {
+          "title": "Introducing Inkling 2 Mini",
+          "url": "https://thinkingmachines.ai/news/inkling-2-mini/",
+          "publisher": "Thinking Machines Lab",
+          "publishedAt": "2026-11-20"
+        },
+        {
+          "title": "Inkling 2 Mini model card",
+          "url": "https://thinkingmachines.ai/model-card/inkling-2-mini/",
+          "publisher": "Thinking Machines Lab"
+        }
+      ],
+      "series": "Inkling",
+      "product": "Inkling 2 Mini",
+      "tags": [
+        "open-weights"
+      ]
     },
     {
       "id": "openai-gpt-6-2-chat-2026-11-23",
@@ -5842,6 +5980,138 @@
         "chat",
         "vision",
         "reasoning"
+      ]
+    },
+    {
+      "id": "baidu-ernie-5-5-flash-preview-weights-2026-11-24",
+      "date": "2026-11-24",
+      "dateStatus": "exact",
+      "title": "百度开放文心 5.5 Flash Preview 权重",
+      "summary": "百度以 Apache 2.0 发布预览权重。模型总参数 2800 亿，每个 token 激活 140 亿，支持约百万 token 上下文。",
+      "category": "model",
+      "companyId": "baidu",
+      "eventType": "open_weights",
+      "sources": [
+        {
+          "title": "ERNIE-5.5-Flash-Preview model card",
+          "url": "https://huggingface.co/baidu/ERNIE-5.5-Flash-Preview",
+          "publisher": "Baidu"
+        },
+        {
+          "title": "Baidu ERNIE release announcement",
+          "url": "https://x.com/Baidu_ERNIE/status/2125072735336546546",
+          "publisher": "Baidu",
+          "publishedAt": "2026-11-24"
+        }
+      ],
+      "series": "ERNIE",
+      "product": "ERNIE 5.5 Flash Preview",
+      "tags": [
+        "open-weights"
+      ]
+    },
+    {
+      "id": "prismml-bonsai-2-5-27b-weights-2026-11-24",
+      "date": "2026-11-24",
+      "dateStatus": "exact",
+      "title": "PrismML 开放 Ternary Bonsai 2.5 27B 权重",
+      "summary": "发布基于 Qwen3.8-27B 的三值权重模型，采用 Apache 2.0 许可。PTQ1_0 权重文件约 5.93 GB，面向本地编程与工具调用。",
+      "category": "model",
+      "companyId": "prismml",
+      "eventType": "open_weights",
+      "sources": [
+        {
+          "title": "PrismML Launches Ternary Bonsai 2.5 27B",
+          "url": "https://prismml.com/news/prismml-launches-ternary-bonsai-2-5-27b",
+          "publisher": "PrismML",
+          "publishedAt": "2026-11-24"
+        },
+        {
+          "title": "Ternary Bonsai 2.5 27B model card",
+          "url": "https://huggingface.co/prism-ml/Ternary-Bonsai-2.5-27B-GGUF",
+          "publisher": "PrismML"
+        }
+      ],
+      "series": "Bonsai",
+      "product": "Ternary Bonsai 2.5 27B",
+      "tags": [
+        "open-weights",
+        "local-inference"
+      ]
+    },
+    {
+      "id": "tencent-hy-mt3-2026-11-24",
+      "date": "2026-11-24",
+      "dateStatus": "exact",
+      "title": "腾讯开放混元翻译模型 Hy-MT3",
+      "summary": "腾讯公开 1.8B、7B 和 30B-A3B 三档模型，支持 102 种语言，面向文本翻译和游戏本地化等场景。",
+      "category": "model",
+      "companyId": "tencent",
+      "eventType": "open_weights",
+      "sources": [
+        {
+          "title": "Hy-MT3 release and model links",
+          "url": "https://github.com/Tencent-Hunyuan/Hy-MT3",
+          "publisher": "Tencent"
+        },
+        {
+          "title": "Hy-MT3 technical report",
+          "url": "https://arxiv.org/abs/2611.27673",
+          "publisher": "arXiv"
+        }
+      ],
+      "series": "Hy-MT",
+      "product": "Hy-MT3",
+      "tags": [
+        "open-weights",
+        "translation"
+      ]
+    },
+    {
+      "id": "sandai-magi-2-flagship-2026-11-24",
+      "date": "2026-11-24",
+      "dateStatus": "exact",
+      "title": "Sand.ai 公布旗舰音视频模型 MAGI-2",
+      "summary": "官方展示同一模型生成同步音视频。旗舰版总参数 4800 亿，区别于此前公开权重的 MAGI-2 Preview。",
+      "category": "model",
+      "companyId": "sandai",
+      "eventType": "first_announce",
+      "sources": [
+        {
+          "title": "MAGI-2: A 480B Frontier Video Generation Model",
+          "url": "https://sand.ai/blog/magi-2",
+          "publisher": "Sand.ai",
+          "publishedAt": "2026-11-24"
+        }
+      ],
+      "series": "MAGI",
+      "product": "MAGI-2",
+      "tags": [
+        "video-generation"
+      ]
+    },
+    {
+      "id": "openai-astra-exoplanet-search-2026-11-24",
+      "date": "2026-11-24",
+      "dateStatus": "exact",
+      "title": "OpenAI 公开 Astra 辅助寻找系外行星的案例",
+      "summary": "研究者用 Astra 辅助分析公开望远镜数据，找到待复核信号；独立分析复现了部分信号，但尚未确认是新行星。",
+      "category": "science",
+      "companyId": "openai",
+      "eventType": "first_announce",
+      "sources": [
+        {
+          "title": "Searching for distant planets with Astra",
+          "url": "https://openai.com/index/searching-for-distant-planets-with-astra",
+          "publisher": "OpenAI",
+          "publishedAt": "2026-11-24"
+        }
+      ],
+      "scienceDiscipline": "other",
+      "series": "GPT-6",
+      "product": "Astra",
+      "tags": [
+        "astronomy"
       ]
     }
   ]
