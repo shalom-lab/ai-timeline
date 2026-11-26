@@ -15,11 +15,12 @@ const chapters = [
     ['deepseek-r1-open-source-2025-01-20', '开放推理模型与蒸馏版本'],
     ['alibaba-qwen3-open-source-2025-04-29', '同一家族提供多种规模与思考模式'],
   ] },
-  { title: '走进科研现场', overline: '04 / SCIENCE', color: 'moss', copy: '天气、结构生物学与算法发现。这里追踪的是可查证的研究节点，不是厂商能力榜。', points: [
+  { title: 'AI 与科学发现', overline: '04 / SCIENCE', color: 'moss', copy: '从预测天气、探索分子结构，到寻找新算法和攻克数学难题。每个节点都关注 AI 做了什么，以及结果如何得到验证。', points: [
     ['deepmind-graphcast-2023-11-14', '预测未来十天的天气'],
     ['google-deepmind-alphafold3-2024-05-08', '预测生物分子的相互作用'],
     ['deepmind-alphaevolve-algorithms-2025-05-14', '搜索并检验更好的算法'],
     ['deepmind-alphagenome-atlas-2026-09-08', '把变异效应预测做成可查询图谱'],
+    ['anthropic-alpoge-claude-riemann-proof-2026-11-20', 'Claude 参与推导和形式化；经典黎曼猜想的证明已通过 Lean 核验'],
   ] },
 ] as const
 
