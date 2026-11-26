@@ -1,4 +1,4 @@
-export async function writeClipboard(text: string): Promise<void> {
+export async function writeClipboard(text: string, requireSuccess = false): Promise<void> {
   try {
     await navigator.clipboard.writeText(text)
   } catch {
@@ -10,7 +10,7 @@ export async function writeClipboard(text: string): Promise<void> {
     document.body.appendChild(ta)
     ta.select()
     try {
-      document.execCommand('copy')
+      if (!document.execCommand('copy') && requireSuccess) throw new Error('Clipboard unavailable')
     } finally {
       document.body.removeChild(ta)
     }
