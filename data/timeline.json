@@ -320,8 +320,8 @@
       "id": "openai-chatgpt-research-preview-2022-11-30",
       "date": "2022-11-30",
       "dateStatus": "exact",
-      "title": "发布 ChatGPT 研究预览",
-      "summary": "OpenAI 以研究预览形式向公众开放对话式模型 ChatGPT，免费试用；该日成为本时间线的起点。",
+      "title": "ChatGPT 向公众开放：用对话使用大模型",
+      "summary": "OpenAI 免费开放 ChatGPT 研究预览。用户不用写代码、也不用调用 API，在网页上就能用自然语言提问、追问和修改答案。初版由 GPT‑3.5 系列的一个模型微调而来，仍可能给出看似可信却错误的回答。基于 OpenAI 数据的后续工作论文记载，截至 12 月 5 日，注册用户已超过 100 万。这不是 AI 的诞生，而是本纪年记录生成式 AI 走向大众的起点。",
       "category": "product",
       "productSubcategory": "chat",
       "companyId": "openai",
@@ -334,6 +334,11 @@
           "url": "https://openai.com/index/chatgpt/",
           "publisher": "OpenAI",
           "publishedAt": "2022-11-30"
+        },
+        {
+          "title": "How People Use ChatGPT（第 4 节：注册用户增长）",
+          "url": "https://doi.org/10.3386/w34255",
+          "publisher": "NBER 工作论文"
         }
       ],
       "tags": [

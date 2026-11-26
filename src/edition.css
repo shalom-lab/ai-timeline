@@ -49,6 +49,7 @@
 .archive-index__inner .edition-label { color: #c9bcad; padding: 0 4px 8px; font-size: 10px; }
 .archive-index button { width: 100%; border: 0; border-top: 1px solid #534b42; cursor:pointer; background: transparent; color: #f4e9d9; display:flex; align-items: baseline; justify-content: space-between; padding: 8px 5px; }
 .archive-index button strong { font: 500 23px/1.05 var(--type-display); }
+.archive-index button .archive-index__epoch { margin-right:auto; margin-left:8px; color:#f5c394; font-size:10px; }
 .archive-index button span,.archive-index__tail { font: 11px var(--type-mono); color: #d2c4b2; }
 .archive-index button[aria-current],.archive-index button:hover { color:#ffd6a8; background:#ffffff0f; }
 .archive-index button:focus-visible { outline-color: var(--metal); outline-offset: 0; }

@@ -5,12 +5,13 @@ import { groupKeyForEvent } from '../lib/group'
 import BrandMark, { brandStyle } from './BrandMark'
 import './chronology.css'
 
-type Props = { events: TimelineEvent[]; companies: Company[]; onClearSearch: () => void; hasQuery: boolean }
+type Props = { events: TimelineEvent[]; companies: Company[]; scopeStart: string; onClearSearch: () => void; hasQuery: boolean }
 const categories: ('all' | Category)[] = ['all', 'model', 'product', 'science']
 const linkedEvent = () => /^#\/event\/([a-z0-9-]+)$/.exec(window.location.hash)?.[1] ?? null
 
-export default function Chronology({ events, companies, onClearSearch, hasQuery }: Props) {
+export default function Chronology({ events, companies, scopeStart, onClearSearch, hasQuery }: Props) {
   const [category, setCategory] = useState<'all' | Category>('all')
+  const openingYear = scopeStart.slice(0, 4)
   const [year, setYear] = useState('')
   const [selectedYear, setSelectedYear] = useState('')
   const [company, setCompany] = useState('')
@@ -104,9 +105,9 @@ export default function Chronology({ events, companies, onClearSearch, hasQuery 
           <div className="archive-index__inner">
             <div className="edition-label">年份索引 / YEAR</div>
             {shownYears.map(({label,count})=><button type="button" key={label}
-              aria-label={`跳到 ${label} 年，${count} 条事件`}
+              aria-label={`跳到 ${label} 年${label === openingYear ? "（本纪年元年）" : ""}，${count} 条事件`}
               aria-current={(shownYears.some(y=>y.label===selectedYear)?selectedYear:shownYears[0]?.label)===label?'location':undefined}
-              onClick={()=>jump(label)}><strong>{label}</strong><span>{String(count).padStart(2,'0')}</span></button>)}
+              onClick={()=>jump(label)}><strong>{label}</strong>{label === openingYear && <span className="archive-index__epoch">元年</span>}<span>{String(count).padStart(2,'0')}</span></button>)}
             <div className="archive-index__tail"><span>{count} 条事件</span><span>↓</span></div>
           </div>
         </aside>
@@ -119,7 +120,7 @@ export default function Chronology({ events, companies, onClearSearch, hasQuery 
         ) : groups.map(([y, entries], index) => (
           <section className="chronology__year" key={y} aria-labelledby={'chronology-year-' + y}>
             <div className="chronology__yearhead">
-              <div className="chronology__year-title"><span className="edition-label">年度档案 / YEAR</span><h2 id={'chronology-year-' + y}>{y}</h2></div>
+              <div className="chronology__year-title"><span className="edition-label">{y === openingYear ? "本纪年元年 / YEAR ONE" : "年度档案 / YEAR"}</span><h2 id={'chronology-year-' + y}>{y}</h2></div>
               <span className="chronology__count" aria-live={index === 0 ? 'polite' : undefined}>{index === 0 && hasFilters ? `${count} 条符合条件` : `${entries.length} 条记录`}</span>
               {index === 0 && hasFilters && <button type="button" className="chronology__clear" onClick={clear}>清除筛选</button>}
             </div>

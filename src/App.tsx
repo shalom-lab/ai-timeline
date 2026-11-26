@@ -49,7 +49,7 @@ export default function App() {
     {page==='gallery' ? <Exhibition events={events}/> :
       page==='tools' ? <ToolDirectory data={aiToolsData} companies={companies} query={filters.query}/> :
       page==='compare' ? <CompareBoard events={events} searched={searched} companies={companies} onClearSearch={clearSearch}/> :
-      <Chronology events={searched} companies={companies}
+      <Chronology events={searched} companies={companies} scopeStart={meta.scopeStart}
         onClearSearch={clearSearch} hasQuery={!!filters.query.trim()}/>}
   </div>
 }
