@@ -1,8 +1,8 @@
-import { useEffect, useMemo, useRef, useState, type CSSProperties } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { CATEGORY_LABEL_ZH, type Category, type Company, type TimelineEvent } from '../types/timeline'
 import { EVENT_TYPE_LABEL_ZH } from '../lib/labels'
 import { groupKeyForEvent } from '../lib/group'
-import { CompanyLogoImg, hasCompanyLogo } from '../lib/icons'
+import BrandMark, { brandStyle } from './BrandMark'
 import './chronology.css'
 
 type Props = { events: TimelineEvent[]; companies: Company[]; onClearSearch: () => void; hasQuery: boolean }
@@ -134,17 +134,13 @@ export default function Chronology({ events, companies, onClearSearch, hasQuery 
                     : undefined
                 const startsMonth = i === 0 || entries[i - 1].date.slice(0,7) !== event.date.slice(0,7)
                 const startsDay = i === 0 || entries[i - 1].date !== event.date
-                return <li className={`chronology__item${startsDay ? " chronology__item--newday" : ""}${startsMonth ? " chronology__item--newmonth" : ""}`} key={event.id} style={{ '--event-tone': brand?.color ?? '#447463', '--event-soft': brand?.colorSoft } as CSSProperties}>
+                return <li className={`chronology__item${startsDay ? " chronology__item--newday" : ""}${startsMonth ? " chronology__item--newmonth" : ""}`} key={event.id} style={brandStyle(brand)}>
                   <time className={startsDay ? undefined : "sr-only"} dateTime={event.date}><span>{event.date.slice(5,7)}</span><span className="chronology__date-slash">/</span><strong>{event.date.slice(8)}</strong></time>
                   <details className="chronology__card" id={'event-' + event.id}>
                     <summary>
                       <span className="chronology__eyebrow">
                         <span className="chronology__org">
-                          <span className="chronology__mark" aria-hidden="true">
-                            {hasCompanyLogo(event.companyId)
-                              ? <CompanyLogoImg companyId={event.companyId} size={13} />
-                              : event.company.slice(0, 1).toUpperCase()}
-                          </span>
+                          <BrandMark id={event.companyId} name={event.company} />
                           {event.company}
                         </span>
                         <span className="chronology__taxonomy">

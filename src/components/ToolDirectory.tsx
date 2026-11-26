@@ -1,7 +1,7 @@
 import { useMemo, useRef, useState } from 'react'
 import type { AiToolsData, ToolColumnId } from '../types/tools'
 import type { Company } from '../types/timeline'
-import { CompanyLogoImg, hasCompanyLogo } from '../lib/icons'
+import BrandMark, { brandStyle } from './BrandMark'
 import './directory.css'
 
 type Category = ToolColumnId | 'all'
@@ -19,7 +19,7 @@ export default function ToolDirectory({ data, companies, query }: { data: AiTool
       const col = categories.get(product.categoryId) ?? { id: product.categoryId, label: product.categoryId }
       const name = product.brandLabel ?? company?.name ?? product.companyId
       return {
-        product, col, name, id: product.logo ?? product.companyId, key: product.id,
+        product, col, name, company, id: product.logo ?? product.companyId, key: product.id,
         keywords: [product.name, product.description, product.note, product.pricing, name,
           company?.name, col.label, ...(company?.aliases ?? []), ...(product.aliases ?? [])].join(' ').toLowerCase(),
       }
@@ -66,12 +66,10 @@ export default function ToolDirectory({ data, companies, query }: { data: AiTool
           <span aria-live="polite">{visible.length} 项结果</span>
         </div>
         {visible.length > 0 ? <div className="directory__grid">
-          {visible.map(({ product, col, name, id, key }) => <article className="directory__card" key={key}>
+          {visible.map(({ product, col, name, company, id, key }) => <article className="directory__card" key={key} style={brandStyle(company)}>
             <div className="directory__meta">
               <span className="directory__brand">
-                <span className="directory__mark" aria-hidden="true">
-                  {hasCompanyLogo(id) ? <CompanyLogoImg companyId={id} size={19}/> : name.slice(0, 1)}
-                </span>
+                <BrandMark id={id} name={name} size={19}/>
                 <span>{name}</span>
               </span>
               <span className="directory__tag">{col.label}</span>

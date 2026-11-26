@@ -3,6 +3,7 @@ import { buildSubGroups } from '../lib/group'
 import { CATEGORY_LABEL_ZH, type Company, type TimelineEvent } from '../types/timeline'
 import { EVENT_TYPE_LABEL_ZH } from '../lib/labels'
 import { writeClipboard } from '../lib/clipboard'
+import BrandMark, { brandStyle } from './BrandMark'
 import './compare.css'
 
 const tabs = ['model','product','science'] as const
@@ -16,11 +17,12 @@ const MAX = 4
 const monthLabel = (month: string) => `${month.slice(0,4)} 年 ${Number(month.slice(5))} 月`
 const tsvCell = (value: string) => value.replace(/[\t\n\r]+/g,' ').replace(/^[=+@-]/, match => "'" + match)
 
-function CompareEvent({e, group}: {e:TimelineEvent; group?:string}) {
-  return <article className="compare-entry">
+function CompareEvent({e, company, group}: {e:TimelineEvent; company?:Company; group?:string}) {
+  return <article className="compare-entry" style={brandStyle(company)}>
     <div className="compare-entry__meta">
+      <span className="compare-entry__brand"><BrandMark id={e.companyId} name={e.company} size={12}/>{e.company}</span>
       {group && <strong>{group}</strong>}
-      <span>{e.company}</span><span>{EVENT_TYPE_LABEL_ZH[e.eventType]}</span>
+      <span className="compare-entry__phase">{EVENT_TYPE_LABEL_ZH[e.eventType]}</span>
     </div>
     <a className="compare-entry__title" href={`#/event/${e.id}`}>{e.title}<span aria-hidden="true"> ↗</span></a>
     {e.sources[0] && <a className="compare-entry__source" href={e.sources[0].url} target="_blank" rel="noopener noreferrer" aria-label={`查看来源：${e.sources[0].title}`}>原文 ↗</a>}
@@ -42,6 +44,7 @@ export default function CompareBoard({events, searched, companies, onClearSearch
   const matrix = useRef<HTMLDivElement>(null)
   const rail = useRef<HTMLDivElement>(null)
   const pinnedScrollTop = useRef<number | null>(null)
+  const companyMap = useMemo(() => new Map(companies.map(company => [company.id, company])), [companies])
   const choices = useMemo(()=>buildSubGroups(tab,events.filter(e=>e.category===tab),companies),[tab,events,companies])
   const visible = choices.filter(g=>picked[tab].includes(g.key))
   const years = [...new Set(choices.flatMap(g=>g.events.map(e=>e.date.slice(0,4))))].sort().reverse()
@@ -224,7 +227,7 @@ export default function CompareBoard({events, searched, companies, onClearSearch
               {monthRows.map(([date,day])=><tr key={date} data-compare-date={date} data-current={date===activeDate} className={day.size>1?"comparison__overlap":undefined}>
                 <th className="comparison__date" scope="row"><time dateTime={date}>{date.slice(5).replace('-',' / ')}</time>{day.size>1&&<span>同日 · {day.size} 列</span>}</th>
                 {visible.map(g=><td key={g.key} className={day.has(g.key)?'has-events':'is-blank'}>
-                  {day.get(g.key)?.map(e=><CompareEvent key={e.id} e={e}/>)??<span aria-label="当日无匹配事件">·</span>}
+                  {day.get(g.key)?.map(e=><CompareEvent key={e.id} e={e} company={companyMap.get(e.companyId)}/>)??<span aria-label="当日无匹配事件">·</span>}
                 </td>)}
               </tr>)}
             </tbody>)}
@@ -240,7 +243,7 @@ export default function CompareBoard({events, searched, companies, onClearSearch
           {[...groupsByMonth].map(([month,monthRows])=><section id={'compare-mobile-'+month} key={month} aria-label={monthLabel(month)}>
             <h3>{monthLabel(month)}</h3>
             {monthRows.map(([date,day])=><div className="comparison__mobile-day" key={date}><time dateTime={date}>{date.slice(5).replace('-',' / ')}</time>
-              <div>{visible.flatMap(g=>(day.get(g.key)??[]).map(e=><CompareEvent key={e.id} e={e} group={g.label}/>))}</div>
+              <div>{visible.flatMap(g=>(day.get(g.key)??[]).map(e=><CompareEvent key={e.id} e={e} company={companyMap.get(e.companyId)} group={tab === 'model' ? undefined : g.label}/>))}</div>
             </div>)}
           </section>)}
         </div>

@@ -1,0 +1,7 @@
+.brand-mark {
+  display:inline-grid; place-items:center; width:calc(var(--mark-size) + 7px);
+  height:calc(var(--mark-size) + 7px); flex:none; border-radius:5px;
+  background:color-mix(in srgb, var(--white, white), transparent 18%);
+  color:var(--ink); font:700 calc(var(--mark-size) * .78)/1 var(--type-mono, monospace);
+}
+.brand-mark .co-logo { width:var(--mark-size); height:var(--mark-size); }

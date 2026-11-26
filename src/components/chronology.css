@@ -40,12 +40,6 @@
 .chronology__card summary::-webkit-details-marker { display:none; }
 .chronology__eyebrow { display:flex; flex-wrap:wrap; align-items:center; gap:8px; font-size:12px; font-weight:650; color:var(--forest); }
 .chronology__org { display:inline-flex; align-items:center; gap:6px; min-width:0; }
-.chronology__mark {
-  display:grid; place-items:center; flex:0 0 20px; height:20px; border-radius:5px;
-  background:color-mix(in srgb, var(--white, white), transparent 18%); color:var(--ink);
-  font:700 10px/1 var(--type-mono, monospace);
-}
-.chronology__mark .co-logo { width:13px; height:13px; }
 .chronology__taxonomy { display:inline-flex; align-items:baseline; gap:6px; min-width:0; color:var(--muted); font-weight:500; }
 .chronology__taxonomy::before { content:"·"; margin-right:2px; }
 .chronology__taxonomy-divider { opacity:.8; }
