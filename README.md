@@ -31,6 +31,7 @@
 ## 增量线索与收录
 
 - GitHub Actions 的 [Discover AI timeline candidates](https://github.com/shalom-lab/ai-timeline/actions/workflows/discover-candidates.yml) 在北京时间每周一、四约 10:27 扫描最近 14 天，也可手动运行。每次输出待审候选与来源连通性报告，不改正式数据，不部署。
+- [交叉核验规则](docs/EDITORIAL-REVIEW.md)会随候选报告一起打包。
 - [来源表](config/discovery-sources.json) 将官方发布、平台、周报和媒体分开。周报帮忙找线索，转载日和简报日期不作为事件日期。同一篇公告可能涉及多条发布，链接去重只缩小人工候选列表。
 - 入库先确定它是否改变了能力、可用性或科研结论；再核对原始公告、变更日志、论文或官方代码仓库，区分首次公布、预览、正式开放、权重开放和退役。不要把预印本当正式发表、把厂商测评当独立评测。按机构＋产品＋阶段＋日期检查重复；缺少可靠日期就留待核查。
 - 工具库回答「现在能不能用」，停用项从工具库移除，但历史事件保留。修改数据后执行 `npm run validate`，通过后再进入发布流程。

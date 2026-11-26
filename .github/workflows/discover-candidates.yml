@@ -11,6 +11,7 @@ on:
       - 'config/discovery-sources.json'
       - 'scripts/discover-candidates.py'
       - 'scripts/test_discover_candidates.py'
+      - 'docs/EDITORIAL-REVIEW.md'
 
 permissions:
   contents: read
@@ -31,6 +32,16 @@ jobs:
         run: python3 -m unittest discover -s scripts -p 'test_discover_candidates.py'
       - name: Fetch public feeds and produce review shortlist
         run: python3 scripts/discover-candidates.py --days 14 --out candidate-review
+      - name: Attach editorial gate to review artifacts
+        if: always()
+        run: |
+          mkdir -p candidate-review
+          cp docs/EDITORIAL-REVIEW.md candidate-review/
+          {
+            echo '### 待审候选，不自动入库'
+            echo '回到原始公告、更新日志或论文，核对事件日期、开放对象和阶段。关键细节找第二条证据；证据冲突或不全就留在待审。'
+            echo "详见 [审校规则](${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/blob/${GITHUB_SHA}/docs/EDITORIAL-REVIEW.md)。"
+          } >> "$GITHUB_STEP_SUMMARY"
       - name: Upload review queue (does not publish timeline events)
         if: always()
         uses: actions/upload-artifact@v4

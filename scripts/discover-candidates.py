@@ -276,7 +276,10 @@ def main():
     (args.out / "candidates.json").write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     lines = [f"AI 纪年待审候选：{cutoff} 至 {args.as_of}",
              "仅供发现线索。观察日期是消息/期刊日期，不是事件日期；不自动写入纪年。",
-             "入库前核对官方公告/论文、事件发生日期、开放对象及阶段，按机构+产品+阶段+日期查重。",
+             "审校规则：docs/EDITORIAL-REVIEW.md",
+             "先核一手原文，再找发布日志、模型卡、版本记录或独立原始证据，核对日期、对象、开放渠道和阶段。",
+             "转载共用同一原文不算独立证据；证据冲突或关键细节无法核实就留在待审。",
+             "复核后再按机构+产品+阶段+日期查重和选编。",
              "同一官方链接若涵盖多个事件，可在人工核对后继续使用。", "",
              f"候选：{len(shown)}／{len(ranked)} 个；排除已有来源网址：{skipped_known} 个。", ""]
     headers = {

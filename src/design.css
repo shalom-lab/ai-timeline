@@ -82,7 +82,7 @@ button:focus-visible, a:focus-visible, select:focus-visible { outline:2px solid 
   .app-header__en { display:none; }
   .app-header__nav-btn { padding:5px 10px; font-size:.74rem; }
   .app-header__github-label { display:none; }
-  .app-header__search-wrap { flex:1 1 100%; max-width:none; }
+  .app-header__search-wrap { flex:1 1 calc(100% - 52px); max-width:none; }
   .app-header__search { max-width:none; }
   .board { display:flex; flex-direction:column; overflow:visible; padding:12px; gap:10px; }
   .timeline-rail { height:auto; max-height:170px; padding:0 8px; flex-shrink:0; border:1px solid var(--border); border-radius:10px; }

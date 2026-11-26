@@ -4,6 +4,7 @@
     {"name": "Google AI", "kind": "official", "url": "https://blog.google/innovation-and-ai/technology/ai/rss/"},
     {"name": "Google DeepMind", "kind": "official", "url": "https://deepmind.google/blog/rss.xml"},
     {"name": "Microsoft Research", "kind": "official", "url": "https://www.microsoft.com/en-us/research/feed/", "excludePathPrefix": ["/en-us/research/podcast/"]},
+    {"name": "Nature Portfolio · Machine Learning", "kind": "platform", "url": "https://www.nature.com/subjects/machine-learning.rss"},
     {"name": "Hugging Face Blog", "kind": "platform", "url": "https://huggingface.co/blog/feed.xml"},
     {"name": "Claude Code Releases", "kind": "official", "url": "https://github.com/anthropics/claude-code/releases.atom"},
     {"name": "Qwen3 Releases", "kind": "official", "url": "https://github.com/QwenLM/Qwen3/releases.atom"},
