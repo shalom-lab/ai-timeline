@@ -68,10 +68,15 @@
 .archive-app .chronology__item time:not(.sr-only) { padding-top: 21px; font: 600 11px var(--type-mono); white-space: nowrap; }
 .chronology__item time strong { font-size: 19px; color: var(--ink); font-weight: 600; }
 .chronology__date-slash { padding: 0 4px; color: var(--signal); }
-.archive-app .chronology__card { border:0; border-radius:0; border-bottom: 1px solid var(--line); background:transparent; }
-.archive-app .chronology__card[open],.archive-app .chronology__card:hover { background:var(--white); }
-.archive-app .chronology__card[data-linked][open] { box-shadow: inset 3px 0 var(--signal); }
-.archive-app .chronology__card summary { border-radius:0; padding:16px 74px 16px 13px; gap:5px; }
+.archive-app .chronology__card {
+  --row-soft: var(--event-soft, color-mix(in srgb, var(--event-tone) 14%, var(--white)));
+  border:0; border-radius:0; border-bottom:1px solid var(--line);
+  background:color-mix(in srgb, var(--row-soft) 48%, var(--white));
+}
+.archive-app .chronology__card[open],.archive-app .chronology__card:hover {
+  background:color-mix(in srgb, var(--row-soft) 72%, var(--white));
+}
+.archive-app .chronology__card summary { border-radius:0; padding:16px 44px 16px 13px; gap:5px; }
 .archive-app .chronology__title { color:var(--ink); letter-spacing:-.012em; font-size:clamp(17px,2.1vw,24px); }
 .archive-app .chronology__eyebrow { color:var(--signal); font-size:11px; letter-spacing:.025em; }
 .archive-app .chronology__detail { padding: 0 14px 17px; }
