@@ -1,9 +1,5 @@
 /* Parallel chronology. Use one real date per row, never imply a proportional time scale. */
-.comparison { flex:1; min-width:0; min-height:0; overflow:auto; padding:28px max(24px,calc((100% - 1184px)/2)) 64px; }
-.comparison__mast { border-bottom:1px solid var(--ink); padding-bottom:17px; margin-bottom:12px; }
-.comparison__mast h2 { font-family:var(--type-display); font-size:clamp(34px,5vw,62px); margin:12px 0 5px; line-height:1.1; }
-.comparison__mast p { color:var(--ink); margin:0; font-size:14px; }
-.comparison__mast p span { color:var(--dim); display:inline-block; }
+.comparison { flex:1; min-width:0; min-height:0; overflow:auto; padding:20px max(24px,calc((100% - 1184px)/2)) 64px; }
 .comparison__controls,.comparison__selection,.comparison__status { display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:8px 13px; }
 .comparison__tabs,.comparison__chips,.comparison__filters { display:flex; flex-wrap:wrap; align-items:center; gap:6px; }
 .comparison__tabs button,.comparison__chips button,.comparison__filters select,.comparison__picker summary { cursor:pointer; min-height:38px; padding:6px 10px; border:1px solid var(--line); border-radius:3px; background:var(--white); font-weight:650; font-size:13px; }
@@ -54,9 +50,6 @@
 .comparison__mobile { display:none; }
 @media (max-width: 730px) {
  .comparison { padding:14px 12px 44px; }
- .comparison__mast { padding-bottom:12px; }
- .comparison__mast h2 { margin-top:10px; }
- .comparison__mast p span { display:block; margin-top:4px; font-size:12px; }
  .comparison__filters select { min-height:34px; }
  .comparison__selection { padding-block:8px; }
  .comparison__matrix { display:none; }

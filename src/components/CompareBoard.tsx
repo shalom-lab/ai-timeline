@@ -160,12 +160,7 @@ export default function CompareBoard({events, searched, companies, onClearSearch
     } catch {setMessage('暂时无法复制，请检查浏览器的剪贴板权限。')}
   }
 
-  return <main className="comparison" ref={page}>
-    <div className="comparison__mast">
-      <span className="edition-label">PARALLEL CHRONOLOGY</span>
-      <h2>分栏对照</h2>
-      <p>把不同发布放在同一条时间轴上。<span>每行是一个实际发生事件的日期，行距不代表相隔天数。</span></p>
-    </div>
+  return <main className="comparison" aria-label="分栏对照" ref={page}>
     <div className="comparison__controls">
       <div className="comparison__tabs" role="group" aria-label="对照类别">
         {tabs.map((label)=><button type="button" key={label} aria-pressed={tab===label} onClick={()=>{setTab(label);setMessage('')}}>{CATEGORY_LABEL_ZH[label]}</button>)}
