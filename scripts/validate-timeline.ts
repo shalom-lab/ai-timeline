@@ -288,6 +288,10 @@ function validateTools(
         const label = `tools ${row.companyId}/${cid}/${p.name}`
         if (!p.name?.trim()) push(`${label}: empty name`)
         if (!/^https?:\/\//.test(p.url ?? '')) push(`${label}: bad url`)
+        const description = typeof p.description === 'string' ? p.description.trim() : ''
+        if (!description || description.length > 70 || /[\r\n]/.test(description)) {
+          push(`${label}: description must be a short, single-line plain-language summary (1–70 chars)`)
+        }
         if (!p.pricing?.trim()) push(`${label}: empty pricing hint`)
         if (p.pricingUrl && !/^https?:\/\//.test(p.pricingUrl)) {
           push(`${label}: bad pricingUrl`)

@@ -46,54 +46,62 @@
           "url": "https://openai.com/gpt",
           "pricing": "Chat 含免费档；API 按量计费",
           "pricingUrl": "https://openai.com/api/pricing/",
-          "note": "含 o 系列"
+          "note": "含 o 系列",
+          "description": "用来写作、解题和处理代码，同一家族里有适合快速回答和深入推理的版本。"
         },
         "image": {
           "name": "GPT Image 2.6",
           "url": "https://openai.com/index/introducing-images-2-6/",
           "pricing": "ChatGPT / Codex 各档可用；API 按量计费",
           "pricingUrl": "https://openai.com/api/pricing/",
-          "note": "API 提供 Flare 与 Sunburst"
+          "note": "API 提供 Flare 与 Sunburst",
+          "description": "用文字生成或修改图片，适合做带文字的海报和需要保留主体的局部编辑。"
         },
         "chat": [
           {
             "name": "ChatGPT",
             "url": "https://chatgpt.com/",
             "pricing": "免费 · Go $8/月 · Plus $20/月 · Pro 起 $100/月",
-            "pricingUrl": "https://chatgpt.com/pricing/"
+            "pricingUrl": "https://chatgpt.com/pricing/",
+            "description": "把提问、读文件、出图和分析放在同一个对话里，适合边做边追问。"
           },
           {
             "name": "ChatGPT 智能体模式",
             "url": "https://help.openai.com/en/articles/11752874-chatgpt-agent",
             "pricing": "高级订阅档开放（见 ChatGPT 定价）",
             "pricingUrl": "https://chatgpt.com/pricing/",
-            "note": "整合了 Operator；区别于独立的 dot"
+            "note": "整合了 Operator；区别于独立的 dot",
+            "description": "能在网页上点按钮和填表，适合把需要来回切换页面的任务交给它处理。"
           }
         ],
         "coding": {
           "name": "Codex",
           "url": "https://openai.com/codex/",
           "pricing": "ChatGPT 计划内限额；API 按量",
-          "pricingUrl": "https://chatgpt.com/pricing/"
+          "pricingUrl": "https://chatgpt.com/pricing/",
+          "description": "能打开项目、改多份代码并跑测试，适合把一个具体开发任务交给它做。"
         },
         "api": {
           "name": "OpenAI API",
           "url": "https://platform.openai.com/",
           "pricing": "按 token / 工具用量计费",
-          "pricingUrl": "https://openai.com/api/pricing/"
+          "pricingUrl": "https://openai.com/api/pricing/",
+          "description": "让自己的应用调用 OpenAI 模型，适合把文字、图像或语音功能按需接进产品。"
         },
         "other": [
           {
             "name": "Embeddings",
             "url": "https://platform.openai.com/docs/guides/embeddings",
             "pricing": "API 按 token 计费",
-            "pricingUrl": "https://openai.com/api/pricing/"
+            "pricingUrl": "https://openai.com/api/pricing/",
+            "description": "把句子转成能比较意思的数字，让搜索能找到换了说法的同一件事。"
           },
           {
             "name": "Whisper",
             "url": "https://platform.openai.com/docs/guides/speech-to-text",
             "pricing": "API 按分钟计费",
-            "pricingUrl": "https://openai.com/api/pricing/"
+            "pricingUrl": "https://openai.com/api/pricing/",
+            "description": "把录音变成文字，适合整理访谈、会议录音和多语言字幕。"
           }
         ]
       }
@@ -106,32 +114,37 @@
           "name": "Claude",
           "url": "https://www.anthropic.com/claude",
           "pricing": "对话订阅 + API 按量",
-          "pricingUrl": "https://claude.com/pricing"
+          "pricingUrl": "https://claude.com/pricing",
+          "description": "擅长读长材料和改写正文，适合拿同一批资料反复核对、追问和打磨。"
         },
         "chat": {
           "name": "Claude.ai",
           "url": "https://claude.ai/",
           "pricing": "免费 · Pro $20/月 · Max 起 $100/月",
-          "pricingUrl": "https://claude.com/pricing"
+          "pricingUrl": "https://claude.com/pricing",
+          "description": "把几份长材料放进同一个项目里，方便围绕同一批资料持续问答和写作。"
         },
         "coding": {
           "name": "Claude Code",
           "url": "https://www.anthropic.com/claude-code",
           "pricing": "Pro/Max 含；API/终端用量另计",
-          "pricingUrl": "https://claude.com/pricing"
+          "pricingUrl": "https://claude.com/pricing",
+          "description": "从终端读仓库、改代码、运行命令，适合在原有项目里定位问题并验证修复。"
         },
         "api": {
           "name": "Anthropic API",
           "url": "https://www.anthropic.com/api",
           "pricing": "按 token 计费",
-          "pricingUrl": "https://www.anthropic.com/pricing#api"
+          "pricingUrl": "https://www.anthropic.com/pricing#api",
+          "description": "把 Claude 接到自有系统，适合批量处理文档或让模型调用你定义的工具。"
         },
         "other": {
           "name": "Computer use",
           "url": "https://www.anthropic.com/news/developing-computer-use",
           "pricing": "API / 企业方案",
           "pricingUrl": "https://www.anthropic.com/pricing#api",
-          "note": "含 Agents"
+          "note": "含 Agents",
+          "description": "让应用里的助手像人一样看屏幕、点按钮和打字，适合没提供接口的旧软件。"
         }
       }
     },
@@ -143,45 +156,52 @@
           "name": "Gemini",
           "url": "https://deepmind.google/technologies/gemini/",
           "pricing": "消费订阅 + API 按量",
-          "pricingUrl": "https://ai.google.dev/pricing"
+          "pricingUrl": "https://ai.google.dev/pricing",
+          "description": "能把文字、图像和长材料放在一起理解，适合从跨格式资料里找线索。"
         },
         "image": {
           "name": "Imagen",
           "url": "https://deepmind.google/technologies/imagen-3/",
           "pricing": "Gemini / Vertex 额度内；API 按量",
-          "pricingUrl": "https://ai.google.dev/pricing"
+          "pricingUrl": "https://ai.google.dev/pricing",
+          "description": "把文字描述变成图片，适合从不同构图、光线和风格里挑出一版。"
         },
         "video": {
           "name": "Veo",
           "url": "https://deepmind.google/technologies/veo/",
           "pricing": "Google AI Pro/Ultra 等高档；API 按量",
-          "pricingUrl": "https://one.google.com/about/google-ai-plans/"
+          "pricingUrl": "https://one.google.com/about/google-ai-plans/",
+          "description": "从文字或参考图生成短镜头，适合先验证分镜和镜头运动。"
         },
         "chat": {
           "name": "Gemini 应用",
           "url": "https://gemini.google.com/",
           "pricing": "免费 · AI Plus $4.99/月 · Pro $19.99/月 · Ultra 更高",
-          "pricingUrl": "https://one.google.com/about/google-ai-plans/"
+          "pricingUrl": "https://one.google.com/about/google-ai-plans/",
+          "description": "适合在日常聊天里读文件或理解图片，和 Google 常用服务放在一起用更方便。"
         },
         "coding": {
           "name": "Gemini CLI",
           "url": "https://cloud.google.com/gemini/docs/codeassist/overview",
           "pricing": "个人免费档 + 云端按量/订阅",
           "pricingUrl": "https://cloud.google.com/gemini/docs/codeassist/overview",
-          "note": "含 Code Assist"
+          "note": "含 Code Assist",
+          "description": "在终端里问代码、读项目和运行命令，适合不离开命令行就处理开发任务。"
         },
         "api": {
           "name": "Gemini API",
           "url": "https://ai.google.dev/",
           "pricing": "免费额度 + 按量；Vertex 企业价",
           "pricingUrl": "https://ai.google.dev/pricing",
-          "note": "含 Vertex"
+          "note": "含 Vertex",
+          "description": "把 Gemini 接到自己的程序里，适合开发同时处理文本、图片等输入的应用。"
         },
         "other": {
           "name": "Gemini Agents",
           "url": "https://ai.google.dev/",
           "pricing": "API / Workspace 方案",
-          "pricingUrl": "https://ai.google.dev/pricing"
+          "pricingUrl": "https://ai.google.dev/pricing",
+          "description": "用 Gemini 组装能调用工具的助手，适合把问答变成查找资料、整理结果等多步任务。"
         }
       }
     },
@@ -193,26 +213,30 @@
           "name": "Llama",
           "url": "https://www.llama.com/",
           "pricing": "开源权重自托管；云厂商另计",
-          "pricingUrl": "https://www.llama.com/"
+          "pricingUrl": "https://www.llama.com/",
+          "description": "提供可自行部署的模型权重，适合想自己控制运行环境和数据去向的人。"
         },
         "image": {
           "name": "Llama 视觉",
           "url": "https://www.llama.com/",
           "pricing": "开源/云托管按供应商",
-          "pricingUrl": "https://www.llama.com/"
+          "pricingUrl": "https://www.llama.com/",
+          "description": "让应用看懂截图、照片和图表，适合使用 Llama 体系处理图文输入。"
         },
         "chat": {
           "name": "Meta AI",
           "url": "https://www.meta.ai/",
           "pricing": "消费端免费（地区/账号限制）",
-          "pricingUrl": "https://www.meta.ai/"
+          "pricingUrl": "https://www.meta.ai/",
+          "description": "在 Meta 的聊天应用里直接问问题或想点子，不用另外装一套助手。"
         },
         "api": {
           "name": "Llama API",
           "url": "https://www.llama.com/",
           "pricing": "自托管免费权重；托管按云厂商",
           "pricingUrl": "https://www.llama.com/",
-          "note": "含云托管"
+          "note": "含云托管",
+          "description": "适合在自己搭建的服务或云平台上调用 Llama，不必只用网页聊天。"
         }
       }
     },
@@ -225,34 +249,39 @@
           "url": "https://azure.microsoft.com/products/ai-services/openai-service/",
           "pricing": "Azure 按量",
           "pricingUrl": "https://azure.microsoft.com/pricing/details/cognitive-services/openai-service/",
-          "note": "含模型目录"
+          "note": "含模型目录",
+          "description": "在 Azure 环境里使用 OpenAI 模型，适合已有 Azure 账号体系的团队。"
         },
         "chat": {
           "name": "Microsoft Copilot",
           "url": "https://copilot.microsoft.com/",
           "pricing": "免费消费端 + M365 Copilot 席位订阅",
           "pricingUrl": "https://www.microsoft.com/microsoft-365/copilot",
-          "note": "含 Microsoft 365、Bing"
+          "note": "含 Microsoft 365、Bing",
+          "description": "用对话查资料、起草内容，在 Microsoft 365 里也有面向办公场景的版本。"
         },
         "coding": {
           "name": "GitHub Copilot",
           "url": "https://github.com/features/copilot",
           "pricing": "Individual / Business / Enterprise 订阅",
           "pricingUrl": "https://github.com/features/copilot#pricing",
-          "logo": "github"
+          "logo": "github",
+          "description": "在写代码时补全、解释和改写，适合不用切出编辑器就处理小问题。"
         },
         "api": {
           "name": "Azure AI",
           "url": "https://azure.microsoft.com/products/ai-services/",
           "pricing": "Azure 按量",
-          "pricingUrl": "https://azure.microsoft.com/pricing/details/cognitive-services/openai-service/"
+          "pricingUrl": "https://azure.microsoft.com/pricing/details/cognitive-services/openai-service/",
+          "description": "把模型接入 Azure 上的业务应用，适合统一管理调用、权限和部署。"
         },
         "other": {
           "name": "Copilot Studio",
           "url": "https://www.microsoft.com/microsoft-copilot/microsoft-copilot-studio",
           "pricing": "Power Platform / 企业许可",
           "pricingUrl": "https://www.microsoft.com/microsoft-copilot/microsoft-copilot-studio",
-          "note": "含 Agents"
+          "note": "含 Agents",
+          "description": "不用从头写代码就能搭建工作助手，适合把企业资料和业务流程接起来。"
         }
       }
     },
@@ -265,32 +294,37 @@
           "name": "Grok",
           "url": "https://x.ai/",
           "pricing": "X Subscription 含用量池",
-          "pricingUrl": "https://x.ai/pricing"
+          "pricingUrl": "https://x.ai/pricing",
+          "description": "适合对带时效的话题做问答和推理，也可通过 API 接到自己的程序。"
         },
         "image": {
           "name": "Grok Imagine",
           "url": "https://x.ai/",
           "pricing": "付费档共享用量",
-          "pricingUrl": "https://x.ai/pricing"
+          "pricingUrl": "https://x.ai/pricing",
+          "description": "用文字生成图片，适合快速试不同的创意画面。"
         },
         "video": {
           "name": "Grok 视频能力",
           "url": "https://x.ai/",
           "pricing": "Premium+ 档（见 X Subscription）",
-          "pricingUrl": "https://x.ai/pricing"
+          "pricingUrl": "https://x.ai/pricing",
+          "description": "把文字或参考图做成短视频，适合先把静态点子变成可看的动效。"
         },
         "chat": [
           {
             "name": "Grok",
             "url": "https://grok.com/",
             "pricing": "免费限额 · Plus $8/月 · Premium $30/月 起",
-            "pricingUrl": "https://x.ai/pricing"
+            "pricingUrl": "https://x.ai/pricing",
+            "description": "在 Grok 网页里对话，适合一边查公开信息一边追问来龙去脉。"
           },
           {
             "name": "Grok Bot",
             "url": "https://x.ai/",
             "pricing": "Premium 及以上",
-            "pricingUrl": "https://x.ai/pricing"
+            "pricingUrl": "https://x.ai/pricing",
+            "description": "把需要跨网页或应用的多步任务交给一个助手，不只是问完就结束。"
           }
         ],
         "coding": [
@@ -300,7 +334,8 @@
             "pricing": "Free · Plus $8/月 · Premium $30/月 · Super/Ultra 更高（X Subscription）",
             "pricingUrl": "https://cursor.com/pricing",
             "note": "X Subscription；含 Cursor Agent、Cloud Agents；第三方模型按 API 标价从预付费扣（cursor.com/docs/models-and-pricing）",
-            "logo": "cursor"
+            "logo": "cursor",
+            "description": "把助手放进代码编辑器，可以边看项目、边改代码、边确认每次修改。"
           },
           {
             "name": "Cursor Agent",
@@ -308,14 +343,16 @@
             "pricing": "Premium 及以上含 Cloud Agents",
             "pricingUrl": "https://cursor.com/pricing",
             "logo": "cursor",
-            "note": "含 Cloud Agents"
+            "note": "含 Cloud Agents",
+            "description": "给出目标后能跨文件改代码，适合把范围明确的修改交给它执行。"
           }
         ],
         "api": {
           "name": "xAI API",
           "url": "https://docs.x.ai/",
           "pricing": "订阅含档位 API 访问；超额按量",
-          "pricingUrl": "https://x.ai/pricing"
+          "pricingUrl": "https://x.ai/pricing",
+          "description": "把 Grok 接到自己的应用里，按需要调用模型做问答或分析。"
         }
       }
     },
@@ -327,19 +364,22 @@
           "name": "DeepSeek-V4.1-Flash",
           "url": "https://www.deepseek.com/en/news/deepseek-v4-1-flash/",
           "pricing": "对话免费档；API 按量（deepseek-flash）",
-          "pricingUrl": "https://platform.deepseek.com/api-docs/pricing"
+          "pricingUrl": "https://platform.deepseek.com/api-docs/pricing",
+          "description": "能处理图文输入，适合从截图、图表和文字混在一起的材料里找信息。"
         },
         "chat": {
           "name": "DeepSeek Chat",
           "url": "https://chat.deepseek.com/",
           "pricing": "免费（有限额；当前产品默认 V4.1-Flash）",
-          "pricingUrl": "https://www.deepseek.com/"
+          "pricingUrl": "https://www.deepseek.com/",
+          "description": "打开网页就能用自然语言查思路、写代码或解题，不必另外接 API。"
         },
         "api": {
           "name": "DeepSeek API",
           "url": "https://platform.deepseek.com/",
           "pricing": "按 token 计费（模型 deepseek-flash）",
-          "pricingUrl": "https://platform.deepseek.com/api-docs/pricing"
+          "pricingUrl": "https://platform.deepseek.com/api-docs/pricing",
+          "description": "把 DeepSeek 接入脚本或服务，适合自动处理大量问答和文本任务。"
         }
       }
     },
@@ -352,48 +392,55 @@
           "name": "Qwen（通义千问）",
           "url": "https://qwen.ai/",
           "pricing": "开源权重 + 云端按量",
-          "pricingUrl": "https://www.alibabacloud.com/product/model-studio"
+          "pricingUrl": "https://www.alibabacloud.com/product/model-studio",
+          "description": "有多个可自行部署的规格，也能选云端，适合按设备和预算挑模型。"
         },
         "image": {
           "name": "通义万相",
           "url": "https://tongyi.aliyun.com/",
           "pricing": "免费试用 + 云端按量",
           "pricingUrl": "https://www.alibabacloud.com/product/model-studio",
-          "note": "含 Qwen-VL"
+          "note": "含 Qwen-VL",
+          "description": "用文字生成图片，适合先试商品图、插画或封面的不同画法。"
         },
         "video": {
           "name": "通义万相视频",
           "url": "https://tongyi.aliyun.com/",
           "pricing": "云端按量 / 套餐",
-          "pricingUrl": "https://www.alibabacloud.com/product/model-studio"
+          "pricingUrl": "https://www.alibabacloud.com/product/model-studio",
+          "description": "把文字或参考图变成短视频，适合先把分镜草图做成动态样片。"
         },
         "chat": [
           {
             "name": "通义千问",
             "url": "https://tongyi.aliyun.com/",
             "pricing": "免费档 + 会员",
-            "pricingUrl": "https://tongyi.aliyun.com/"
+            "pricingUrl": "https://tongyi.aliyun.com/",
+            "description": "直接用中文问问题、梳理材料和写正文，不用自己部署模型。"
           },
           {
             "name": "通义应用",
             "url": "https://tongyi.aliyun.com/",
             "pricing": "平台套餐",
             "pricingUrl": "https://tongyi.aliyun.com/",
-            "note": "含 Agent"
+            "note": "含 Agent",
+            "description": "通过现成助手处理总结、改写等任务，适合不想从空白提示词开始的人。"
           }
         ],
         "coding": {
           "name": "通义灵码",
           "url": "https://lingma.aliyun.com/",
           "pricing": "个人免费档 + 企业版",
-          "pricingUrl": "https://lingma.aliyun.com/"
+          "pricingUrl": "https://lingma.aliyun.com/",
+          "description": "在编辑器里补全、解释和改代码，适合想用中文描述需求的开发者。"
         },
         "api": {
           "name": "DashScope",
           "url": "https://www.alibabacloud.com/product/model-studio",
           "pricing": "按量计费",
           "pricingUrl": "https://www.alibabacloud.com/product/model-studio",
-          "note": "含 Model Studio"
+          "note": "含 Model Studio",
+          "description": "在同一平台调用通义等模型，方便集中处理文字、图像等不同任务。"
         }
       }
     },
@@ -407,20 +454,23 @@
           "url": "https://www.volcengine.com/product/doubao",
           "pricing": "火山引擎按量",
           "pricingUrl": "https://www.volcengine.com/product/doubao",
-          "note": "含 Seed"
+          "note": "含 Seed",
+          "description": "把 Seed 系列模型用于问答和理解材料，适合从豆包的云端服务接入业务。"
         },
         "image": [
           {
             "name": "即梦",
             "url": "https://jimeng.jianying.com/",
             "pricing": "免费积分 · 基础 ¥79/月 起",
-            "pricingUrl": "https://jimeng.jianying.com/"
+            "pricingUrl": "https://jimeng.jianying.com/",
+            "description": "用文字和参考图做海报、插画，适合反复试构图和风格。"
           },
           {
             "name": "豆包图像",
             "url": "https://www.doubao.com/",
             "pricing": "App 限额 + 云端按量",
-            "pricingUrl": "https://www.volcengine.com/product/doubao"
+            "pricingUrl": "https://www.volcengine.com/product/doubao",
+            "description": "在豆包对话里边说边改图，适合只想迅速调整一张图片的人。"
           }
         ],
         "video": [
@@ -428,14 +478,16 @@
             "name": "即梦",
             "url": "https://jimeng.jianying.com/",
             "pricing": "会员积分制 · 基础 ¥79/月 起",
-            "pricingUrl": "https://jimeng.jianying.com/"
+            "pricingUrl": "https://jimeng.jianying.com/",
+            "description": "把参考图或分镜做成短视频，适合先看人物动作和镜头怎么衔接。"
           },
           {
             "name": "Seedance",
             "url": "https://www.doubao.com/",
             "pricing": "App / 云端套餐",
             "pricingUrl": "https://www.volcengine.com/product/doubao",
-            "note": "豆包视频"
+            "note": "豆包视频",
+            "description": "用文字或参考素材生成有动作的镜头，适合从静态画面快速试拍。"
           }
         ],
         "chat": [
@@ -443,32 +495,37 @@
             "name": "豆包",
             "url": "https://www.doubao.com/",
             "pricing": "免费为主（功能限额）",
-            "pricingUrl": "https://www.doubao.com/"
+            "pricingUrl": "https://www.doubao.com/",
+            "description": "在一个聊天窗口里提问、读文件或试语音，适合日常随手用。"
           },
           {
             "name": "豆包智能体",
             "url": "https://www.doubao.com/",
             "pricing": "App 内功能",
-            "pricingUrl": "https://www.doubao.com/"
+            "pricingUrl": "https://www.doubao.com/",
+            "description": "把常用提示和任务做成可重复使用的助手，适合每天做同一类事。"
           }
         ],
         "coding": {
           "name": "TRAE",
           "url": "https://www.trae.cn/",
           "pricing": "免费 · Lite ¥49 · Pro ¥99 · Pro+ ¥239 · Ultra ¥699",
-          "pricingUrl": "https://www.trae.cn/pricing"
+          "pricingUrl": "https://www.trae.cn/pricing",
+          "description": "在同一个编辑器里描述需求、看代码改动并试跑，适合把想法做成小应用。"
         },
         "api": {
           "name": "火山方舟",
           "url": "https://www.volcengine.com/product/ark",
           "pricing": "按量计费",
-          "pricingUrl": "https://www.volcengine.com/product/ark"
+          "pricingUrl": "https://www.volcengine.com/product/ark",
+          "description": "通过火山引擎调用不同模型，适合给现有产品统一接入和管理模型。"
         },
         "other": {
           "name": "扣子 Coze",
           "url": "https://www.coze.cn/",
           "pricing": "免费 · 进阶 ¥39.9/月 起",
-          "pricingUrl": "https://docs.coze.cn/coze_pro_premium_package"
+          "pricingUrl": "https://docs.coze.cn/coze_pro_premium_package",
+          "description": "用可视化步骤搭建助手，适合把查资料、调用工具和输出结果串起来。"
         }
       }
     },
@@ -481,21 +538,24 @@
           "name": "GLM",
           "url": "https://www.zhipuai.cn/",
           "pricing": "开放平台按量 + 开源权重",
-          "pricingUrl": "https://open.bigmodel.cn/pricing"
+          "pricingUrl": "https://open.bigmodel.cn/pricing",
+          "description": "有不同规格和开放权重版本，适合在本地部署与云端调用之间选方案。"
         },
         "image": {
           "name": "CogView",
           "url": "https://www.zhipuai.cn/",
           "pricing": "平台按量",
           "pricingUrl": "https://open.bigmodel.cn/pricing",
-          "note": "GLM 图像"
+          "note": "GLM 图像",
+          "description": "把文字变成图片，适合在智谱平台上做插图或设计草稿。"
         },
         "video": {
           "name": "清影",
           "url": "https://chatglm.cn/",
           "pricing": "App 限额 + API",
           "pricingUrl": "https://open.bigmodel.cn/pricing",
-          "note": "含 CogVideo"
+          "note": "含 CogVideo",
+          "description": "在清言里从文字或图片生成短片，适合不用另开剪辑软件先试一个镜头。"
         },
         "chat": [
           {
@@ -503,14 +563,16 @@
             "url": "https://chatglm.cn/",
             "pricing": "免费 + VIP/SVIP",
             "pricingUrl": "https://chatglm.cn/",
-            "note": "Z.ai"
+            "note": "Z.ai",
+            "description": "用中文提问、写稿和读材料，适合直接在聊天窗口里反复追问。"
           },
           {
             "name": "AutoGLM",
             "url": "https://chatglm.cn/",
             "pricing": "App / 平台套餐",
             "pricingUrl": "https://chatglm.cn/",
-            "note": "清言智能体"
+            "note": "清言智能体",
+            "description": "让助手动手操作界面，适合把原本要点很多次的步骤交给它走一遍。"
           }
         ],
         "coding": {
@@ -518,13 +580,15 @@
           "url": "https://codegeex.cn/",
           "pricing": "个人免费档 + 商业版",
           "pricingUrl": "https://codegeex.cn/",
-          "note": "GLM Coding"
+          "note": "GLM Coding",
+          "description": "在编辑器里预测下一段代码、解释旧代码，适合在原有项目中边学边改。"
         },
         "api": {
           "name": "GLM API",
           "url": "https://open.bigmodel.cn/",
           "pricing": "按 token 计费",
-          "pricingUrl": "https://open.bigmodel.cn/pricing"
+          "pricingUrl": "https://open.bigmodel.cn/pricing",
+          "description": "通过接口把 GLM 接入自己的程序，适合批量问答或搭建自有助手。"
         }
       }
     },
@@ -538,21 +602,24 @@
           "url": "https://www.moonshot.cn/",
           "pricing": "对话会员 + API 按量",
           "pricingUrl": "https://platform.moonshot.cn/docs/pricing/chat",
-          "note": "Moonshot"
+          "note": "Moonshot",
+          "description": "适合读长文本和多步推理，可作为文档助手或编程工具背后的模型。"
         },
         "chat": [
           {
             "name": "Kimi",
             "url": "https://kimi.moonshot.cn/",
             "pricing": "免费 + 会员",
-            "pricingUrl": "https://kimi.moonshot.cn/"
+            "pricingUrl": "https://kimi.moonshot.cn/",
+            "description": "把长文档交给它，用一轮轮问题提炼重点，比自己翻整份文档省事。"
           },
           {
             "name": "Kimi",
             "url": "https://kimi.moonshot.cn/",
             "pricing": "会员功能",
             "pricingUrl": "https://kimi.moonshot.cn/",
-            "note": "助手与 Agent"
+            "note": "助手与 Agent",
+            "description": "用 Kimi 里现成的助手处理重复任务，适合从已有流程开始而非从零写提示词。"
           }
         ],
         "coding": {
@@ -560,13 +627,15 @@
           "url": "https://kimi.moonshot.cn/",
           "pricing": "会员/平台",
           "pricingUrl": "https://kimi.moonshot.cn/",
-          "note": "含 IDE 插件"
+          "note": "含 IDE 插件",
+          "description": "围绕编程任务读项目、解释代码和提出改动，适合从编辑器继续做。"
         },
         "api": {
           "name": "Moonshot API",
           "url": "https://platform.moonshot.cn/",
           "pricing": "按 token 计费",
-          "pricingUrl": "https://platform.moonshot.cn/docs/pricing/chat"
+          "pricingUrl": "https://platform.moonshot.cn/docs/pricing/chat",
+          "description": "用 API 把 Kimi 接到自己的系统，适合长资料提取和流程自动化。"
         }
       }
     },
@@ -579,39 +648,45 @@
           "url": "https://www.minimax.io/",
           "pricing": "平台按量 + 订阅",
           "pricingUrl": "https://www.minimax.io/pricing",
-          "note": "含 M-series"
+          "note": "含 M-series",
+          "description": "同一系列有多种规格，适合在任务难度、响应速度和用量之间选模型。"
         },
         "image": {
           "name": "MiniMax Image",
           "url": "https://www.minimax.io/",
           "pricing": "平台按量",
-          "pricingUrl": "https://www.minimax.io/pricing"
+          "pricingUrl": "https://www.minimax.io/pricing",
+          "description": "根据描述生成图片，适合快速给内容配图或试几种视觉方向。"
         },
         "video": {
           "name": "Hailuo",
           "url": "https://hailuoai.com/",
           "pricing": "积分/订阅",
           "pricingUrl": "https://www.minimax.io/pricing",
-          "note": "MiniMax Video"
+          "note": "MiniMax Video",
+          "description": "把图片做出人物动作和镜头变化，适合给短视频先做一个动态样片。"
         },
         "chat": {
           "name": "海螺",
           "url": "https://chat.minimaxi.com/",
           "pricing": "免费 + 付费包",
           "pricingUrl": "https://www.minimax.io/pricing",
-          "note": "MiniMax 对话"
+          "note": "MiniMax 对话",
+          "description": "用自然语言聊天、改写和找思路，适合临时处理一段文字。"
         },
         "api": {
           "name": "MiniMax API",
           "url": "https://www.minimax.io/",
           "pricing": "按量计费",
-          "pricingUrl": "https://www.minimax.io/pricing"
+          "pricingUrl": "https://www.minimax.io/pricing",
+          "description": "通过接口使用 MiniMax 的文本、语音等模型，适合在自己的应用里组合调用。"
         },
         "other": {
           "name": "MiniMax Agent",
           "url": "https://www.minimax.io/",
           "pricing": "平台方案",
-          "pricingUrl": "https://www.minimax.io/pricing"
+          "pricingUrl": "https://www.minimax.io/pricing",
+          "description": "能分步骤使用工具完成任务，适合从查资料一直做到交付一份结果。"
         }
       }
     },
@@ -624,13 +699,15 @@
             "name": "GitHub Copilot",
             "url": "https://github.com/features/copilot",
             "pricing": "Free/Pro/Business/Enterprise 订阅",
-            "pricingUrl": "https://github.com/features/copilot#pricing"
+            "pricingUrl": "https://github.com/features/copilot#pricing",
+            "description": "直接在 GitHub 和常用编辑器里找代码帮助，适合不换开发环境就开始。"
           },
           {
             "name": "Copilot Coding Agent",
             "url": "https://github.com/features/copilot",
             "pricing": "Copilot 计划内功能",
-            "pricingUrl": "https://github.com/features/copilot#pricing"
+            "pricingUrl": "https://github.com/features/copilot#pricing",
+            "description": "把 GitHub Issue 交给它，适合让它先修改代码，再交回可审阅的拉取请求。"
           }
         ]
       }
@@ -643,27 +720,31 @@
           "name": "混元",
           "url": "https://hunyuan.tencent.com/",
           "pricing": "免费体验 + 云按量",
-          "pricingUrl": "https://cloud.tencent.com/product/hunyuan"
+          "pricingUrl": "https://cloud.tencent.com/product/hunyuan",
+          "description": "处理中文文本和图文内容，适合在腾讯的产品或云端服务中调用。"
         },
         "chat": {
           "name": "元宝",
           "url": "https://yuanbao.tencent.com/",
           "pricing": "免费为主",
           "pricingUrl": "https://yuanbao.tencent.com/",
-          "note": "混元助手"
+          "note": "混元助手",
+          "description": "适合快速搜索、总结和读文档，尤其方便从腾讯生态找资料。"
         },
         "api": {
           "name": "腾讯云混元",
           "url": "https://cloud.tencent.com/product/hunyuan",
           "pricing": "按量计费",
-          "pricingUrl": "https://cloud.tencent.com/product/hunyuan"
+          "pricingUrl": "https://cloud.tencent.com/product/hunyuan",
+          "description": "把混元接到企业系统，适合在腾讯云里集中管理模型调用。"
         },
         "coding": {
           "name": "WorkBuddy",
           "url": "https://cloud.tencent.com/product/workbuddy",
           "pricing": "体验免费 · 标准 ¥99/月 起；企业旗舰 ¥198/人/月",
           "pricingUrl": "https://www.workbuddy.cn/docs/workbuddy/Pricing",
-          "note": "与 CodeBuddy 同账号积分共享"
+          "note": "与 CodeBuddy 同账号积分共享",
+          "description": "用桌面助手处理本地文件和办公步骤，适合把重复操作交出去。"
         }
       }
     },
@@ -677,14 +758,16 @@
             "name": "Devin Desktop（原 Windsurf）",
             "url": "https://devin.ai/",
             "pricing": "Free · Pro $20/月 · Max $200/月",
-            "pricingUrl": "https://devin.ai/pricing"
+            "pricingUrl": "https://devin.ai/pricing",
+            "description": "在原 Windsurf 的编辑体验上集中查看本地和云端任务，适合同时盯多个改动。"
           },
           {
             "name": "Devin",
             "url": "https://devin.ai/",
             "pricing": "Pro 及以上含云端 Agent",
             "pricingUrl": "https://devin.ai/pricing",
-            "note": "Cloud 与 Local"
+            "note": "Cloud 与 Local",
+            "description": "把软件任务交给代理独立处理，适合让它在自己的环境里改代码并给出结果。"
           }
         ]
       }
@@ -699,19 +782,22 @@
           "url": "https://cloud.baidu.com/product/model.html",
           "pricing": "千帆按量",
           "pricingUrl": "https://cloud.baidu.com/doc/qianfan/s/wmh4sv6ya",
-          "note": "ERNIE"
+          "note": "ERNIE",
+          "description": "用中文理解、生成和推理，适合中文问答、长文整理和内容生产。"
         },
         "chat": {
           "name": "文心一言",
           "url": "https://yiyan.baidu.com/",
           "pricing": "对话端免费为主",
-          "pricingUrl": "https://yiyan.baidu.com/"
+          "pricingUrl": "https://yiyan.baidu.com/",
+          "description": "直接在网页里与文心对话，适合起草中文内容或追问资料。"
         },
         "api": {
           "name": "千帆",
           "url": "https://cloud.baidu.com/product/model.html",
           "pricing": "按 token 计费",
-          "pricingUrl": "https://cloud.baidu.com/doc/qianfan/s/wmh4sv6ya"
+          "pricingUrl": "https://cloud.baidu.com/doc/qianfan/s/wmh4sv6ya",
+          "description": "在百度云里选择、部署和调用模型，适合已有百度云业务的团队。"
         }
       }
     },
@@ -723,7 +809,8 @@
           "name": "Midjourney",
           "url": "https://www.midjourney.com/",
           "pricing": "Basic $10 · Standard $30 · Pro $60 · Mega $120/月",
-          "pricingUrl": "https://docs.midjourney.com/hc/en-us/articles/27870484040333-Comparing-Midjourney-Plans"
+          "pricingUrl": "https://docs.midjourney.com/hc/en-us/articles/27870484040333-Comparing-Midjourney-Plans",
+          "description": "擅长风格鲜明的画面，适合先确定海报、概念图或角色的视觉方向。"
         }
       }
     },
@@ -736,13 +823,15 @@
             "name": "Perplexity",
             "url": "https://www.perplexity.ai/",
             "pricing": "免费 · Pro $17/月起（年付） · Max 更高",
-            "pricingUrl": "https://www.perplexity.ai/hub/pricing"
+            "pricingUrl": "https://www.perplexity.ai/hub/pricing",
+            "description": "搜索后给出带出处的回答，适合快速看结论，再回原文核对。"
           },
           {
             "name": "Perplexity Computer",
             "url": "https://www.perplexity.ai/",
             "pricing": "Pro / Max 计划内",
-            "pricingUrl": "https://www.perplexity.ai/hub/pricing"
+            "pricingUrl": "https://www.perplexity.ai/hub/pricing",
+            "description": "把调研、整理和产出交给同一个助手，适合不止要答案、还要一份可用结果的任务。"
           }
         ]
       }

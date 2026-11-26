@@ -30,6 +30,8 @@ export interface ToolColumnGroupDef {
 export interface ToolProduct {
   /** Short product name shown in the cell */
   name: string
+  /** Short, plain-language sentence naming a concrete use and a distinguishing feature. */
+  description: string
   /** Official product homepage */
   url: string
   /**

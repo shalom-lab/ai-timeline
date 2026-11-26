@@ -325,6 +325,7 @@ type ToolColumnId =
 interface ToolProduct {
   name: string
   url: string          // 产品主页
+  description: string  // 说清能做什么、特色在哪；一行，最多 70 字
   pricing: string      // 高层费用提示（免费档 / Plus 价 / API 按量）
   pricingUrl?: string  // 官方定价页
   note?: string
@@ -346,7 +347,7 @@ interface ToolRow {
 
 1. `rows[].companyId` 必须存在于 `timeline.json` `companies[]`。
 2. `columns[].id` 为上述枚举；无重复。顺序建议：大模型四列 → 产品三列。
-3. 每个 cell 产品须有非空 `name` / `pricing`，且 `url`（及可选 `pricingUrl`）为 http(s)；可选 `logo` 为 kebab-case 键。
+3. 每个 cell 产品须有非空 `name` / `description` / `pricing`，且 `url`（及可选 `pricingUrl`）为 http(s)；可选 `logo` 为 kebab-case 键。
 4. `displayName` 若存在，不得含 `/`（公司列只用单一品牌名）。
 5. 每行至少 1 个产品；种子不少于约 5 家主要公司。
 6. UI 以 Tab 切换 `TOOL_COLUMN_GROUPS`（模型 | 产品），每次只展示一组子列；无两级 group thead。隐藏当前 Tab 下无单元格的公司行；可隐藏整列为空的形态列。模型与产品单元格均在名称旁显示小 logo（`logo` 键或行公司标）；列头旁配简洁形态 icon。

@@ -28,7 +28,9 @@
 .directory__mark .co-logo { width:19px; height:19px; object-fit:contain; }
 .directory__tag { color:var(--signal); font-size:11px; background:#f3e9df; padding:3px 7px; border-radius:3px; }
 .directory__card h4 { font-size:19px; line-height:1.27; margin:12px 0 6px; }
-.directory__card p { color:var(--ink); margin:0 0 4px; font-size:13px; }
+.directory__description { color:var(--ink); margin:0 0 10px; font-size:14px; line-height:1.55; }
+.directory__pricing { color:var(--dim); margin:0 0 4px; font-size:12px; line-height:1.5; }
+.directory__pricing span { color:var(--signal); margin-right:3px; font-weight:650; }
 .directory__card small { color:var(--dim); font-size:12px; }
 .directory__links { display:flex; flex-wrap:wrap; gap:0 15px; margin-top:auto; padding-top:10px; }
 .directory__links::before { content:""; flex:0 0 100%; border-top:1px solid #e8dfd1; }

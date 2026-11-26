@@ -20,7 +20,7 @@ export default function ToolDirectory({ data, companies, query }: { data: AiTool
       if (!value) return []
       return (Array.isArray(value) ? value : [value]).map((product, index) => ({
         product, col, name, id: row.companyId, key: `${row.companyId}:${col.id}:${index}`,
-        keywords: [product.name, product.note, product.pricing, name, col.label, ...(company?.aliases ?? [])].join(' ').toLowerCase(),
+        keywords: [product.name, product.description, product.note, product.pricing, name, col.label, ...(company?.aliases ?? [])].join(' ').toLowerCase(),
       }))
     })
   }), [data, companies])
@@ -76,7 +76,8 @@ export default function ToolDirectory({ data, companies, query }: { data: AiTool
               <span className="directory__tag">{col.label}</span>
             </div>
             <h4>{product.name}</h4>
-            <p>{product.pricing}</p>
+            <p className="directory__description">{product.description}</p>
+            <p className="directory__pricing"><span>费用</span> {product.pricing}</p>
             {product.note && <small>{product.note}</small>}
             <div className="directory__links">
               <a href={product.url} target="_blank" rel="noopener noreferrer" aria-label={`${product.name}：产品官网（新标签页）`}>产品官网 <span aria-hidden="true">↗</span></a>
