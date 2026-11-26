@@ -14,7 +14,7 @@ type Props = {
 
 const tabs: ReadonlyArray<{ page: AppPage; label: string }> = [
   { page: 'timeline', label: '时间线' },
-  { page: 'compare', label: '分栏对照' },
+  { page: 'compare', label: '同期对照' },
   { page: 'tools', label: 'AI 工具库' },
   { page: 'gallery', label: '里程碑展' },
 ]

@@ -163,7 +163,7 @@ export default function CompareBoard({events, searched, companies, onClearSearch
     } catch {setMessage('暂时无法复制，请检查浏览器的剪贴板权限。')}
   }
 
-  return <main className="comparison" aria-label="分栏对照" ref={page}>
+  return <main className="comparison" aria-label="同期对照" ref={page}>
     <div className="comparison__controls">
       <div className="comparison__tabs" role="group" aria-label="对照类别">
         {tabs.map((label)=><button type="button" key={label} aria-pressed={tab===label} onClick={()=>{setTab(label);setMessage('')}}>{CATEGORY_LABEL_ZH[label]}</button>)}

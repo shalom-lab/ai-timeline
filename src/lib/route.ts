@@ -1,4 +1,4 @@
-/** Hash routes for GH Pages (no server router): `#/` timeline, `#/compare` 分栏对照, `#/tools` AI工具, `#/gallery` 里程碑展. */
+/** Hash routes for GH Pages (no server router): `#/` timeline, `#/compare` 同期对照, `#/tools` AI工具, `#/gallery` 里程碑展. */
 
 export type AppPage = 'timeline' | 'compare' | 'tools' | 'gallery'
 
