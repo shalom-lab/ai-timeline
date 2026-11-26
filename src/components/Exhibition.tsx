@@ -11,8 +11,8 @@ const chapters = [
     ['anthropic-claude-code-research-preview-2025-02-24', '把编码助手带进终端'],
     ['openai-codex-research-preview-2025-05-16', '在云端执行软件工程任务'],
   ] },
-  { title: '模型不只在云上', overline: '03 / OPEN WEIGHTS', color: 'ink', copy: '公开模型权重，让部署和研究不只能依赖单一厂商的 API。能否商用、如何分发，仍取决于各自许可证。', points: [
-    ['deepseek-r1-open-source-2025-01-20', '开放推理模型与蒸馏版本'],
+  { title: '模型权重走向开放', overline: '03 / OPEN WEIGHTS', color: 'ink', copy: '开发者可以下载权重，自行部署或研究模型，不必只用厂商的 API。公开权重不等于完整开源，能否商用、修改或再分发，要看各自的许可。', points: [
+    ['deepseek-r1-open-source-2025-01-20', '公开推理模型及蒸馏版本的权重'],
     ['alibaba-qwen3-open-source-2025-04-29', '同一家族提供多种规模与思考模式'],
   ] },
   { title: 'AI 与科学发现', overline: '04 / SCIENCE', color: 'moss', copy: '从预测天气、探索分子结构，到寻找新算法和攻克数学难题。每个节点都关注 AI 做了什么，以及结果如何得到验证。', points: [
@@ -60,7 +60,7 @@ function Plate({ variant }: { variant: number }) {
           </g>
         })}
       </>}
-      <text x="51" y="33">AI CHRONICLE / ARCHIVE PLATE</text>
+      <text x="51" y="33">AI CHRONICLE / MILESTONES</text>
       <text x="51" y="336">{`FIG. 0${variant + 1}  /  CONCEPT DIAGRAM`}</text>
     </svg>
   )
@@ -72,11 +72,11 @@ export default function Exhibition({events}: {events: TimelineEvent[]}) {
   const lookup = new Map(events.map(e => [e.id,e]))
   return <main className="exhibit">
     <div className="edition-heading">
-      <span className="edition-label">THE EXHIBITION / 04 CHAPTERS</span>
-      <h2>里程碑展</h2>
+      <span className="edition-label">MILESTONES / 04 CHAPTERS</span>
+      <h2>里程碑</h2>
       <p>四条线索，重读生成式 AI 的关键转折。</p>
     </div>
-    <div className="exhibit__tabs" role="group" aria-label="选择展览章节">
+    <div className="exhibit__tabs" role="group" aria-label="选择里程碑主题">
       {chapters.map((c,i) => <button type="button" aria-pressed={selected===i} key={c.title} onClick={()=>setSelected(i)}><span>{String(i+1).padStart(2,'0')}</span>{c.title}</button>)}
     </div>
     <section className={`exhibit__feature exhibit__feature--${chapter.color}`} aria-labelledby="exhibit-chapter">

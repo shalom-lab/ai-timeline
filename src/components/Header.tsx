@@ -16,7 +16,7 @@ const tabs: ReadonlyArray<{ page: AppPage; label: string }> = [
   { page: 'timeline', label: '时间线' },
   { page: 'compare', label: '同期对照' },
   { page: 'tools', label: 'AI 工具库' },
-  { page: 'gallery', label: '里程碑展' },
+  { page: 'gallery', label: '里程碑' },
 ]
 
 const brandMarkSrc = `${import.meta.env.BASE_URL || '/'}brand/mark.svg`
