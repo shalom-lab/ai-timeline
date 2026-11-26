@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState, type CSSProperties } from 'react'
 import { buildSubGroups } from '../lib/group'
 import { CATEGORY_LABEL_ZH, type Company, type TimelineEvent } from '../types/timeline'
 import { EVENT_TYPE_LABEL_ZH } from '../lib/labels'
@@ -13,7 +13,6 @@ const defaults: Record<Tab, string[]> = {
   product:['ide','agent','chat'],
   science:['life','math','earth'],
 }
-const MAX = 4
 const monthLabel = (month: string) => `${month.slice(0,4)} 年 ${Number(month.slice(5))} 月`
 const tsvCell = (value: string) => value.replace(/[\t\n\r]+/g,' ').replace(/^[=+@-]/, match => "'" + match)
 
@@ -42,11 +41,17 @@ export default function CompareBoard({events, searched, companies, onClearSearch
   const [mobileMonth,setMobileMonth] = useState('')
   const page = useRef<HTMLElement>(null)
   const matrix = useRef<HTMLDivElement>(null)
+  const matrixHead = useRef<HTMLDivElement>(null)
+  const [canScrollSideways,setCanScrollSideways] = useState(false)
   const rail = useRef<HTMLDivElement>(null)
   const pinnedScrollTop = useRef<number | null>(null)
   const companyMap = useMemo(() => new Map(companies.map(company => [company.id, company])), [companies])
   const choices = useMemo(()=>buildSubGroups(tab,events.filter(e=>e.category===tab),companies),[tab,events,companies])
-  const visible = choices.filter(g=>picked[tab].includes(g.key))
+  const choicesByKey = new Map(choices.map(g=>[g.key,g]))
+  const visible = picked[tab].flatMap(key=>{
+    const group = choicesByKey.get(key)
+    return group ? [group] : []
+  })
   const years = [...new Set(choices.flatMap(g=>g.events.map(e=>e.date.slice(0,4))))].sort().reverse()
   const allowed = new Set(searched.map(e=>e.id))
   const now = Date.now()
@@ -75,6 +80,7 @@ export default function CompareBoard({events, searched, companies, onClearSearch
   const activeDate = perDate.has(currentDate) && rows.some(([date])=>date===currentDate) ? currentDate : rows[0]?.[0] ?? ''
   const activeMonth = activeDate.slice(0,7)
   const selectionKey = picked[tab].join('|')
+  const hasRows = rows.length > 0
 
   useEffect(()=>{
     pinnedScrollTop.current = null
@@ -83,6 +89,26 @@ export default function CompareBoard({events, searched, companies, onClearSearch
     setCurrentDate('')
     setMobileMonth('')
   },[tab,selectionKey,range,sort,sameDay,searched])
+
+  useEffect(()=>{
+    const pane = matrix.current
+    const head = matrixHead.current
+    const table = pane?.querySelector('table')
+    if (!pane || !head || !table) {
+      setCanScrollSideways(false)
+      return
+    }
+    function measureOverflow() {
+      if (!pane || !head) return
+      setCanScrollSideways(pane.clientWidth > 0 && pane.scrollWidth > pane.clientWidth + 1)
+      head.scrollLeft = pane.scrollLeft
+    }
+    const observer = new ResizeObserver(measureOverflow)
+    observer.observe(pane)
+    observer.observe(table)
+    measureOverflow()
+    return ()=>observer.disconnect()
+  },[tab,selectionKey,hasRows])
 
   useEffect(()=>{
     const pane = rail.current
@@ -150,9 +176,16 @@ export default function CompareBoard({events, searched, companies, onClearSearch
     setMessage('')
     setPicked(current=>{
       const old=current[tab]
-      return {...current,[tab]:old.includes(key) ? old.filter(x=>x!==key) : old.length<MAX ? [...old,key] : old}
+      return {...current,[tab]:old.includes(key) ? old.filter(x=>x!==key) : [...old,key]}
     })
   }
+  const columnHeads = <thead><tr><th scope="col">事件日期</th>{visible.map(g=><th scope="col" key={g.key}>{g.label}<small>{columnCounts.get(g.key)} 条</small></th>)}</tr></thead>
+
+  function scrollColumns(direction: -1 | 1) {
+    const pane = matrix.current
+    if (pane) pane.scrollBy({left: direction * Math.max(180,pane.clientWidth - 224)})
+  }
+
   async function copy() {
     const body = rows.flatMap(([date,day])=>visible.flatMap(g=>(day.get(g.key)??[]).map(e=>[
       date,g.label,e.company,e.title,EVENT_TYPE_LABEL_ZH[e.eventType],e.sources[0]?.url ?? '',
@@ -180,9 +213,10 @@ export default function CompareBoard({events, searched, companies, onClearSearch
     </div>
     <div className="comparison__selection">
       <details className="comparison__picker">
-        <summary>选择{what}<span>{selectedCount} / {MAX}</span></summary>
+        <summary>选择{what}<span>已选 {selectedCount}</span></summary>
         <div className="comparison__options" role="group" aria-label={`选择对照${what}`}>
-          {choices.map(g=><label key={g.key}><input type="checkbox" checked={picked[tab].includes(g.key)} disabled={selectedCount>=MAX&&!picked[tab].includes(g.key)} onChange={()=>toggle(g.key)}/>{g.label}</label>)}
+          <p>按勾选顺序排列，列多时可左右滑动。</p>
+          {choices.map(g=><label key={g.key}><input type="checkbox" checked={picked[tab].includes(g.key)} onChange={()=>toggle(g.key)}/>{g.label}</label>)}
         </div>
       </details>
       <div className="comparison__chips" aria-label={`已选${what}`}>
@@ -193,6 +227,11 @@ export default function CompareBoard({events, searched, companies, onClearSearch
       <span aria-live="polite">{total} 条事件 · {rows.length} 个日期</span>
       <label className="comparison__same-day"><input type="checkbox" checked={sameDay} onChange={e=>{setSameDay(e.target.checked);setMessage('')}}/>仅看跨列同日</label>
       <button type="button" className="edition-control" disabled={!total} onClick={copy}>复制当前结果</button>
+      {canScrollSideways && <div className="comparison__sideways" role="group" aria-label="横向浏览对照列">
+        <button type="button" className="edition-control" onClick={()=>scrollColumns(-1)} aria-label="向左查看列">←</button>
+        <span>左右浏览</span>
+        <button type="button" className="edition-control" onClick={()=>scrollColumns(1)} aria-label="向右查看列">→</button>
+      </div>}
       <span role="status">{message}</span>
     </div>
 
@@ -218,12 +257,17 @@ export default function CompareBoard({events, searched, companies, onClearSearch
               </div>)}
             </div>
           </aside>
-        <div className="comparison__matrix" ref={matrix} aria-label="事件对照表">
-
+        <div className="comparison__table-shell" style={{'--compare-columns': selectedCount} as CSSProperties}>
+          {/* The separate visual header stays sticky during page scroll; the real table keeps its semantic header. */}
+          <div className="comparison__fixed-head" aria-hidden="true">
+            <div className="comparison__head-viewport" ref={matrixHead}><table>{columnHeads}</table></div>
+          </div>
+          <div className="comparison__matrix" ref={matrix} role="region" aria-label="事件对照表" tabIndex={canScrollSideways ? 0 : undefined}
+            onScroll={e=>{if(matrixHead.current) matrixHead.current.scrollLeft = e.currentTarget.scrollLeft}}>
           <table>
-            <thead><tr><th scope="col">事件日期</th>{visible.map(g=><th scope="col" key={g.key}>{g.label}<small>{columnCounts.get(g.key)} 条</small></th>)}</tr></thead>
+            {columnHeads}
             {[...groupsByMonth].map(([month,monthRows])=><tbody key={month}>
-              <tr className="comparison__month" data-compare-month={month}><th scope="rowgroup" colSpan={visible.length+1}>{monthLabel(month)}</th></tr>
+              <tr className="comparison__month" data-compare-month={month}><th scope="rowgroup" colSpan={visible.length+1}><span>{monthLabel(month)}</span></th></tr>
               {monthRows.map(([date,day])=><tr key={date} data-compare-date={date} data-current={date===activeDate} className={day.size>1?"comparison__overlap":undefined}>
                 <th className="comparison__date" scope="row"><time dateTime={date}>{date.slice(5).replace('-',' / ')}</time>{day.size>1&&<span>同日 · {day.size} 列</span>}</th>
                 {visible.map(g=><td key={g.key} className={day.has(g.key)?'has-events':'is-blank'}>
@@ -232,6 +276,7 @@ export default function CompareBoard({events, searched, companies, onClearSearch
               </tr>)}
             </tbody>)}
           </table>
+          </div>
         </div>
         </div>
         <label className="comparison__mobile-jump"><span>时间轴</span><select aria-label="跳到月份" value={mobileMonth}
