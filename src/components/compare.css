@@ -75,3 +75,43 @@
 .comparison__same-day input { accent-color:var(--signal); }
 .comparison__overlap .comparison__date { box-shadow:inset 3px 0 var(--signal); background:#f2e7d5; }
 .comparison__overlap .comparison__date span { color:var(--signal); }
+
+/* Independent month-and-day navigation, synchronized with the aligned rows. */
+.comparison__desk { display:grid; grid-template-columns:160px minmax(0,1fr); gap:14px; }
+.comparison__rail { min-width:0; display:flex; flex-direction:column; max-height:min(65vh,860px); background:#eee8da; border:1px solid var(--line); border-radius:3px; overflow:hidden; color:var(--ink); }
+.comparison__rail-title { min-height:55px; padding:10px 12px 8px; display:grid; gap:2px; background:var(--night); color:#fff6e9; }
+.comparison__rail-title span { color:#e0c9aa; font-size:10px; letter-spacing:.08em; }
+.comparison__rail-scroll { overflow:auto; padding:7px 10px 10px; }
+.comparison__rail-block { position:relative; }
+.comparison__rail-year { padding:11px 0 3px 10px; font:600 20px/1.1 var(--type-display); letter-spacing:.02em; }
+.comparison__rail-month { width:100%; border:0; border-left:1px solid #c0af99; background:transparent; display:flex; align-items:center; justify-content:space-between; position:relative; text-align:left; padding:4px 7px 4px 13px; min-height:30px; margin-left:6px; width:calc(100% - 6px); cursor:pointer; color:var(--ink); font-size:13px; font-weight:650; }
+.comparison__rail-month::before { position:absolute; content:""; left:-4px; top:12px; width:7px; height:7px; border-radius:50%; background:#887760; box-shadow:0 0 0 2px #eee8da; }
+.comparison__rail-month[data-active-month=true]::before { background:var(--signal); }
+.comparison__rail-month small { font:11px var(--type-mono); color:var(--dim); }
+.comparison__rail-month[data-active-month=true],.comparison__rail-month:hover { color:var(--signal); background:#e4d8c4; }
+.comparison__rail-days { border-left:1px solid #c0af99; margin:0 0 0 6px; padding:0 0 4px 7px; list-style:none; }
+.comparison__rail-days button { position:relative; width:100%; border:0; text-align:left; display:flex; gap:4px; align-items:center; justify-content:space-between; min-height:27px; border-radius:2px; padding:3px 6px; cursor:pointer; color:var(--dim); background:none; font:11px var(--type-mono); }
+.comparison__rail-days button[aria-current],.comparison__rail-days button:hover { background:var(--white); color:var(--signal); }
+.comparison__rail-days button[aria-current]::before { content:""; position:absolute; left:-10px; top:11px; width:5px; height:5px; border-radius:50%; background:var(--signal); }
+.comparison__rail-days button span { font-size:9px; white-space:nowrap; }
+.comparison__matrix [data-current=true] th { box-shadow:inset 3px 0 var(--signal); }
+.comparison__matrix [data-current=true] td.has-events { background:#fff2e3; }
+.comparison__mobile-jump { display:none; }
+@media (max-width: 920px) { .comparison__desk { grid-template-columns:132px minmax(0,1fr); gap:9px; } }
+@media (max-width: 730px) {
+  .comparison__desk { display:none; }
+  .comparison__mobile-jump { display:flex; align-items:center; justify-content:space-between; gap:8px; margin:3px 0 9px; color:var(--signal); font-size:13px; font-weight:650; }
+  .comparison__mobile-jump select { min-height:34px; border-radius:3px; background:var(--white); border:1px solid var(--line); padding:4px 7px; color:var(--ink); }
+  .comparison__mobile section { scroll-margin-top:104px; }
+}
+
+/* Only the page scrolls vertically. The index and headings stay in view. */
+.archive-app.archive-app--compare { height:auto; max-height:none; overflow:visible; }
+.comparison { --compare-site-header:68px; overflow:visible; }
+.comparison__matrix { max-height:none; overflow:visible; }
+.comparison__matrix thead th { top:var(--compare-site-header); }
+.comparison__rail { position:sticky; top:var(--compare-site-header); align-self:start; max-height:max(220px,calc(100dvh - var(--compare-site-header) - 14px)); }
+.comparison__rail-scroll { overscroll-behavior-y:contain; }
+.comparison__mobile section { scroll-margin-top:calc(var(--compare-site-header) + 8px); }
+.archive-app--compare .app-header { position:sticky; top:0; }
+.comparison__rail-scroll { overflow-anchor:none; }
