@@ -31,6 +31,14 @@ ATOM = b"""<feed xmlns="http://www.w3.org/2005/Atom"><entry>
 
 
 class DiscoveryTest(unittest.TestCase):
+    def test_priority_surfaces_math_and_newsletter_outside_official_feeds(self):
+        rows = [
+            {"title": "v2.1.332", "observedDate": "2026-11-25", "observations": [{"source": "Claude Code Releases"}]},
+            {"title": "Riemann proof", "observedDate": "2026-11-20", "observations": [{"source": "TLDR AI"}]},
+            {"title": "A quote from Levent Alpöge", "observedDate": "2026-11-20", "observations": [{"source": "Simon Willison · Mathematics"}]},
+        ]
+        self.assertEqual(discovery.priority_review(rows), rows[1:])
+
     def test_rss_and_malformed_items(self):
         parsed = list(discovery.parse_feed(RSS, "https://newsletter.example/feed"))
         self.assertEqual(len(parsed), 2)

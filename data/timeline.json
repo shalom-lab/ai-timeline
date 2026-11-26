@@ -5918,6 +5918,42 @@
       ]
     },
     {
+      "id": "anthropic-alpoge-claude-riemann-proof-2026-11-20",
+      "date": "2026-11-20",
+      "dateStatus": "exact",
+      "title": "Alpöge 与 Claude 公开黎曼猜想的 Lean 证明",
+      "summary": "Levent Alpöge 公开与 Claude 合作写出的 Lean 证明，并称可扩展到广义黎曼猜想。次日 Lean FRO 与 Mathlib 宣布经典黎曼猜想的陈述和证明通过核验；24 日，Polymath 启动进一步复核和人读版整理。",
+      "category": "science",
+      "scienceDiscipline": "math",
+      "companyId": "anthropic",
+      "series": "Claude",
+      "eventType": "first_announce",
+      "sources": [
+        {
+          "title": "Levent Alpöge：公开声明",
+          "url": "https://alpo.ge/remark.pdf",
+          "publisher": "Levent Alpöge"
+        },
+        {
+          "title": "Lean verification of the Riemann Hypothesis",
+          "url": "https://leanprover-community.github.io/blog/posts/riemann-hypothesis/",
+          "publisher": "Lean FRO and Mathlib Initiative",
+          "publishedAt": "2026-11-21"
+        },
+        {
+          "title": "G.R.H. Polymath",
+          "url": "https://terrytao.wordpress.com/2026/11/24/g-r-h-polymath/",
+          "publisher": "Polymath",
+          "publishedAt": "2026-11-24"
+        }
+      ],
+      "tags": [
+        "riemann-hypothesis",
+        "lean",
+        "formal-verification"
+      ]
+    },
+    {
       "id": "openai-gpt-6-2-chat-2026-11-23",
       "date": "2026-11-23",
       "dateStatus": "exact",

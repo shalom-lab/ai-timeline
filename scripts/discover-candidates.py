@@ -254,6 +254,23 @@ def previously_cited_for_review(candidates, source_events, limit=12):
     return entries[:limit], len(entries)
 
 
+MILESTONE_TERMS = re.compile(
+    r"riemann|millennium.{0,10}prize|navier.stokes|polymath|"
+    r"p\s*(?:!=|≠|vs\.?)\s*np|lindel[oö]f|"
+    r"黎曼|千禧年难题|纳维.{0,4}斯托克斯",
+    re.I,
+)
+MATH_WATCH_FEEDS = {"Terence Tao · What's New", "Simon Willison · Mathematics"}
+
+
+def priority_review(ranked, limit=12):
+    """Triage only; source fit or keywords are never a verification decision."""
+    hits = [item for item in ranked if MILESTONE_TERMS.search(item["title"])
+            or any(o["source"] in MATH_WATCH_FEEDS for o in item["observations"])]
+    hits.sort(key=lambda item: (bool(MILESTONE_TERMS.search(item["title"])), item["observedDate"]), reverse=True)
+    return hits[:limit]
+
+
 def main():
     parser = ArgumentParser(description=__doc__)
     parser.add_argument("--days", type=int, default=14, choices=range(1, 91), metavar="1..90")
@@ -283,6 +300,7 @@ def main():
                 audit.update(status="error", failure=compact(str(err), 140))
             health.append(audit)
     ranked, skipped_known = merge(gathered, known)
+    priority = priority_review(ranked)
     rechecks, total_rechecks = previously_cited_for_review(gathered, source_events)
     # Cap each source class independently so an official-feed spike does not hide newsletters.
     limits = dict(zip(KIND_RANK, (90, 40, 25, 25), strict=True))
@@ -293,7 +311,7 @@ def main():
             limits[item["kind"]] -= 1
     report = {"reviewState": "unverified", "windowStart": cutoff.isoformat(), "windowEnd": args.as_of.isoformat(),
               "alreadyCitedDistinctUrls": skipped_known, "newDistinctUrlsBeforeCap": len(ranked),
-              "feedHealth": health, "candidates": shown, "previouslyCitedOfficialForReview": rechecks,
+              "feedHealth": health, "candidates": shown, "priorityReview": priority, "previouslyCitedOfficialForReview": rechecks,
               "previouslyCitedOfficialBeforeCap": total_rechecks,
               "manualOfficialSources": config["manualOfficialSources"]}
     args.out.mkdir(parents=True, exist_ok=True)
@@ -306,6 +324,11 @@ def main():
              "复核后再按机构+产品+阶段+日期查重和选编。",
              "同一官方链接若涵盖多个事件，可在人工核对后继续使用。", "",
              f"候选：{len(shown)}／{len(ranked)} 个；排除已有来源网址：{skipped_known} 个。", ""]
+    lines += ["优先复核：重大科学主张（未核实，不自动入库）", "=" * 28]
+    for item in priority:
+        lines += [f"{item['observedDate']}  {item['title']}", f"  {item['url']}",
+                  "  线索来源：" + "、".join(dict.fromkeys(o["source"] for o in item["observations"]))]
+    lines.append("")
     headers = {
         "official-feed": "直接来自机构订阅源",
         "official-link-from-newsletter": "从新闻简报发现的官方链接（仍需核对）",

@@ -2,7 +2,7 @@ name: Discover AI timeline candidates
 
 on:
   schedule:
-    - cron: '27 2 * * 1,4'
+    - cron: '27 2 * * *'
   workflow_dispatch:
   push:
     branches: [main]
@@ -39,7 +39,7 @@ jobs:
           cp docs/EDITORIAL-REVIEW.md candidate-review/
           {
             echo '### 待审候选，不自动入库'
-            echo '回到原始公告、更新日志或论文，核对事件日期、开放对象和阶段。关键细节找第二条证据；证据冲突或不全就留在待审。'
+            echo '先看优先复核队列；再回到原始公告、更新日志或论文，核对事件日期、开放对象和阶段。关键细节找第二条证据；证据冲突或不全就留在待审。'
             echo "详见 [审校规则](${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/blob/${GITHUB_SHA}/docs/EDITORIAL-REVIEW.md)。"
           } >> "$GITHUB_STEP_SUMMARY"
       - name: Upload review queue (does not publish timeline events)
